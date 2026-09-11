@@ -1,0 +1,80 @@
+/* =================================
+   TABLET
+================================= */
+
+@media (max-width: 900px) {
+
+    :root {
+        --container-padding: 1.25rem;
+    }
+
+
+    /* ---------- GLOBAL ---------- */
+
+    .section {
+        padding-block: var(--space-4xl);
+    }
+
+    .section-title {
+        font-size: var(--text-3xl);
+    }
+
+
+    /* ---------- BUTTONS ---------- */
+
+    .btn {
+        min-height: 46px;
+    }
+
+}
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+    :root {
+        --container-padding: 1rem;
+    }
+
+
+    /* ---------- GLOBAL ---------- */
+
+    html {
+        font-size: 15px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .section {
+        padding-block: var(--space-3xl);
+    }
+
+    .section-title {
+        font-size: 2rem;
+        line-height: 1.1;
+    }
+
+    .section-description {
+        font-size: var(--text-md);
+    }
+
+
+    /* ---------- SECTION HEADER ---------- */
+
+    .section-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+
+    /* ---------- BUTTONS ---------- */
+
+    .btn {
+        width: 100%;
+    }
+
+}

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Revenue Leak Hunter article"
+        id="article-description"
+    >
+
+    <title id="article-title">
+        Article | Precious
+    </title>
+
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="../../favicon.ico"
+    >
+
+    <!-- GLOBAL STYLES -->
+
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+    <!-- BLOG STYLES -->
+
+    <link
+        rel="stylesheet"
+        href="blog.css"
+    >
+
+    <style>
+
+        .article-page {
+            padding: 8rem 0 5rem;
+        }
+
+        .article-header {
+            max-width: 850px;
+            margin: 0 auto 3rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .article-title {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-excerpt {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+        }
+
+        .article-content h2 {
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h3 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-back {
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+
+        .article-loading,
+        .article-error {
+            max-width: 800px;
+            margin: 8rem auto;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div id="navbar"></div>
+
+
+    <main class="article-page">
+
+        <div class="container">
+
+            <article>
+
+                <div
+                    class="article-loading"
+                    id="article-loading"
+                >
+                    <p>
+                        Loading article...
+                    </p>
+                </div>
+
+
+                <div
+                    id="article-container"
+                    hidden
+                >
+
+                    <header class="article-header">
+
+                        <a
+                            href="blog.html"
+                            class="article-back"
+                        >
+                            ← Back to Blog
+                        </a>
+
+
+                        <span
+                            class="section-label article-category"
+                            id="article-category"
+                        >
+                            Conversion
+                        </span>
+
+
+                        <h1
+                            class="article-title"
+                            id="article-heading"
+                        >
+                        </h1>
+
+
+                        <p
+                            class="article-excerpt"
+                            id="article-excerpt"
+                        >
+                        </p>
+
+
+                        <div class="article-meta">
+
+                            <span id="article-read-time">
+                                5 min read
+                            </span>
+
+                            <span>•</span>
+
+                            <time id="article-date"></time>
+
+                        </div>
+
+                    </header>
+
+
+                    <div
+                        class="article-content"
+                        id="article-content"
+                    >
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="article-error"
+                    id="article-error"
+                    hidden
+                >
+
+                    <h1>
+                        Article Not Found
+                    </h1>
+
+                    <p>
+                        This article doesn't exist or is no longer published.
+                    </p>
+
+                    <a
+                        href="blog.html"
+                        class="button button-primary"
+                    >
+                        Back to Blog
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </main>
+
+
+    <div id="footer"></div>
+
+
+    <script src="../../config/page-loader.js"></script>
+
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                loadSharedComponent(
+                    "navbar",
+                    "../../components/navbar/navbar.html",
+                    "../../components/navbar/navbar.css",
+                    "../../components/navbar/navbar.js"
+                );
+
+
+                loadSharedComponent(
+                    "footer",
+                    "../../components/footer/footer.html",
+                    "../../components/footer/footer.css",
+                    "../../components/footer/footer.js"
+                );
+
+            }
+        );
+
+    </script>
+
+
+    <script src="article.js"></script>
+
+</body>
+
+</html>

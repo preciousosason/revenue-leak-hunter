@@ -1,0 +1,496 @@
+/* =================================
+   PROOF SECTION
+================================= */
+
+.proof {
+    position: relative;
+
+    background: var(--color-bg-secondary);
+
+    border-top: 1px solid var(--color-border-light);
+}
+
+
+/* =================================
+   HEADER
+================================= */
+
+.proof-header {
+    max-width: 780px;
+}
+
+
+/* =================================
+   PRINCIPLES
+================================= */
+
+.proof-principles {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: var(--space-lg);
+
+    margin-top: var(--space-3xl);
+}
+
+
+.proof-principle {
+    position: relative;
+
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border-light);
+
+    border-radius: var(--border-radius-lg);
+
+    background: var(--color-bg);
+
+    overflow: hidden;
+}
+
+
+.proof-principle-number {
+    position: absolute;
+
+    top: var(--space-xl);
+    right: var(--space-xl);
+
+    color: var(--color-text-muted);
+
+    font-size: 0.6rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.1em;
+}
+
+
+.proof-principle-icon {
+    width: 46px;
+    height: 46px;
+
+    display: grid;
+    place-items: center;
+
+    margin-bottom: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+
+    border-radius: var(--border-radius-md);
+
+    color: var(--color-text-secondary);
+
+    font-size: 1rem;
+}
+
+
+.proof-principle h3 {
+    margin-bottom: var(--space-md);
+
+    font-size: var(--text-xl);
+
+    letter-spacing: -0.02em;
+}
+
+
+.proof-principle p {
+    font-size: var(--text-sm);
+
+    line-height: 1.7;
+}
+
+
+/* =================================
+   CASE STUDY HEADER
+================================= */
+
+.proof-case-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: var(--space-xl);
+
+    margin-top: var(--space-5xl);
+}
+
+
+.proof-case-header h3 {
+    margin-top: 0.6rem;
+
+    font-size: var(--text-3xl);
+
+    letter-spacing: -0.03em;
+}
+
+
+.proof-view-all {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.6rem;
+
+    padding-bottom: 0.35rem;
+
+    border-bottom: 1px solid var(--color-border);
+
+    color: var(--color-text-secondary);
+
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+
+    text-decoration: none;
+
+    transition:
+        color var(--transition-normal),
+        border-color var(--transition-normal);
+}
+
+
+.proof-view-all:hover {
+    color: var(--color-text);
+
+    border-color: var(--color-primary);
+}
+
+
+.proof-view-all span {
+    color: var(--color-primary);
+}
+
+
+/* =================================
+   CASE STUDIES
+================================= */
+
+.proof-cases {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: var(--space-lg);
+
+    margin-top: var(--space-2xl);
+}
+
+
+/* =================================
+   CASE
+================================= */
+
+.proof-case {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 430px;
+
+    border: 1px solid var(--color-border-light);
+
+    border-radius: var(--border-radius-lg);
+
+    background: var(--color-bg);
+
+    overflow: hidden;
+
+    transition:
+        transform var(--transition-normal),
+        border-color var(--transition-normal);
+}
+
+
+.proof-case:hover {
+    transform: translateY(-5px);
+
+    border-color: var(--color-border);
+}
+
+
+/* =================================
+   CASE TOP
+================================= */
+
+.proof-case-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: var(--space-lg) var(--space-xl);
+
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+
+.proof-case-category,
+.proof-case-status {
+    font-size: 0.55rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.1em;
+}
+
+
+.proof-case-category {
+    color: var(--color-text-muted);
+}
+
+
+.proof-case-status {
+    color: var(--color-primary);
+}
+
+
+/* =================================
+   CASE BODY
+================================= */
+
+.proof-case-body {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: var(--space-xl);
+}
+
+
+.proof-case-context > span,
+.proof-case-leak > span,
+.proof-case-bottom span {
+    display: block;
+
+    margin-bottom: 0.55rem;
+
+    color: var(--color-text-muted);
+
+    font-size: 0.55rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.1em;
+}
+
+
+.proof-case-context h4 {
+    max-width: 380px;
+
+    font-size: var(--text-xl);
+
+    line-height: 1.4;
+
+    letter-spacing: -0.02em;
+}
+
+
+/* =================================
+   CASE LEAK
+================================= */
+
+.proof-case-leak {
+    margin-top: var(--space-2xl);
+
+    padding: var(--space-md);
+
+    border: 1px solid rgba(255, 59, 48, 0.18);
+
+    border-radius: var(--border-radius-md);
+
+    background: rgba(255, 59, 48, 0.04);
+}
+
+
+.proof-case-leak strong {
+    color: var(--color-primary);
+
+    font-size: var(--text-sm);
+}
+
+
+/* =================================
+   CASE BOTTOM
+================================= */
+
+.proof-case-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: var(--space-lg);
+
+    padding: var(--space-xl);
+
+    border-top: 1px solid var(--color-border-light);
+}
+
+
+.proof-case-bottom p {
+    max-width: 330px;
+
+    color: var(--color-text-secondary);
+
+    font-size: 0.7rem;
+
+    line-height: 1.6;
+}
+
+
+.proof-case-arrow {
+    width: 38px;
+    height: 38px;
+
+    display: grid !important;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    margin: 0 !important;
+
+    border: 1px solid var(--color-border);
+
+    border-radius: 50%;
+
+    color: var(--color-text-secondary) !important;
+
+    font-size: 0.8rem !important;
+
+    transition:
+        transform var(--transition-normal),
+        border-color var(--transition-normal);
+}
+
+
+.proof-case:hover .proof-case-arrow {
+    transform: translateX(4px);
+
+    border-color: var(--color-primary);
+
+    color: var(--color-primary) !important;
+}
+
+
+/* =================================
+   EVIDENCE NOTE
+================================= */
+
+.proof-note {
+    display: flex;
+    align-items: flex-start;
+
+    gap: var(--space-lg);
+
+    margin-top: var(--space-3xl);
+
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border-light);
+
+    border-radius: var(--border-radius-lg);
+
+    background: rgba(255, 255, 255, 0.015);
+}
+
+
+.proof-note-icon {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid var(--color-border);
+
+    border-radius: 50%;
+
+    color: var(--color-text-secondary);
+
+    font-size: 0.8rem;
+    font-weight: var(--weight-bold);
+}
+
+
+.proof-note-label {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
+    color: var(--color-text-muted);
+
+    font-size: 0.55rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.1em;
+}
+
+
+.proof-note p {
+    max-width: 800px;
+
+    color: var(--color-text-secondary);
+
+    font-size: var(--text-sm);
+
+    line-height: 1.7;
+}
+
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 950px) {
+
+    .proof-principles,
+    .proof-cases {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .proof-principle:last-child {
+        grid-column: span 2;
+    }
+
+    .proof-case:last-child {
+        grid-column: span 2;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .proof-principles,
+    .proof-cases {
+        grid-template-columns: 1fr;
+    }
+
+    .proof-principle:last-child,
+    .proof-case:last-child {
+        grid-column: auto;
+    }
+
+    .proof-case-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .proof-case-header h3 {
+        font-size: var(--text-2xl);
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .proof-case {
+        min-height: 400px;
+    }
+
+    .proof-note {
+        padding: var(--space-lg);
+    }
+
+}
