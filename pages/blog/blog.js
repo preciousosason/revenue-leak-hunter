@@ -47,7 +47,7 @@ function formatPublishedDate(dateString) {
 
 function getArticleUrl(slug) {
 
-    return `article.html?slug=${encodeURIComponent(slug)}`;
+    return `/pages/blog/article.html?slug=${encodeURIComponent(slug)}`;
 
 }
 
