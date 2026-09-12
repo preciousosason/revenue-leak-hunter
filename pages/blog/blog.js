@@ -9,6 +9,7 @@ const BLOG_API_URL =
     "http://192.168.57.31:8000/api/blog/";
     "http://192.168.57.31:8000/";
     "http://192.168.57.31:3000";
+    "https://revenue-leak-hunter-backend.onrender.com",
 
 
 /* =================================
