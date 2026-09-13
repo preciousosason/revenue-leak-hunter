@@ -52,23 +52,35 @@
 
     <style>
 
+        /* =================================
+           ARTICLE PAGE
+        ================================= */
+
         .article-page {
-            padding: 8rem 0 5rem;
+            padding: 8rem 0 6rem;
         }
+
+
+        /* =================================
+           ARTICLE HEADER
+        ================================= */
 
         .article-header {
             max-width: 850px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 4rem;
         }
+
 
         .article-category {
             display: inline-block;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
+
 
         .article-title {
             margin-bottom: 1.5rem;
         }
+
 
         .article-excerpt {
             font-size: 1.15rem;
@@ -77,44 +89,330 @@
             margin-bottom: 1.5rem;
         }
 
+
         .article-meta {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 0.75rem;
             color: var(--color-text-muted);
             font-size: 0.9rem;
         }
 
-        .article-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
 
-        .article-content p {
-            margin-bottom: 1.5rem;
-            line-height: 1.9;
-        }
-
-        .article-content h2 {
-            margin-top: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-content h3 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
+        /* =================================
+           BACK TO BLOG
+        ================================= */
 
         .article-back {
             display: inline-block;
             margin-bottom: 3rem;
         }
 
+
+        /* =================================
+           ARTICLE CONTENT
+        ================================= */
+
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+
+        .article-block-paragraph {
+            margin: 0 0 1.5rem;
+            line-height: 1.9;
+        }
+
+
+        /* =================================
+           HEADINGS
+        ================================= */
+
+        .article-block-heading {
+            line-height: 1.25;
+        }
+
+
+        .article-block-heading-1 {
+            margin-top: 3.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+
+        .article-block-heading-2 {
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+
+
+        .article-block-heading-3 {
+            margin-top: 2rem;
+            margin-bottom: 0.85rem;
+        }
+
+
+        /* =================================
+           QUOTE
+        ================================= */
+
+        .article-block-quote {
+            margin: 2.5rem 0;
+            padding: 1.5rem 2rem;
+            border-left: 4px solid currentColor;
+        }
+
+
+        .article-block-quote blockquote {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+
+        .article-block-quote figcaption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+
+        /* =================================
+           LISTS
+        ================================= */
+
+        .article-block-list {
+            margin: 1.5rem 0 2rem;
+            padding-left: 2rem;
+        }
+
+
+        .article-block-list li {
+            margin-bottom: 0.7rem;
+            line-height: 1.8;
+        }
+
+
+        /* =================================
+           IMAGES
+        ================================= */
+
+        .article-block-image {
+            margin: 2.5rem 0;
+        }
+
+
+        .article-block-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+
+        .article-block-image figcaption {
+            margin-top: 0.75rem;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+
+        /* =================================
+           LINKS
+        ================================= */
+
+        .article-block-link-wrapper {
+            margin: 1.5rem 0;
+        }
+
+
+        .article-block-link {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+
+        /* =================================
+           BUTTON / CTA
+        ================================= */
+
+        .article-block-button-wrapper {
+            margin: 2rem 0;
+        }
+
+
+        .article-block-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .article-block-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+
+        /* =================================
+           CALLOUT
+        ================================= */
+
+        .article-block-callout {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+
+        .article-block-callout h3 {
+            margin-top: 0;
+            margin-bottom: 0.6rem;
+        }
+
+
+        .article-block-callout p {
+            margin: 0;
+            line-height: 1.8;
+        }
+
+
+        /* =================================
+           DIVIDER
+        ================================= */
+
+        .article-block-divider {
+            margin: 3rem 0;
+            border: 0;
+            border-top: 1px solid currentColor;
+            opacity: 0.15;
+        }
+
+
+        /* =================================
+           SPACER
+        ================================= */
+
+        .article-block-spacer {
+            width: 100%;
+        }
+
+
+        /* =================================
+           YOUTUBE
+        ================================= */
+
+        .article-block-video {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin: 2.5rem 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+
+        .article-block-video iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+
+        /* =================================
+           CODE
+        ================================= */
+
+        .article-block-code {
+            margin: 2rem 0;
+            overflow-x: auto;
+            border-radius: 10px;
+        }
+
+
+        .article-block-code pre {
+            margin: 0;
+            padding: 1.25rem;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+
+        .article-block-code code {
+            font-family:
+                "Courier New",
+                Courier,
+                monospace;
+            font-size: 0.9rem;
+        }
+
+
+        /* =================================
+           LOADING / ERROR
+        ================================= */
+
         .article-loading,
         .article-error {
             max-width: 800px;
             margin: 8rem auto;
             text-align: center;
+        }
+
+
+        /* =================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 768px) {
+
+            .article-page {
+                padding: 6rem 0 4rem;
+            }
+
+
+            .article-header {
+                margin-bottom: 3rem;
+            }
+
+
+            .article-excerpt {
+                font-size: 1rem;
+            }
+
+
+            .article-block-quote {
+                padding: 1.25rem 1.25rem;
+            }
+
+
+            .article-block-quote blockquote {
+                font-size: 1.05rem;
+            }
+
+
+            .article-block-image {
+                margin: 2rem 0;
+            }
+
+
+            .article-block-video {
+                margin: 2rem 0;
+            }
+
         }
 
     </style>
@@ -133,15 +431,21 @@
 
             <article>
 
+                <!-- LOADING -->
+
                 <div
                     class="article-loading"
                     id="article-loading"
                 >
+
                     <p>
                         Loading article...
                     </p>
+
                 </div>
 
+
+                <!-- ARTICLE -->
 
                 <div
                     id="article-container"
@@ -186,14 +490,20 @@
                                 5 min read
                             </span>
 
-                            <span>•</span>
+                            <span>
+                                •
+                            </span>
 
-                            <time id="article-date"></time>
+                            <time
+                                id="article-date"
+                            ></time>
 
                         </div>
 
                     </header>
 
+
+                    <!-- BLOCK CONTENT -->
 
                     <div
                         class="article-content"
@@ -203,6 +513,8 @@
 
                 </div>
 
+
+                <!-- ERROR -->
 
                 <div
                     class="article-error"
@@ -237,8 +549,12 @@
     <div id="footer"></div>
 
 
+    <!-- PAGE LOADER -->
+
     <script src="../../config/page-loader.js"></script>
 
+
+    <!-- SHARED COMPONENTS -->
 
     <script>
 
@@ -266,6 +582,8 @@
 
     </script>
 
+
+    <!-- ARTICLE SCRIPT -->
 
     <script src="article.js"></script>
 
