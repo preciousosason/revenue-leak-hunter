@@ -336,32 +336,228 @@ SMALL PHONES
    --------------------------------------------------------- */
 
 .article-content h2 {
+    position: relative;
     max-width: 760px;
-    margin-top: var(--space-4xl);
+    margin-top: var(--space-5xl);
     margin-bottom: 0;
 
     color: var(--color-text);
-    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
     font-weight: var(--weight-bold);
-    line-height: 1.08;
-    letter-spacing: -0.045em;
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+
+    text-wrap: balance;
 }
 
+/* First major heading needs no huge empty space above it */
 .article-content h2:first-child {
     margin-top: 0;
 }
 
-.article-content h3 {
-    margin-top: var(--space-3xl);
-    margin-bottom: 0;
+/* Signature leak-hunt marker */
+.article-content h2::before {
+    content: "";
+    position: absolute;
 
-    color: var(--color-text);
-    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
-    font-weight: var(--weight-bold);
-    line-height: 1.25;
-    letter-spacing: -0.025em;
+    top: 0.15em;
+    left: -2rem;
+
+    width: 0.65rem;
+    height: 0.65rem;
+
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+
+    box-sizing: border-box;
 }
 
+/* Small horizontal trace coming from the marker */
+.article-content h2::after {
+    content: "";
+    position: absolute;
+
+    top: calc(0.15em + 0.325rem);
+    left: -1.15rem;
+
+    width: 0.65rem;
+    height: 1px;
+
+    background: var(--color-primary);
+    opacity: 0.6;
+}
+
+
+/* ---------------------------------------------------------
+   H3
+   Secondary diagnostic sections
+   --------------------------------------------------------- */
+
+.article-content h3 {
+    position: relative;
+
+    margin-top: var(--space-3xl);
+    margin-bottom: 0;
+    padding-left: 1.1rem;
+
+    color: var(--color-text);
+    font-size: clamp(1.35rem, 2.7vw, 1.75rem);
+    font-weight: var(--weight-bold);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+
+    text-wrap: balance;
+}
+
+/* Vertical signal beside H3 */
+.article-content h3::before {
+    content: "";
+
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    left: 0;
+
+    width: 1px;
+
+    background: var(--color-primary);
+}
+
+
+/* =========================================================
+   HEADING → PARAGRAPH RELATIONSHIP
+   ========================================================= */
+
+/*
+   The paragraph immediately following a heading belongs
+   visually to that heading.
+
+   This creates a tighter "heading → explanation" rhythm
+   without changing the spacing of normal paragraphs.
+*/
+
+.article-content h2 + p,
+.article-content h3 + p {
+    margin-top: var(--space-lg);
+}
+
+/*
+   The first paragraph after a major heading gets slightly
+   stronger visual presence.
+*/
+
+.article-content h2 + p {
+    color: var(--color-text-secondary);
+}
+
+
+/* =========================================================
+   HEADING → LIST RELATIONSHIP
+   ========================================================= */
+
+.article-content h2 + ul,
+.article-content h2 + ol,
+.article-content h3 + ul,
+.article-content h3 + ol {
+    margin-top: var(--space-lg);
+}
+
+
+/* =========================================================
+   HEADING → CALLOUT / EXAMPLE
+   ========================================================= */
+
+.article-content h2 + .article-callout,
+.article-content h3 + .article-callout,
+.article-content h2 + .article-example,
+.article-content h3 + .article-example {
+    margin-top: var(--space-lg);
+}
+
+
+/* =========================================================
+   HEADING RHYTHM
+   Prevent consecutive headings from looking broken
+   ========================================================= */
+
+.article-content h2 + h3 {
+    margin-top: var(--space-xl);
+}
+
+.article-content h3 + h3 {
+    margin-top: var(--space-2xl);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 950px) {
+    .article-content h2::before {
+        left: -1.5rem;
+    }
+
+    .article-content h2::after {
+        left: -0.65rem;
+        width: 0.45rem;
+    }
+}
+
+@media (max-width: 650px) {
+    .article-content h2 {
+        margin-top: var(--space-4xl);
+        font-size: clamp(1.9rem, 8vw, 2.5rem);
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+    }
+
+    /*
+       Bring the marker inside the content area on mobile.
+       No hanging decorations outside the viewport.
+    */
+    .article-content h2::before {
+        top: -0.9rem;
+        left: 0;
+
+        width: 0.45rem;
+        height: 0.45rem;
+    }
+
+    .article-content h2::after {
+        top: -0.7rem;
+        left: 0.55rem;
+
+        width: 1.4rem;
+    }
+
+    .article-content h3 {
+        margin-top: var(--space-2xl);
+        padding-left: 0.9rem;
+
+        font-size: 1.3rem;
+        line-height: 1.25;
+    }
+
+    .article-content h2 + p,
+    .article-content h3 + p,
+    .article-content h2 + ul,
+    .article-content h2 + ol,
+    .article-content h3 + ul,
+    .article-content h3 + ol {
+        margin-top: var(--space-lg);
+    }
+}
+
+@media (max-width: 450px) {
+    .article-content h2 {
+        font-size: 1.85rem;
+    }
+
+    .article-content h3 {
+        font-size: 1.25rem;
+    }
+}
 
 /* ---------------------------------------------------------
    STRONG / EMPHASIS
