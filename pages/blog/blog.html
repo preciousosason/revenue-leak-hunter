@@ -2,95 +2,69 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
+    <title>Blog | Revenue Leak Hunter</title>
+
     <meta
         name="description"
-        content="Insights on conversion leaks, customer journeys, funnel friction, messaging, and revenue optimization."
+        content="Insights on conversion leaks, customer journeys, websites, funnels, and the friction that quietly kills growth."
     >
 
-    <title>
-        Blog | Precious
-    </title>
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../global/variables.css">
+    <link rel="stylesheet" href="../../global/global.css">
+    <link rel="stylesheet" href="../../global/responsive.css">
 
-    <link
-        rel="icon"
-        type="image/x-icon"
-        href="../../favicon.ico"
-    >
+    <!-- Components -->
+    <link rel="stylesheet" href="../../components/navbar/navbar.css">
+    <link rel="stylesheet" href="../../components/footer/footer.css">
 
-    <!-- GLOBAL STYLES -->
-
-    <link
-        rel="stylesheet"
-        href="../../global/variables.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../../global/global.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../../global/responsive.css"
-    >
-
-    <!-- PAGE STYLES -->
-
-    <link
-        rel="stylesheet"
-        href="blog.css"
-    >
-
+    <!-- Blog -->
+    <link rel="stylesheet" href="blog.css">
 </head>
 
 
 <body>
 
-    <!-- ============================
+    <!-- =================================
          NAVBAR
-    ============================= -->
+    ================================= -->
 
     <div id="navbar"></div>
 
 
-    <!-- ============================
-         MAIN
-    ============================= -->
-
     <main>
 
-        <!-- ============================
+        <!-- =================================
              BLOG HERO
-        ============================= -->
+        ================================= -->
 
-        <section class="blog-hero section">
+        <section class="blog-hero">
 
             <div class="container">
 
                 <div class="blog-hero-content">
 
-                    <span class="section-label">
-                        The Leak Files
-                    </span>
+                    <p class="post-category">
+                        Revenue Leak Hunter
+                    </p>
 
                     <h1>
-                        Ideas for Finding
-                        What Others Miss.
+                        Find the leaks
+                        <br>
+                        before they cost you.
                     </h1>
 
                     <p>
-                        Practical breakdowns on conversion,
-                        customer journeys, messaging, funnels,
-                        and the hidden friction that quietly
-                        costs businesses revenue.
+                        Practical thinking on conversion leaks,
+                        customer journeys, messaging, websites,
+                        funnels, and the friction that quietly
+                        turns interested visitors into lost revenue.
                     </p>
 
                 </div>
@@ -100,127 +74,112 @@
         </section>
 
 
-        <!-- ============================
-             FEATURED ARTICLE
-        ============================= -->
+        <!-- =================================
+             FEATURED POST
+        ================================= -->
 
-      <section class="featured-post section">
-
-    <div class="container">
-
-        <article class="featured-post-card">
-
-            <div class="featured-post-content">
-
-                <span
-                    class="post-category"
-                    id="featured-category"
-                >
-                    Conversion
-                </span>
-
-
-                <h2 id="featured-title">
-                    Loading featured article...
-                </h2>
-
-
-                <p id="featured-excerpt">
-                    Loading the latest featured thinking...
-                </p>
-
-
-                <div class="post-meta">
-
-                    <span id="featured-read-time">
-                        5 min read
-                    </span>
-
-                    <span>•</span>
-
-                    <span id="featured-category-meta">
-                        Conversion
-                    </span>
-
-                    <span>•</span>
-
-                    <time id="featured-date"></time>
-
-                </div>
-
-
-                <a
-                    href="#"
-                    id="featured-link"
-                    class="article-card-link"
-                >
-                    Read the Article
-                    <span>→</span>
-                </a>
-
-            </div>
-
-
-            <div class="featured-post-visual">
-
-                <div class="leak-diagram">
-
-                    <div class="diagram-node">
-                        VISIT
-                    </div>
-
-                    <div class="diagram-line"></div>
-
-                    <div class="diagram-node">
-                        TRUST
-                    </div>
-
-                    <div class="diagram-line"></div>
-
-                    <div class="diagram-node diagram-warning">
-                        ACTION
-                    </div>
-
-                    <div class="diagram-line"></div>
-
-                    <div class="diagram-node">
-                        PAYMENT
-                    </div>
-
-                </div>
-
-            </div>
-
-        </article>
-
-    </div>
-
-</section>
-
-
-        <!-- ============================
-             ARTICLES
-        ============================= -->
-
-        <section class="articles section">
+        <section class="featured-post">
 
             <div class="container">
 
-                <div class="section-header">
+                <div
+                    class="featured-post-card"
+                    id="featured-post"
+                >
 
-                    <span class="section-label">
-                        Latest Thinking
-                    </span>
+                    <!-- Populated by blog.js -->
 
-                    <h2 class="section-title">
-                        Hunt Smarter.
-                    </h2>
+                    <div class="featured-post-content">
 
-                    <p class="section-description">
-                        No motivational fluff. Just useful
-                        thinking about what happens after
-                        attention arrives.
+                        <span class="post-category">
+                            Featured
+                        </span>
+
+                        <h2>
+                            Loading...
+                        </h2>
+
+                        <p>
+                            Loading the latest article.
+                        </p>
+
+                        <div class="post-meta">
+
+                            <span class="post-date">
+                                —
+                            </span>
+
+                            <span>•</span>
+
+                            <span class="post-time">
+                                —
+                            </span>
+
+                        </div>
+
+                        <a
+                            href="#"
+                            class="post-link"
+                        >
+                            Read article
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+
+                    <!-- =================================
+                         LEAK DIAGRAM
+                    ================================= -->
+
+                    <div class="featured-post-visual">
+
+                        <div class="leak-diagram">
+
+                            <div class="diagram-node">
+                                VISITORS
+                            </div>
+
+                            <div class="diagram-line"></div>
+
+                            <div class="diagram-node diagram-warning">
+                                LEAK
+                            </div>
+
+                            <div class="diagram-line"></div>
+
+                            <div class="diagram-node">
+                                CUSTOMERS
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             ARTICLES
+        ================================= -->
+
+        <section class="articles">
+
+            <div class="container">
+
+                <div class="blog-hero-content">
+
+                    <p class="post-category">
+                        The Hunt
                     </p>
+
+                    <h2>
+                        Recent articles
+                    </h2>
 
                 </div>
 
@@ -230,8 +189,7 @@
                     id="articles-grid"
                 >
 
-                    <!-- BLOG POSTS ARE INSERTED
-                         BY BLOG.JS -->
+                    <!-- Article cards inserted by blog.js -->
 
                 </div>
 
@@ -240,36 +198,36 @@
         </section>
 
 
-        <!-- ============================
-             NEWSLETTER / CTA
-        ============================= -->
+        <!-- =================================
+             BLOG CTA
+        ================================= -->
 
-        <section class="blog-cta section">
+        <section class="blog-cta">
 
             <div class="container">
 
                 <div class="blog-cta-card">
 
-                    <span class="section-label">
-                        Still Hunting?
-                    </span>
+                    <p class="post-category">
+                        Find the leak
+                    </p>
 
                     <h2>
-                        Don't Just Drive More Traffic.
-                        Find Out Where It Dies.
+                        More traffic won't fix
+                        a broken journey.
                     </h2>
 
                     <p>
-                        If something feels wrong inside your
-                        customer journey, there is usually
-                        something worth investigating.
+                        Before you spend more money bringing
+                        people to your website, find out where
+                        the people you already have are dropping off.
                     </p>
 
                     <a
                         href="../leak-audit/leak-audit.html"
-                        class="button button-primary"
+                        class="button"
                     >
-                        Start a Leak Audit
+                        Start a Leak Hunt
                         <span>→</span>
                     </a>
 
@@ -282,45 +240,19 @@
     </main>
 
 
-    <!-- ============================
+    <!-- =================================
          FOOTER
-    ============================= -->
+    ================================= -->
 
     <div id="footer"></div>
 
 
-    <!-- ============================
-         SCRIPTS
-    ============================= -->
+    <!-- Component Loader -->
+    <script src="../../config/component-loader.js"></script>
 
-<script src="../../config/page-loader.js"></script>
+    <!-- Blog -->
+    <script src="blog.js"></script>
 
-<script>
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-
-            loadSharedComponent(
-                "navbar",
-                "../../components/navbar/navbar.html",
-                "../../components/navbar/navbar.css",
-                "../../components/navbar/navbar.js"
-            );
-
-            loadSharedComponent(
-                "footer",
-                "../../components/footer/footer.html",
-                "../../components/footer/footer.css",
-                "../../components/footer/footer.js"
-            );
-
-        }
-    );
-
-</script>
-
-<script src="blog.js"></script>
 </body>
 
 </html>

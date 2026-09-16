@@ -1,0 +1,533 @@
+/* =========================================================
+   ARTICLE PAGE
+   Shared styling for all individual blog articles
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   ARTICLE HEADER
+   --------------------------------------------------------- */
+
+.article-header {
+    padding-top: clamp(9rem, 16vw, 13rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.article-header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.article-category {
+    display: inline-block;
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.article-title {
+    max-width: 900px;
+    margin-top: var(--space-lg);
+
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-weight: var(--weight-bold);
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+}
+
+.article-description {
+    max-width: 720px;
+    margin-top: var(--space-xl);
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+    line-height: 1.75;
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+
+    margin-top: var(--space-xl);
+
+    color: var(--color-text-muted);
+    font-size: 0.65rem;
+    line-height: 1.5;
+}
+
+.article-meta-separator {
+    opacity: 0.5;
+}
+
+
+/* ---------------------------------------------------------
+   ARTICLE BODY
+   --------------------------------------------------------- */
+
+.article-body {
+    padding-bottom: var(--space-5xl);
+}
+
+.article-content {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* ---------------------------------------------------------
+   PARAGRAPHS
+   --------------------------------------------------------- */
+
+.article-content p {
+    margin-top: var(--space-xl);
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.9;
+}
+
+.article-content p:first-child {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   HEADINGS
+   --------------------------------------------------------- */
+
+.article-content h2 {
+    max-width: 760px;
+    margin-top: var(--space-4xl);
+    margin-bottom: 0;
+
+    color: var(--color-text);
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: var(--weight-bold);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+}
+
+.article-content h2:first-child {
+    margin-top: 0;
+}
+
+.article-content h3 {
+    margin-top: var(--space-3xl);
+    margin-bottom: 0;
+
+    color: var(--color-text);
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-weight: var(--weight-bold);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+}
+
+
+/* ---------------------------------------------------------
+   STRONG / EMPHASIS
+   --------------------------------------------------------- */
+
+.article-content strong {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+}
+
+.article-content em {
+    color: var(--color-text);
+}
+
+
+/* ---------------------------------------------------------
+   LINKS
+   --------------------------------------------------------- */
+
+.article-content a {
+    color: var(--color-primary);
+    text-decoration: none;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+}
+
+.article-content a:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------------------------------
+   LISTS
+   --------------------------------------------------------- */
+
+.article-content ul,
+.article-content ol {
+    margin-top: var(--space-xl);
+    padding-left: 1.5rem;
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.9;
+}
+
+.article-content li {
+    margin-top: 0.75rem;
+    padding-left: 0.35rem;
+}
+
+.article-content li:first-child {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   ORDERED LISTS
+   --------------------------------------------------------- */
+
+.article-content ol {
+    padding-left: 1.7rem;
+}
+
+.article-content ol li::marker {
+    color: var(--color-primary);
+    font-weight: var(--weight-bold);
+}
+
+
+/* ---------------------------------------------------------
+   UNORDERED LISTS
+   --------------------------------------------------------- */
+
+.article-content ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.article-content ul li {
+    position: relative;
+    padding-left: 1.6rem;
+}
+
+.article-content ul li::before {
+    content: "";
+    position: absolute;
+    top: 0.78em;
+    left: 0;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+
+/* ---------------------------------------------------------
+   BLOCKQUOTES
+   --------------------------------------------------------- */
+
+.article-content blockquote {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl) var(--space-2xl);
+
+    border-left: 2px solid var(--color-primary);
+    background: var(--color-bg-secondary);
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.8;
+}
+
+.article-content blockquote p {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   CALLOUT BOX
+   Optional reusable structure:
+   
+   <div class="article-callout">
+       <strong>Key idea</strong>
+       <p>...</p>
+   </div>
+   --------------------------------------------------------- */
+
+.article-callout {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+}
+
+.article-callout strong {
+    display: block;
+    margin-bottom: 0.6rem;
+
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.article-callout p {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   EXAMPLE BOX
+   Optional reusable structure:
+   
+   <div class="article-example">
+       <span>Example</span>
+       <p>...</p>
+   </div>
+   --------------------------------------------------------- */
+
+.article-example {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+}
+
+.article-example > span {
+    display: block;
+    margin-bottom: 0.75rem;
+
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.article-example p {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   ARTICLE DIVIDER
+   Optional:
+   
+   <hr>
+   --------------------------------------------------------- */
+
+.article-content hr {
+    width: 100%;
+    height: 1px;
+
+    margin: var(--space-3xl) 0;
+
+    border: 0;
+    background: var(--color-border);
+}
+
+
+/* ---------------------------------------------------------
+   IMAGES
+   --------------------------------------------------------- */
+
+.article-content img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    margin: var(--space-2xl) 0;
+
+    border-radius: var(--radius-md);
+}
+
+
+/* ---------------------------------------------------------
+   IMAGE CAPTION
+   Optional:
+   
+   <figure>
+       <img src="...">
+       <figcaption>...</figcaption>
+   </figure>
+   --------------------------------------------------------- */
+
+.article-content figure {
+    margin: var(--space-2xl) 0;
+}
+
+.article-content figure img {
+    margin: 0;
+}
+
+.article-content figcaption {
+    margin-top: 0.75rem;
+
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    line-height: 1.6;
+}
+
+
+/* ---------------------------------------------------------
+   CODE
+   --------------------------------------------------------- */
+
+.article-content code {
+    padding: 0.15em 0.35em;
+
+    border-radius: 4px;
+    background: var(--color-bg-secondary);
+
+    color: var(--color-text);
+    font-size: 0.9em;
+}
+
+.article-content pre {
+    overflow-x: auto;
+
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+
+    line-height: 1.7;
+}
+
+.article-content pre code {
+    padding: 0;
+
+    background: transparent;
+}
+
+
+/* ---------------------------------------------------------
+   TABLES
+   --------------------------------------------------------- */
+
+.article-content table {
+    width: 100%;
+    margin: var(--space-2xl) 0;
+
+    border-collapse: collapse;
+
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.article-content th,
+.article-content td {
+    padding: 0.9rem 0.75rem;
+
+    border-bottom: 1px solid var(--color-border);
+
+    text-align: left;
+}
+
+.article-content th {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+}
+
+
+/* ---------------------------------------------------------
+   SELECTION
+   --------------------------------------------------------- */
+
+.article-content ::selection {
+    background: var(--color-primary);
+    color: var(--color-bg);
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+    .article-header {
+        padding-top: 8rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .article-title {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        line-height: 1;
+    }
+
+    .article-description {
+        margin-top: var(--space-lg);
+
+        font-size: var(--text-md);
+        line-height: 1.7;
+    }
+
+    .article-meta {
+        margin-top: var(--space-lg);
+    }
+
+    .article-body {
+        padding-bottom: var(--space-4xl);
+    }
+
+    .article-content p,
+    .article-content ul,
+    .article-content ol {
+        font-size: 1rem;
+        line-height: 1.85;
+    }
+
+    .article-content h2 {
+        margin-top: var(--space-3xl);
+
+        font-size: clamp(1.8rem, 8vw, 2.4rem);
+    }
+
+    .article-content h3 {
+        margin-top: var(--space-2xl);
+
+        font-size: 1.3rem;
+    }
+
+    .article-content blockquote {
+        padding: var(--space-lg);
+    }
+
+    .article-callout,
+    .article-example {
+        padding: var(--space-lg);
+    }
+
+    .article-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   SMALL PHONES
+   --------------------------------------------------------- */
+
+@media (max-width: 450px) {
+
+    .article-header {
+        padding-top: 7rem;
+    }
+
+    .article-title {
+        font-size: 2.4rem;
+    }
+
+    .article-content ul li {
+        padding-left: 1.4rem;
+    }
+}

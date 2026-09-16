@@ -1,0 +1,22 @@
+{
+  "name": "my-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "new-article": "node scripts/new-article.js",
+    "build-blog": "node scripts/build-blog.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/preciousosason/revenue-leak-hunter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/preciousosason/revenue-leak-hunter/issues"
+  },
+  "homepage": "https://github.com/preciousosason/revenue-leak-hunter#readme"
+}

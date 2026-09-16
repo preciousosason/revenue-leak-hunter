@@ -1,0 +1,43 @@
+{
+    "generatedAt": "2026-09-16T19:28:04.595Z",
+    "articles": [
+        {
+            "title": "The 7 Silent Conversion Leaks That Make Good Businesses Look Broken",
+            "category": "Conversion",
+            "description": "Not every conversion problem is obvious. Some leaks hide inside unclear messaging, weak trust, unnecessary friction, and broken expectations. Here’s how to identify the silent problems that quietly turn interested visitors into lost customers.",
+            "slug": "silent-conversion-leaks",
+            "status": "published",
+            "publishedAt": "2026-09-16T19:27:48.956Z",
+            "url": "/articles/silent-conversion-leaks/article.html"
+        },
+        {
+            "title": "Find the Revenue Leaks Before You Scale",
+            "category": "Growth",
+            "description": "Scaling a broken customer journey can multiply the traffic, money, and opportunities you lose. Learn how to find the leaks before putting more resources into growth.",
+            "slug": "find-revenue-leaks-before-scaling",
+            "status": "published",
+            "publishedAt": "2026-09-16T19:10:15.523Z",
+            "url": "/articles/find-revenue-leaks-before-scaling/article.html"
+        }
+    ],
+    "publishedArticles": [
+        {
+            "title": "The 7 Silent Conversion Leaks That Make Good Businesses Look Broken",
+            "category": "Conversion",
+            "description": "Not every conversion problem is obvious. Some leaks hide inside unclear messaging, weak trust, unnecessary friction, and broken expectations. Here’s how to identify the silent problems that quietly turn interested visitors into lost customers.",
+            "slug": "silent-conversion-leaks",
+            "status": "published",
+            "publishedAt": "2026-09-16T19:27:48.956Z",
+            "url": "/articles/silent-conversion-leaks/article.html"
+        },
+        {
+            "title": "Find the Revenue Leaks Before You Scale",
+            "category": "Growth",
+            "description": "Scaling a broken customer journey can multiply the traffic, money, and opportunities you lose. Learn how to find the leaks before putting more resources into growth.",
+            "slug": "find-revenue-leaks-before-scaling",
+            "status": "published",
+            "publishedAt": "2026-09-16T19:10:15.523Z",
+            "url": "/articles/find-revenue-leaks-before-scaling/article.html"
+        }
+    ]
+}
