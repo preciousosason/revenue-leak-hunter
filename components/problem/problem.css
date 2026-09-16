@@ -1,11 +1,215 @@
 /* =================================
    PROBLEM SECTION
+   CINEMATIC LEAK EXPLANATION
 ================================= */
 
 .problem {
     position: relative;
 
-    background: var(--color-bg);
+    overflow: hidden;
+
+    isolation: isolate;
+
+    background:
+        radial-gradient(
+            ellipse 75% 65% at 12% 20%,
+            rgba(0, 180, 255, 0.10),
+            transparent 62%
+        ),
+        radial-gradient(
+            ellipse 70% 70% at 88% 35%,
+            rgba(255, 45, 45, 0.12),
+            transparent 62%
+        ),
+        radial-gradient(
+            ellipse 65% 50% at 50% 100%,
+            rgba(120, 40, 255, 0.045),
+            transparent 70%
+        ),
+        linear-gradient(
+            135deg,
+            #020304 0%,
+            #08090b 42%,
+            #0a080a 70%,
+            #030304 100%
+        );
+}
+
+
+/* =================================
+   ATMOSPHERIC BACKGROUND
+================================= */
+
+.problem::before {
+    content: "";
+
+    position: absolute;
+
+    width: 800px;
+    height: 800px;
+
+    top: -350px;
+    right: -220px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 45, 45, 0.20),
+            rgba(255, 45, 45, 0.07) 35%,
+            transparent 70%
+        );
+
+    filter: blur(45px);
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation:
+        problemRedOrb
+        13s
+        ease-in-out
+        infinite;
+}
+
+
+.problem::after {
+    content: "";
+
+    position: absolute;
+
+    width: 700px;
+    height: 700px;
+
+    left: -280px;
+    bottom: -350px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 180, 255, 0.15),
+            rgba(0, 180, 255, 0.035) 42%,
+            transparent 72%
+        );
+
+    filter: blur(45px);
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation:
+        problemBlueOrb
+        16s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes problemRedOrb {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate3d(-100px, 130px, 0)
+            scale(1.15);
+    }
+
+}
+
+
+@keyframes problemBlueOrb {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate3d(120px, -100px, 0)
+            scale(1.12);
+    }
+
+}
+
+
+/* =================================
+   MOVING GRID
+================================= */
+
+.problem-header,
+.problem-comparison,
+.problem-journey,
+.problem-statement {
+    position: relative;
+    z-index: 2;
+}
+
+
+.problem-header::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 300px;
+
+    top: -100px;
+    left: -150px;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 40px 40px;
+
+    mask-image:
+        radial-gradient(
+            ellipse,
+            black,
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+    animation:
+        problemGrid
+        18s
+        linear
+        infinite;
+}
+
+
+@keyframes problemGrid {
+
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(40px, 40px);
+    }
+
 }
 
 
@@ -30,8 +234,14 @@
     gap: var(--space-lg);
 
     margin-top: var(--space-3xl);
+
+    perspective: 1200px;
 }
 
+
+/* =================================
+   PROBLEM CARDS
+================================= */
 
 .problem-card {
     position: relative;
@@ -43,33 +253,195 @@
     display: flex;
     flex-direction: column;
 
+    overflow: hidden;
+
     border-radius: var(--border-radius-xl);
 
-    overflow: hidden;
+    transform-style: preserve-3d;
+
+    transition:
+        transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 400ms ease,
+        box-shadow 400ms ease;
+
+    animation:
+        problemCardReveal
+        0.9s
+        cubic-bezier(0.16, 1, 0.3, 1)
+        both;
 }
 
+
+.problem-card:first-child {
+    animation-delay: 0.15s;
+}
+
+
+.problem-card:last-child {
+    animation-delay: 0.3s;
+}
+
+
+@keyframes problemCardReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(35px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* =================================
+   WRONG CARD
+================================= */
 
 .problem-card-wrong {
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.025),
-            rgba(255, 255, 255, 0.01)
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.008)
         );
 
-    border: 1px solid var(--color-border-light);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.3);
 }
 
 
+/* =================================
+   RIGHT CARD
+================================= */
+
 .problem-card-right {
     background:
+        radial-gradient(
+            ellipse at 90% 0%,
+            rgba(255, 45, 45, 0.11),
+            transparent 50%
+        ),
         linear-gradient(
             145deg,
-            rgba(255, 59, 48, 0.07),
-            rgba(255, 255, 255, 0.015)
+            rgba(255, 59, 48, 0.075),
+            rgba(255, 255, 255, 0.012)
         );
 
-    border: 1px solid rgba(255, 59, 48, 0.2);
+    border: 1px solid rgba(255, 59, 48, 0.22);
+
+    box-shadow:
+        0 30px 90px rgba(255, 30, 30, 0.045);
+}
+
+
+/* =================================
+   CARD LIGHT SWEEP
+================================= */
+
+.problem-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: -30%;
+    left: -80%;
+
+    width: 55%;
+    height: 160%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.035),
+            transparent
+        );
+
+    transform: rotate(18deg);
+
+    pointer-events: none;
+
+    animation:
+        problemCardSweep
+        7s
+        ease-in-out
+        infinite;
+}
+
+
+.problem-card-right::before {
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 59, 48, 0.10),
+            transparent
+        );
+
+    animation-delay: 1.8s;
+}
+
+
+@keyframes problemCardSweep {
+
+    0%,
+    25% {
+        left: -80%;
+    }
+
+    55%,
+    75% {
+        left: 140%;
+    }
+
+    100% {
+        left: 140%;
+    }
+
+}
+
+
+/* =================================
+   CARD HOVER
+================================= */
+
+.problem-card-wrong:hover {
+    transform:
+        translateY(-7px)
+        rotateX(1deg)
+        rotateY(-1deg);
+
+    border-color:
+        rgba(255, 255, 255, 0.14);
+
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.42);
+}
+
+
+.problem-card-right:hover {
+    transform:
+        translateY(-7px)
+        rotateX(1deg)
+        rotateY(1deg);
+
+    border-color:
+        rgba(255, 59, 48, 0.38);
+
+    box-shadow:
+        0 40px 110px rgba(255, 40, 40, 0.09);
 }
 
 
@@ -78,6 +450,9 @@
 ================================= */
 
 .problem-card-top {
+    position: relative;
+    z-index: 2;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -108,6 +483,26 @@
 
 .problem-card-right .problem-card-status {
     color: var(--color-primary);
+
+    animation:
+        statusFlicker
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes statusFlicker {
+
+    0%,
+    100% {
+        opacity: 0.65;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
 }
 
 
@@ -116,6 +511,9 @@
 ================================= */
 
 .problem-card-icon {
+    position: relative;
+    z-index: 2;
+
     width: 52px;
     height: 52px;
 
@@ -131,6 +529,20 @@
     color: var(--color-text-secondary);
 
     font-size: 1.4rem;
+
+    background:
+        rgba(255, 255, 255, 0.015);
+
+    transition:
+        transform 400ms ease,
+        box-shadow 400ms ease;
+}
+
+
+.problem-card:hover .problem-card-icon {
+    transform:
+        translateY(-3px)
+        scale(1.04);
 }
 
 
@@ -140,6 +552,31 @@
     color: var(--color-primary);
 
     background: rgba(255, 59, 48, 0.06);
+
+    box-shadow:
+        0 0 25px rgba(255, 59, 48, 0.06);
+
+    animation:
+        iconWarning
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes iconWarning {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 rgba(255, 59, 48, 0);
+    }
+
+    50% {
+        box-shadow:
+            0 0 30px rgba(255, 59, 48, 0.12);
+    }
+
 }
 
 
@@ -148,6 +585,9 @@
 ================================= */
 
 .problem-card h3 {
+    position: relative;
+    z-index: 2;
+
     margin-bottom: var(--space-md);
 
     font-size: var(--text-2xl);
@@ -157,6 +597,9 @@
 
 
 .problem-card p {
+    position: relative;
+    z-index: 2;
+
     max-width: 480px;
 
     font-size: var(--text-md);
@@ -170,6 +613,9 @@
 ================================= */
 
 .problem-flow {
+    position: relative;
+    z-index: 2;
+
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -190,10 +636,36 @@
 
 .flow-arrow {
     color: var(--color-text-muted);
+
+    opacity: 0.6;
+
+    animation:
+        arrowSignal
+        2.5s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes arrowSignal {
+
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: translateX(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(3px);
+    }
+
 }
 
 
 .flow-leak {
+    position: relative;
+
     color: var(--color-primary);
 
     padding: 0.3rem 0.5rem;
@@ -203,6 +675,31 @@
     border-radius: var(--border-radius-sm);
 
     background: rgba(255, 59, 48, 0.06);
+
+    box-shadow:
+        0 0 20px rgba(255, 59, 48, 0.05);
+
+    animation:
+        flowLeakPulse
+        2.8s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes flowLeakPulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 rgba(255, 59, 48, 0);
+    }
+
+    50% {
+        box-shadow:
+            0 0 20px rgba(255, 59, 48, 0.12);
+    }
+
 }
 
 
@@ -216,6 +713,31 @@
     border-radius: var(--border-radius-sm);
 
     background: rgba(50, 215, 75, 0.06);
+
+    box-shadow:
+        0 0 20px rgba(50, 215, 75, 0.04);
+
+    animation:
+        investigateGlow
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes investigateGlow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 rgba(50, 215, 75, 0);
+    }
+
+    50% {
+        box-shadow:
+            0 0 20px rgba(50, 215, 75, 0.1);
+    }
+
 }
 
 
@@ -224,24 +746,89 @@
 ================================= */
 
 .problem-journey {
+    position: relative;
+
     margin-top: var(--space-5xl);
 
     padding: var(--space-3xl);
 
-    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     border-radius: var(--border-radius-xl);
 
     background:
+        radial-gradient(
+            ellipse at 90% 50%,
+            rgba(255, 59, 48, 0.065),
+            transparent 48%
+        ),
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.025),
-            transparent
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.008)
         );
+
+    box-shadow:
+        0 35px 100px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(15px);
 }
 
 
+/* Moving border light */
+
+.problem-journey::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -30%;
+
+    width: 30%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0, 190, 255, 0.8),
+            rgba(255, 59, 48, 0.8),
+            transparent
+        );
+
+    animation:
+        journeyBorderScan
+        6s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes journeyBorderScan {
+
+    0% {
+        left: -30%;
+    }
+
+    60%,
+    100% {
+        left: 130%;
+    }
+
+}
+
+
+/* =================================
+   JOURNEY HEADING
+================================= */
+
 .problem-journey-heading {
+    position: relative;
+    z-index: 2;
+
     max-width: 600px;
 
     margin-bottom: var(--space-3xl);
@@ -269,6 +856,9 @@
 ================================= */
 
 .conversion-path {
+    position: relative;
+    z-index: 2;
+
     display: grid;
 
     grid-template-columns:
@@ -284,7 +874,13 @@
 }
 
 
+/* =================================
+   CONVERSION STAGE
+================================= */
+
 .conversion-stage {
+    position: relative;
+
     min-height: 100px;
 
     display: flex;
@@ -294,15 +890,117 @@
 
     padding: 1rem;
 
-    border: 1px solid var(--color-border);
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
 
     border-radius: var(--border-radius-lg);
 
-    background: rgba(255, 255, 255, 0.02);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.012)
+        );
+
+    transition:
+        transform 350ms ease,
+        border-color 350ms ease,
+        background 350ms ease;
 }
 
 
+.conversion-stage:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(255, 255, 255, 0.16);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.015)
+        );
+}
+
+
+/* =================================
+   STAGE LIGHT
+================================= */
+
+.conversion-stage::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.04),
+            transparent
+        );
+
+    transform: skewX(-18deg);
+
+    animation:
+        stageSweep
+        6s
+        ease-in-out
+        infinite;
+}
+
+
+.conversion-stage:nth-child(1)::before {
+    animation-delay: 0s;
+}
+
+
+.conversion-stage:nth-child(3)::before {
+    animation-delay: 0.8s;
+}
+
+
+.conversion-stage:nth-child(5)::before {
+    animation-delay: 1.6s;
+}
+
+
+.conversion-stage:nth-child(7)::before {
+    animation-delay: 2.4s;
+}
+
+
+@keyframes stageSweep {
+
+    0%,
+    35% {
+        left: -100%;
+    }
+
+    70%,
+    100% {
+        left: 150%;
+    }
+
+}
+
+
+/* =================================
+   CONVERSION NUMBER
+================================= */
+
 .conversion-number {
+    position: relative;
+    z-index: 2;
+
     color: var(--color-text-muted);
 
     font-size: 0.6rem;
@@ -310,7 +1008,14 @@
 }
 
 
+/* =================================
+   STAGE CONTENT
+================================= */
+
 .conversion-stage-content {
+    position: relative;
+    z-index: 2;
+
     display: flex;
     flex-direction: column;
 
@@ -337,7 +1042,14 @@
 }
 
 
+/* =================================
+   STAGE MARK
+================================= */
+
 .conversion-stage-mark {
+    position: relative;
+    z-index: 2;
+
     width: 28px;
     height: 28px;
 
@@ -364,9 +1076,67 @@
 
     position: relative;
 
-    background: var(--color-border);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--color-border),
+            transparent
+        );
 }
 
+
+/* Traveling signal */
+
+.conversion-connector::before {
+    content: "";
+
+    position: absolute;
+
+    left: -20px;
+    top: 50%;
+
+    width: 18px;
+    height: 2px;
+
+    transform: translateY(-50%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0, 190, 255, 0.9),
+            transparent
+        );
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(0, 190, 255, 0.7)
+        );
+
+    animation:
+        signalFlow
+        3.2s
+        linear
+        infinite;
+}
+
+
+@keyframes signalFlow {
+
+    from {
+        left: -25px;
+    }
+
+    to {
+        left: calc(100% + 25px);
+    }
+
+}
+
+
+/* Arrow */
 
 .conversion-connector::after {
     content: "";
@@ -385,6 +1155,57 @@
     transform:
         translateY(-50%)
         rotate(45deg);
+}
+
+
+/* =================================
+   MAKE THE THIRD STAGE FEEL LIKE
+   THE PRESSURE POINT
+================================= */
+
+.conversion-stage:nth-child(5) {
+    border-color:
+        rgba(255, 59, 48, 0.18);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 59, 48, 0.065),
+            rgba(255, 255, 255, 0.012)
+        );
+
+    animation:
+        pressurePoint
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes pressurePoint {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 rgba(255, 59, 48, 0);
+    }
+
+    50% {
+        box-shadow:
+            0 0 35px rgba(255, 59, 48, 0.075);
+    }
+
+}
+
+
+.conversion-stage:nth-child(5) .conversion-stage-mark {
+    border-color:
+        rgba(255, 59, 48, 0.35);
+
+    color: var(--color-primary);
+
+    box-shadow:
+        0 0 15px rgba(255, 59, 48, 0.08);
 }
 
 
@@ -410,12 +1231,56 @@
 
 
 .problem-statement-line {
+    position: relative;
+
     width: 60px;
     height: 1px;
 
     flex-shrink: 0;
 
+    overflow: hidden;
+
     background: var(--color-border);
+}
+
+
+.problem-statement-line::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--color-primary),
+            transparent
+        );
+
+    transform: translateX(-100%);
+
+    animation:
+        statementSignal
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes statementSignal {
+
+    0%,
+    35% {
+        transform: translateX(-100%);
+    }
+
+    70%,
+    100% {
+        transform: translateX(100%);
+    }
+
 }
 
 
@@ -428,6 +1293,9 @@
 
 .problem-statement strong {
     color: var(--color-text);
+
+    text-shadow:
+        0 0 20px rgba(255, 255, 255, 0.04);
 }
 
 
@@ -443,6 +1311,7 @@
 
     .conversion-path {
         grid-template-columns: 1fr;
+
         gap: 0;
     }
 
@@ -451,6 +1320,50 @@
         height: 25px;
 
         margin-left: 2rem;
+
+        background:
+            linear-gradient(
+                180deg,
+                transparent,
+                var(--color-border),
+                transparent
+            );
+    }
+
+    .conversion-connector::before {
+        left: 50%;
+        top: -20px;
+
+        width: 2px;
+        height: 18px;
+
+        transform: translateX(-50%);
+
+        background:
+            linear-gradient(
+                180deg,
+                transparent,
+                rgba(0, 190, 255, 0.9),
+                transparent
+            );
+
+        animation:
+            verticalSignal
+            3.2s
+            linear
+            infinite;
+    }
+
+    @keyframes verticalSignal {
+
+        from {
+            top: -22px;
+        }
+
+        to {
+            top: calc(100% + 22px);
+        }
+
     }
 
     .conversion-connector::after {
@@ -493,6 +1406,33 @@
 
     .problem-statement p {
         font-size: var(--text-md);
+    }
+
+}
+
+
+/* =================================
+   REDUCED MOTION
+================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .problem::before,
+    .problem::after,
+    .problem-header::before,
+    .problem-card,
+    .problem-card::before,
+    .problem-card-right .problem-card-status,
+    .problem-card-right .problem-card-icon,
+    .flow-arrow,
+    .flow-leak,
+    .flow-investigate,
+    .problem-journey::before,
+    .conversion-stage::before,
+    .conversion-connector::before,
+    .conversion-stage:nth-child(5),
+    .problem-statement-line::after {
+        animation: none !important;
     }
 
 }
