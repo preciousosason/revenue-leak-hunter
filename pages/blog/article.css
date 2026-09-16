@@ -8,59 +8,242 @@
    --------------------------------------------------------- */
 
 .article-header {
-    padding-top: clamp(9rem, 16vw, 13rem);
-    padding-bottom: clamp(4rem, 8vw, 7rem);
+position: relative;
+
+padding-top: clamp(10rem, 17vw, 14rem);
+padding-bottom: clamp(5rem, 9vw, 8rem);
+
+}
+
+/* ---------------------------------------------------------
+HEADER CONTENT
+--------------------------------------------------------- */
+
+.article-header-content {
+position: relative;
+
+max-width: 960px;
+margin: 0 auto;
+
+}
+
+/* ---------------------------------------------------------
+CATEGORY
+--------------------------------------------------------- */
+
+.article-category {
+position: relative;
+
+display: inline-flex;
+align-items: center;
+gap: 0.65rem;
+
+color: var(--color-primary);
+
+font-size: 0.65rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.16em;
+line-height: 1.4;
+text-transform: uppercase;
+
+}
+
+/* Small diagnostic marker */
+
+.article-category::before {
+content: "";
+
+width: 0.45rem;
+height: 0.45rem;
+
+border: 1px solid var(--color-primary);
+border-radius: 50%;
+
+box-sizing: border-box;
+
+}
+
+/* ---------------------------------------------------------
+TITLE
+--------------------------------------------------------- */
+
+.article-title {
+max-width: 920px;
+
+margin-top: var(--space-lg);
+margin-bottom: 0;
+
+color: var(--color-text);
+
+font-size: clamp(3rem, 7.5vw, 6.5rem);
+font-weight: var(--weight-bold);
+line-height: 0.94;
+letter-spacing: -0.065em;
+
+text-wrap: balance;
+
+}
+
+/* ---------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------- */
+
+.article-description {
+position: relative;
+
+max-width: 700px;
+
+margin-top: var(--space-2xl);
+padding-left: 1.25rem;
+
+color: var(--color-text-secondary);
+
+font-size: var(--text-lg);
+line-height: 1.75;
+
+}
+
+/* Editorial guide line */
+
+.article-description::before {
+content: "";
+
+position: absolute;
+top: 0.25rem;
+bottom: 0.25rem;
+left: 0;
+
+width: 1px;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+META INFORMATION
+--------------------------------------------------------- */
+
+.article-meta {
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 0.8rem;
+
+margin-top: var(--space-2xl);
+
+color: var(--color-text-muted);
+
+font-size: 0.65rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.06em;
+line-height: 1.5;
+
+}
+
+/* ---------------------------------------------------------
+META SEPARATOR
+--------------------------------------------------------- */
+
+.article-meta-separator {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+width: 1rem;
+
+color: var(--color-border);
+
+font-size: 0.7rem;
+
+}
+
+/* ---------------------------------------------------------
+SUBTLE HEADER RHYTHM
+--------------------------------------------------------- */
+
+.article-header::after {
+content: "";
+
+display: block;
+
+width: min(960px, 100%);
+
+height: 1px;
+
+margin: clamp(4rem, 8vw, 7rem) auto 0;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-header {
+    padding-top: 8rem;
+    padding-bottom: 3.5rem;
 }
 
 .article-header-content {
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 100%;
 }
 
 .article-category {
-    display: inline-block;
-    color: var(--color-primary);
-    font-size: 0.65rem;
-    font-weight: var(--weight-bold);
+    font-size: 0.6rem;
     letter-spacing: 0.14em;
-    line-height: 1.4;
-    text-transform: uppercase;
 }
 
 .article-title {
-    max-width: 900px;
     margin-top: var(--space-lg);
 
-    font-size: clamp(2.8rem, 7vw, 6rem);
-    font-weight: var(--weight-bold);
-    line-height: 0.98;
-    letter-spacing: -0.06em;
+    font-size: clamp(2.6rem, 12vw, 4.2rem);
+    line-height: 0.97;
+    letter-spacing: -0.055em;
 }
 
 .article-description {
-    max-width: 720px;
-    margin-top: var(--space-xl);
+    max-width: 100%;
 
-    color: var(--color-text-secondary);
-    font-size: var(--text-lg);
-    line-height: 1.75;
+    margin-top: var(--space-xl);
+    padding-left: 1rem;
+
+    font-size: var(--text-md);
+    line-height: 1.7;
 }
 
 .article-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.7rem;
-
     margin-top: var(--space-xl);
 
-    color: var(--color-text-muted);
-    font-size: 0.65rem;
-    line-height: 1.5;
+    font-size: 0.6rem;
 }
 
-.article-meta-separator {
-    opacity: 0.5;
+.article-header::after {
+    margin-top: 3.5rem;
+}
+
+}
+
+/* ---------------------------------------------------------
+SMALL PHONES
+--------------------------------------------------------- */
+
+@media (max-width: 450px) {
+
+.article-header {
+    padding-top: 7rem;
+}
+
+.article-title {
+    font-size: 2.4rem;
+}
+
+.article-description {
+    font-size: 0.95rem;
+}
+
 }
 
 
@@ -69,12 +252,65 @@
    --------------------------------------------------------- */
 
 .article-body {
+    position: relative;
     padding-bottom: var(--space-5xl);
 }
 
 .article-content {
+    position: relative;
     max-width: 760px;
     margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* Subtle reading guide */
+.article-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2.5rem;
+    width: 1px;
+    background: var(--color-border);
+    opacity: 0.45;
+}
+
+/* Keep the first piece of content visually connected
+   to the article header */
+.article-content > :first-child {
+    margin-top: 0;
+}
+
+/* Give major sections breathing room */
+.article-content > h2 {
+    position: relative;
+}
+
+/* =========================================================
+   ARTICLE BODY RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
+    .article-content::before {
+        left: -1.5rem;
+    }
+}
+
+@media (max-width: 650px) {
+    .article-body {
+        padding-bottom: var(--space-4xl);
+    }
+
+    .article-content {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    /* Remove the desktop reading guide.
+       Mobile already has enough visual density. */
+    .article-content::before {
+        display: none;
+    }
 }
 
 
@@ -131,13 +367,91 @@
    STRONG / EMPHASIS
    --------------------------------------------------------- */
 
-.article-content strong {
+.article-content strong,
+.article-content b {
+    position: relative;
     color: var(--color-text);
-    font-weight: var(--weight-bold);
+    font-weight: 800;
+    letter-spacing: -0.012em;
 }
 
-.article-content em {
+/*
+   A very subtle accent underlining for important statements.
+   It sits close to the text instead of looking like a link.
+*/
+.article-content strong::after,
+.article-content b::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.08em;
+    height: 1px;
+    background: var(--color-primary);
+    opacity: 0.45;
+    transform: scaleX(0.35);
+    transform-origin: left center;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Let the emphasis reveal itself when the reader interacts */
+@media (hover: hover) {
+    .article-content strong:hover::after,
+    .article-content b:hover::after {
+        opacity: 0.9;
+        transform: scaleX(1);
+    }
+}
+
+/* =========================================================
+   EMPHASIS / ITALICS
+   ========================================================= */
+
+.article-content em,
+.article-content i {
     color: var(--color-text);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.008em;
+}
+
+/*
+   Give italic emphasis a quiet visual distinction
+   without turning every sentence into decoration.
+*/
+.article-content em {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+}
+
+/* =========================================================
+   STRONG + EMPHASIS COMBINATION
+   ========================================================= */
+
+.article-content strong em,
+.article-content em strong,
+.article-content b i,
+.article-content i b {
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+    .article-content strong,
+    .article-content b {
+        letter-spacing: -0.008em;
+    }
+
+    .article-content strong::after,
+    .article-content b::after {
+        bottom: -0.05em;
+    }
 }
 
 
@@ -188,12 +502,144 @@
    --------------------------------------------------------- */
 
 .article-content ol {
-    padding-left: 1.7rem;
+list-style: none;
+
+margin: var(--space-xl) 0 0;
+padding: 0;
+
+counter-reset: article-step;
+
 }
 
-.article-content ol li::marker {
-    color: var(--color-primary);
-    font-weight: var(--weight-bold);
+.article-content ol li {
+position: relative;
+
+counter-increment: article-step;
+
+min-height: 3.5rem;
+
+margin: 0;
+padding: 0.9rem 0 0.9rem 4.25rem;
+
+border-bottom: 1px solid var(--color-border);
+
+color: var(--color-text-secondary);
+font-size: var(--text-md);
+line-height: 1.8;
+
+transition:
+    padding-left 0.25s ease,
+    border-color 0.25s ease;
+
+}
+
+.article-content ol li {
+border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------
+NUMBER
+--------------------------------------------------------- */
+
+.article-content ol li::before {
+content: counter(article-step, decimal-leading-zero);
+
+position: absolute;
+top: 0.9rem;
+left: 0;
+
+width: 2.7rem;
+
+color: var(--color-primary);
+
+font-size: 0.68rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.1em;
+line-height: 1.8;
+
+text-align: left;
+
+}
+
+/* ---------------------------------------------------------
+VERTICAL TRACE
+--------------------------------------------------------- */
+
+.article-content ol li::after {
+content: "";
+
+position: absolute;
+top: 0;
+bottom: 0;
+left: 3.2rem;
+
+width: 1px;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+STRONG TEXT
+--------------------------------------------------------- */
+
+.article-content ol li strong,
+.article-content ol li b {
+color: var(--color-text);
+font-weight: 800;
+}
+
+/* ---------------------------------------------------------
+HOVER
+--------------------------------------------------------- */
+
+@media (hover: hover) {
+
+.article-content ol li:hover {
+    padding-left: 4.5rem;
+}
+
+.article-content ol li:hover::before {
+    color: var(--color-text);
+}
+
+.article-content ol li:hover::after {
+    background: var(--color-primary);
+}
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-content ol li {
+    min-height: 3.25rem;
+
+    padding-top: 0.8rem;
+    padding-right: 0;
+    padding-bottom: 0.8rem;
+    padding-left: 3.5rem;
+}
+
+.article-content ol li:hover {
+    padding-left: 3.5rem;
+}
+
+.article-content ol li::before {
+    top: 0.8rem;
+
+    width: 2.2rem;
+
+    font-size: 0.62rem;
+}
+
+.article-content ol li::after {
+    left: 2.7rem;
+}
+
 }
 
 
@@ -202,26 +648,130 @@
    --------------------------------------------------------- */
 
 .article-content ul {
-    list-style: none;
-    padding-left: 0;
+list-style: none;
+margin: var(--space-xl) 0 0;
+padding: 0;
 }
 
 .article-content ul li {
-    position: relative;
-    padding-left: 1.6rem;
+position: relative;
+
+margin: 0;
+padding: 1rem 0 1rem 3.25rem;
+
+border-bottom: 1px solid var(--color-border);
+
+color: var(--color-text-secondary);
+font-size: var(--text-md);
+line-height: 1.8;
+
+transition:
+    padding-left 0.25s ease,
+    border-color 0.25s ease;
+
+}
+
+.article-content ul li {
+border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------
+TRACE MARKER
+--------------------------------------------------------- */
+
+.article-content ul li::before {
+content: "";
+
+position: absolute;
+top: 50%;
+left: 0;
+
+width: 1rem;
+height: 1rem;
+
+box-sizing: border-box;
+
+border: 1px solid var(--color-primary);
+border-radius: 50%;
+
+transform: translateY(-50%);
+
+transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+
+}
+
+.article-content ul li::after {
+content: "";
+
+position: absolute;
+top: 50%;
+left: 0.3rem;
+
+width: 0.4rem;
+height: 1px;
+
+background: var(--color-primary);
+
+transform: translateY(-50%);
+
+}
+
+/* ---------------------------------------------------------
+STRONG TEXT INSIDE LISTS
+--------------------------------------------------------- */
+
+.article-content ul li strong,
+.article-content ul li b {
+color: var(--color-text);
+font-weight: 800;
+}
+
+/* ---------------------------------------------------------
+HOVER
+--------------------------------------------------------- */
+
+@media (hover: hover) {
+
+.article-content ul li:hover {
+    padding-left: 3.5rem;
+}
+
+.article-content ul li:hover::before {
+    background-color: var(--color-primary);
+    transform: translateY(-50%) scale(1.08);
+}
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-content ul li {
+    padding-top: 0.85rem;
+    padding-right: 0;
+    padding-bottom: 0.85rem;
+    padding-left: 2.75rem;
+}
+
+.article-content ul li:hover {
+    padding-left: 2.75rem;
 }
 
 .article-content ul li::before {
-    content: "";
-    position: absolute;
-    top: 0.78em;
-    left: 0;
+    width: 0.9rem;
+    height: 0.9rem;
+}
 
-    width: 5px;
-    height: 5px;
+.article-content ul li::after {
+    left: 0.27rem;
+    width: 0.36rem;
+}
 
-    border-radius: 50%;
-    background: var(--color-primary);
 }
 
 
@@ -310,7 +860,7 @@
 .article-example p {
     margin-top: 0;
 }
-
+ 
 
 /* ---------------------------------------------------------
    ARTICLE DIVIDER
