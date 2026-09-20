@@ -2,6 +2,11 @@
    GLOBAL COMPONENT LOADER
 ================================= */
 
+
+/* =================================
+   SITE ROOT
+================================= */
+
 const LOADER_SCRIPT = document.currentScript;
 
 const SITE_ROOT = LOADER_SCRIPT
@@ -24,7 +29,7 @@ function resolveSitePath(path) {
 
 
 /* =================================
-   BUILD ROUTE
+   ROUTE BUILDER
 ================================= */
 
 function buildRoute(routeName) {
@@ -95,107 +100,15 @@ function resolveRoutes(container = document) {
 
 
 /* =================================
-   LOAD COMPONENT
-================================= */
-
-async function loadComponent(
-    elementId,
-    componentPath,
-    cssPath = null,
-    jsPath = null
-) {
-
-    const element =
-        document.getElementById(elementId);
-
-
-    if (!element) {
-
-        console.warn(
-            `Component container #${elementId} was not found.`
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        /* ============================
-           LOAD HTML
-        ============================ */
-
-        const htmlUrl =
-            resolveSitePath(componentPath);
-
-
-        const response =
-            await fetch(htmlUrl);
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                `Failed to load ${htmlUrl}`
-            );
-
-        }
-
-
-        const html =
-            await response.text();
-
-
-        element.innerHTML = html;
-
-
-        /* ============================
-           LOAD CSS
-        ============================ */
-
-        if (cssPath) {
-
-            loadStylesheet(cssPath);
-
-        }
-
-
-        /* ============================
-           RESOLVE ROUTES
-        ============================ */
-
-        resolveRoutes(element);
-
-
-        /* ============================
-           LOAD JAVASCRIPT
-        ============================ */
-
-        if (jsPath) {
-
-            await loadScript(jsPath);
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            `Component loading error for #${elementId}:`,
-            error
-        );
-
-    }
-
-}
-
-
-/* =================================
    LOAD STYLESHEET
 ================================= */
 
 function loadStylesheet(path) {
+
+    if (!path) {
+        return;
+    }
+
 
     const url =
         resolveSitePath(path);
@@ -208,9 +121,7 @@ function loadStylesheet(path) {
 
 
     if (existing) {
-
         return;
-
     }
 
 
@@ -235,6 +146,11 @@ function loadStylesheet(path) {
 ================================= */
 
 function loadScript(path) {
+
+    if (!path) {
+        return Promise.resolve();
+    }
+
 
     return new Promise(
         (resolve, reject) => {
@@ -294,30 +210,93 @@ function loadScript(path) {
 
 
 /* =================================
-   LOAD FAQ
+   LOAD COMPONENT
 ================================= */
 
-async function loadFAQ() {
+async function loadComponent({
+    id,
+    html,
+    css = null,
+    js = null
+}) {
+
+    const element =
+        document.getElementById(id);
+
+
+    /*
+       If the page doesn't contain
+       this component, simply skip it.
+    */
+
+    if (!element) {
+        return;
+    }
+
 
     try {
 
-        await loadScript(
-            "data/faq.js"
-        );
+        /* ============================
+           LOAD HTML
+        ============================ */
+
+        const htmlUrl =
+            resolveSitePath(html);
 
 
-        await loadComponent(
-            "faq",
-            "components/faq/faq.html",
-            "components/faq/faq.css",
-            "components/faq/faq.js"
-        );
+        const response =
+            await fetch(htmlUrl);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Failed to load ${htmlUrl}`
+            );
+
+        }
+
+
+        const markup =
+            await response.text();
+
+
+        element.innerHTML = markup;
+
+
+        /* ============================
+           LOAD CSS
+        ============================ */
+
+        if (css) {
+
+            loadStylesheet(css);
+
+        }
+
+
+        /* ============================
+           RESOLVE ROUTES
+        ============================ */
+
+        resolveRoutes(element);
+
+
+        /* ============================
+           LOAD JAVASCRIPT
+        ============================ */
+
+        if (js) {
+
+            await loadScript(js);
+
+        }
 
 
     } catch (error) {
 
         console.error(
-            "FAQ loading error:",
+            `Component loading error: #${id}`,
             error
         );
 
@@ -328,128 +307,277 @@ async function loadFAQ() {
 
 /* =================================
    GLOBAL COMPONENTS
-   ---------------------------------
-   These are safe to load on
-   every page.
 ================================= */
 
-async function initializeGlobalComponents() {
+const GLOBAL_COMPONENTS = [
 
-    await Promise.all([
+    {
+        id: "navbar",
 
-        /* NAVBAR */
+        html: "components/navbar/navbar.html",
 
-        loadComponent(
-            "navbar",
-            "components/navbar/navbar.html",
-            "components/navbar/navbar.css",
-            "components/navbar/navbar.js"
-        ),
+        css: "components/navbar/navbar.css",
 
-
-        /* FOOTER */
-
-        loadComponent(
-            "footer",
-            "components/footer/footer.html",
-            "components/footer/footer.css",
-            "components/footer/footer.js"
-        )
-
-    ]);
+        js: "components/navbar/navbar.js"
+    },
 
 
-    resolveRoutes(document);
+    {
+        id: "footer",
 
-}
+        html: "components/footer/footer.html",
+
+        css: "components/footer/footer.css",
+
+        js: "components/footer/footer.js"
+    }
+
+];
 
 
 /* =================================
    HOMEPAGE COMPONENTS
 ================================= */
 
-async function initializeHomepageComponents() {
+const HOMEPAGE_COMPONENTS = [
 
-    await Promise.all([
+    {
+        id: "hero",
 
-        /* HERO */
+        html: "components/hero/hero.html",
 
-        loadComponent(
-            "hero",
-            "components/hero/hero.html",
-            "components/hero/hero.css",
-            "components/hero/hero.js"
-        ),
+        css: "components/hero/hero.css",
 
-
-        /* PROBLEM */
-
-        loadComponent(
-            "problem",
-            "components/problem/problem.html",
-            "components/problem/problem.css"
-        ),
+        js: "components/hero/hero.js"
+    },
 
 
-        /* LEAKS */
+    {
+        id: "problem",
 
-        loadComponent(
-            "leaks",
-            "components/leaks/leaks.html",
-            "components/leaks/leaks.css"
-        ),
+        html: "components/problem/problem.html",
 
-
-        /* PROCESS */
-
-        loadComponent(
-            "process",
-            "components/process/process.html",
-            "components/process/process.css"
-        ),
+        css: "components/problem/problem.css"
+    },
 
 
-        /* SERVICES */
+    {
+        id: "leaks",
 
-        loadComponent(
-            "services",
-            "components/services/services.html",
-            "components/services/services.css"
-        ),
+        html: "components/leaks/leaks.html",
 
-
-        /* PROOF */
-
-        loadComponent(
-            "proof",
-            "components/proof/proof.html",
-            "components/proof/proof.css"
-        ),
+        css: "components/leaks/leaks.css"
+    },
 
 
-        /* TESTIMONIALS */
+    {
+        id: "process",
 
-        loadComponent(
-            "testimonials",
-            "components/testimonials/testimonials.html",
-            "components/testimonials/testimonials.css"
-        ),
+        html: "components/process/process.html",
 
-
-        /* FAQ */
-
-        loadFAQ(),
+        css: "components/process/process.css"
+    },
 
 
-        /* CTA */
+    {
+        id: "services",
 
-        loadComponent(
-            "cta",
-            "components/cta/cta.html",
-            "components/cta/cta.css"
+        html: "components/services/services.html",
+
+        css: "components/services/services.css"
+    },
+
+
+    {
+        id: "proof",
+
+        html: "components/proof/proof.html",
+
+        css: "components/proof/proof.css"
+    },
+
+
+    {
+        id: "testimonials",
+
+        html: "components/testimonials/testimonials.html",
+
+        css: "components/testimonials/testimonials.css"
+    },
+
+
+    {
+        id: "faq",
+
+        html: "components/faq/faq.html",
+
+        css: "components/faq/faq.css",
+
+        js: "components/faq/faq.js"
+    },
+
+
+    {
+        id: "cta",
+
+        html: "components/cta/cta.html",
+
+        css: "components/cta/cta.css"
+    }
+
+];
+
+
+/* =================================
+   SERVICES PAGE COMPONENTS
+================================= */
+
+const SERVICES_COMPONENTS = [
+
+    {
+        id: "servicesHero",
+
+        html: "components/services-page/hero.html",
+
+        css: "components/services-page/hero.css",
+
+        js: "components/services-page/hero.js"
+    },
+
+
+    {
+        id: "servicesIntro",
+
+        html: "components/services-page/intro.html",
+
+        css: "components/services-page/intro.css"
+    },
+
+
+    {
+        id: "servicesList",
+
+        html: "components/services-page/services.html",
+
+        css: "components/services-page/services.css"
+    },
+
+
+    {
+        id: "serviceProcess",
+
+        html: "components/services-page/process.html",
+
+        css: "components/services-page/process.css"
+    },
+
+
+    {
+        id: "serviceFit",
+
+        html: "components/services-page/fit.html",
+
+        css: "components/services-page/fit.css"
+    },
+
+
+    {
+        id: "servicesCTA",
+
+        html: "components/services-page/cta.html",
+
+        css: "components/services-page/cta.css"
+    }
+
+];
+
+
+/* =================================
+   SERVICE DETAIL COMPONENTS
+================================= */
+
+const SERVICE_DETAIL_COMPONENTS = [
+
+    {
+        id: "serviceHero",
+
+        html: "components/service-detail/hero.html",
+
+        css: "components/service-detail/hero.css",
+
+        js: "components/service-detail/hero.js"
+    },
+
+
+    {
+        id: "serviceContent",
+
+        html: "components/service-detail/content.html",
+
+        css: "components/service-detail/content.css"
+    },
+
+
+    {
+        id: "serviceProcess",
+
+        html: "components/service-detail/process.html",
+
+        css: "components/service-detail/process.css"
+    },
+
+
+    {
+        id: "serviceProof",
+
+        html: "components/service-detail/proof.html",
+
+        css: "components/service-detail/proof.css"
+    },
+
+
+    {
+        id: "serviceCTA",
+
+        html: "components/service-detail/cta.html",
+
+        css: "components/service-detail/cta.css"
+    }
+
+];
+
+
+/* =================================
+   PAGE COMPONENT MAP
+================================= */
+
+const PAGE_COMPONENTS = {
+
+    home: HOMEPAGE_COMPONENTS,
+
+    services: SERVICES_COMPONENTS,
+
+    "service-detail": SERVICE_DETAIL_COMPONENTS
+
+};
+
+
+/* =================================
+   LOAD COMPONENT GROUP
+================================= */
+
+async function loadComponentGroup(components) {
+
+    if (!components || !components.length) {
+        return;
+    }
+
+
+    await Promise.all(
+        components.map(component =>
+            loadComponent(component)
         )
-
-    ]);
+    );
 
 }
 
@@ -461,33 +589,67 @@ async function initializeHomepageComponents() {
 async function initializeComponents() {
 
     /*
-       Global components first.
-       These belong everywhere.
+       Determine the page type.
     */
 
-    await initializeGlobalComponents();
+    const pageType =
+        document.body.dataset.page ||
+        "home";
 
 
-    /*
-       Only load homepage sections
-       when this is actually the homepage.
-    */
-
-    const isHomepage =
-        document.body.dataset.page === "home";
+    console.log(
+        `Initializing page: ${pageType}`
+    );
 
 
-    if (isHomepage) {
+    /* ==============================
+       GLOBAL COMPONENTS
+    ============================== */
 
-        await initializeHomepageComponents();
+    await loadComponentGroup(
+        GLOBAL_COMPONENTS
+    );
+
+
+    /* ==============================
+       PAGE COMPONENTS
+    ============================== */
+
+    const pageComponents =
+        PAGE_COMPONENTS[pageType];
+
+
+    if (!pageComponents) {
+
+        console.warn(
+            `No component configuration found for page: "${pageType}"`
+        );
+
+    } else {
+
+        await loadComponentGroup(
+            pageComponents
+        );
 
     }
+
+
+    /* ==============================
+       FINAL ROUTE RESOLUTION
+    ============================== */
+
+    resolveRoutes(document);
+
+
+    console.log(
+        `Page initialized: ${pageType}`
+    );
 
 }
 
 
 /* =================================
-   START
+   START LOADER
 ================================= */
 
 if (
