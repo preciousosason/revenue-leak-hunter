@@ -2452,46 +2452,97 @@
 
 
 /* =================================
-   MOBILE
+   MOBILE NOTIFICATION
 ================================= */
 
 @media (max-width: 600px) {
 
     .audit-notification {
-        right: 16px;
-        bottom: 16px;
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
 
-        width: calc(100vw - 32px);
+        width: auto;
     }
+
 
     .audit-notification-content {
-        align-items: flex-start;
+        display: grid;
 
-        padding: 16px 38px 16px 16px;
+        grid-template-columns: 34px 1fr;
 
-        gap: 11px;
+        gap: 12px;
+
+        padding: 17px;
+
+        padding-right: 38px;
+
+        border-radius: 12px;
     }
 
-    .audit-notification-icon {
-        flex-basis: 32px;
 
-        width: 32px;
-        height: 32px;
+    /* ICON */
+
+    .audit-notification-icon {
+        width: 34px;
+        height: 34px;
+
+        flex: none;
+
+        grid-column: 1;
+        grid-row: 1;
+
+        margin-top: 1px;
+    }
+
+
+    /* TEXT */
+
+    .audit-notification-text {
+        grid-column: 2;
+        grid-row: 1;
+
+        min-width: 0;
+    }
+
+    .audit-notification-label {
+        font-size: 8px;
+
+        margin-bottom: 5px;
     }
 
     .audit-notification-text p {
         font-size: 12px;
+        line-height: 1.5;
     }
 
-    .audit-notification-action {
-        position: absolute;
 
-        left: 16px;
-        bottom: -40px;
+    /* BUTTON */
+
+    .audit-notification-action {
+        grid-column: 1 / -1;
+        grid-row: 2;
+
+        width: 100%;
+
+        justify-content: center;
+
+        padding: 11px 14px;
+
+        margin-top: 3px;
+
+        font-size: 11px;
+    }
+
+
+    /* CLOSE */
+
+    .audit-notification-close {
+        top: 7px;
+        right: 8px;
     }
 
 }
-
 /* =========================================================
    SERVICE DIVIDER
 ========================================================= */
