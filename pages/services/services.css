@@ -1,20 +1,17 @@
-/* =================================
+/* =========================================================
    SERVICES PAGE
-================================= */
+========================================================= */
 
 
-/* =================================
+/* =========================================================
    HERO
-================================= */
+========================================================= */
 
 .services-hero {
 
     position: relative;
 
-    padding:
-        8rem
-        0
-        7rem;
+    padding: 8rem 0 7rem;
 
     overflow: hidden;
 
@@ -87,6 +84,10 @@
 }
 
 
+/* =========================================================
+   EYEBROW
+========================================================= */
+
 .eyebrow {
 
     display: inline-flex;
@@ -116,9 +117,12 @@
 
     height: 8px;
 
+    flex-shrink: 0;
+
     border-radius: 50%;
 
-    background: var(--color-primary);
+    background:
+        var(--color-primary);
 
     box-shadow:
         0 0 14px
@@ -126,6 +130,10 @@
 
 }
 
+
+/* =========================================================
+   HERO HEADING
+========================================================= */
 
 .services-hero h1 {
 
@@ -149,7 +157,8 @@
 
 .services-hero h1 span {
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
 }
 
@@ -167,10 +176,15 @@
 
     line-height: 1.8;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
+
+/* =========================================================
+   HERO BUTTONS
+========================================================= */
 
 .services-hero-actions {
 
@@ -216,7 +230,8 @@
 
 .btn:hover {
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
 }
 
@@ -225,7 +240,8 @@
 
     color: #fff;
 
-    background: var(--color-primary);
+    background:
+        var(--color-primary);
 
 }
 
@@ -240,7 +256,8 @@
 
 .btn-secondary {
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     border:
         1px solid
@@ -260,9 +277,9 @@
 }
 
 
-/* =================================
+/* =========================================================
    SCANNER VISUAL
-================================= */
+========================================================= */
 
 .services-hero-visual {
 
@@ -295,7 +312,8 @@
         0 30px 80px
         rgba(0,0,0,0.3);
 
-    backdrop-filter: blur(14px);
+    backdrop-filter:
+        blur(14px);
 
 }
 
@@ -317,7 +335,8 @@
 
     letter-spacing: 0.12em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
@@ -388,6 +407,22 @@
     background:
         rgba(255,255,255,0.025);
 
+    transition:
+        border-color var(--transition-normal),
+        background var(--transition-normal),
+        transform var(--transition-normal);
+
+}
+
+
+.funnel-stage:hover {
+
+    transform:
+        translateX(4px);
+
+    border-color:
+        rgba(255,50,50,0.22);
+
 }
 
 
@@ -410,7 +445,8 @@
 
     font-size: 0.7rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
@@ -421,7 +457,8 @@
 
     font-weight: 700;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
@@ -453,7 +490,8 @@
 
 .stage-status.warning {
 
-    color: #f0c36b;
+    color:
+        #f0c36b;
 
     background:
         rgba(240,195,107,0.08);
@@ -463,7 +501,8 @@
 
 .stage-status.danger {
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     background:
         rgba(255,50,50,0.1);
@@ -512,14 +551,15 @@
 
 .hunt-card-footer span:first-child {
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
 }
 
 
-/* =================================
+/* =========================================================
    INTRO
-================================= */
+========================================================= */
 
 .services-intro {
 
@@ -545,9 +585,9 @@
 
 .section-heading.centered {
 
-    margin-left: auto;
-
     margin-right: auto;
+
+    margin-left: auto;
 
     text-align: center;
 
@@ -574,7 +614,8 @@
 
 .section-heading h2 span {
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
 }
 
@@ -587,10 +628,15 @@
 
     line-height: 1.8;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
+
+/* =========================================================
+   JOURNEY STRIP
+========================================================= */
 
 .journey-strip {
 
@@ -629,7 +675,8 @@
 
     font-size: 0.65rem;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
 }
 
@@ -651,7 +698,8 @@
 
     margin-top: 0.35rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
@@ -664,11 +712,13 @@
 }
 
 
-/* =================================
+/* =========================================================
    SERVICES LIST
-================================= */
+========================================================= */
 
 .services-list {
+
+    position: relative;
 
     padding:
         7rem
@@ -680,17 +730,53 @@
 }
 
 
+.services-list::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 50%;
+
+    width: min(900px, 80%);
+
+    height: 1px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,50,50,0.35),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   SERVICE GRID
+========================================================= */
+
 .service-grid {
 
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(3, minmax(0, 1fr));
 
     gap: 1.25rem;
 
 }
 
+
+/* =========================================================
+   SERVICE CARD
+========================================================= */
 
 .service-card {
 
@@ -700,9 +786,11 @@
 
     flex-direction: column;
 
-    min-height: 560px;
+    min-height: 500px;
 
     padding: 1.75rem;
+
+    overflow: hidden;
 
     border:
         1px solid
@@ -712,12 +800,89 @@
         var(--border-radius-lg);
 
     background:
-        var(--color-bg);
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.035),
+            rgba(255,255,255,0.012)
+        );
+
+    color:
+        var(--color-text);
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    isolation: isolate;
 
     transition:
-        transform var(--transition-normal),
-        border-color var(--transition-normal),
-        box-shadow var(--transition-normal);
+        transform 300ms ease,
+        border-color 300ms ease,
+        box-shadow 300ms ease,
+        background 300ms ease;
+
+}
+
+
+.service-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--color-primary),
+            transparent
+        );
+
+    opacity: 0;
+
+    transition:
+        opacity 300ms ease;
+
+}
+
+
+.service-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+
+    right: -120px;
+
+    width: 240px;
+
+    height: 240px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,50,50,0.10),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 300ms ease;
 
 }
 
@@ -725,22 +890,48 @@
 .service-card:hover {
 
     transform:
-        translateY(-5px);
+        translateY(-7px);
 
     border-color:
-        rgba(255,50,50,0.35);
+        rgba(255,50,50,0.38);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.015)
+        );
 
     box-shadow:
-        0 25px 60px
-        rgba(0,0,0,0.2);
+        0 25px 65px
+        rgba(0,0,0,0.25);
 
 }
 
 
+.service-card:hover::before,
+.service-card:hover::after {
+
+    opacity: 1;
+
+}
+
+
+/* =========================================================
+   FEATURED SERVICE
+========================================================= */
+
 .featured-service {
 
     border-color:
-        rgba(255,50,50,0.3);
+        rgba(255,50,50,0.28);
+
+}
+
+
+.featured-service::before {
+
+    opacity: 0.45;
 
 }
 
@@ -755,17 +946,22 @@
 
     padding:
         0.35rem
-        0.55rem;
+        0.6rem;
 
-    border-radius: 5px;
+    border:
+        1px solid
+        rgba(255,50,50,0.2);
+
+    border-radius:
+        5px;
 
     background:
-        rgba(255,50,50,0.1);
+        rgba(255,50,50,0.08);
 
     color:
         var(--color-primary);
 
-    font-size: 0.58rem;
+    font-size: 0.56rem;
 
     font-weight: 800;
 
@@ -773,6 +969,10 @@
 
 }
 
+
+/* =========================================================
+   SERVICE CARD TOP
+========================================================= */
 
 .service-card-top {
 
@@ -782,20 +982,21 @@
 
     justify-content: space-between;
 
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.2rem;
 
 }
 
 
 .service-number {
 
-    font-size: 0.7rem;
+    font-size: 0.68rem;
 
     font-weight: 800;
 
     letter-spacing: 0.1em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
 }
 
@@ -808,31 +1009,95 @@
 
     height: 42px;
 
+    flex-shrink: 0;
+
     place-items: center;
 
     border:
         1px solid
         rgba(255,255,255,0.08);
 
-    border-radius: 10px;
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,255,255,0.02);
 
     color:
         var(--color-primary);
 
     font-size: 1rem;
 
+    transition:
+        transform 300ms ease,
+        border-color 300ms ease,
+        background 300ms ease;
+
 }
 
 
+.service-card:hover .service-icon {
+
+    transform:
+        rotate(-4deg);
+
+    border-color:
+        rgba(255,50,50,0.3);
+
+    background:
+        rgba(255,50,50,0.06);
+
+}
+
+
+/* =========================================================
+   SERVICE CATEGORY
+========================================================= */
+
+.service-category {
+
+    margin-bottom:
+        0.7rem;
+
+    font-size:
+        0.6rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.16em;
+
+    text-transform:
+        uppercase;
+
+    color:
+        var(--color-primary);
+
+}
+
+
+/* =========================================================
+   SERVICE TITLE
+========================================================= */
+
 .service-card h3 {
+
+    max-width: 340px;
 
     margin: 0;
 
-    font-size: 1.45rem;
+    font-size:
+        clamp(
+            1.35rem,
+            2vw,
+            1.55rem
+        );
 
     line-height: 1.15;
 
-    letter-spacing: -0.025em;
+    letter-spacing:
+        -0.025em;
 
 }
 
@@ -847,36 +1112,210 @@
     color:
         var(--color-text-muted);
 
-    line-height: 1.7;
+    line-height:
+        1.7;
 
-    font-size: 0.92rem;
+    font-size:
+        0.9rem;
 
 }
+/* =========================================================
+   LEAK AUDIT
+========================================================= */
 
+.leak-audit-section {
 
-.service-divider {
+    position:
+        relative;
 
-    width: 100%;
+    padding:
+        7rem
+        0;
 
-    height: 1px;
-
-    margin-bottom: 1.4rem;
+    overflow:
+        hidden;
 
     background:
-        var(--color-border);
+        rgba(255,255,255,0.015);
 
 }
 
 
-.service-card h4 {
+/* =========================================================
+   TOP ACCENT LINE
+========================================================= */
 
-    margin: 0 0 0.9rem;
+.leak-audit-section::before {
 
-    font-size: 0.72rem;
+    content: "";
 
-    text-transform: uppercase;
+    position:
+        absolute;
 
-    letter-spacing: 0.1em;
+    top:
+        0;
+
+    left:
+        50%;
+
+    width:
+        min(900px, 80%);
+
+    height:
+        1px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,50,50,0.35),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
+
+.leak-audit-section::after {
+
+    content: "";
+
+    position:
+        absolute;
+
+    top:
+        10%;
+
+    left:
+        50%;
+
+    width:
+        700px;
+
+    height:
+        500px;
+
+    transform:
+        translateX(-50%);
+
+    pointer-events:
+        none;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,50,50,0.045),
+            transparent 65%
+        );
+
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.leak-audit-container {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    width:
+        min(
+            100% - (var(--container-padding) * 2),
+            var(--container-width)
+        );
+
+    margin-inline:
+        auto;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.leak-audit-header {
+
+    max-width:
+        700px;
+
+    margin-bottom:
+        3rem;
+
+}
+
+
+.leak-audit-header .section-eyebrow {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        1rem;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.14em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.leak-audit-header h2 {
+
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            2.3rem,
+            4vw,
+            4rem
+        );
+
+    line-height:
+        1.05;
+
+    letter-spacing:
+        -0.04em;
+
+}
+
+
+.leak-audit-header p {
+
+    max-width:
+        650px;
+
+    margin-top:
+        1.25rem;
+
+    font-size:
+        1rem;
+
+    line-height:
+        1.8;
 
     color:
         var(--color-text-muted);
@@ -884,13 +1323,1230 @@
 }
 
 
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.leak-audit-content {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(360px, 0.85fr);
+
+    gap:
+        4rem;
+
+    align-items:
+        stretch;
+
+}
+
+
+/* =========================================================
+   AUDIT VISUAL
+========================================================= */
+
+.leak-audit-visual {
+
+    position:
+        relative;
+
+    min-height:
+        380px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    padding:
+        2rem;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--color-border);
+
+    border-radius:
+        var(--border-radius-lg);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.035),
+            rgba(255,255,255,0.012)
+        );
+
+}
+
+
+/* =========================================================
+   VISUAL GRID
+========================================================= */
+
+.leak-audit-visual::before {
+
+    content: "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        60px 60px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   VISUAL GLOW
+========================================================= */
+
+.leak-audit-visual::after {
+
+    content: "";
+
+    position:
+        absolute;
+
+    top:
+        -160px;
+
+    right:
+        -120px;
+
+    width:
+        320px;
+
+    height:
+        320px;
+
+    border-radius:
+        50%;
+
+    pointer-events:
+        none;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,50,50,0.09),
+            transparent 70%
+        );
+
+}
+
+
+/* =========================================================
+   VISUAL LABEL
+========================================================= */
+
+.audit-visual-label {
+
+    position:
+        absolute;
+
+    top:
+        1.5rem;
+
+    left:
+        1.75rem;
+
+    z-index:
+        2;
+
+    font-size:
+        0.62rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.14em;
+
+    color:
+        var(--color-text-muted);
+
+}
+
+
+/* =========================================================
+   JOURNEY
+========================================================= */
+
+.audit-journey {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    width:
+        100%;
+
+}
+
+
+/* =========================================================
+   AUDIT STAGE
+========================================================= */
+
+.audit-stage {
+
+    position:
+        relative;
+
+    width:
+        82px;
+
+    height:
+        82px;
+
+    flex-shrink:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(8,8,8,0.85);
+
+    transition:
+        transform 300ms ease,
+        border-color 300ms ease;
+
+}
+
+
+.audit-stage:hover {
+
+    transform:
+        translateY(-4px);
+
+    border-color:
+        rgba(255,255,255,0.22);
+
+}
+
+
+/* =========================================================
+   STAGE NUMBER
+========================================================= */
+
+.audit-stage-number {
+
+    margin-bottom:
+        0.25rem;
+
+    font-size:
+        0.62rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.08em;
+
+    color:
+        var(--color-text-muted);
+
+}
+
+
+/* =========================================================
+   STAGE NAME
+========================================================= */
+
+.audit-stage-name {
+
+    font-size:
+        0.58rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.08em;
+
+    color:
+        var(--color-text);
+
+}
+
+
+/* =========================================================
+   CONNECTOR
+========================================================= */
+
+.audit-connector {
+
+    position:
+        relative;
+
+    flex:
+        1;
+
+    height:
+        1px;
+
+    margin:
+        0 0.5rem;
+
+    background:
+        rgba(255,255,255,0.10);
+
+}
+
+
+/* =========================================================
+   LEAK CONNECTOR
+========================================================= */
+
+.audit-connector.audit-leak {
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,50,50,0.45) 0,
+            rgba(255,50,50,0.45) 5px,
+            transparent 5px,
+            transparent 10px
+        );
+
+}
+
+
+/* =========================================================
+   LEAK STAGE
+========================================================= */
+
+.audit-stage-leak {
+
+    border:
+        1px dashed
+        rgba(255,50,50,0.55);
+
+    box-shadow:
+        inset 0 0 20px
+        rgba(255,50,50,0.035);
+
+    animation:
+        auditLeakPulse 3s ease-in-out infinite;
+
+}
+
+
+.audit-stage-leak .audit-stage-number,
+.audit-stage-leak .audit-stage-name {
+
+    color:
+        var(--color-primary);
+
+}
+
+
+/* =========================================================
+   LEAK LABEL
+========================================================= */
+
+.audit-leak-label {
+
+    position:
+        absolute;
+
+    top:
+        -1.6rem;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    font-size:
+        0.55rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.14em;
+
+    color:
+        var(--color-primary);
+
+}
+
+
+/* =========================================================
+   LEAK ANIMATION
+========================================================= */
+
+@keyframes auditLeakPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+        box-shadow:
+            inset 0 0 20px
+            rgba(255,50,50,0.035);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.045);
+
+        box-shadow:
+            inset 0 0 25px
+            rgba(255,50,50,0.08),
+            0 0 30px
+            rgba(255,50,50,0.06);
+
+    }
+
+}
+
+
+/* =========================================================
+   VISUAL FOOTER
+========================================================= */
+
+.audit-visual-footer {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    margin-top:
+        3rem;
+
+    padding-top:
+        1rem;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.06);
+
+    font-size:
+        0.55rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.12em;
+
+    color:
+        var(--color-text-muted);
+
+}
+
+
+.audit-loss {
+
+    color:
+        var(--color-primary);
+
+}
+
+
+/* =========================================================
+   AUDIT INFORMATION
+========================================================= */
+
+.leak-audit-info {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+}
+
+
+.leak-audit-info-label {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        1rem;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        0.65rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.14em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.leak-audit-info h3 {
+
+    max-width:
+        500px;
+
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            1.8rem,
+            3vw,
+            2.8rem
+        );
+
+    line-height:
+        1.08;
+
+    letter-spacing:
+        -0.035em;
+
+}
+
+
+.leak-audit-info > p {
+
+    max-width:
+        500px;
+
+    margin:
+        1.25rem
+        0
+        1.75rem;
+
+    font-size:
+        0.92rem;
+
+    line-height:
+        1.8;
+
+    color:
+        var(--color-text-muted);
+
+}
+
+
+/* =========================================================
+   AUDIT POINTS
+========================================================= */
+
+.leak-audit-points {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        0;
+
+    margin:
+        0 0 1.75rem;
+
+    padding:
+        0;
+
+    list-style:
+        none;
+
+    border-top:
+        1px solid
+        var(--color-border);
+
+}
+
+
+.leak-audit-points li {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        0.9rem;
+
+    padding:
+        0.85rem 0;
+
+    border-bottom:
+        1px solid
+        var(--color-border);
+
+    font-size:
+        0.78rem;
+
+    color:
+        var(--color-text);
+
+}
+
+
+.leak-audit-points li span {
+
+    width:
+        26px;
+
+    flex-shrink:
+        0;
+
+    font-size:
+        0.6rem;
+
+    font-weight:
+        800;
+
+    color:
+        var(--color-primary);
+
+}
+
+
+/* =========================================================
+   AUDIT BUTTON
+========================================================= */
+
+.leak-audit-button {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        0.7rem;
+
+    width:
+        fit-content;
+
+    min-height:
+        48px;
+
+    padding:
+        0.75rem
+        1.25rem;
+
+    border:
+        1px solid
+        var(--color-primary);
+
+    border-radius:
+        var(--border-radius-md);
+
+    background:
+        var(--color-primary);
+
+    color:
+        #ffffff;
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    transition:
+        transform 300ms ease,
+        background 300ms ease,
+        border-color 300ms ease;
+
+}
+
+
+.leak-audit-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    background:
+        var(--color-primary-hover);
+
+    border-color:
+        var(--color-primary-hover);
+
+}
+
+
+.leak-audit-button span {
+
+    transition:
+        transform 250ms ease;
+
+}
+
+
+.leak-audit-button:hover span {
+
+    transform:
+        translateX(5px);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .leak-audit-content {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            3rem;
+
+    }
+
+
+    .leak-audit-info {
+
+        max-width:
+            700px;
+
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .leak-audit-section {
+
+        padding:
+            5rem
+            0;
+
+    }
+
+
+    .leak-audit-header {
+
+        margin-bottom:
+            2.5rem;
+
+    }
+
+
+    .leak-audit-visual {
+
+        min-height:
+            340px;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .leak-audit-section {
+
+        padding:
+            5rem
+            0;
+
+    }
+
+
+    .leak-audit-container {
+
+        width:
+            calc(
+                100% -
+                (var(--container-padding) * 2)
+            );
+
+    }
+
+
+    .leak-audit-header h2 {
+
+        font-size:
+            2.3rem;
+
+    }
+
+
+    .leak-audit-header p {
+
+        font-size:
+            0.92rem;
+
+    }
+
+
+    .leak-audit-visual {
+
+        min-height:
+            300px;
+
+        padding:
+            1.25rem;
+
+        border-radius:
+            var(--border-radius-md);
+
+    }
+
+
+    .audit-visual-label {
+
+        top:
+            1.25rem;
+
+        left:
+            1.25rem;
+
+    }
+
+
+    .audit-journey {
+
+        transform:
+            scale(0.72);
+
+        transform-origin:
+            center;
+
+    }
+
+
+    .audit-visual-footer {
+
+        margin-top:
+            1.5rem;
+
+        font-size:
+            0.48rem;
+
+    }
+
+
+    .leak-audit-info h3 {
+
+        font-size:
+            1.8rem;
+
+    }
+
+
+    .leak-audit-button {
+
+        width:
+            100%;
+
+    }
+
+}
+
+/* =================================
+   LEAK AUDIT NOTIFICATION
+================================= */
+
+.audit-notification {
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+
+    width: min(430px, calc(100vw - 32px));
+
+    z-index: 9999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(25px);
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s cubic-bezier(.22, 1, .36, 1),
+        visibility 0.35s ease;
+}
+
+
+/* =================================
+   VISIBLE STATE
+================================= */
+
+.audit-notification.is-visible {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+
+    pointer-events: auto;
+}
+
+
+/* =================================
+   NOTIFICATION BOX
+================================= */
+
+.audit-notification-content {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 17px 45px 17px 17px;
+
+    background: var(--color-surface);
+
+    border: 1px solid var(--color-border);
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.22);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+
+/* =================================
+   ICON
+================================= */
+
+.audit-notification-icon {
+    flex: 0 0 36px;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--color-border);
+
+    border-radius: 50%;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+
+/* =================================
+   TEXT
+================================= */
+
+.audit-notification-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.audit-notification-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+
+    color: var(--color-muted);
+}
+
+.audit-notification-text p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.45;
+
+    color: var(--color-text);
+}
+
+
+/* =================================
+   ACTION
+================================= */
+
+.audit-notification-action {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 12px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: var(--color-text);
+
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.audit-notification-action span {
+    transition: transform 0.25s ease;
+}
+
+.audit-notification-action:hover {
+    background: var(--color-text);
+    border-color: var(--color-text);
+
+    color: var(--color-bg);
+
+    transform: translateY(-1px);
+}
+
+.audit-notification-action:hover span {
+    transform: translateX(3px);
+}
+
+
+/* =================================
+   CLOSE
+================================= */
+
+.audit-notification-close {
+    position: absolute;
+
+    top: 7px;
+    right: 8px;
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-muted);
+
+    font-size: 17px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.audit-notification-close:hover {
+    color: var(--color-text);
+
+    transform: rotate(90deg);
+}
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+    .audit-notification {
+        right: 16px;
+        bottom: 16px;
+
+        width: calc(100vw - 32px);
+    }
+
+    .audit-notification-content {
+        align-items: flex-start;
+
+        padding: 16px 38px 16px 16px;
+
+        gap: 11px;
+    }
+
+    .audit-notification-icon {
+        flex-basis: 32px;
+
+        width: 32px;
+        height: 32px;
+    }
+
+    .audit-notification-text p {
+        font-size: 12px;
+    }
+
+    .audit-notification-action {
+        position: absolute;
+
+        left: 16px;
+        bottom: -40px;
+    }
+
+}
+
+/* =========================================================
+   SERVICE DIVIDER
+========================================================= */
+
+.service-divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    margin-bottom:
+        1.4rem;
+
+    background:
+        var(--color-border);
+
+}
+
+
+/* =========================================================
+   SERVICE LIST LABEL
+========================================================= */
+
+.service-card h4 {
+
+    margin:
+        0 0 0.9rem;
+
+    font-size:
+        0.68rem;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.1em;
+
+    color:
+        var(--color-text-muted);
+
+}
+
+
+/* =========================================================
+   SERVICE BULLETS
+========================================================= */
+
 .service-card ul {
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 0.65rem;
+    gap:
+        0.65rem;
 
     margin: 0;
 
@@ -905,9 +2561,14 @@
 
     position: relative;
 
-    padding-left: 1.2rem;
+    padding-left:
+        1.2rem;
 
-    font-size: 0.82rem;
+    font-size:
+        0.8rem;
+
+    line-height:
+        1.45;
 
     color:
         var(--color-text-muted);
@@ -921,7 +2582,8 @@
 
     position: absolute;
 
-    top: 0.48em;
+    top:
+        0.48em;
 
     left: 0;
 
@@ -929,13 +2591,22 @@
 
     height: 5px;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
         var(--color-primary);
 
+    box-shadow:
+        0 0 8px
+        rgba(255,50,50,0.45);
+
 }
 
+
+/* =========================================================
+   SERVICE LINK
+========================================================= */
 
 .service-link {
 
@@ -943,46 +2614,70 @@
 
     align-items: center;
 
-    gap: 0.6rem;
+    gap:
+        0.6rem;
 
-    margin-top: auto;
+    margin-top:
+        auto;
 
-    padding-top: 1.75rem;
+    padding-top:
+        1.75rem;
 
     color:
         var(--color-text);
 
-    font-size: 0.82rem;
+    font-size:
+        0.8rem;
 
-    font-weight: 700;
+    font-weight:
+        700;
 
-    text-decoration: none;
+    text-decoration:
+        none;
 
 }
 
 
 .service-link span {
 
+    display: inline-block;
+
     color:
         var(--color-primary);
 
     transition:
-        transform var(--transition-normal);
+        transform 250ms ease;
 
 }
 
 
-.service-link:hover span {
+.service-card:hover .service-link span {
 
     transform:
-        translateX(4px);
+        translateX(5px);
 
 }
 
 
-/* =================================
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
+
+.service-card:focus-visible {
+
+    outline:
+        2px solid
+        var(--color-primary);
+
+    outline-offset:
+        4px;
+
+}
+
+
+/* =========================================================
    METHOD
-================================= */
+========================================================= */
 
 .service-process {
 
@@ -1007,16 +2702,19 @@
     border-radius:
         var(--border-radius-lg);
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
 }
 
 
 .method-card {
 
-    min-height: 310px;
+    min-height:
+        310px;
 
-    padding: 1.75rem;
+    padding:
+        1.75rem;
 
     border-right:
         1px solid
@@ -1027,7 +2725,8 @@
 
 .method-card:last-child {
 
-    border-right: none;
+    border-right:
+        none;
 
 }
 
@@ -1036,27 +2735,34 @@
 
     display: block;
 
-    margin-bottom: 2rem;
+    margin-bottom:
+        2rem;
 
     color:
         var(--color-primary);
 
-    font-size: 0.7rem;
+    font-size:
+        0.7rem;
 
-    font-weight: 800;
+    font-weight:
+        800;
 
-    letter-spacing: 0.1em;
+    letter-spacing:
+        0.1em;
 
 }
 
 
 .method-line {
 
-    width: 32px;
+    width:
+        32px;
 
-    height: 2px;
+    height:
+        2px;
 
-    margin-bottom: 1.5rem;
+    margin-bottom:
+        1.5rem;
 
     background:
         var(--color-primary);
@@ -1066,20 +2772,25 @@
 
 .method-card h3 {
 
-    margin: 0;
+    margin:
+        0;
 
-    font-size: 1.3rem;
+    font-size:
+        1.3rem;
 
 }
 
 
 .method-card p {
 
-    margin-top: 0.9rem;
+    margin-top:
+        0.9rem;
 
-    font-size: 0.86rem;
+    font-size:
+        0.86rem;
 
-    line-height: 1.75;
+    line-height:
+        1.75;
 
     color:
         var(--color-text-muted);
@@ -1087,9 +2798,9 @@
 }
 
 
-/* =================================
+/* =========================================================
    FIT
-================================= */
+========================================================= */
 
 .service-fit {
 
@@ -1111,18 +2822,22 @@
     grid-template-columns:
         1fr 1fr;
 
-    gap: 6rem;
+    gap:
+        6rem;
 
-    align-items: center;
+    align-items:
+        center;
 
 }
 
 
 .fit-content h2 {
 
-    max-width: 620px;
+    max-width:
+        620px;
 
-    margin: 0;
+    margin:
+        0;
 
     font-size:
         clamp(
@@ -1131,9 +2846,11 @@
             3.8rem
         );
 
-    line-height: 1.05;
+    line-height:
+        1.05;
 
-    letter-spacing: -0.04em;
+    letter-spacing:
+        -0.04em;
 
 }
 
@@ -1148,14 +2865,17 @@
 
 .fit-content p {
 
-    max-width: 620px;
+    max-width:
+        620px;
 
-    margin-top: 1.25rem;
+    margin-top:
+        1.25rem;
 
     color:
         var(--color-text-muted);
 
-    line-height: 1.8;
+    line-height:
+        1.8;
 
 }
 
@@ -1164,9 +2884,11 @@
 
     display: flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    gap: 0.8rem;
+    gap:
+        0.8rem;
 
 }
 
@@ -1175,20 +2897,39 @@
 
     display: grid;
 
-    grid-template-columns: 38px 1fr;
+    grid-template-columns:
+        38px 1fr;
 
-    gap: 1rem;
+    gap:
+        1rem;
 
-    padding: 1.25rem;
+    padding:
+        1.25rem;
 
     border:
         1px solid
         var(--color-border);
 
-    border-radius: 12px;
+    border-radius:
+        12px;
 
     background:
         rgba(255,255,255,0.015);
+
+    transition:
+        transform 250ms ease,
+        border-color 250ms ease;
+
+}
+
+
+.fit-item:hover {
+
+    transform:
+        translateX(4px);
+
+    border-color:
+        rgba(255,50,50,0.25);
 
 }
 
@@ -1197,13 +2938,17 @@
 
     display: grid;
 
-    width: 30px;
+    width:
+        30px;
 
-    height: 30px;
+    height:
+        30px;
 
-    place-items: center;
+    place-items:
+        center;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
         rgba(255,50,50,0.08);
@@ -1211,29 +2956,36 @@
     color:
         var(--color-primary);
 
-    font-size: 0.75rem;
+    font-size:
+        0.75rem;
 
-    font-weight: 800;
+    font-weight:
+        800;
 
 }
 
 
 .fit-item strong {
 
-    display: block;
+    display:
+        block;
 
-    font-size: 0.88rem;
+    font-size:
+        0.88rem;
 
 }
 
 
 .fit-item p {
 
-    margin: 0.35rem 0 0;
+    margin:
+        0.35rem 0 0;
 
-    font-size: 0.78rem;
+    font-size:
+        0.78rem;
 
-    line-height: 1.6;
+    line-height:
+        1.6;
 
     color:
         var(--color-text-muted);
@@ -1241,9 +2993,9 @@
 }
 
 
-/* =================================
+/* =========================================================
    FINAL CTA
-================================= */
+========================================================= */
 
 .services-cta {
 
@@ -1257,19 +3009,26 @@
 
 .services-cta-inner {
 
-    position: relative;
+    position:
+        relative;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    min-height: 420px;
+    min-height:
+        420px;
 
-    padding: 4rem;
+    padding:
+        4rem;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     border:
         1px solid
@@ -1293,11 +3052,14 @@
 
     content: "";
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
     background-image:
         linear-gradient(
@@ -1310,27 +3072,33 @@
             transparent 1px
         );
 
-    background-size: 60px 60px;
+    background-size:
+        60px 60px;
 
 }
 
 
 .services-cta-content {
 
-    position: relative;
+    position:
+        relative;
 
-    z-index: 2;
+    z-index:
+        2;
 
-    text-align: center;
+    text-align:
+        center;
 
 }
 
 
 .services-cta-content h2 {
 
-    max-width: 750px;
+    max-width:
+        750px;
 
-    margin: 0 auto;
+    margin:
+        0 auto;
 
     font-size:
         clamp(
@@ -1339,9 +3107,11 @@
             4.5rem
         );
 
-    line-height: 1;
+    line-height:
+        1;
 
-    letter-spacing: -0.045em;
+    letter-spacing:
+        -0.045em;
 
 }
 
@@ -1361,35 +3131,49 @@
 
 .services-cta-content .btn {
 
-    margin: 0 auto;
+    margin:
+        0 auto;
 
 }
 
 
+/* =========================================================
+   CTA SCANNER
+========================================================= */
+
 .cta-scanner {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
-    opacity: 0.5;
+    opacity:
+        0.5;
 
 }
 
 
 .cta-scanner span {
 
-    position: absolute;
+    position:
+        absolute;
 
-    display: block;
+    display:
+        block;
 
-    width: 8px;
+    width:
+        8px;
 
-    height: 8px;
+    height:
+        8px;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
         var(--color-primary);
@@ -1403,34 +3187,40 @@
 
 .cta-scanner span:nth-child(1) {
 
-    top: 25%;
+    top:
+        25%;
 
-    left: 12%;
+    left:
+        12%;
 
 }
 
 
 .cta-scanner span:nth-child(2) {
 
-    top: 65%;
+    top:
+        65%;
 
-    right: 14%;
+    right:
+        14%;
 
 }
 
 
 .cta-scanner span:nth-child(3) {
 
-    bottom: 15%;
+    bottom:
+        15%;
 
-    left: 35%;
+    left:
+        35%;
 
 }
 
 
-/* =================================
+/* =========================================================
    RESPONSIVE
-================================= */
+========================================================= */
 
 @media (max-width: 1100px) {
 
@@ -1444,14 +3234,16 @@
 
     .services-hero-content {
 
-        max-width: 850px;
+        max-width:
+            850px;
 
     }
 
 
     .services-hero-visual {
 
-        justify-content: flex-start;
+        justify-content:
+            flex-start;
 
     }
 
@@ -1459,7 +3251,7 @@
     .service-grid {
 
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(2, minmax(0, 1fr));
 
     }
 
@@ -1474,7 +3266,8 @@
 
     .method-card:nth-child(2) {
 
-        border-right: none;
+        border-right:
+            none;
 
     }
 
@@ -1517,15 +3310,15 @@
     .journey-strip {
 
         grid-template-columns:
-            1fr
-            1fr;
+            1fr 1fr;
 
     }
 
 
     .journey-arrow {
 
-        display: none;
+        display:
+            none;
 
     }
 
@@ -1535,7 +3328,16 @@
         grid-template-columns:
             1fr;
 
-        gap: 3rem;
+        gap:
+            3rem;
+
+    }
+
+
+    .service-card {
+
+        min-height:
+            470px;
 
     }
 
@@ -1558,30 +3360,35 @@
 
     .services-hero-description {
 
-        font-size: 0.95rem;
+        font-size:
+            0.95rem;
 
     }
 
 
     .services-hero-actions {
 
-        flex-direction: column;
+        flex-direction:
+            column;
 
-        align-items: stretch;
+        align-items:
+            stretch;
 
     }
 
 
     .btn {
 
-        width: 100%;
+        width:
+            100%;
 
     }
 
 
     .hunt-card {
 
-        padding: 1rem;
+        padding:
+            1rem;
 
     }
 
@@ -1593,7 +3400,8 @@
             1fr
             26px;
 
-        gap: 0.7rem;
+        gap:
+            0.7rem;
 
         padding:
             0.7rem;
@@ -1611,7 +3419,35 @@
 
     .service-card {
 
-        min-height: auto;
+        min-height:
+            auto;
+
+        padding:
+            1.4rem;
+
+    }
+
+
+    .service-card-top {
+
+        margin-bottom:
+            1.75rem;
+
+    }
+
+
+    .service-card h3 {
+
+        font-size:
+            1.35rem;
+
+    }
+
+
+    .service-card > p {
+
+        font-size:
+            0.88rem;
 
     }
 
@@ -1626,9 +3462,11 @@
 
     .method-card {
 
-        min-height: auto;
+        min-height:
+            auto;
 
-        border-right: none;
+        border-right:
+            none;
 
         border-bottom:
             1px solid
@@ -1639,7 +3477,8 @@
 
     .method-card:last-child {
 
-        border-bottom: none;
+        border-bottom:
+            none;
 
     }
 
@@ -1654,9 +3493,12 @@
 
     .services-cta-inner {
 
-        min-height: 360px;
+        min-height:
+            360px;
 
-        padding: 2rem 1.25rem;
+        padding:
+            2rem
+            1.25rem;
 
     }
 

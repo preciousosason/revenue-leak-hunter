@@ -162,7 +162,7 @@ async function loadComponent(
 
 
         /* ============================
-           RESOLVE COMPONENT ROUTES
+           RESOLVE ROUTES
         ============================ */
 
         resolveRoutes(element);
@@ -294,7 +294,7 @@ function loadScript(path) {
 
 
 /* =================================
-   LOAD FAQ DATA + COMPONENT
+   LOAD FAQ
 ================================= */
 
 async function loadFAQ() {
@@ -327,10 +327,13 @@ async function loadFAQ() {
 
 
 /* =================================
-   INITIALIZE COMPONENTS
+   GLOBAL COMPONENTS
+   ---------------------------------
+   These are safe to load on
+   every page.
 ================================= */
 
-async function initializeComponents() {
+async function initializeGlobalComponents() {
 
     await Promise.all([
 
@@ -343,6 +346,31 @@ async function initializeComponents() {
             "components/navbar/navbar.js"
         ),
 
+
+        /* FOOTER */
+
+        loadComponent(
+            "footer",
+            "components/footer/footer.html",
+            "components/footer/footer.css",
+            "components/footer/footer.js"
+        )
+
+    ]);
+
+
+    resolveRoutes(document);
+
+}
+
+
+/* =================================
+   HOMEPAGE COMPONENTS
+================================= */
+
+async function initializeHomepageComponents() {
+
+    await Promise.all([
 
         /* HERO */
 
@@ -419,26 +447,41 @@ async function initializeComponents() {
             "cta",
             "components/cta/cta.html",
             "components/cta/cta.css"
-        ),
-
-
-        /* FOOTER */
-
-        loadComponent(
-            "footer",
-            "components/footer/footer.html",
-            "components/footer/footer.css",
-            "components/footer/footer.js"
         )
 
     ]);
 
+}
 
-    /* =================================
-       RESOLVE ALL ROUTES
-    ================================= */
 
-    resolveRoutes(document);
+/* =================================
+   INITIALIZE
+================================= */
+
+async function initializeComponents() {
+
+    /*
+       Global components first.
+       These belong everywhere.
+    */
+
+    await initializeGlobalComponents();
+
+
+    /*
+       Only load homepage sections
+       when this is actually the homepage.
+    */
+
+    const isHomepage =
+        document.body.dataset.page === "home";
+
+
+    if (isHomepage) {
+
+        await initializeHomepageComponents();
+
+    }
 
 }
 
