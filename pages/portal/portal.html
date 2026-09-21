@@ -10,7 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Private Portal | Revenue Leak Hunter</title>
+    <title>
+        Private Portal | Revenue Leak Hunter
+    </title>
 
     <meta
         name="robots"
@@ -93,6 +95,8 @@
             ></div>
 
 
+            <!-- INVESTIGATION -->
+
             <section class="portal-card">
 
                 <div class="portal-card-header">
@@ -110,7 +114,10 @@
                     </div>
 
 
-                    <span class="portal-status">
+                    <span
+                        id="investigation-status"
+                        class="portal-status"
+                    >
                         OPEN
                     </span>
 
@@ -120,57 +127,134 @@
                 <div class="portal-client-info">
 
                     <div>
-                        <span>Name</span>
-                        <strong id="client-info-name">
+
+                        <span>
+                            Name
+                        </span>
+
+                        <strong
+                            id="client-info-name"
+                        >
                             —
                         </strong>
+
                     </div>
 
 
                     <div>
-                        <span>Email</span>
-                        <strong id="client-info-email">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong
+                            id="client-info-email"
+                        >
                             —
                         </strong>
+
                     </div>
 
 
                     <div>
-                        <span>Business</span>
-                        <strong id="client-info-business">
+
+                        <span>
+                            Business
+                        </span>
+
+                        <strong
+                            id="client-info-business"
+                        >
                             —
                         </strong>
+
                     </div>
 
 
                     <div>
-                        <span>Website</span>
-                        <strong id="client-info-website">
+
+                        <span>
+                            Website
+                        </span>
+
+                        <strong
+                            id="client-info-website"
+                        >
                             —
                         </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONVERSATION -->
+
+            <section class="conversation-section">
+
+                <div class="conversation-heading">
+
+                    <div>
+
+                        <span class="portal-label">
+                            PRIVATE CONVERSATION
+                        </span>
+
+                        <h2>
+                            Your Leak Hunt
+                        </h2>
+
                     </div>
 
                 </div>
 
 
-                <div class="portal-placeholder">
+                <div
+                    id="messages-container"
+                    class="messages-container"
+                >
 
-                    <div class="portal-placeholder-icon">
-                        ◇
+                    <div class="messages-loading">
+                        Loading conversation...
                     </div>
 
-                    <h3>
-                        Your investigation workspace
-                    </h3>
-
-                    <p>
-                        Your messages, findings,
-                        recommendations, and next steps
-                        will appear here as the Leak Hunt
-                        progresses.
-                    </p>
-
                 </div>
+
+
+                <form
+                    id="message-form"
+                    class="message-form"
+                >
+
+                    <textarea
+                        id="message-input"
+                        name="message"
+                        rows="4"
+                        maxlength="5000"
+                        placeholder="Write a message..."
+                        required
+                    ></textarea>
+
+
+                    <div class="message-form-footer">
+
+                        <span>
+                            Private conversation
+                        </span>
+
+
+                        <button
+                            type="submit"
+                            id="send-message"
+                        >
+                            Send Message →
+                        </button>
+
+                    </div>
+
+                </form>
 
             </section>
 

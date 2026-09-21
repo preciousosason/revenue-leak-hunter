@@ -937,7 +937,406 @@ async function handlePortalLogout(
     });
 
 }
+/* =========================================
+   AUTHENTICATE SESSION
+========================================= */
 
+async function authenticateSession(request, env) {
+
+    const authorization =
+        request.headers.get("Authorization");
+
+
+    if (
+        !authorization ||
+        !authorization.startsWith("Bearer ")
+    ) {
+        return null;
+    }
+
+
+    const sessionId =
+        authorization
+            .substring(7)
+            .trim();
+
+
+    if (!sessionId) {
+        return null;
+    }
+
+
+    const session =
+        await env.DB
+            .prepare(
+                `SELECT
+                    sessions.id,
+                    sessions.client_id,
+                    sessions.expires_at
+                 FROM sessions
+                 WHERE sessions.id = ?`
+            )
+            .bind(sessionId)
+            .first();
+
+
+    if (!session) {
+        return null;
+    }
+
+
+    if (
+        new Date(session.expires_at)
+            .getTime() <= Date.now()
+    ) {
+
+        await env.DB
+            .prepare(
+                `DELETE FROM sessions
+                 WHERE id = ?`
+            )
+            .bind(sessionId)
+            .run();
+
+        return null;
+
+    }
+
+
+    return session;
+
+}
+
+
+/* =========================================
+   GET PORTAL MESSAGES
+========================================= */
+
+async function handlePortalMessages(
+    request,
+    env
+) {
+
+    try {
+
+        const session =
+            await authenticateSession(
+                request,
+                env
+            );
+
+
+        if (!session) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        const conversation =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        subject,
+                        status,
+                        created_at,
+                        updated_at
+                     FROM conversations
+                     WHERE client_id = ?
+                     ORDER BY created_at DESC
+                     LIMIT 1`
+                )
+                .bind(session.client_id)
+                .first();
+
+
+        if (!conversation) {
+
+            return json({
+                success: true,
+                conversation: null,
+                messages: []
+            });
+
+        }
+
+
+        const messages =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        sender_type,
+                        message,
+                        created_at
+                     FROM messages
+                     WHERE conversation_id = ?
+                     ORDER BY created_at ASC`
+                )
+                .bind(conversation.id)
+                .all();
+
+
+        return json({
+
+            success: true,
+
+            conversation,
+
+            messages:
+                messages.results || []
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Portal messages error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to load your messages."
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SEND PORTAL MESSAGE
+========================================= */
+
+async function handlePortalSendMessage(
+    request,
+    env
+) {
+
+    try {
+
+        const session =
+            await authenticateSession(
+                request,
+                env
+            );
+
+
+        if (!session) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        let data;
+
+
+        try {
+
+            data =
+                await request.json();
+
+        } catch {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Invalid JSON request."
+                },
+                400
+            );
+
+        }
+
+
+        const message =
+            typeof data.message === "string"
+                ? data.message.trim()
+                : "";
+
+
+        if (!message) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Please enter a message."
+                },
+                422
+            );
+
+        }
+
+
+        if (message.length > 5000) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Your message is too long."
+                },
+                422
+            );
+
+        }
+
+
+        const conversation =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id
+                     FROM conversations
+                     WHERE client_id = ?
+                     ORDER BY created_at DESC
+                     LIMIT 1`
+                )
+                .bind(session.client_id)
+                .first();
+
+
+        if (!conversation) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "No active conversation was found."
+                },
+                404
+            );
+
+        }
+
+
+        const messageId =
+            createId();
+
+
+        await env.DB
+            .prepare(
+                `INSERT INTO messages
+                (
+                    id,
+                    conversation_id,
+                    sender_type,
+                    message
+                )
+                VALUES (?, ?, ?, ?)`
+            )
+            .bind(
+                messageId,
+                conversation.id,
+                "client",
+                message
+            )
+            .run();
+
+
+        await env.DB
+            .prepare(
+                `UPDATE conversations
+                 SET updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ?`
+            )
+            .bind(conversation.id)
+            .run();
+
+
+        const client =
+            await env.DB
+                .prepare(
+                    `SELECT name
+                     FROM clients
+                     WHERE id = ?`
+                )
+                .bind(session.client_id)
+                .first();
+
+
+        await env.DB
+            .prepare(
+                `INSERT INTO notifications
+                (
+                    id,
+                    client_id,
+                    type,
+                    title,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?)`
+            )
+            .bind(
+                createId(),
+                session.client_id,
+                "new_message",
+                "New Client Message",
+                `${client?.name || "A client"} sent a new portal message.`
+            )
+            .run();
+
+
+        return json({
+
+            success: true,
+
+            message: {
+                id: messageId,
+                sender_type: "client",
+                message,
+                created_at:
+                    new Date().toISOString()
+            }
+
+        }, 201);
+
+
+    } catch (error) {
+
+        console.error(
+            "Send portal message error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to send your message."
+            },
+            500
+        );
+
+    }
+
+}
 
 /* =========================================
    WORKER
@@ -948,6 +1347,7 @@ export default {
     async fetch(
         request,
         env
+        
     ) {
 
         const url =
