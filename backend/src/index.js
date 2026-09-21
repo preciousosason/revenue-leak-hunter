@@ -483,10 +483,10 @@ async function handleContact(request, env) {
         }
 
 
-        return json(
-            result.data,
-            result.status
-        );
+        return json({
+    success: true,
+    ...result.data
+}, result.status);
 
     } catch (error) {
 

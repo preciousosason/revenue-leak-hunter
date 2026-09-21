@@ -221,10 +221,10 @@ async function handleContact(request, env) {
         result.status
       );
     }
-    return json(
-      result.data,
-      result.status
-    );
+    return json({
+      success: true,
+      ...result.data
+    }, result.status);
   } catch (error) {
     console.error(
       "Contact submission error:",

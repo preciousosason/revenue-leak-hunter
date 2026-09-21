@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "new-article": "node scripts/new-article.js",
-    "build-blog": "node scripts/build-blog.js"
+    "build-blog": "node scripts/build-blog.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,6 @@
   },
   "homepage": "https://github.com/preciousosason/revenue-leak-hunter#readme",
   "devDependencies": {
-    "wrangler": "^4.136.0"
+    "wrangler": "^4.136.1"
   }
 }
