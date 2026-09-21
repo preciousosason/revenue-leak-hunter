@@ -5,7 +5,7 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 var CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Content-Type": "application/json"
 };
 function json(data, status = 200) {
@@ -25,7 +25,9 @@ __name(createId, "createId");
 function generatePortalToken() {
   const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const randomValues = new Uint32Array(16);
-  crypto.getRandomValues(randomValues);
+  crypto.getRandomValues(
+    randomValues
+  );
   const groups = [];
   for (let group = 0; group < 4; group++) {
     let value = "";
@@ -58,9 +60,7 @@ function validateContact(data) {
   if (!data.name || typeof data.name !== "string" || data.name.trim().length < 2) {
     errors.name = "Please provide your name.";
   }
-  if (!data.email || typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-    data.email.trim()
-  )) {
+  if (!data.email || typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
     errors.email = "Please provide a valid email address.";
   }
   if (!data.offer || typeof data.offer !== "string" || data.offer.trim().length < 3) {
@@ -87,7 +87,9 @@ async function createContact(data, env) {
   const problem = data.problem.trim();
   const message = data.message ? data.message.trim() : "";
   const portalToken = generatePortalToken();
-  const tokenHash = await hashToken(portalToken);
+  const tokenHash = await hashToken(
+    portalToken
+  );
   const clientId = createId();
   const conversationId = createId();
   const messageId = createId();
@@ -103,7 +105,8 @@ async function createContact(data, env) {
     };
   }
   await env.DB.prepare(
-    `INSERT INTO clients (
+    `INSERT INTO clients
+            (
                 id,
                 name,
                 email,
@@ -121,7 +124,8 @@ async function createContact(data, env) {
     tokenHash
   ).run();
   await env.DB.prepare(
-    `INSERT INTO conversations (
+    `INSERT INTO conversations
+            (
                 id,
                 client_id,
                 subject,
@@ -144,7 +148,8 @@ async function createContact(data, env) {
     message || "No additional message provided."
   ].join("\n");
   await env.DB.prepare(
-    `INSERT INTO messages (
+    `INSERT INTO messages
+            (
                 id,
                 conversation_id,
                 sender_type,
@@ -158,7 +163,8 @@ async function createContact(data, env) {
     firstMessage
   ).run();
   await env.DB.prepare(
-    `INSERT INTO notifications (
+    `INSERT INTO notifications
+            (
                 id,
                 client_id,
                 type,
@@ -177,6 +183,7 @@ async function createContact(data, env) {
     success: true,
     status: 201,
     data: {
+      success: true,
       clientId,
       conversationId,
       portalToken
@@ -221,10 +228,13 @@ async function handleContact(request, env) {
         result.status
       );
     }
-    return json({
-      success: true,
-      ...result.data
-    }, result.status);
+    return json(
+      {
+        success: true,
+        ...result.data
+      },
+      result.status
+    );
   } catch (error) {
     console.error(
       "Contact submission error:",
@@ -240,6 +250,228 @@ async function handleContact(request, env) {
   }
 }
 __name(handleContact, "handleContact");
+async function createSession(clientId, env) {
+  const sessionId = createId();
+  const expiresAt = new Date(
+    Date.now() + 7 * 24 * 60 * 60 * 1e3
+  ).toISOString();
+  await env.DB.prepare(
+    `INSERT INTO sessions
+            (
+                id,
+                client_id,
+                expires_at
+            )
+            VALUES (?, ?, ?)`
+  ).bind(
+    sessionId,
+    clientId,
+    expiresAt
+  ).run();
+  return {
+    sessionId,
+    expiresAt
+  };
+}
+__name(createSession, "createSession");
+async function handlePortalLogin(request, env) {
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return json(
+      {
+        success: false,
+        error: "Invalid JSON request."
+      },
+      400
+    );
+  }
+  if (!data.token || typeof data.token !== "string") {
+    return json(
+      {
+        success: false,
+        error: "Please enter your private access token."
+      },
+      400
+    );
+  }
+  const token = data.token.trim().toUpperCase();
+  if (!/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/.test(token)) {
+    return json(
+      {
+        success: false,
+        error: "Invalid private access token."
+      },
+      400
+    );
+  }
+  try {
+    const tokenHash = await hashToken(token);
+    const client = await env.DB.prepare(
+      `SELECT
+                        id,
+                        name,
+                        email,
+                        business,
+                        website,
+                        created_at
+                     FROM clients
+                     WHERE token_hash = ?`
+    ).bind(tokenHash).first();
+    if (!client) {
+      return json(
+        {
+          success: false,
+          error: "Invalid private access token."
+        },
+        401
+      );
+    }
+    const session = await createSession(
+      client.id,
+      env
+    );
+    return json(
+      {
+        success: true,
+        sessionToken: session.sessionId,
+        expiresAt: session.expiresAt,
+        client: {
+          id: client.id,
+          name: client.name,
+          email: client.email,
+          business: client.business,
+          website: client.website
+        }
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Portal login error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to sign you in right now."
+      },
+      500
+    );
+  }
+}
+__name(handlePortalLogin, "handlePortalLogin");
+async function handlePortalMe(request, env) {
+  const authorization = request.headers.get(
+    "Authorization"
+  );
+  if (!authorization || !authorization.startsWith(
+    "Bearer "
+  )) {
+    return json(
+      {
+        success: false,
+        error: "Authentication required."
+      },
+      401
+    );
+  }
+  const sessionId = authorization.substring(7).trim();
+  if (!sessionId) {
+    return json(
+      {
+        success: false,
+        error: "Authentication required."
+      },
+      401
+    );
+  }
+  try {
+    const session = await env.DB.prepare(
+      `SELECT
+                        sessions.id,
+                        sessions.client_id,
+                        sessions.expires_at,
+                        clients.name,
+                        clients.email,
+                        clients.business,
+                        clients.website
+                     FROM sessions
+                     INNER JOIN clients
+                     ON clients.id =
+                        sessions.client_id
+                     WHERE sessions.id = ?`
+    ).bind(sessionId).first();
+    if (!session) {
+      return json(
+        {
+          success: false,
+          error: "Your session is invalid."
+        },
+        401
+      );
+    }
+    if (new Date(session.expires_at).getTime() <= Date.now()) {
+      await env.DB.prepare(
+        `DELETE FROM sessions
+                     WHERE id = ?`
+      ).bind(sessionId).run();
+      return json(
+        {
+          success: false,
+          error: "Your session has expired."
+        },
+        401
+      );
+    }
+    return json(
+      {
+        success: true,
+        client: {
+          id: session.client_id,
+          name: session.name,
+          email: session.email,
+          business: session.business,
+          website: session.website
+        },
+        expiresAt: session.expires_at
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Portal session error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to load your portal."
+      },
+      500
+    );
+  }
+}
+__name(handlePortalMe, "handlePortalMe");
+async function handlePortalLogout(request, env) {
+  const authorization = request.headers.get(
+    "Authorization"
+  );
+  if (authorization && authorization.startsWith(
+    "Bearer "
+  )) {
+    const sessionId = authorization.substring(7).trim();
+    if (sessionId) {
+      await env.DB.prepare(
+        `DELETE FROM sessions
+                     WHERE id = ?`
+      ).bind(sessionId).run();
+    }
+  }
+  return json({
+    success: true
+  });
+}
+__name(handlePortalLogout, "handlePortalLogout");
 var src_default = {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -261,6 +493,24 @@ var src_default = {
     }
     if (url.pathname === "/api/contact" && request.method === "POST") {
       return handleContact(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/portal/login" && request.method === "POST") {
+      return handlePortalLogin(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/portal/me" && request.method === "GET") {
+      return handlePortalMe(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/portal/logout" && request.method === "POST") {
+      return handlePortalLogout(
         request,
         env
       );

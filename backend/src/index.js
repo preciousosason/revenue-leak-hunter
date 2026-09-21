@@ -1,14 +1,10 @@
 const CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Content-Type": "application/json"
 };
 
-
-/* =========================================================
-   RESPONSE HELPERS
-========================================================= */
 
 function json(data, status = 200) {
 
@@ -23,20 +19,12 @@ function json(data, status = 200) {
 }
 
 
-/* =========================================================
-   UUID
-========================================================= */
-
 function createId() {
 
     return crypto.randomUUID();
 
 }
 
-
-/* =========================================================
-   SECURE TOKEN GENERATION
-========================================================= */
 
 function generatePortalToken() {
 
@@ -46,15 +34,25 @@ function generatePortalToken() {
     const randomValues =
         new Uint32Array(16);
 
-    crypto.getRandomValues(randomValues);
+    crypto.getRandomValues(
+        randomValues
+    );
 
     const groups = [];
 
-    for (let group = 0; group < 4; group++) {
+    for (
+        let group = 0;
+        group < 4;
+        group++
+    ) {
 
         let value = "";
 
-        for (let i = 0; i < 4; i++) {
+        for (
+            let i = 0;
+            i < 4;
+            i++
+        ) {
 
             const index =
                 randomValues[
@@ -73,10 +71,6 @@ function generatePortalToken() {
 
 }
 
-
-/* =========================================================
-   HASH TOKEN
-========================================================= */
 
 async function hashToken(token) {
 
@@ -109,9 +103,9 @@ async function hashToken(token) {
 }
 
 
-/* =========================================================
-   VALIDATION
-========================================================= */
+/* =========================================
+   CONTACT VALIDATION
+========================================= */
 
 function validateContact(data) {
 
@@ -132,9 +126,8 @@ function validateContact(data) {
     if (
         !data.email ||
         typeof data.email !== "string" ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-            data.email.trim()
-        )
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            .test(data.email.trim())
     ) {
 
         errors.email =
@@ -199,9 +192,9 @@ function validateContact(data) {
 }
 
 
-/* =========================================================
-   CREATE CLIENT + CONVERSATION
-========================================================= */
+/* =========================================
+   CREATE CONTACT
+========================================= */
 
 async function createContact(data, env) {
 
@@ -209,7 +202,9 @@ async function createContact(data, env) {
         data.name.trim();
 
     const email =
-        data.email.trim().toLowerCase();
+        data.email
+            .trim()
+            .toLowerCase();
 
     const business =
         data.business
@@ -233,19 +228,13 @@ async function createContact(data, env) {
             : "";
 
 
-    /*
-     * Generate the portal token.
-     *
-     * The raw token is NEVER stored
-     * in the database.
-     */
-
     const portalToken =
         generatePortalToken();
 
     const tokenHash =
-        await hashToken(portalToken);
-
+        await hashToken(
+            portalToken
+        );
 
     const clientId =
         createId();
@@ -256,11 +245,6 @@ async function createContact(data, env) {
     const messageId =
         createId();
 
-
-    /*
-     * Check whether the email already
-     * belongs to an existing client.
-     */
 
     const existingClient =
         await env.DB
@@ -284,13 +268,10 @@ async function createContact(data, env) {
     }
 
 
-    /*
-     * Create client.
-     */
-
     await env.DB
         .prepare(
-            `INSERT INTO clients (
+            `INSERT INTO clients
+            (
                 id,
                 name,
                 email,
@@ -311,13 +292,10 @@ async function createContact(data, env) {
         .run();
 
 
-    /*
-     * Create conversation.
-     */
-
     await env.DB
         .prepare(
-            `INSERT INTO conversations (
+            `INSERT INTO conversations
+            (
                 id,
                 client_id,
                 subject,
@@ -334,28 +312,34 @@ async function createContact(data, env) {
         .run();
 
 
-    /*
-     * Create the first message.
-     *
-     * This gives the admin/client portal
-     * an initial record of what the client
-     * submitted.
-     */
-
     const firstMessage = [
-        `Business: ${business || "Not provided"}`,
-        `Website: ${website || "Not provided"}`,
+
+        `Business: ${
+            business || "Not provided"
+        }`,
+
+        `Website: ${
+            website || "Not provided"
+        }`,
+
         `What they sell: ${offer}`,
+
         `Suspected leak: ${problem}`,
+
         "",
+
         "Client message:",
-        message || "No additional message provided."
+
+        message ||
+            "No additional message provided."
+
     ].join("\n");
 
 
     await env.DB
         .prepare(
-            `INSERT INTO messages (
+            `INSERT INTO messages
+            (
                 id,
                 conversation_id,
                 sender_type,
@@ -372,14 +356,10 @@ async function createContact(data, env) {
         .run();
 
 
-    /*
-     * Create notification for future
-     * admin dashboard.
-     */
-
     await env.DB
         .prepare(
-            `INSERT INTO notifications (
+            `INSERT INTO notifications
+            (
                 id,
                 client_id,
                 type,
@@ -398,33 +378,40 @@ async function createContact(data, env) {
         .run();
 
 
-    /*
-     * IMPORTANT:
-     *
-     * The raw token is returned only once.
-     * The database only contains the hash.
-     */
-
     return {
+
         success: true,
+
         status: 201,
+
         data: {
+
+            success: true,
+
             clientId,
+
             conversationId,
+
             portalToken
+
         }
+
     };
 
 }
 
 
-/* =========================================================
-   CONTACT ENDPOINT
-========================================================= */
+/* =========================================
+   CONTACT HANDLER
+========================================= */
 
-async function handleContact(request, env) {
+async function handleContact(
+    request,
+    env
+) {
 
     let data;
+
 
     try {
 
@@ -436,7 +423,8 @@ async function handleContact(request, env) {
         return json(
             {
                 success: false,
-                error: "Invalid JSON request."
+                error:
+                    "Invalid JSON request."
             },
             400
         );
@@ -448,7 +436,9 @@ async function handleContact(request, env) {
         validateContact(data);
 
 
-    if (Object.keys(errors).length > 0) {
+    if (
+        Object.keys(errors).length > 0
+    ) {
 
         return json(
             {
@@ -483,10 +473,14 @@ async function handleContact(request, env) {
         }
 
 
-        return json({
-    success: true,
-    ...result.data
-}, result.status);
+        return json(
+            {
+                success: true,
+                ...result.data
+            },
+            result.status
+        );
+
 
     } catch (error) {
 
@@ -510,44 +504,479 @@ async function handleContact(request, env) {
 }
 
 
-/* =========================================================
-   MAIN WORKER
-========================================================= */
+/* =========================================
+   CREATE SESSION
+========================================= */
+
+async function createSession(
+    clientId,
+    env
+) {
+
+    const sessionId =
+        createId();
+
+    /*
+     * Session lasts 7 days.
+     */
+
+    const expiresAt =
+        new Date(
+            Date.now() +
+            7 * 24 * 60 * 60 * 1000
+        ).toISOString();
+
+
+    await env.DB
+        .prepare(
+            `INSERT INTO sessions
+            (
+                id,
+                client_id,
+                expires_at
+            )
+            VALUES (?, ?, ?)`
+        )
+        .bind(
+            sessionId,
+            clientId,
+            expiresAt
+        )
+        .run();
+
+
+    return {
+        sessionId,
+        expiresAt
+    };
+
+}
+
+
+/* =========================================
+   PORTAL LOGIN
+========================================= */
+
+async function handlePortalLogin(
+    request,
+    env
+) {
+
+    let data;
+
+
+    try {
+
+        data =
+            await request.json();
+
+    } catch {
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Invalid JSON request."
+            },
+            400
+        );
+
+    }
+
+
+    if (
+        !data.token ||
+        typeof data.token !== "string"
+    ) {
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Please enter your private access token."
+            },
+            400
+        );
+
+    }
+
+
+    const token =
+        data.token
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/
+            .test(token)
+    ) {
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Invalid private access token."
+            },
+            400
+        );
+
+    }
+
+
+    try {
+
+        const tokenHash =
+            await hashToken(token);
+
+
+        const client =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        name,
+                        email,
+                        business,
+                        website,
+                        created_at
+                     FROM clients
+                     WHERE token_hash = ?`
+                )
+                .bind(tokenHash)
+                .first();
+
+
+        if (!client) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Invalid private access token."
+                },
+                401
+            );
+
+        }
+
+
+        const session =
+            await createSession(
+                client.id,
+                env
+            );
+
+
+        return json(
+            {
+                success: true,
+
+                sessionToken:
+                    session.sessionId,
+
+                expiresAt:
+                    session.expiresAt,
+
+                client: {
+
+                    id: client.id,
+
+                    name: client.name,
+
+                    email: client.email,
+
+                    business:
+                        client.business,
+
+                    website:
+                        client.website
+
+                }
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Portal login error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to sign you in right now."
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   GET PORTAL SESSION
+========================================= */
+
+async function handlePortalMe(
+    request,
+    env
+) {
+
+    const authorization =
+        request.headers.get(
+            "Authorization"
+        );
+
+
+    if (
+        !authorization ||
+        !authorization.startsWith(
+            "Bearer "
+        )
+    ) {
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Authentication required."
+            },
+            401
+        );
+
+    }
+
+
+    const sessionId =
+        authorization
+            .substring(7)
+            .trim();
+
+
+    if (!sessionId) {
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Authentication required."
+            },
+            401
+        );
+
+    }
+
+
+    try {
+
+        const session =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        sessions.id,
+                        sessions.client_id,
+                        sessions.expires_at,
+                        clients.name,
+                        clients.email,
+                        clients.business,
+                        clients.website
+                     FROM sessions
+                     INNER JOIN clients
+                     ON clients.id =
+                        sessions.client_id
+                     WHERE sessions.id = ?`
+                )
+                .bind(sessionId)
+                .first();
+
+
+        if (!session) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Your session is invalid."
+                },
+                401
+            );
+
+        }
+
+
+        if (
+            new Date(session.expires_at)
+            .getTime() <= Date.now()
+        ) {
+
+            await env.DB
+                .prepare(
+                    `DELETE FROM sessions
+                     WHERE id = ?`
+                )
+                .bind(sessionId)
+                .run();
+
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Your session has expired."
+                },
+                401
+            );
+
+        }
+
+
+        return json(
+            {
+                success: true,
+
+                client: {
+
+                    id:
+                        session.client_id,
+
+                    name:
+                        session.name,
+
+                    email:
+                        session.email,
+
+                    business:
+                        session.business,
+
+                    website:
+                        session.website
+
+                },
+
+                expiresAt:
+                    session.expires_at
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Portal session error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to load your portal."
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function handlePortalLogout(
+    request,
+    env
+) {
+
+    const authorization =
+        request.headers.get(
+            "Authorization"
+        );
+
+
+    if (
+        authorization &&
+        authorization.startsWith(
+            "Bearer "
+        )
+    ) {
+
+        const sessionId =
+            authorization
+                .substring(7)
+                .trim();
+
+
+        if (sessionId) {
+
+            await env.DB
+                .prepare(
+                    `DELETE FROM sessions
+                     WHERE id = ?`
+                )
+                .bind(sessionId)
+                .run();
+
+        }
+
+    }
+
+
+    return json({
+        success: true
+    });
+
+}
+
+
+/* =========================================
+   WORKER
+========================================= */
 
 export default {
 
-    async fetch(request, env) {
+    async fetch(
+        request,
+        env
+    ) {
 
         const url =
             new URL(request.url);
 
 
-        /*
-         * CORS preflight
-         */
+        /* CORS */
 
         if (
-            request.method === "OPTIONS"
+            request.method ===
+            "OPTIONS"
         ) {
 
             return new Response(
                 null,
                 {
                     status: 204,
-                    headers: CORS_HEADERS
+                    headers:
+                        CORS_HEADERS
                 }
             );
 
         }
 
 
-        /*
-         * Health check
-         */
+        /* API STATUS */
 
         if (
-            url.pathname === "/"
-            &&
+            url.pathname === "/" &&
             request.method === "GET"
         ) {
 
@@ -555,20 +984,17 @@ export default {
                 success: true,
                 service:
                     "Revenue Leak Hunter API",
-                status:
-                    "online"
+                status: "online"
             });
 
         }
 
 
-        /*
-         * Contact submission
-         */
+        /* CONTACT */
 
         if (
-            url.pathname === "/api/contact"
-            &&
+            url.pathname ===
+            "/api/contact" &&
             request.method === "POST"
         ) {
 
@@ -580,14 +1006,59 @@ export default {
         }
 
 
-        /*
-         * Unknown route
-         */
+        /* PORTAL LOGIN */
+
+        if (
+            url.pathname ===
+            "/api/portal/login" &&
+            request.method === "POST"
+        ) {
+
+            return handlePortalLogin(
+                request,
+                env
+            );
+
+        }
+
+
+        /* PORTAL SESSION */
+
+        if (
+            url.pathname ===
+            "/api/portal/me" &&
+            request.method === "GET"
+        ) {
+
+            return handlePortalMe(
+                request,
+                env
+            );
+
+        }
+
+
+        /* PORTAL LOGOUT */
+
+        if (
+            url.pathname ===
+            "/api/portal/logout" &&
+            request.method === "POST"
+        ) {
+
+            return handlePortalLogout(
+                request,
+                env
+            );
+
+        }
+
 
         return json(
             {
                 success: false,
-                error: "Route not found."
+                error:
+                    "Route not found."
             },
             404
         );

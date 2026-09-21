@@ -301,78 +301,183 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================
-       PORTAL LOGIN
-       
-       PHASE 2
-       
-       The backend authentication endpoint
-       will be connected here after Phase 1
-       contact submission is confirmed.
-    ================================== */
+   /* =================================
+   PORTAL LOGIN
+================================== */
 
-    if (portalLoginForm) {
+if (portalLoginForm) {
 
-        portalLoginForm.addEventListener(
-            "submit",
-            event => {
+    portalLoginForm.addEventListener(
+        "submit",
+        async event => {
 
-                event.preventDefault();
+            event.preventDefault();
 
 
-                if (!portalTokenInput) {
-                    return;
-                }
+            if (!portalTokenInput) {
+                return;
+            }
 
 
-                const token =
-                    portalTokenInput.value
-                        .trim()
-                        .toUpperCase();
+            const token =
+                portalTokenInput.value
+                    .trim()
+                    .toUpperCase();
 
 
-                if (
-                    !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/.test(token)
-                ) {
-
-                    if (portalLoginMessage) {
-
-                        portalLoginMessage.textContent =
-                            "Enter a valid private access token.";
-
-                        portalLoginMessage.hidden =
-                            false;
-
-                    }
-
-                    return;
-
-                }
-
-
-                /*
-                 * Phase 2:
-                 *
-                 * POST /api/portal/login
-                 *
-                 * This will be implemented after
-                 * Phase 1 is tested successfully.
-                 */
+            if (
+                !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/
+                    .test(token)
+            ) {
 
                 if (portalLoginMessage) {
 
                     portalLoginMessage.textContent =
-                        "Portal authentication is being connected.";
+                        "Enter a valid private access token.";
 
                     portalLoginMessage.hidden =
                         false;
 
                 }
 
-            }
-        );
+                return;
 
-    }
+            }
+
+
+            const submitButton =
+                portalLoginForm.querySelector(
+                    "button[type='submit']"
+                );
+
+
+            const originalButtonText =
+                submitButton
+                    ? submitButton.textContent
+                    : "";
+
+
+            try {
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        true;
+
+                    submitButton.textContent =
+                        "Authenticating...";
+
+                }
+
+
+                if (portalLoginMessage) {
+
+                    portalLoginMessage.hidden =
+                        true;
+
+                }
+
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/portal/login`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    token
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    throw new Error(
+                        result.error ||
+                        "Unable to authenticate your portal."
+                    );
+
+                }
+
+
+                /*
+                 * Store the temporary session.
+                 */
+
+                sessionStorage.setItem(
+                    "portalSessionToken",
+                    result.sessionToken
+                );
+
+
+                sessionStorage.setItem(
+                    "portalClient",
+                    JSON.stringify(
+                        result.client
+                    )
+                );
+
+
+                /*
+                 * Send the client
+                 * into the private portal.
+                 */
+
+                window.location.href =
+                    "/pages/portal/portal.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Portal login failed:",
+                    error
+                );
+
+
+                if (portalLoginMessage) {
+
+                    portalLoginMessage.textContent =
+                        error.message ||
+                        "Unable to sign you in right now.";
+
+                    portalLoginMessage.hidden =
+                        false;
+
+                }
+
+            } finally {
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        originalButtonText;
+
+                }
+
+            }
+
+        }
+    );
+
+}
 
 
     /* =================================
