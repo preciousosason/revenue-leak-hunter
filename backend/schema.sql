@@ -100,3 +100,11 @@ ON blog_comments(article_slug);
 
 CREATE INDEX IF NOT EXISTS idx_notifications_client
 ON notifications(client_id);
+CREATE TABLE IF NOT EXISTS admin_sessions (
+    id TEXT PRIMARY KEY,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires
+ON admin_sessions(expires_at);

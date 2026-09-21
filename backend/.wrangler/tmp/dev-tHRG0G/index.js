@@ -25,9 +25,7 @@ __name(createId, "createId");
 function generatePortalToken() {
   const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const randomValues = new Uint32Array(16);
-  crypto.getRandomValues(
-    randomValues
-  );
+  crypto.getRandomValues(randomValues);
   const groups = [];
   for (let group = 0; group < 4; group++) {
     let value = "";
@@ -60,7 +58,9 @@ function validateContact(data) {
   if (!data.name || typeof data.name !== "string" || data.name.trim().length < 2) {
     errors.name = "Please provide your name.";
   }
-  if (!data.email || typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+  if (!data.email || typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    data.email.trim()
+  )) {
     errors.email = "Please provide a valid email address.";
   }
   if (!data.offer || typeof data.offer !== "string" || data.offer.trim().length < 3) {
@@ -87,9 +87,7 @@ async function createContact(data, env) {
   const problem = data.problem.trim();
   const message = data.message ? data.message.trim() : "";
   const portalToken = generatePortalToken();
-  const tokenHash = await hashToken(
-    portalToken
-  );
+  const tokenHash = await hashToken(portalToken);
   const clientId = createId();
   const conversationId = createId();
   const messageId = createId();
@@ -274,6 +272,42 @@ async function createSession(clientId, env) {
   };
 }
 __name(createSession, "createSession");
+async function authenticateSession(request, env) {
+  const authorization = request.headers.get(
+    "Authorization"
+  );
+  if (!authorization || !authorization.startsWith(
+    "Bearer "
+  )) {
+    return null;
+  }
+  const sessionId = authorization.substring(7).trim();
+  if (!sessionId) {
+    return null;
+  }
+  const session = await env.DB.prepare(
+    `SELECT
+                    sessions.id,
+                    sessions.client_id,
+                    sessions.expires_at
+                 FROM sessions
+                 WHERE sessions.id = ?`
+  ).bind(sessionId).first();
+  if (!session) {
+    return null;
+  }
+  if (new Date(
+    session.expires_at
+  ).getTime() <= Date.now()) {
+    await env.DB.prepare(
+      `DELETE FROM sessions
+                 WHERE id = ?`
+    ).bind(sessionId).run();
+    return null;
+  }
+  return session;
+}
+__name(authenticateSession, "authenticateSession");
 async function handlePortalLogin(request, env) {
   let data;
   try {
@@ -297,7 +331,9 @@ async function handlePortalLogin(request, env) {
     );
   }
   const token = data.token.trim().toUpperCase();
-  if (!/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/.test(token)) {
+  if (!/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/.test(
+    token
+  )) {
     return json(
       {
         success: false,
@@ -332,20 +368,18 @@ async function handlePortalLogin(request, env) {
       client.id,
       env
     );
-    return json(
-      {
-        success: true,
-        sessionToken: session.sessionId,
-        expiresAt: session.expiresAt,
-        client: {
-          id: client.id,
-          name: client.name,
-          email: client.email,
-          business: client.business,
-          website: client.website
-        }
+    return json({
+      success: true,
+      sessionToken: session.sessionId,
+      expiresAt: session.expiresAt,
+      client: {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        business: client.business,
+        website: client.website
       }
-    );
+    });
   } catch (error) {
     console.error(
       "Portal login error:",
@@ -362,22 +396,11 @@ async function handlePortalLogin(request, env) {
 }
 __name(handlePortalLogin, "handlePortalLogin");
 async function handlePortalMe(request, env) {
-  const authorization = request.headers.get(
-    "Authorization"
+  const session = await authenticateSession(
+    request,
+    env
   );
-  if (!authorization || !authorization.startsWith(
-    "Bearer "
-  )) {
-    return json(
-      {
-        success: false,
-        error: "Authentication required."
-      },
-      401
-    );
-  }
-  const sessionId = authorization.substring(7).trim();
-  if (!sessionId) {
+  if (!session) {
     return json(
       {
         success: false,
@@ -387,56 +410,30 @@ async function handlePortalMe(request, env) {
     );
   }
   try {
-    const session = await env.DB.prepare(
+    const client = await env.DB.prepare(
       `SELECT
-                        sessions.id,
-                        sessions.client_id,
-                        sessions.expires_at,
-                        clients.name,
-                        clients.email,
-                        clients.business,
-                        clients.website
-                     FROM sessions
-                     INNER JOIN clients
-                     ON clients.id =
-                        sessions.client_id
-                     WHERE sessions.id = ?`
-    ).bind(sessionId).first();
-    if (!session) {
-      return json(
-        {
-          success: false,
-          error: "Your session is invalid."
-        },
-        401
-      );
-    }
-    if (new Date(session.expires_at).getTime() <= Date.now()) {
-      await env.DB.prepare(
-        `DELETE FROM sessions
+                        id,
+                        name,
+                        email,
+                        business,
+                        website
+                     FROM clients
                      WHERE id = ?`
-      ).bind(sessionId).run();
+    ).bind(session.client_id).first();
+    if (!client) {
       return json(
         {
           success: false,
-          error: "Your session has expired."
+          error: "Client account not found."
         },
-        401
+        404
       );
     }
-    return json(
-      {
-        success: true,
-        client: {
-          id: session.client_id,
-          name: session.name,
-          email: session.email,
-          business: session.business,
-          website: session.website
-        },
-        expiresAt: session.expires_at
-      }
-    );
+    return json({
+      success: true,
+      client,
+      expiresAt: session.expires_at
+    });
   } catch (error) {
     console.error(
       "Portal session error:",
@@ -472,6 +469,760 @@ async function handlePortalLogout(request, env) {
   });
 }
 __name(handlePortalLogout, "handlePortalLogout");
+async function handlePortalMessages(request, env) {
+  try {
+    const session = await authenticateSession(
+      request,
+      env
+    );
+    if (!session) {
+      return json(
+        {
+          success: false,
+          error: "Authentication required."
+        },
+        401
+      );
+    }
+    const conversation = await env.DB.prepare(
+      `SELECT
+                        id,
+                        subject,
+                        status,
+                        created_at,
+                        updated_at
+                     FROM conversations
+                     WHERE client_id = ?
+                     ORDER BY created_at DESC
+                     LIMIT 1`
+    ).bind(session.client_id).first();
+    if (!conversation) {
+      return json(
+        {
+          success: false,
+          error: "No conversation found."
+        },
+        404
+      );
+    }
+    const messages = await env.DB.prepare(
+      `SELECT
+                        id,
+                        sender_type,
+                        message,
+                        created_at
+                     FROM messages
+                     WHERE conversation_id = ?
+                     ORDER BY created_at ASC`
+    ).bind(conversation.id).all();
+    return json({
+      success: true,
+      conversation,
+      messages: messages.results || []
+    });
+  } catch (error) {
+    console.error(
+      "Portal messages error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to load your messages."
+      },
+      500
+    );
+  }
+}
+__name(handlePortalMessages, "handlePortalMessages");
+async function handlePortalSendMessage(request, env) {
+  try {
+    const session = await authenticateSession(
+      request,
+      env
+    );
+    if (!session) {
+      return json(
+        {
+          success: false,
+          error: "Authentication required."
+        },
+        401
+      );
+    }
+    let data;
+    try {
+      data = await request.json();
+    } catch {
+      return json(
+        {
+          success: false,
+          error: "Invalid JSON request."
+        },
+        400
+      );
+    }
+    if (!data.message || typeof data.message !== "string") {
+      return json(
+        {
+          success: false,
+          error: "Please enter a message."
+        },
+        400
+      );
+    }
+    const message = data.message.trim();
+    if (!message) {
+      return json(
+        {
+          success: false,
+          error: "Please enter a message."
+        },
+        400
+      );
+    }
+    if (message.length > 5e3) {
+      return json(
+        {
+          success: false,
+          error: "Your message is too long."
+        },
+        422
+      );
+    }
+    const conversation = await env.DB.prepare(
+      `SELECT id
+                     FROM conversations
+                     WHERE client_id = ?
+                     ORDER BY created_at DESC
+                     LIMIT 1`
+    ).bind(session.client_id).first();
+    if (!conversation) {
+      return json(
+        {
+          success: false,
+          error: "No conversation found."
+        },
+        404
+      );
+    }
+    const messageId = createId();
+    await env.DB.prepare(
+      `INSERT INTO messages
+                (
+                    id,
+                    conversation_id,
+                    sender_type,
+                    message
+                )
+                VALUES (?, ?, ?, ?)`
+    ).bind(
+      messageId,
+      conversation.id,
+      "client",
+      message
+    ).run();
+    await env.DB.prepare(
+      `UPDATE conversations
+                 SET updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ?`
+    ).bind(
+      conversation.id
+    ).run();
+    const client = await env.DB.prepare(
+      `SELECT name
+                     FROM clients
+                     WHERE id = ?`
+    ).bind(session.client_id).first();
+    await env.DB.prepare(
+      `INSERT INTO notifications
+                (
+                    id,
+                    client_id,
+                    type,
+                    title,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?)`
+    ).bind(
+      createId(),
+      session.client_id,
+      "new_message",
+      "New Client Message",
+      `${client?.name || "A client"} sent a new message.`
+    ).run();
+    const createdMessage = await env.DB.prepare(
+      `SELECT
+                        id,
+                        sender_type,
+                        message,
+                        created_at
+                     FROM messages
+                     WHERE id = ?`
+    ).bind(messageId).first();
+    return json({
+      success: true,
+      message: createdMessage
+    });
+  } catch (error) {
+    console.error(
+      "Portal send message error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to send your message."
+      },
+      500
+    );
+  }
+}
+__name(handlePortalSendMessage, "handlePortalSendMessage");
+async function createAdminSession(env) {
+  const sessionId = createId();
+  const expiresAt = new Date(
+    Date.now() + 24 * 60 * 60 * 1e3
+  ).toISOString();
+  await env.DB.prepare(
+    `INSERT INTO admin_sessions
+            (
+                id,
+                expires_at
+            )
+            VALUES (?, ?)`
+  ).bind(
+    sessionId,
+    expiresAt
+  ).run();
+  return {
+    sessionId,
+    expiresAt
+  };
+}
+__name(createAdminSession, "createAdminSession");
+async function authenticateAdmin(request, env) {
+  const authorization = request.headers.get(
+    "Authorization"
+  );
+  if (!authorization || !authorization.startsWith(
+    "Bearer "
+  )) {
+    return null;
+  }
+  const sessionId = authorization.substring(7).trim();
+  if (!sessionId) {
+    return null;
+  }
+  const session = await env.DB.prepare(
+    `SELECT
+                    id,
+                    expires_at
+                 FROM admin_sessions
+                 WHERE id = ?`
+  ).bind(sessionId).first();
+  if (!session) {
+    return null;
+  }
+  if (new Date(
+    session.expires_at
+  ).getTime() <= Date.now()) {
+    await env.DB.prepare(
+      `DELETE FROM admin_sessions
+                 WHERE id = ?`
+    ).bind(sessionId).run();
+    return null;
+  }
+  return session;
+}
+__name(authenticateAdmin, "authenticateAdmin");
+async function handleAdminLogin(request, env) {
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return json(
+      {
+        success: false,
+        error: "Invalid JSON request."
+      },
+      400
+    );
+  }
+  if (!data.password || typeof data.password !== "string") {
+    return json(
+      {
+        success: false,
+        error: "Please enter your admin password."
+      },
+      400
+    );
+  }
+  if (data.password !== env.ADMIN_PASSWORD) {
+    return json(
+      {
+        success: false,
+        error: "Invalid admin credentials."
+      },
+      401
+    );
+  }
+  try {
+    const session = await createAdminSession(
+      env
+    );
+    return json({
+      success: true,
+      sessionToken: session.sessionId,
+      expiresAt: session.expiresAt
+    });
+  } catch (error) {
+    console.error(
+      "Admin login error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to sign you in."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminLogin, "handleAdminLogin");
+async function handleAdminMe(request, env) {
+  const session = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!session) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  return json({
+    success: true,
+    expiresAt: session.expires_at
+  });
+}
+__name(handleAdminMe, "handleAdminMe");
+async function handleAdminLogout(request, env) {
+  const authorization = request.headers.get(
+    "Authorization"
+  );
+  if (authorization && authorization.startsWith(
+    "Bearer "
+  )) {
+    const sessionId = authorization.substring(7).trim();
+    if (sessionId) {
+      await env.DB.prepare(
+        `DELETE FROM admin_sessions
+                     WHERE id = ?`
+      ).bind(sessionId).run();
+    }
+  }
+  return json({
+    success: true
+  });
+}
+__name(handleAdminLogout, "handleAdminLogout");
+async function handleAdminClients(request, env) {
+  const admin = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!admin) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  try {
+    const clients = await env.DB.prepare(
+      `SELECT
+                        clients.id,
+                        clients.name,
+                        clients.email,
+                        clients.business,
+                        clients.website,
+                        clients.created_at,
+                        clients.updated_at,
+                        conversations.id AS conversation_id,
+                        conversations.subject,
+                        conversations.status,
+                        conversations.updated_at AS conversation_updated_at,
+                        (
+                            SELECT COUNT(*)
+                            FROM messages
+                            WHERE messages.conversation_id =
+                                  conversations.id
+                        ) AS message_count
+                     FROM clients
+                     LEFT JOIN conversations
+                        ON conversations.client_id =
+                           clients.id
+                     ORDER BY
+                        conversations.updated_at DESC,
+                        clients.created_at DESC`
+    ).all();
+    return json({
+      success: true,
+      clients: clients.results || []
+    });
+  } catch (error) {
+    console.error(
+      "Admin clients error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to load clients."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminClients, "handleAdminClients");
+async function handleAdminConversation(request, env, conversationId) {
+  const admin = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!admin) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  try {
+    const conversation = await env.DB.prepare(
+      `SELECT
+                        conversations.id,
+                        conversations.client_id,
+                        conversations.subject,
+                        conversations.status,
+                        conversations.created_at,
+                        conversations.updated_at,
+                        clients.name,
+                        clients.email,
+                        clients.business,
+                        clients.website
+                     FROM conversations
+                     INNER JOIN clients
+                        ON clients.id =
+                           conversations.client_id
+                     WHERE conversations.id = ?`
+    ).bind(conversationId).first();
+    if (!conversation) {
+      return json(
+        {
+          success: false,
+          error: "Conversation not found."
+        },
+        404
+      );
+    }
+    const messages = await env.DB.prepare(
+      `SELECT
+                        id,
+                        sender_type,
+                        message,
+                        created_at
+                     FROM messages
+                     WHERE conversation_id = ?
+                     ORDER BY created_at ASC`
+    ).bind(conversationId).all();
+    return json({
+      success: true,
+      conversation,
+      messages: messages.results || []
+    });
+  } catch (error) {
+    console.error(
+      "Admin conversation error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to load conversation."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminConversation, "handleAdminConversation");
+async function handleAdminSendMessage(request, env) {
+  const admin = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!admin) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return json(
+      {
+        success: false,
+        error: "Invalid JSON request."
+      },
+      400
+    );
+  }
+  const conversationId = typeof data.conversationId === "string" ? data.conversationId.trim() : "";
+  const message = typeof data.message === "string" ? data.message.trim() : "";
+  if (!conversationId) {
+    return json(
+      {
+        success: false,
+        error: "Conversation ID is required."
+      },
+      400
+    );
+  }
+  if (!message) {
+    return json(
+      {
+        success: false,
+        error: "Please enter a message."
+      },
+      400
+    );
+  }
+  if (message.length > 5e3) {
+    return json(
+      {
+        success: false,
+        error: "Your message is too long."
+      },
+      422
+    );
+  }
+  try {
+    const conversation = await env.DB.prepare(
+      `SELECT
+                        id,
+                        client_id
+                     FROM conversations
+                     WHERE id = ?`
+    ).bind(conversationId).first();
+    if (!conversation) {
+      return json(
+        {
+          success: false,
+          error: "Conversation not found."
+        },
+        404
+      );
+    }
+    const messageId = createId();
+    await env.DB.prepare(
+      `INSERT INTO messages
+                (
+                    id,
+                    conversation_id,
+                    sender_type,
+                    message
+                )
+                VALUES (?, ?, ?, ?)`
+    ).bind(
+      messageId,
+      conversationId,
+      "admin",
+      message
+    ).run();
+    await env.DB.prepare(
+      `UPDATE conversations
+                 SET updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ?`
+    ).bind(conversationId).run();
+    const client = await env.DB.prepare(
+      `SELECT name
+                     FROM clients
+                     WHERE id = ?`
+    ).bind(
+      conversation.client_id
+    ).first();
+    await env.DB.prepare(
+      `INSERT INTO notifications
+                (
+                    id,
+                    client_id,
+                    type,
+                    title,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?)`
+    ).bind(
+      createId(),
+      conversation.client_id,
+      "admin_message",
+      "New Message From Revenue Leak Hunter",
+      "You have received a new message regarding your Leak Hunt."
+    ).run();
+    const createdMessage = await env.DB.prepare(
+      `SELECT
+                        id,
+                        sender_type,
+                        message,
+                        created_at
+                     FROM messages
+                     WHERE id = ?`
+    ).bind(messageId).first();
+    return json({
+      success: true,
+      clientName: client?.name || "",
+      message: createdMessage
+    });
+  } catch (error) {
+    console.error(
+      "Admin send message error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to send your reply."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminSendMessage, "handleAdminSendMessage");
+async function handleAdminNotifications(request, env) {
+  const admin = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!admin) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  try {
+    const notifications = await env.DB.prepare(
+      `SELECT
+                        notifications.id,
+                        notifications.client_id,
+                        notifications.type,
+                        notifications.title,
+                        notifications.message,
+                        notifications.read,
+                        notifications.created_at,
+                        clients.name AS client_name
+                     FROM notifications
+                     LEFT JOIN clients
+                        ON clients.id =
+                           notifications.client_id
+                     ORDER BY
+                        notifications.created_at DESC
+                     LIMIT 100`
+    ).all();
+    return json({
+      success: true,
+      notifications: notifications.results || []
+    });
+  } catch (error) {
+    console.error(
+      "Admin notifications error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to load notifications."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminNotifications, "handleAdminNotifications");
+async function handleAdminMarkNotificationRead(request, env) {
+  const admin = await authenticateAdmin(
+    request,
+    env
+  );
+  if (!admin) {
+    return json(
+      {
+        success: false,
+        error: "Admin authentication required."
+      },
+      401
+    );
+  }
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return json(
+      {
+        success: false,
+        error: "Invalid JSON request."
+      },
+      400
+    );
+  }
+  if (!data.notificationId || typeof data.notificationId !== "string") {
+    return json(
+      {
+        success: false,
+        error: "Notification ID is required."
+      },
+      400
+    );
+  }
+  try {
+    await env.DB.prepare(
+      `UPDATE notifications
+                 SET read = 1
+                 WHERE id = ?`
+    ).bind(
+      data.notificationId
+    ).run();
+    return json({
+      success: true
+    });
+  } catch (error) {
+    console.error(
+      "Mark notification error:",
+      error
+    );
+    return json(
+      {
+        success: false,
+        error: "Unable to update notification."
+      },
+      500
+    );
+  }
+}
+__name(handleAdminMarkNotificationRead, "handleAdminMarkNotificationRead");
 var src_default = {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -511,6 +1262,72 @@ var src_default = {
     }
     if (url.pathname === "/api/portal/logout" && request.method === "POST") {
       return handlePortalLogout(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/portal/messages" && request.method === "GET") {
+      return handlePortalMessages(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/portal/messages" && request.method === "POST") {
+      return handlePortalSendMessage(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/login" && request.method === "POST") {
+      return handleAdminLogin(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/me" && request.method === "GET") {
+      return handleAdminMe(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/logout" && request.method === "POST") {
+      return handleAdminLogout(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/clients" && request.method === "GET") {
+      return handleAdminClients(
+        request,
+        env
+      );
+    }
+    if (url.pathname.startsWith(
+      "/api/admin/conversations/"
+    ) && request.method === "GET") {
+      const conversationId = url.pathname.split(
+        "/"
+      ).pop();
+      return handleAdminConversation(
+        request,
+        env,
+        conversationId
+      );
+    }
+    if (url.pathname === "/api/admin/messages" && request.method === "POST") {
+      return handleAdminSendMessage(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/notifications" && request.method === "GET") {
+      return handleAdminNotifications(
+        request,
+        env
+      );
+    }
+    if (url.pathname === "/api/admin/notifications/read" && request.method === "POST") {
+      return handleAdminMarkNotificationRead(
         request,
         env
       );
