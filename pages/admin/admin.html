@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin | Revenue Leak Hunter</title>
+
+    <link rel="stylesheet" href="./admin.css">
+</head>
+
+<body>
+
+    <!-- ================================
+         LOGIN
+    ================================= -->
+
+    <main id="admin-login" class="admin-login">
+
+        <div class="login-card">
+
+            <div class="login-brand">
+                <span class="brand-mark">RLH</span>
+
+                <div>
+                    <strong>Revenue Leak Hunter</strong>
+                    <span>Private Admin</span>
+                </div>
+            </div>
+
+            <div class="login-heading">
+                <span class="eyebrow">PRIVATE ACCESS</span>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    Manage clients, investigations,
+                    messages and notifications.
+                </p>
+            </div>
+
+            <form id="admin-login-form">
+
+                <label for="admin-password">
+                    Admin Password
+                </label>
+
+                <input
+                    type="password"
+                    id="admin-password"
+                    name="password"
+                    autocomplete="current-password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    id="admin-login-button"
+                >
+                    <span>Enter Dashboard</span>
+                    <span>→</span>
+                </button>
+
+                <p
+                    id="admin-login-error"
+                    class="form-error"
+                    hidden
+                ></p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================================
+         DASHBOARD
+    ================================= -->
+
+    <div id="admin-dashboard" class="admin-dashboard" hidden>
+
+        <!-- SIDEBAR -->
+
+        <aside class="admin-sidebar">
+
+            <div class="sidebar-brand">
+
+                <span class="brand-mark">RLH</span>
+
+                <div>
+                    <strong>Revenue Leak Hunter</strong>
+                    <span>Admin</span>
+                </div>
+
+            </div>
+
+            <nav class="admin-nav">
+
+                <button
+                    class="nav-item active"
+                    data-view="overview"
+                >
+                    <span class="nav-icon">⌂</span>
+                    <span>Overview</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-view="clients"
+                >
+                    <span class="nav-icon">◉</span>
+                    <span>Clients</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-view="notifications"
+                >
+                    <span class="nav-icon">◌</span>
+                    <span>Notifications</span>
+
+                    <span
+                        id="notification-count"
+                        class="notification-count"
+                        hidden
+                    >
+                        0
+                    </span>
+                </button>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <a
+                    href="/"
+                    class="back-site"
+                >
+                    ← View Website
+                </a>
+
+                <button
+                    id="admin-logout"
+                    class="logout-button"
+                >
+                    Log Out
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+
+        <main class="admin-main">
+
+            <header class="admin-header">
+
+                <div>
+                    <span class="eyebrow">
+                        CONTROL CENTER
+                    </span>
+
+                    <h1 id="page-title">
+                        Overview
+                    </h1>
+                </div>
+
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    System Online
+                </div>
+
+            </header>
+
+
+            <!-- ==========================
+                 OVERVIEW
+            =========================== -->
+
+            <section
+                id="view-overview"
+                class="admin-view active-view"
+            >
+
+                <div class="stats-grid">
+
+                    <article class="stat-card">
+                        <span class="stat-label">
+                            Total Clients
+                        </span>
+
+                        <strong
+                            id="stat-clients"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                        <span class="stat-note">
+                            Registered investigations
+                        </span>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="stat-label">
+                            Conversations
+                        </span>
+
+                        <strong
+                            id="stat-conversations"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                        <span class="stat-note">
+                            Active client threads
+                        </span>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="stat-label">
+                            Messages
+                        </span>
+
+                        <strong
+                            id="stat-messages"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                        <span class="stat-note">
+                            Across all investigations
+                        </span>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="stat-label">
+                            Unread
+                        </span>
+
+                        <strong
+                            id="stat-unread"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                        <span class="stat-note">
+                            Notifications waiting
+                        </span>
+                    </article>
+
+                </div>
+
+
+                <div class="dashboard-grid">
+
+                    <section class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <span class="panel-kicker">
+                                    RECENT ACTIVITY
+                                </span>
+
+                                <h2>
+                                    Latest clients
+                                </h2>
+                            </div>
+
+                            <button
+                                class="text-button"
+                                data-view="clients"
+                            >
+                                View all →
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="recent-clients"
+                            class="recent-list"
+                        >
+                            <div class="empty-state">
+                                Loading clients...
+                            </div>
+                        </div>
+
+                    </section>
+
+
+                    <section class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <span class="panel-kicker">
+                                    INBOX
+                                </span>
+
+                                <h2>
+                                    Notifications
+                                </h2>
+                            </div>
+
+                            <button
+                                class="text-button"
+                                data-view="notifications"
+                            >
+                                View all →
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="recent-notifications"
+                            class="notification-list"
+                        >
+                            <div class="empty-state">
+                                Loading notifications...
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================
+                 CLIENTS
+            =========================== -->
+
+            <section
+                id="view-clients"
+                class="admin-view"
+                hidden
+            >
+
+                <div class="section-intro">
+
+                    <div>
+                        <span class="eyebrow">
+                            CLIENT MANAGEMENT
+                        </span>
+
+                        <h2>
+                            Your investigations
+                        </h2>
+
+                        <p>
+                            Every client, conversation and
+                            active investigation in one place.
+                        </p>
+                    </div>
+
+                    <button
+                        id="refresh-clients"
+                        class="secondary-button"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div
+                    id="clients-list"
+                    class="clients-list"
+                >
+                    <div class="empty-state">
+                        Loading clients...
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ==========================
+                 CONVERSATION
+            =========================== -->
+
+            <section
+                id="view-conversation"
+                class="admin-view"
+                hidden
+            >
+
+                <div class="conversation-page">
+
+                    <div class="conversation-topbar">
+
+                        <button
+                            id="back-to-clients"
+                            class="back-button"
+                        >
+                            ← Clients
+                        </button>
+
+                        <div>
+                            <span
+                                id="conversation-status"
+                                class="conversation-status"
+                            >
+                                OPEN
+                            </span>
+
+                            <h2
+                                id="conversation-client-name"
+                            >
+                                Client
+                            </h2>
+
+                            <p
+                                id="conversation-client-details"
+                            >
+                                Loading...
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="conversation-layout">
+
+                        <aside class="client-info-card">
+
+                            <span class="panel-kicker">
+                                CLIENT
+                            </span>
+
+                            <h3 id="client-info-name">
+                                —
+                            </h3>
+
+                            <div class="client-detail">
+                                <span>Email</span>
+                                <strong id="client-info-email">
+                                    —
+                                </strong>
+                            </div>
+
+                            <div class="client-detail">
+                                <span>Business</span>
+                                <strong id="client-info-business">
+                                    —
+                                </strong>
+                            </div>
+
+                            <div class="client-detail">
+                                <span>Website</span>
+                                <strong id="client-info-website">
+                                    —
+                                </strong>
+                            </div>
+
+                        </aside>
+
+
+                        <div class="conversation-card">
+
+                            <div
+                                id="admin-messages"
+                                class="admin-messages"
+                            >
+                                <div class="empty-state">
+                                    Loading conversation...
+                                </div>
+                            </div>
+
+                            <form
+                                id="admin-message-form"
+                                class="admin-message-form"
+                            >
+
+                                <textarea
+                                    id="admin-message-input"
+                                    placeholder="Write your reply..."
+                                    maxlength="5000"
+                                    required
+                                ></textarea>
+
+                                <div class="message-form-bottom">
+
+                                    <span>
+                                        Reply as Revenue Leak Hunter
+                                    </span>
+
+                                    <button
+                                        type="submit"
+                                        id="admin-send-message"
+                                        class="send-button"
+                                    >
+                                        Send Reply →
+                                    </button>
+
+                                </div>
+
+                                <p
+                                    id="admin-message-error"
+                                    class="form-error"
+                                    hidden
+                                ></p>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================
+                 NOTIFICATIONS
+            =========================== -->
+
+            <section
+                id="view-notifications"
+                class="admin-view"
+                hidden
+            >
+
+                <div class="section-intro">
+
+                    <div>
+                        <span class="eyebrow">
+                            ACTIVITY
+                        </span>
+
+                        <h2>
+                            Notifications
+                        </h2>
+
+                        <p>
+                            New clients and messages requiring
+                            your attention.
+                        </p>
+                    </div>
+
+                    <button
+                        id="refresh-notifications"
+                        class="secondary-button"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div
+                    id="notifications-list"
+                    class="notifications-full"
+                >
+                    <div class="empty-state">
+                        Loading notifications...
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="./admin.js"></script>
+
+</body>
+</html>
