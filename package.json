@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/preciousosason/revenue-leak-hunter/issues"
   },
-  "homepage": "https://github.com/preciousosason/revenue-leak-hunter#readme"
+  "homepage": "https://github.com/preciousosason/revenue-leak-hunter#readme",
+  "devDependencies": {
+    "wrangler": "^4.136.0"
+  }
 }
