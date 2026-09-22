@@ -10,8 +10,60 @@ let notifications = [];
 let currentConversationId = null;
 
 let conversationPollingInterval = null;
-let lastConversationMessageId = null;
-let lastConversationMessageCount = 0;
+let lastConversationSignature = "";
+
+
+/* =========================================
+   FILE CONFIGURATION
+========================================= */
+
+const MAX_FILES = 5;
+
+const MAX_FILE_SIZE =
+    10 * 1024 * 1024;
+
+const ALLOWED_EXTENSIONS = [
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "webp",
+    "gif",
+    "txt",
+    "csv",
+    "doc",
+    "docx",
+    "xls",
+    "xlsx",
+    "ppt",
+    "pptx"
+];
+
+const ALLOWED_MIME_TYPES = [
+    "application/pdf",
+
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+
+    "text/plain",
+    "text/csv",
+
+    "application/msword",
+
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+    "application/vnd.ms-excel",
+
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+    "application/vnd.ms-powerpoint",
+
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+];
+
+let selectedFiles = [];
 
 
 /* =========================================
@@ -90,6 +142,21 @@ const adminMessageInput =
 const adminMessageError =
     document.getElementById(
         "admin-message-error"
+    );
+
+const adminMessageFiles =
+    document.getElementById(
+        "admin-message-files"
+    );
+
+const adminFileSelection =
+    document.getElementById(
+        "admin-file-selection"
+    );
+
+const adminSelectedFiles =
+    document.getElementById(
+        "admin-selected-files"
     );
 
 
@@ -178,6 +245,508 @@ function getAuthHeaders() {
 
 
 /* =========================================
+   FILE HELPERS
+========================================= */
+
+function formatFileSize(bytes) {
+
+    const size =
+        Number(bytes);
+
+
+    if (
+        !Number.isFinite(size) ||
+        size < 0
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        size < 1024
+    ) {
+
+        return `${size} B`;
+
+    }
+
+
+    if (
+        size < 1024 * 1024
+    ) {
+
+        return `${(
+            size / 1024
+        ).toFixed(1)} KB`;
+
+    }
+
+
+    return `${(
+        size /
+        (1024 * 1024)
+    ).toFixed(1)} MB`;
+
+}
+
+
+function getFileLabel(file) {
+
+    const category =
+        String(
+            file?.category ||
+            ""
+        ).toLowerCase();
+
+
+    const contentType =
+        String(
+            file?.contentType ||
+            ""
+        ).toLowerCase();
+
+
+    if (
+        category === "image" ||
+        contentType.startsWith(
+            "image/"
+        )
+    ) {
+
+        return "IMG";
+
+    }
+
+
+    if (
+        category === "pdf" ||
+        contentType ===
+            "application/pdf"
+    ) {
+
+        return "PDF";
+
+    }
+
+
+    if (
+        category === "document"
+    ) {
+
+        return "DOC";
+
+    }
+
+
+    if (
+        category === "spreadsheet"
+    ) {
+
+        return "XLS";
+
+    }
+
+
+    if (
+        category === "presentation"
+    ) {
+
+        return "PPT";
+
+    }
+
+
+    if (
+        category === "text"
+    ) {
+
+        return "TXT";
+
+    }
+
+
+    return "FILE";
+
+}
+
+
+function validateFile(file) {
+
+    if (!file) {
+
+        return "Invalid file.";
+
+    }
+
+
+    if (
+        file.size >
+        MAX_FILE_SIZE
+    ) {
+
+        return (
+            `"${file.name}" is larger than 10 MB.`
+        );
+
+    }
+
+
+    const extension =
+        String(
+            file.name || ""
+        )
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    if (
+        !ALLOWED_EXTENSIONS.includes(
+            extension
+        )
+    ) {
+
+        return (
+            `"${file.name}" is not a supported file type.`
+        );
+
+    }
+
+
+    if (
+        file.type &&
+        !ALLOWED_MIME_TYPES.includes(
+            file.type
+        )
+    ) {
+
+        return (
+            `"${file.name}" has an unsupported file format.`
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================
+   SELECTED FILES
+========================================= */
+
+function renderSelectedFiles() {
+
+    if (!adminSelectedFiles) {
+        return;
+    }
+
+
+    adminSelectedFiles.innerHTML =
+        selectedFiles
+            .map(
+                (file, index) => {
+
+                    const extension =
+                        file.name
+                            .split(".")
+                            .pop()
+                            .toUpperCase();
+
+
+                    return `
+                        <div
+                            class="selected-file"
+                            data-file-index="${index}"
+                        >
+
+                            <span
+                                class="selected-file-icon"
+                            >
+                                ${escapeHTML(
+                                    extension
+                                )}
+                            </span>
+
+
+                            <span
+                                class="selected-file-name"
+                                title="${escapeHTML(
+                                    file.name
+                                )}"
+                            >
+                                ${escapeHTML(
+                                    file.name
+                                )}
+                            </span>
+
+
+                            <span
+                                class="selected-file-size"
+                            >
+                                ${escapeHTML(
+                                    formatFileSize(
+                                        file.size
+                                    )
+                                )}
+                            </span>
+
+
+                            <button
+                                type="button"
+                                class="selected-file-remove"
+                                data-file-index="${index}"
+                                aria-label="Remove ${escapeHTML(
+                                    file.name
+                                )}"
+                                title="Remove file"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    if (adminFileSelection) {
+
+        if (!selectedFiles.length) {
+
+            adminFileSelection.textContent =
+                "No files selected";
+
+        } else {
+
+            adminFileSelection.textContent =
+                `${selectedFiles.length} ${
+                    selectedFiles.length === 1
+                        ? "file"
+                        : "files"
+                } selected`;
+
+        }
+
+    }
+
+}
+
+
+function handleFileSelection(files) {
+
+    hideMessageError();
+
+
+    const incomingFiles =
+        Array.from(
+            files || []
+        );
+
+
+    if (!incomingFiles.length) {
+        return;
+    }
+
+
+    const availableSlots =
+        MAX_FILES -
+        selectedFiles.length;
+
+
+    if (
+        availableSlots <= 0
+    ) {
+
+        showMessageError(
+            "You can attach a maximum of 5 files to one message."
+        );
+
+
+        if (adminMessageFiles) {
+
+            adminMessageFiles.value =
+                "";
+
+        }
+
+
+        return;
+
+    }
+
+
+    const filesToAdd =
+        incomingFiles.slice(
+            0,
+            availableSlots
+        );
+
+
+    const rejected = [];
+
+
+    filesToAdd.forEach(
+        file => {
+
+            const validationError =
+                validateFile(
+                    file
+                );
+
+
+            if (validationError) {
+
+                rejected.push(
+                    validationError
+                );
+
+                return;
+
+            }
+
+
+            const duplicate =
+                selectedFiles.some(
+                    existingFile =>
+                        existingFile.name ===
+                            file.name &&
+                        existingFile.size ===
+                            file.size &&
+                        existingFile.lastModified ===
+                            file.lastModified
+                );
+
+
+            if (duplicate) {
+                return;
+            }
+
+
+            selectedFiles.push(
+                file
+            );
+
+        }
+    );
+
+
+    if (
+        incomingFiles.length >
+        availableSlots
+    ) {
+
+        rejected.push(
+            "Only 5 files can be attached to one message."
+        );
+
+    }
+
+
+    if (rejected.length) {
+
+        showMessageError(
+            rejected.join(" ")
+        );
+
+    }
+
+
+    renderSelectedFiles();
+
+
+    if (adminMessageFiles) {
+
+        adminMessageFiles.value =
+            "";
+
+    }
+
+}
+
+
+function removeSelectedFile(index) {
+
+    if (
+        index < 0 ||
+        index >= selectedFiles.length
+    ) {
+
+        return;
+
+    }
+
+
+    selectedFiles.splice(
+        index,
+        1
+    );
+
+
+    renderSelectedFiles();
+
+}
+
+
+/* =========================================
+   FILE INPUT
+========================================= */
+
+if (adminMessageFiles) {
+
+    adminMessageFiles.addEventListener(
+        "change",
+        event => {
+
+            handleFileSelection(
+                event.target.files
+            );
+
+        }
+    );
+
+}
+
+
+if (adminSelectedFiles) {
+
+    adminSelectedFiles.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    ".selected-file-remove"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            const index =
+                Number(
+                    button.dataset.fileIndex
+                );
+
+
+            removeSelectedFile(
+                index
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
    CLICKABLE LINKS + EMAILS
 ========================================= */
 
@@ -201,10 +770,6 @@ function linkifyMessage(value) {
                     "";
 
 
-                /*
-                 * Keep punctuation outside the link.
-                 */
-
                 while (
                     /[.,!?;:)]$/.test(
                         cleanMatch
@@ -224,10 +789,6 @@ function linkifyMessage(value) {
                 }
 
 
-                /*
-                 * EMAIL
-                 */
-
                 if (
                     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
                         cleanMatch
@@ -244,10 +805,6 @@ function linkifyMessage(value) {
 
                 }
 
-
-                /*
-                 * URL
-                 */
 
                 const href =
                     /^https?:\/\//i.test(
@@ -664,11 +1221,6 @@ document
 
 function switchView(view) {
 
-    /*
-     * Any view other than conversation
-     * should stop conversation polling.
-     */
-
     if (
         view !==
         "conversation"
@@ -1047,10 +1599,6 @@ async function openConversation(
     }
 
 
-    /*
-     * Stop polling the previous conversation.
-     */
-
     stopConversationPolling();
 
 
@@ -1058,12 +1606,15 @@ async function openConversation(
         conversationId;
 
 
-    lastConversationMessageId =
-        null;
+    lastConversationSignature =
+        "";
 
 
-    lastConversationMessageCount =
-        0;
+    selectedFiles =
+        [];
+
+
+    renderSelectedFiles();
 
 
     switchView(
@@ -1088,11 +1639,6 @@ async function openConversation(
         );
 
 
-        /*
-         * Start 2-second polling only
-         * after the conversation has loaded.
-         */
-
         startConversationPolling();
 
 
@@ -1111,6 +1657,41 @@ async function openConversation(
 
 
 /* =========================================
+   CONVERSATION SIGNATURE
+========================================= */
+
+function getConversationSignature(
+    messages
+) {
+
+    return messages
+        .map(message => {
+
+            const fileSignature =
+                Array.isArray(
+                    message.files
+                )
+                    ? message.files
+                        .map(
+                            file =>
+                                file.id
+                        )
+                        .join(",")
+                    : "";
+
+
+            return (
+                `${message.id}:` +
+                `${fileSignature}`
+            );
+
+        })
+        .join("|");
+
+}
+
+
+/* =========================================
    LOAD CONVERSATION
 ========================================= */
 
@@ -1124,12 +1705,6 @@ async function loadConversation(
         forceRender = false
     } = options;
 
-
-    /*
-     * Ignore responses belonging to an
-     * older conversation if the admin
-     * switched quickly.
-     */
 
     if (
         conversationId !==
@@ -1151,11 +1726,6 @@ async function loadConversation(
             );
 
 
-        /*
-         * Conversation may have changed
-         * while the request was in flight.
-         */
-
         if (
             conversationId !==
             currentConversationId
@@ -1170,28 +1740,16 @@ async function loadConversation(
             data.messages || [];
 
 
-        const newestMessage =
-            messages.length
-                ? messages[messages.length - 1]
-                : null;
-
-
-        const newestMessageId =
-            newestMessage
-                ? newestMessage.id
-                : null;
+        const conversationSignature =
+            getConversationSignature(
+                messages
+            );
 
 
         const messagesChanged =
-            newestMessageId !==
-                lastConversationMessageId ||
-            messages.length !==
-                lastConversationMessageCount;
+            conversationSignature !==
+            lastConversationSignature;
 
-
-        /*
-         * Only redraw when necessary.
-         */
 
         if (
             forceRender ||
@@ -1204,12 +1762,8 @@ async function loadConversation(
             );
 
 
-            lastConversationMessageId =
-                newestMessageId;
-
-
-            lastConversationMessageCount =
-                messages.length;
+            lastConversationSignature =
+                conversationSignature;
 
         }
 
@@ -1221,12 +1775,6 @@ async function loadConversation(
             error
         );
 
-
-        /*
-         * During background polling,
-         * don't destroy the conversation UI
-         * because of a temporary network error.
-         */
 
         if (!silent) {
 
@@ -1261,11 +1809,6 @@ function startConversationPolling() {
     conversationPollingInterval =
         setInterval(
             () => {
-
-                /*
-                 * Don't make requests when the
-                 * admin has another tab active.
-                 */
 
                 if (
                     document.hidden
@@ -1335,20 +1878,10 @@ document.addEventListener(
             document.hidden
         ) {
 
-            /*
-             * Keep the interval alive but don't
-             * make requests while hidden.
-             */
-
             return;
 
         }
 
-
-        /*
-         * Immediately check for a new message
-         * when returning to the dashboard.
-         */
 
         if (
             currentConversationId &&
@@ -1367,6 +1900,122 @@ document.addEventListener(
 
     }
 );
+
+
+/* =========================================
+   RENDER MESSAGE FILES
+========================================= */
+
+function renderMessageFiles(
+    files
+) {
+
+    if (
+        !Array.isArray(files) ||
+        !files.length
+    ) {
+
+        return "";
+
+    }
+
+
+    return `
+        <div class="message-attachments">
+
+            <span class="message-attachments-label">
+                Attachments
+            </span>
+
+            ${files.map(
+                file => {
+
+                    const fileId =
+                        escapeHTML(
+                            file.id || ""
+                        );
+
+                    const fileName =
+                        escapeHTML(
+                            file.name ||
+                            "Attached file"
+                        );
+
+                    const label =
+                        escapeHTML(
+                            getFileLabel(
+                                file
+                            )
+                        );
+
+                    const size =
+                        escapeHTML(
+                            formatFileSize(
+                                file.size
+                            )
+                        );
+
+
+                    return `
+                        <div
+                            class="message-file"
+                        >
+
+                            <span
+                                class="message-file-icon"
+                                aria-hidden="true"
+                            >
+                                ${label}
+                            </span>
+
+
+                            <div
+                                class="message-file-info"
+                            >
+
+                                <span
+                                    class="message-file-name"
+                                    title="${fileName}"
+                                >
+                                    ${fileName}
+                                </span>
+
+
+                                <span
+                                    class="message-file-meta"
+                                >
+                                    ${label}
+                                    ${
+                                        size
+                                            ? ` · ${size}`
+                                            : ""
+                                    }
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="message-file-download"
+                                data-file-id="${fileId}"
+                                data-file-name="${fileName}"
+                                title="Download file"
+                                aria-label="Download ${fileName}"
+                            >
+                                ↓
+                            </button>
+
+                        </div>
+                    `;
+
+                }
+            ).join("")}
+
+        </div>
+    `;
+
+}
 
 
 /* =========================================
@@ -1467,6 +2116,11 @@ function renderConversation(
                             </div>
 
 
+                            ${renderMessageFiles(
+                                message.files
+                            )}
+
+
                             <div class="message-meta">
 
                                 ${
@@ -1504,6 +2158,301 @@ function renderConversation(
 
 
 /* =========================================
+   DOWNLOAD ADMIN ATTACHMENT
+========================================= */
+
+async function downloadAdminFile(
+    fileId,
+    fileName,
+    button
+) {
+
+    if (!fileId) {
+        return;
+    }
+
+
+    const originalContent =
+        button
+            ? button.innerHTML
+            : "";
+
+
+    try {
+
+        if (button) {
+
+            button.disabled =
+                true;
+
+            button.innerHTML =
+                "…";
+
+        }
+
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/files/${encodeURIComponent(
+                    fileId
+                )}`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${adminSession}`
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            let errorMessage =
+                "Unable to download file.";
+
+
+            try {
+
+                const result =
+                    await response.json();
+
+
+                errorMessage =
+                    result.error ||
+                    errorMessage;
+
+            } catch {
+            }
+
+
+            if (
+                response.status ===
+                401
+            ) {
+
+                logoutLocal();
+
+            }
+
+
+            throw new Error(
+                errorMessage
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const anchor =
+            document.createElement(
+                "a"
+            );
+
+
+        anchor.href =
+            url;
+
+
+        anchor.download =
+            fileName ||
+            "download";
+
+
+        document.body.appendChild(
+            anchor
+        );
+
+
+        anchor.click();
+
+
+        anchor.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1000
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Admin file download error:",
+            error
+        );
+
+
+        showMessageError(
+            error.message ||
+            "Unable to download file."
+        );
+
+
+    } finally {
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.innerHTML =
+                originalContent;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   ATTACHMENT DOWNLOAD DELEGATION
+========================================= */
+
+if (adminMessages) {
+
+    adminMessages.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    ".message-file-download"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            downloadAdminFile(
+                button.dataset.fileId,
+                button.dataset.fileName ||
+                    "download",
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   UPLOAD ADMIN FILE
+========================================= */
+
+async function uploadAdminFile(
+    file,
+    conversationId,
+    messageId
+) {
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "conversationId",
+        conversationId
+    );
+
+
+    formData.append(
+        "messageId",
+        messageId
+    );
+
+
+    const response =
+        await fetch(
+            `${API_URL}/api/admin/files`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Authorization":
+                        `Bearer ${adminSession}`
+                },
+
+                body:
+                    formData
+            }
+        );
+
+
+    let result = null;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    } catch {
+        result = null;
+    }
+
+
+    if (
+        response.status ===
+        401
+    ) {
+
+        logoutLocal();
+
+
+        throw new Error(
+            "Your admin session has expired."
+        );
+
+    }
+
+
+    if (
+        !response.ok ||
+        !result?.success
+    ) {
+
+        throw new Error(
+            result?.error ||
+            `Unable to upload ${file.name}.`
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================
    SEND ADMIN MESSAGE
 ========================================= */
 
@@ -1514,8 +2463,7 @@ adminMessageForm.addEventListener(
         event.preventDefault();
 
 
-        adminMessageError.hidden =
-            true;
+        hideMessageError();
 
 
         const message =
@@ -1550,30 +2498,69 @@ adminMessageForm.addEventListener(
             );
 
 
+        const filesBeingSent =
+            [...selectedFiles];
+
+
         sendButton.disabled =
             true;
 
 
-        sendButton.textContent =
-            "Sending...";
-
-
         try {
 
-            await api(
-                "/api/admin/messages",
-                {
-                    method: "POST",
+            /*
+             * STEP 1:
+             * Send the admin message.
+             */
 
-                    body:
-                        JSON.stringify({
-                            conversationId:
-                                currentConversationId,
+            sendButton.textContent =
+                "Sending...";
 
-                            message
-                        })
-                }
-            );
+
+            const result =
+                await api(
+                    "/api/admin/messages",
+                    {
+                        method: "POST",
+
+                        body:
+                            JSON.stringify({
+                                conversationId:
+                                    currentConversationId,
+
+                                message
+                            })
+                    }
+                );
+
+
+            /*
+             * The backend should return the
+             * created message. We support the
+             * common response shapes.
+             */
+
+            const messageId =
+                result.message?.id ||
+                result.id;
+
+
+            const conversationId =
+                result.message?.conversation_id ||
+                result.conversation?.id ||
+                currentConversationId;
+
+
+            if (
+                filesBeingSent.length &&
+                !messageId
+            ) {
+
+                throw new Error(
+                    "Your reply was sent, but the server did not return the message ID needed for file uploads."
+                );
+
+            }
 
 
             adminMessageInput.value =
@@ -1581,8 +2568,80 @@ adminMessageForm.addEventListener(
 
 
             /*
-             * Immediately refresh the open
-             * conversation after sending.
+             * STEP 2:
+             * Upload selected files.
+             */
+
+            const uploadResults = {
+                successful: [],
+                failed: []
+            };
+
+
+            for (
+                let index = 0;
+                index <
+                filesBeingSent.length;
+                index++
+            ) {
+
+                const file =
+                    filesBeingSent[index];
+
+
+                sendButton.textContent =
+                    `Uploading ${
+                        index + 1
+                    }/${filesBeingSent.length}...`;
+
+
+                try {
+
+                    await uploadAdminFile(
+                        file,
+                        conversationId,
+                        messageId
+                    );
+
+
+                    uploadResults.successful.push(
+                        file
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        `Admin file upload failed: ${file.name}`,
+                        error
+                    );
+
+
+                    uploadResults.failed.push({
+                        file,
+                        error
+                    });
+
+                }
+
+            }
+
+
+            /*
+             * Clear selected files only after
+             * the upload attempt has completed.
+             */
+
+            selectedFiles =
+                [];
+
+
+            renderSelectedFiles();
+
+
+            /*
+             * STEP 3:
+             * Refresh conversation.
              */
 
             await loadConversation(
@@ -1597,10 +2656,43 @@ adminMessageForm.addEventListener(
             await loadNotifications();
 
 
+            /*
+             * Tell admin about partial upload
+             * failures without pretending the
+             * message itself failed.
+             */
+
+            if (
+                uploadResults.failed.length
+            ) {
+
+                const failedNames =
+                    uploadResults.failed
+                        .map(
+                            item =>
+                                item.file.name
+                        )
+                        .join(", ");
+
+
+                showMessageError(
+                    `Your reply was sent, but these files could not be uploaded: ${failedNames}`
+                );
+
+            }
+
+
         } catch (error) {
 
+            console.error(
+                "Admin send message error:",
+                error
+            );
+
+
             showMessageError(
-                error.message
+                error.message ||
+                "Unable to send your reply."
             );
 
 
@@ -1619,9 +2711,18 @@ adminMessageForm.addEventListener(
 );
 
 
+/* =========================================
+   MESSAGE ERROR
+========================================= */
+
 function showMessageError(
     message
 ) {
+
+    if (!adminMessageError) {
+        return;
+    }
+
 
     adminMessageError.textContent =
         message;
@@ -1629,6 +2730,23 @@ function showMessageError(
 
     adminMessageError.hidden =
         false;
+
+}
+
+
+function hideMessageError() {
+
+    if (!adminMessageError) {
+        return;
+    }
+
+
+    adminMessageError.textContent =
+        "";
+
+
+    adminMessageError.hidden =
+        true;
 
 }
 
@@ -1647,6 +2765,17 @@ document
 
             currentConversationId =
                 null;
+
+
+            lastConversationSignature =
+                "";
+
+
+            selectedFiles =
+                [];
+
+
+            renderSelectedFiles();
 
 
             stopConversationPolling();
@@ -1962,6 +3091,13 @@ document
         "click",
         loadNotifications
     );
+
+
+/* =========================================
+   INITIAL FILE UI
+========================================= */
+
+renderSelectedFiles();
 
 
 /* =========================================

@@ -3,6 +3,7 @@
     --surface: #101012;
     --surface-2: #151518;
     --surface-3: #1b1b20;
+
     --border: rgba(255, 255, 255, 0.09);
     --border-strong: rgba(255, 255, 255, 0.15);
 
@@ -32,6 +33,7 @@ body {
 body {
     background: var(--bg);
     color: var(--text);
+
     font-family:
         Inter,
         -apple-system,
@@ -60,8 +62,10 @@ button {
 
 .admin-login {
     min-height: 100vh;
+
     display: grid;
     place-items: center;
+
     padding: 24px;
 
     background:
@@ -75,26 +79,28 @@ button {
 
 .login-card {
     width: min(100%, 460px);
+
     padding: 42px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(255,255,255,0.045),
-            rgba(255,255,255,0.015)
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.015)
         );
 
     border: 1px solid var(--border);
     border-radius: 24px;
 
     box-shadow:
-        0 30px 100px rgba(0,0,0,0.45);
+        0 30px 100px rgba(0, 0, 0, 0.45);
 }
 
 .login-brand,
 .sidebar-brand {
     display: flex;
     align-items: center;
+
     gap: 12px;
 }
 
@@ -122,15 +128,18 @@ button {
 .login-brand strong,
 .sidebar-brand strong {
     display: block;
+
     font-size: 13px;
 }
 
 .login-brand span:last-child,
 .sidebar-brand span:last-child {
     display: block;
+
     margin-top: 3px;
 
     color: var(--muted);
+
     font-size: 11px;
 }
 
@@ -145,10 +154,11 @@ button {
 }
 
 .login-heading h1 {
-    margin: 10px 0 10px;
+    margin: 10px 0;
 
     font-size: clamp(32px, 6vw, 46px);
     line-height: 1;
+
     letter-spacing: -0.04em;
 }
 
@@ -156,11 +166,13 @@ button {
     margin: 0 0 34px;
 
     color: var(--muted);
+
     line-height: 1.7;
 }
 
 #admin-login-form label {
     display: block;
+
     margin-bottom: 9px;
 
     color: #cfcfd4;
@@ -176,7 +188,7 @@ button {
     padding: 0 16px;
 
     color: var(--text);
-    background: rgba(255,255,255,0.04);
+    background: rgba(255, 255, 255, 0.04);
 
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -189,8 +201,9 @@ button {
 }
 
 #admin-password:focus {
-    border-color: rgba(215,255,63,0.55);
-    background: rgba(255,255,255,0.06);
+    border-color: rgba(215, 255, 63, 0.55);
+
+    background: rgba(255, 255, 255, 0.06);
 }
 
 #admin-login-button {
@@ -221,6 +234,7 @@ button {
 
 #admin-login-button:hover {
     transform: translateY(-2px);
+
     filter: brightness(1.05);
 }
 
@@ -228,6 +242,7 @@ button {
     margin: 12px 0 0;
 
     color: var(--danger);
+
     font-size: 12px;
     line-height: 1.5;
 }
@@ -238,11 +253,13 @@ button {
 
 .admin-dashboard {
     min-height: 100vh;
+
     display: flex;
 }
 
 .admin-sidebar {
     position: fixed;
+
     inset: 0 auto 0 0;
 
     width: var(--sidebar);
@@ -263,6 +280,7 @@ button {
 
 .admin-nav {
     display: grid;
+
     gap: 5px;
 }
 
@@ -271,6 +289,7 @@ button {
 
     display: flex;
     align-items: center;
+
     gap: 12px;
 
     padding: 12px;
@@ -278,6 +297,7 @@ button {
     color: var(--muted);
 
     background: transparent;
+
     border: 1px solid transparent;
     border-radius: 10px;
 
@@ -292,7 +312,9 @@ button {
 .nav-item:hover,
 .nav-item.active {
     color: var(--text);
-    background: rgba(255,255,255,0.045);
+
+    background: rgba(255, 255, 255, 0.045);
+
     border-color: var(--border);
 }
 
@@ -304,6 +326,7 @@ button {
     width: 20px;
 
     text-align: center;
+
     font-size: 15px;
 }
 
@@ -331,6 +354,7 @@ button {
     margin-top: auto;
 
     display: grid;
+
     gap: 8px;
 }
 
@@ -343,11 +367,13 @@ button {
     border-radius: 9px;
 
     font-size: 12px;
+
     text-align: left;
 }
 
 .back-site {
     color: var(--muted);
+
     text-decoration: none;
 
     background: transparent;
@@ -360,9 +386,9 @@ button {
 .logout-button {
     color: var(--danger);
 
-    background: rgba(255,98,98,0.05);
+    background: rgba(255, 98, 98, 0.05);
 
-    border: 1px solid rgba(255,98,98,0.12);
+    border: 1px solid rgba(255, 98, 98, 0.12);
 }
 
 /* =========================================
@@ -371,6 +397,7 @@ button {
 
 .admin-main {
     width: calc(100% - var(--sidebar));
+
     margin-left: var(--sidebar);
 
     padding: 36px;
@@ -394,12 +421,14 @@ button {
     margin: 8px 0 0;
 
     font-size: 30px;
+
     letter-spacing: -0.04em;
 }
 
 .header-status {
     display: flex;
     align-items: center;
+
     gap: 8px;
 
     color: var(--muted);
@@ -412,10 +441,11 @@ button {
     height: 7px;
 
     border-radius: 50%;
+
     background: var(--accent);
 
     box-shadow:
-        0 0 12px rgba(215,255,63,0.65);
+        0 0 12px rgba(215, 255, 63, 0.65);
 }
 
 /* =========================================
@@ -429,17 +459,20 @@ button {
 @keyframes fadeIn {
     from {
         opacity: 0;
+
         transform: translateY(5px);
     }
 
     to {
         opacity: 1;
+
         transform: translateY(0);
     }
 }
 
 .stats-grid {
     display: grid;
+
     grid-template-columns:
         repeat(4, minmax(0, 1fr));
 
@@ -470,7 +503,9 @@ button {
 
 .stat-label {
     text-transform: uppercase;
+
     letter-spacing: 0.12em;
+
     font-weight: 700;
 }
 
@@ -480,6 +515,7 @@ button {
     margin: 17px 0 7px;
 
     font-size: 38px;
+
     line-height: 1;
 
     letter-spacing: -0.05em;
@@ -495,6 +531,7 @@ button {
 
 .dashboard-grid {
     display: grid;
+
     grid-template-columns:
         minmax(0, 1.25fr)
         minmax(300px, 0.75fr);
@@ -532,6 +569,7 @@ button {
 
     font-size: 9px;
     font-weight: 800;
+
     letter-spacing: 0.17em;
 }
 
@@ -539,6 +577,7 @@ button {
     margin: 0;
 
     font-size: 19px;
+
     letter-spacing: -0.03em;
 }
 
@@ -566,6 +605,7 @@ button {
 .client-row {
     display: flex;
     align-items: center;
+
     gap: 14px;
 
     padding: 16px 20px;
@@ -580,7 +620,7 @@ button {
 }
 
 .client-row:hover {
-    background: rgba(255,255,255,0.025);
+    background: rgba(255, 255, 255, 0.025);
 }
 
 .client-avatar {
@@ -594,7 +634,7 @@ button {
 
     border-radius: 10px;
 
-    background: rgba(215,255,63,0.09);
+    background: rgba(215, 255, 63, 0.09);
     color: var(--accent);
 
     font-size: 12px;
@@ -603,6 +643,7 @@ button {
 
 .client-row-main {
     min-width: 0;
+
     flex: 1;
 }
 
@@ -612,7 +653,9 @@ button {
     font-size: 13px;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
@@ -626,7 +669,9 @@ button {
     font-size: 11px;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
@@ -652,6 +697,7 @@ button {
     margin: 8px 0 7px;
 
     font-size: 28px;
+
     letter-spacing: -0.04em;
 }
 
@@ -669,6 +715,7 @@ button {
 
 .clients-list {
     display: grid;
+
     gap: 10px;
 }
 
@@ -682,6 +729,7 @@ button {
         auto;
 
     align-items: center;
+
     gap: 20px;
 
     padding: 19px 20px;
@@ -698,25 +746,30 @@ button {
 
 .client-card:hover {
     border-color: var(--border-strong);
+
     transform: translateY(-1px);
 }
 
 .client-card-name {
     display: flex;
     align-items: center;
+
     gap: 12px;
 }
 
 .client-card-name strong {
     display: block;
+
     font-size: 13px;
 }
 
 .client-card-name span {
     display: block;
+
     margin-top: 4px;
 
     color: var(--muted);
+
     font-size: 10px;
 }
 
@@ -728,13 +781,17 @@ button {
     color: var(--muted-2);
 
     font-size: 9px;
+
     text-transform: uppercase;
+
     letter-spacing: 0.1em;
 }
 
 .client-card-detail strong {
     color: #d5d5da;
+
     font-size: 11px;
+
     font-weight: 600;
 }
 
@@ -742,6 +799,7 @@ button {
     padding: 9px 12px;
 
     color: #090909;
+
     background: var(--accent);
 
     border: 0;
@@ -752,12 +810,13 @@ button {
 }
 
 /* =========================================
-   CONVERSATION
+   CONVERSATION HEADER
 ========================================= */
 
 .conversation-topbar {
     display: flex;
     align-items: flex-start;
+
     gap: 24px;
 
     margin-bottom: 22px;
@@ -771,6 +830,7 @@ button {
     margin: 6px 0 4px;
 
     font-size: 27px;
+
     letter-spacing: -0.04em;
 }
 
@@ -789,15 +849,20 @@ button {
 
     color: var(--accent);
 
-    background: rgba(215,255,63,0.08);
+    background: rgba(215, 255, 63, 0.08);
 
-    border: 1px solid rgba(215,255,63,0.12);
+    border: 1px solid rgba(215, 255, 63, 0.12);
     border-radius: 20px;
 
     font-size: 8px;
     font-weight: 900;
+
     letter-spacing: 0.12em;
 }
+
+/* =========================================
+   CONVERSATION LAYOUT
+========================================= */
 
 .conversation-layout {
     display: grid;
@@ -839,7 +904,9 @@ button {
     color: var(--muted-2);
 
     font-size: 9px;
+
     text-transform: uppercase;
+
     letter-spacing: 0.1em;
 }
 
@@ -853,8 +920,15 @@ button {
     overflow-wrap: anywhere;
 }
 
+/* =========================================
+   CONVERSATION CARD
+========================================= */
+
 .conversation-card {
     min-width: 0;
+
+    display: flex;
+    flex-direction: column;
 
     background: var(--surface);
 
@@ -864,6 +938,10 @@ button {
     overflow: hidden;
 }
 
+/* =========================================
+   ADMIN MESSAGE AREA
+========================================= */
+
 .admin-messages {
     min-height: 430px;
     max-height: 580px;
@@ -871,12 +949,42 @@ button {
     overflow-y: auto;
 
     padding: 24px;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255, 255, 255, 0.12)
+        transparent;
 }
 
+.admin-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.admin-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.admin-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+
+    border-radius: 20px;
+}
+
+/* =========================================
+   MESSAGES
+========================================= */
+
 .message {
+    width: 100%;
+
     display: flex;
 
     margin-bottom: 18px;
+}
+
+.message:last-child {
+    margin-bottom: 0;
 }
 
 .message.client {
@@ -888,6 +996,8 @@ button {
 }
 
 .message-bubble {
+    width: fit-content;
+
     max-width: min(75%, 620px);
 
     padding: 13px 15px;
@@ -898,7 +1008,10 @@ button {
     line-height: 1.65;
 
     white-space: pre-wrap;
+
     overflow-wrap: anywhere;
+
+    word-break: break-word;
 }
 
 .message.client .message-bubble {
@@ -911,6 +1024,7 @@ button {
 
 .message.admin .message-bubble {
     color: #0b0b0b;
+
     background: var(--accent);
 
     border-bottom-right-radius: 4px;
@@ -928,14 +1042,219 @@ button {
     text-align: right;
 }
 
+.message-link {
+    text-decoration: underline;
+
+    text-underline-offset: 3px;
+
+    word-break: break-word;
+}
+
+.message-link:hover {
+    opacity: 0.75;
+}
+
+.message-email {
+    word-break: break-word;
+}
+
+/* =========================================
+   MESSAGE ATTACHMENTS
+========================================= */
+
+.message-attachments {
+    width: 100%;
+
+    display: grid;
+
+    gap: 7px;
+
+    margin-top: 10px;
+}
+
+.message-attachments-label {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: rgba(255, 255, 255, 0.52);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.12em;
+}
+
+.message.admin .message-attachments-label {
+    color: rgba(43, 173, 115, 0.55);
+}
+
+.message-file {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 10px;
+
+    background: rgba(22, 230, 174, 0.035);
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+}
+
+.message.admin .message-file {
+    background: rgb(250, 238, 2);
+
+    border-color: rgb(250, 250, 250);
+}
+
+.message-file-icon {
+    width: 30px;
+    height: 30px;
+
+    flex: 0 0 30px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 7px;
+
+    color: var(--accent);
+
+    background: rgba(215, 255, 63, 0.08);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.message.admin .message-file-icon {
+    color: #090909;
+
+    background: rgba(8, 8, 8, 0.12);
+}
+
+.message-file-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.message-file-name {
+    display: block;
+
+    max-width: 100%;
+
+    color: var(--text);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.message.admin .message-file-name {
+    color: #090909;
+}
+
+.message-file-meta {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+}
+
+.message.admin .message-file-meta {
+    color: rgba(8, 8, 8, 0.58);
+}
+
+.message-file-download {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 26px;
+
+    padding: 5px 8px;
+
+    color: var(--accent);
+
+    background: transparent;
+
+    border: 1px solid rgba(215, 255, 63, 0.18);
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+
+.message-file-download:hover {
+    color: #090909;
+
+    background: var(--accent);
+
+    border-color: var(--accent);
+}
+
+.message.admin .message-file-download {
+    color: #090909;
+
+    border-color: rgba(8, 8, 8, 0.18);
+}
+
+.message.admin .message-file-download:hover {
+    color: var(--accent);
+
+    background: #090909;
+
+    border-color: #090909;
+}
+
+/* =========================================
+   MESSAGE COMPOSER
+========================================= */
+
 .admin-message-form {
     padding: 16px;
 
     border-top: 1px solid var(--border);
+
+    background: var(--surface);
 }
 
 #admin-message-input {
     width: 100%;
+
     min-height: 110px;
 
     resize: vertical;
@@ -943,17 +1262,245 @@ button {
     padding: 14px;
 
     color: var(--text);
-    background: rgba(255,255,255,0.025);
+
+    background: rgba(255, 255, 255, 0.025);
 
     border: 1px solid var(--border);
+
     border-radius: 12px;
 
     outline: none;
+
+    line-height: 1.6;
+
+    transition:
+        border-color 0.2s,
+        background 0.2s;
 }
 
 #admin-message-input:focus {
-    border-color: rgba(215,255,63,0.4);
+    border-color: rgba(215, 255, 63, 0.4);
+
+    background: rgba(255, 255, 255, 0.04);
 }
+
+/* =========================================
+   ATTACHMENT CONTROLS
+========================================= */
+
+.message-composer-tools {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.file-attach-button {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 36px;
+
+    padding: 8px 11px;
+
+    color: var(--muted);
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s,
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.file-attach-button:hover {
+    color: var(--accent);
+
+    background: rgba(215, 255, 63, 0.045);
+
+    border-color: rgba(215, 255, 63, 0.2);
+}
+
+.file-attach-icon {
+    width: 18px;
+    height: 18px;
+
+    display: grid;
+    place-items: center;
+
+    color: #090909;
+
+    background: var(--accent);
+
+    border-radius: 5px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+.file-selection {
+    min-width: 0;
+
+    flex: 1;
+
+    color: var(--muted-2);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+/* =========================================
+   SELECTED FILES
+========================================= */
+
+.selected-files {
+    width: 100%;
+
+    display: grid;
+
+    gap: 6px;
+
+    margin-top: 9px;
+}
+
+.selected-file {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 8px 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+}
+
+.selected-file-icon {
+    width: 28px;
+    height: 28px;
+
+    flex: 0 0 28px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--accent);
+
+    background: rgba(215, 255, 63, 0.08);
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.selected-file-name {
+    min-width: 0;
+
+    flex: 1;
+
+    color: #d8d8dd;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.selected-file-size {
+    flex: 0 0 auto;
+
+    color: var(--muted-2);
+
+    font-size: 8px;
+
+    white-space: nowrap;
+}
+
+.selected-file-remove {
+    width: 24px;
+    height: 24px;
+
+    flex: 0 0 24px;
+
+    display: grid;
+    place-items: center;
+
+    padding: 0;
+
+    color: var(--muted);
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    line-height: 1;
+
+    transition:
+        color 0.2s,
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.selected-file-remove:hover {
+    color: var(--danger);
+
+    background: rgba(255, 98, 98, 0.06);
+
+    border-color: rgba(255, 98, 98, 0.12);
+}
+
+/* =========================================
+   FORM FOOTER
+========================================= */
 
 .message-form-bottom {
     display: flex;
@@ -972,16 +1519,42 @@ button {
 }
 
 .send-button {
-    padding: 11px 16px;
+    min-height: 38px;
+
+    padding: 10px 16px;
 
     color: #080808;
+
     background: var(--accent);
 
     border: 0;
+
     border-radius: 9px;
 
     font-size: 11px;
+
     font-weight: 900;
+
+    transition:
+        transform 0.2s,
+        filter 0.2s,
+        opacity 0.2s;
+}
+
+.send-button:hover {
+    transform: translateY(-1px);
+
+    filter: brightness(1.05);
+}
+
+.send-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.55;
+
+    transform: none;
+
+    filter: none;
 }
 
 /* =========================================
@@ -990,6 +1563,7 @@ button {
 
 .notification-item {
     display: flex;
+
     gap: 13px;
 
     padding: 16px 20px;
@@ -1002,7 +1576,7 @@ button {
 }
 
 .notification-item.unread {
-    background: rgba(215,255,63,0.025);
+    background: rgba(215, 255, 63, 0.025);
 }
 
 .notification-icon {
@@ -1016,7 +1590,7 @@ button {
 
     color: var(--accent);
 
-    background: rgba(215,255,63,0.08);
+    background: rgba(215, 255, 63, 0.08);
 
     border-radius: 9px;
 
@@ -1025,6 +1599,7 @@ button {
 
 .notification-content {
     min-width: 0;
+
     flex: 1;
 }
 
@@ -1040,6 +1615,7 @@ button {
     color: var(--muted);
 
     font-size: 10px;
+
     line-height: 1.5;
 }
 
@@ -1059,6 +1635,7 @@ button {
     background: transparent;
 
     border: 1px solid var(--border);
+
     border-radius: 7px;
 
     font-size: 9px;
@@ -1078,6 +1655,7 @@ button {
     color: var(--muted-2);
 
     font-size: 11px;
+
     text-align: center;
 }
 
@@ -1109,6 +1687,10 @@ button {
 
 }
 
+/* =========================================
+   TABLET / MOBILE
+========================================= */
+
 @media (max-width: 760px) {
 
     :root {
@@ -1119,11 +1701,13 @@ button {
         position: static;
 
         width: 100%;
+
         min-height: auto;
 
         padding: 16px;
 
         border-right: 0;
+
         border-bottom: 1px solid var(--border);
     }
 
@@ -1137,28 +1721,42 @@ button {
 
     .admin-nav {
         display: flex;
+
         overflow-x: auto;
+
+        scrollbar-width: none;
+    }
+
+    .admin-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .nav-item {
         width: auto;
+
+        flex: 0 0 auto;
+
         white-space: nowrap;
     }
 
     .sidebar-bottom {
         display: flex;
+
         margin-top: 12px;
     }
 
     .back-site,
     .logout-button {
         width: auto;
+
         flex: 1;
     }
 
     .admin-main {
         width: 100%;
+
         margin-left: 0;
+
         padding: 22px 16px 40px;
     }
 
@@ -1179,6 +1777,7 @@ button {
 
     .stat-card {
         min-height: 125px;
+
         padding: 16px;
     }
 
@@ -1188,11 +1787,13 @@ button {
 
     .section-intro {
         align-items: flex-start;
+
         gap: 15px;
     }
 
     .client-card {
         grid-template-columns: 1fr;
+
         gap: 12px;
     }
 
@@ -1218,6 +1819,9 @@ button {
 
     .admin-messages {
         min-height: 360px;
+
+        max-height: 520px;
+
         padding: 16px;
     }
 
@@ -1225,8 +1829,35 @@ button {
         max-width: 88%;
     }
 
+    .message-composer-tools {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+    .file-attach-button {
+        width: 100%;
+    }
+
+    .file-selection {
+        width: 100%;
+
+        flex: none;
+    }
+
+    .selected-file {
+        padding: 8px;
+    }
+
+    .selected-file-name {
+        font-size: 9px;
+    }
+
     .message-form-bottom {
         align-items: stretch;
+
         flex-direction: column;
     }
 
@@ -1235,6 +1866,10 @@ button {
     }
 
 }
+
+/* =========================================
+   SMALL PHONES
+========================================= */
 
 @media (max-width: 460px) {
 
@@ -1260,6 +1895,7 @@ button {
 
     .stat-value {
         margin-top: 13px;
+
         font-size: 26px;
     }
 
@@ -1267,17 +1903,43 @@ button {
         font-size: 24px;
     }
 
-}
-.message-link {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    word-break: break-word;
-}
+    .admin-message-form {
+        padding: 12px;
+    }
 
-.message-link:hover {
-    opacity: 0.75;
-}
+    .message-bubble {
+        max-width: 94%;
 
-.message-email {
-    word-break: break-word;
+        padding: 12px;
+    }
+
+    .message-file {
+        gap: 7px;
+
+        padding: 8px;
+    }
+
+    .message-file-icon {
+        width: 27px;
+        height: 27px;
+
+        flex-basis: 27px;
+    }
+
+    .message-file-download {
+        padding: 5px 6px;
+
+        font-size: 7px;
+    }
+
+    .selected-file-size {
+        display: none;
+    }
+
+    .selected-file-remove {
+        width: 22px;
+        height: 22px;
+
+        flex-basis: 22px;
+    }
 }
