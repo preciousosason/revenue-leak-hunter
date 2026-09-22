@@ -184,99 +184,95 @@ function getAuthHeaders() {
 function linkifyMessage(value) {
 
     const escaped =
-        escapeHTML(value);
-
+        escapeHTML(value ?? "");
 
     const pattern =
         /((?:https?:\/\/|www\.)[^\s<]+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
 
+    return escaped
+        .replace(
+            pattern,
+            match => {
 
-    return escaped.replace(
-        pattern,
-        match => {
+                let cleanMatch =
+                    match;
 
-            let cleanMatch =
-                match;
-
-            let trailing =
-                "";
+                let trailing =
+                    "";
 
 
-            /*
-             * Remove punctuation that is probably
-             * part of the sentence rather than the
-             * URL/email itself.
-             */
+                /*
+                 * Keep punctuation outside the link.
+                 */
 
-            while (
-                /[.,!?;:)]$/.test(
-                    cleanMatch
-                )
-            ) {
+                while (
+                    /[.,!?;:)]$/.test(
+                        cleanMatch
+                    )
+                ) {
 
-                trailing =
-                    cleanMatch.slice(-1) +
-                    trailing;
+                    trailing =
+                        cleanMatch.slice(-1) +
+                        trailing;
 
-                cleanMatch =
-                    cleanMatch.slice(
-                        0,
-                        -1
+                    cleanMatch =
+                        cleanMatch.slice(
+                            0,
+                            -1
+                        );
+
+                }
+
+
+                /*
+                 * EMAIL
+                 */
+
+                if (
+                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                        cleanMatch
+                    )
+                ) {
+
+                    return (
+                        `<a href="mailto:${cleanMatch}" ` +
+                        `class="message-link message-email">` +
+                        `${cleanMatch}` +
+                        `</a>` +
+                        trailing
                     );
 
+                }
+
+
+                /*
+                 * URL
+                 */
+
+                const href =
+                    /^https?:\/\//i.test(
+                        cleanMatch
+                    )
+                        ? cleanMatch
+                        : `https://${cleanMatch}`;
+
+
+                return (
+                    `<a href="${href}" ` +
+                    `target="_blank" ` +
+                    `rel="noopener noreferrer" ` +
+                    `class="message-link">` +
+                    `${cleanMatch}` +
+                    `</a>` +
+                    trailing
+                );
+
             }
-
-
-            /*
-             * Email address
-             */
-
-            if (
-                /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                    cleanMatch
-                )
-            ) {
-
-                return `
-                    <a
-                        href="mailto:${cleanMatch}"
-                        class="message-link message-email"
-                    >
-                        ${cleanMatch}
-                    </a>${trailing}
-                `;
-
-            }
-
-
-            /*
-             * Website URL
-             */
-
-            const href =
-                /^https?:\/\//i.test(
-                    cleanMatch
-                )
-                    ? cleanMatch
-                    : `https://${cleanMatch}`;
-
-
-            return `
-                <a
-                    href="${href}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="message-link"
-                >
-                    ${cleanMatch}
-                </a>${trailing}
-            `;
-
-        }
-    ).replace(
-        /\n/g,
-        "<br>"
-    );
+        )
+        .replace(
+            /\n/g,
+            "<br>"
+        );
 
 }
 

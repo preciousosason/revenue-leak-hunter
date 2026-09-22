@@ -118,6 +118,109 @@ document.addEventListener(
 
 
         /* =================================
+           CLICKABLE LINKS + EMAILS
+        ================================== */
+
+        function linkifyMessage(value) {
+
+            const escaped =
+                escapeHTML(value ?? "");
+
+
+            const pattern =
+                /((?:https?:\/\/|www\.)[^\s<]+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
+
+
+            return escaped
+                .replace(
+                    pattern,
+                    match => {
+
+                        let cleanMatch =
+                            match;
+
+                        let trailing =
+                            "";
+
+
+                        /*
+                         * Keep normal sentence
+                         * punctuation outside links.
+                         */
+
+                        while (
+                            /[.,!?;:)]$/.test(
+                                cleanMatch
+                            )
+                        ) {
+
+                            trailing =
+                                cleanMatch.slice(-1) +
+                                trailing;
+
+                            cleanMatch =
+                                cleanMatch.slice(
+                                    0,
+                                    -1
+                                );
+
+                        }
+
+
+                        /*
+                         * EMAIL
+                         */
+
+                        if (
+                            /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                                cleanMatch
+                            )
+                        ) {
+
+                            return (
+                                `<a href="mailto:${cleanMatch}" ` +
+                                `class="message-link message-email">` +
+                                `${cleanMatch}` +
+                                `</a>` +
+                                trailing
+                            );
+
+                        }
+
+
+                        /*
+                         * WEBSITE URL
+                         */
+
+                        const href =
+                            /^https?:\/\//i.test(
+                                cleanMatch
+                            )
+                                ? cleanMatch
+                                : `https://${cleanMatch}`;
+
+
+                        return (
+                            `<a href="${href}" ` +
+                            `target="_blank" ` +
+                            `rel="noopener noreferrer" ` +
+                            `class="message-link">` +
+                            `${cleanMatch}` +
+                            `</a>` +
+                            trailing
+                        );
+
+                    }
+                )
+                .replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+        }
+
+
+        /* =================================
            FORMAT DATE
         ================================== */
 
@@ -257,12 +360,16 @@ document.addEventListener(
 
                 messagesContainer.innerHTML = `
                     <div class="messages-empty">
-                        <h3>No messages yet.</h3>
+
+                        <h3>
+                            No messages yet.
+                        </h3>
 
                         <p>
                             Your conversation will appear
                             here as your Leak Hunt progresses.
                         </p>
+
                     </div>
                 `;
 
@@ -312,14 +419,9 @@ document.addEventListener(
 
 
                                 <div class="message-body">
-                                    ${
-                                        escapeHTML(
-                                            message.message
-                                        ).replace(
-                                            /\n/g,
-                                            "<br>"
-                                        )
-                                    }
+                                    ${linkifyMessage(
+                                        message.message
+                                    )}
                                 </div>
 
                             </article>

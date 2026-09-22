@@ -6,3 +6,6 @@ compatibility_date = "2026-09-21"
 binding = "DB"
 database_name = "revenue-leak-hunter"
 database_id = "1e30dfac-7a33-43ac-add8-a187ee3560b6"
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "revenue-leak-hunter-files"
