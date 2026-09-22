@@ -74,6 +74,17 @@ document.addEventListener(
 
 
         /* =================================
+           MESSAGE POLLING
+        ================================== */
+
+        let pollingInterval = null;
+
+        let lastMessageId = null;
+
+        let lastMessageCount = 0;
+
+
+        /* =================================
            AUTHENTICATION
         ================================== */
 
@@ -233,7 +244,8 @@ document.addEventListener(
         ================================== */
 
         function renderMessages(
-            messages
+            messages,
+            shouldScroll = true
         ) {
 
             if (!messagesContainer) {
@@ -246,6 +258,7 @@ document.addEventListener(
                 messagesContainer.innerHTML = `
                     <div class="messages-empty">
                         <h3>No messages yet.</h3>
+
                         <p>
                             Your conversation will appear
                             here as your Leak Hunt progresses.
@@ -316,8 +329,12 @@ document.addEventListener(
                 ).join("");
 
 
-            messagesContainer.scrollTop =
-                messagesContainer.scrollHeight;
+            if (shouldScroll) {
+
+                messagesContainer.scrollTop =
+                    messagesContainer.scrollHeight;
+
+            }
 
         }
 
@@ -326,7 +343,15 @@ document.addEventListener(
            LOAD MESSAGES
         ================================== */
 
-        async function loadMessages() {
+        async function loadMessages(
+            options = {}
+        ) {
+
+            const {
+                silent = false,
+                forceRender = false
+            } = options;
+
 
             if (!messagesContainer) {
                 return;
@@ -378,9 +403,53 @@ document.addEventListener(
                 }
 
 
-                renderMessages(
-                    result.messages || []
-                );
+                const messages =
+                    result.messages || [];
+
+
+                const newestMessage =
+                    messages.length
+                        ? messages[messages.length - 1]
+                        : null;
+
+
+                const newestMessageId =
+                    newestMessage
+                        ? newestMessage.id
+                        : null;
+
+
+                const messagesChanged =
+                    newestMessageId !==
+                        lastMessageId ||
+                    messages.length !==
+                        lastMessageCount;
+
+
+                /*
+                 * Only redraw the conversation
+                 * when something actually changed.
+                 */
+
+                if (
+                    forceRender ||
+                    messagesChanged
+                ) {
+
+                    renderMessages(
+                        messages,
+                        true
+                    );
+
+
+                    lastMessageId =
+                        newestMessageId;
+
+
+                    lastMessageCount =
+                        messages.length;
+
+                }
 
 
             } catch (error) {
@@ -391,21 +460,127 @@ document.addEventListener(
                 );
 
 
-                messagesContainer.innerHTML = `
-                    <div class="messages-empty">
-                        <h3>
-                            Unable to load conversation.
-                        </h3>
+                /*
+                 * Don't replace the existing
+                 * conversation with an error
+                 * during silent polling.
+                 */
 
-                        <p>
-                            Please refresh the page and try again.
-                        </p>
-                    </div>
-                `;
+                if (!silent) {
+
+                    messagesContainer.innerHTML = `
+                        <div class="messages-empty">
+
+                            <h3>
+                                Unable to load conversation.
+                            </h3>
+
+                            <p>
+                                Please refresh the page and try again.
+                            </p>
+
+                        </div>
+                    `;
+
+                }
 
             }
 
         }
+
+
+        /* =================================
+           START MESSAGE POLLING
+        ================================== */
+
+        function startMessagePolling() {
+
+            if (pollingInterval) {
+                return;
+            }
+
+
+            pollingInterval =
+                setInterval(
+                    () => {
+
+                        if (
+                            document.hidden
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        loadMessages({
+                            silent: true
+                        });
+
+                    },
+                    2000
+                );
+
+        }
+
+
+        /* =================================
+           STOP MESSAGE POLLING
+        ================================== */
+
+        function stopMessagePolling() {
+
+            if (!pollingInterval) {
+                return;
+            }
+
+
+            clearInterval(
+                pollingInterval
+            );
+
+
+            pollingInterval =
+                null;
+
+        }
+
+
+        /* =================================
+           VISIBILITY CONTROL
+        ================================== */
+
+        document.addEventListener(
+            "visibilitychange",
+            () => {
+
+                if (
+                    document.hidden
+                ) {
+
+                    stopMessagePolling();
+
+                    return;
+
+                }
+
+
+                /*
+                 * Immediately check for a new
+                 * message when the client returns
+                 * to the portal.
+                 */
+
+                loadMessages({
+                    silent: true,
+                    forceRender: true
+                });
+
+
+                startMessagePolling();
+
+            }
+        );
 
 
         /* =================================
@@ -490,11 +665,23 @@ document.addEventListener(
                         }
 
 
-                        messageInput.value =
-                            "";
+                        if (messageInput) {
+
+                            messageInput.value =
+                                "";
+
+                        }
 
 
-                        await loadMessages();
+                        /*
+                         * Immediately reload after
+                         * sending instead of waiting
+                         * for the next 2-second poll.
+                         */
+
+                        await loadMessages({
+                            forceRender: true
+                        });
 
 
                     } catch (error) {
@@ -544,6 +731,13 @@ document.addEventListener(
             logoutButton.addEventListener(
                 "click",
                 async () => {
+
+                    /*
+                     * Stop polling before logging out.
+                     */
+
+                    stopMessagePolling();
+
 
                     logoutButton.disabled =
                         true;
@@ -602,7 +796,18 @@ document.addEventListener(
 
             await loadClient();
 
-            await loadMessages();
+            await loadMessages({
+                forceRender: true
+            });
+
+
+            /*
+             * Start checking for new messages
+             * every 2 seconds.
+             */
+
+            startMessagePolling();
+
 
         } catch (error) {
 
@@ -610,6 +815,9 @@ document.addEventListener(
                 "Portal initialization error:",
                 error
             );
+
+
+            stopMessagePolling();
 
 
             sessionStorage.removeItem(
