@@ -9,6 +9,10 @@ let clients = [];
 let notifications = [];
 let currentConversationId = null;
 
+let conversationPollingInterval = null;
+let lastConversationMessageId = null;
+let lastConversationMessageCount = 0;
+
 
 /* =========================================
    DOM
@@ -94,6 +98,7 @@ const adminMessageError =
 ========================================= */
 
 function escapeHTML(value) {
+
     const div =
         document.createElement("div");
 
@@ -101,15 +106,31 @@ function escapeHTML(value) {
         value ?? "";
 
     return div.innerHTML;
+
 }
 
+
 function formatDate(dateString) {
+
     if (!dateString) {
         return "Unknown";
     }
 
+
     const date =
         new Date(dateString);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "Unknown";
+
+    }
+
 
     return date.toLocaleString(
         undefined,
@@ -118,12 +139,16 @@ function formatDate(dateString) {
             timeStyle: "short"
         }
     );
+
 }
 
+
 function getInitials(name) {
+
     if (!name) {
         return "?";
     }
+
 
     return name
         .trim()
@@ -135,15 +160,124 @@ function getInitials(name) {
                     ?.toUpperCase()
         )
         .join("");
+
 }
 
+
 function getAuthHeaders() {
+
     return {
         "Content-Type":
             "application/json",
+
         "Authorization":
             `Bearer ${adminSession}`
     };
+
+}
+
+
+/* =========================================
+   CLICKABLE LINKS + EMAILS
+========================================= */
+
+function linkifyMessage(value) {
+
+    const escaped =
+        escapeHTML(value);
+
+
+    const pattern =
+        /((?:https?:\/\/|www\.)[^\s<]+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
+
+
+    return escaped.replace(
+        pattern,
+        match => {
+
+            let cleanMatch =
+                match;
+
+            let trailing =
+                "";
+
+
+            /*
+             * Remove punctuation that is probably
+             * part of the sentence rather than the
+             * URL/email itself.
+             */
+
+            while (
+                /[.,!?;:)]$/.test(
+                    cleanMatch
+                )
+            ) {
+
+                trailing =
+                    cleanMatch.slice(-1) +
+                    trailing;
+
+                cleanMatch =
+                    cleanMatch.slice(
+                        0,
+                        -1
+                    );
+
+            }
+
+
+            /*
+             * Email address
+             */
+
+            if (
+                /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                    cleanMatch
+                )
+            ) {
+
+                return `
+                    <a
+                        href="mailto:${cleanMatch}"
+                        class="message-link message-email"
+                    >
+                        ${cleanMatch}
+                    </a>${trailing}
+                `;
+
+            }
+
+
+            /*
+             * Website URL
+             */
+
+            const href =
+                /^https?:\/\//i.test(
+                    cleanMatch
+                )
+                    ? cleanMatch
+                    : `https://${cleanMatch}`;
+
+
+            return `
+                <a
+                    href="${href}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="message-link"
+                >
+                    ${cleanMatch}
+                </a>${trailing}
+            `;
+
+        }
+    ).replace(
+        /\n/g,
+        "<br>"
+    );
+
 }
 
 
@@ -155,11 +289,13 @@ async function api(
     endpoint,
     options = {}
 ) {
+
     const response =
         await fetch(
             `${API_URL}${endpoint}`,
             {
                 ...options,
+
                 headers: {
                     ...getAuthHeaders(),
                     ...(options.headers || {})
@@ -167,34 +303,55 @@ async function api(
             }
         );
 
+
     let data;
 
+
     try {
-        data = await response.json();
+
+        data =
+            await response.json();
+
     } catch {
+
         throw new Error(
             "The server returned an invalid response."
         );
+
     }
+
 
     if (
         response.status === 401
     ) {
+
+        stopConversationPolling();
+
         logoutLocal();
+
 
         throw new Error(
             "Your admin session has expired."
         );
+
     }
 
-    if (!response.ok || data.success === false) {
+
+    if (
+        !response.ok ||
+        data.success === false
+    ) {
+
         throw new Error(
             data.error ||
             "Something went wrong."
         );
+
     }
 
+
     return data;
+
 }
 
 
@@ -205,86 +362,124 @@ async function api(
 loginForm.addEventListener(
     "submit",
     async event => {
+
         event.preventDefault();
 
-        loginError.hidden = true;
+
+        loginError.hidden =
+            true;
+
 
         const password =
             passwordInput.value;
 
+
         if (!password) {
+
             showLoginError(
                 "Enter your admin password."
             );
 
             return;
+
         }
 
-        loginButton.disabled = true;
+
+        loginButton.disabled =
+            true;
+
 
         loginButton.innerHTML =
             "<span>Signing in...</span><span>...</span>";
 
+
         try {
+
             const response =
                 await fetch(
                     `${API_URL}/api/admin/login`,
                     {
                         method: "POST",
+
                         headers: {
                             "Content-Type":
                                 "application/json"
                         },
-                        body: JSON.stringify({
-                            password
-                        })
+
+                        body:
+                            JSON.stringify({
+                                password
+                            })
                     }
                 );
 
+
             const data =
                 await response.json();
+
 
             if (
                 !response.ok ||
                 !data.success
             ) {
+
                 throw new Error(
                     data.error ||
                     "Invalid admin credentials."
                 );
+
             }
+
 
             adminSession =
                 data.sessionToken;
+
 
             sessionStorage.setItem(
                 SESSION_KEY,
                 adminSession
             );
 
-            passwordInput.value = "";
+
+            passwordInput.value =
+                "";
+
 
             showDashboard();
 
+
         } catch (error) {
+
             showLoginError(
                 error.message
             );
 
+
         } finally {
-            loginButton.disabled = false;
+
+            loginButton.disabled =
+                false;
+
 
             loginButton.innerHTML =
                 "<span>Enter Dashboard</span><span>→</span>";
+
         }
+
     }
 );
 
-function showLoginError(message) {
+
+function showLoginError(
+    message
+) {
+
     loginError.textContent =
         message;
 
-    loginError.hidden = false;
+    loginError.hidden =
+        false;
+
 }
 
 
@@ -293,34 +488,60 @@ function showLoginError(message) {
 ========================================= */
 
 function logoutLocal() {
-    adminSession = null;
+
+    stopConversationPolling();
+
+    adminSession =
+        null;
+
 
     sessionStorage.removeItem(
         SESSION_KEY
     );
 
-    dashboard.hidden = true;
-    loginScreen.hidden = false;
+
+    dashboard.hidden =
+        true;
+
+
+    loginScreen.hidden =
+        false;
+
 }
 
+
 async function logout() {
+
+    stopConversationPolling();
+
+
     try {
+
         if (adminSession) {
+
             await fetch(
                 `${API_URL}/api/admin/logout`,
                 {
                     method: "POST",
+
                     headers:
                         getAuthHeaders()
                 }
             );
+
         }
+
     } catch {
+
         // Local logout still happens.
+
     }
 
+
     logoutLocal();
+
 }
+
 
 document
     .getElementById("admin-logout")
@@ -331,31 +552,44 @@ document
 
 
 async function restoreSession() {
+
     const stored =
         sessionStorage.getItem(
             SESSION_KEY
         );
 
+
     if (!stored) {
         return false;
     }
 
-    adminSession = stored;
+
+    adminSession =
+        stored;
+
 
     try {
+
         await api(
             "/api/admin/me"
         );
 
+
         showDashboard();
+
 
         return true;
 
+
     } catch {
+
         logoutLocal();
 
+
         return false;
+
     }
+
 }
 
 
@@ -364,29 +598,47 @@ async function restoreSession() {
 ========================================= */
 
 function showDashboard() {
-    loginScreen.hidden = true;
-    dashboard.hidden = false;
 
-    switchView("overview");
+    loginScreen.hidden =
+        true;
+
+
+    dashboard.hidden =
+        false;
+
+
+    switchView(
+        "overview"
+    );
+
 
     loadDashboard();
+
 }
 
+
 async function loadDashboard() {
+
     try {
+
         await Promise.all([
             loadClients(),
             loadNotifications()
         ]);
 
+
         updateStats();
 
+
     } catch (error) {
+
         console.error(
             "Dashboard loading error:",
             error
         );
+
     }
+
 }
 
 
@@ -403,70 +655,121 @@ document
         button.addEventListener(
             "click",
             () => {
+
                 switchView(
                     button.dataset.view
                 );
+
             }
         );
 
     });
 
+
 function switchView(view) {
+
+    /*
+     * Any view other than conversation
+     * should stop conversation polling.
+     */
+
+    if (
+        view !==
+        "conversation"
+    ) {
+
+        stopConversationPolling();
+
+    }
+
 
     document
         .querySelectorAll(".nav-item")
         .forEach(item => {
+
             item.classList.toggle(
                 "active",
                 item.dataset.view === view
             );
+
         });
+
 
     document
         .querySelectorAll(".admin-view")
         .forEach(section => {
-            section.hidden = true;
+
+            section.hidden =
+                true;
+
             section.classList.remove(
                 "active-view"
             );
+
         });
+
 
     const target =
         document.getElementById(
             `view-${view}`
         );
 
+
     if (!target) {
         return;
     }
 
-    target.hidden = false;
+
+    target.hidden =
+        false;
+
+
     target.classList.add(
         "active-view"
     );
 
+
     const titles = {
-        overview: "Overview",
-        clients: "Clients",
-        conversation: "Conversation",
+
+        overview:
+            "Overview",
+
+        clients:
+            "Clients",
+
+        conversation:
+            "Conversation",
+
         notifications:
             "Notifications"
+
     };
+
 
     pageTitle.textContent =
         titles[view] ||
         "Dashboard";
 
-    if (view === "clients") {
+
+    if (
+        view ===
+        "clients"
+    ) {
+
         loadClients();
+
     }
+
 
     if (
         view ===
         "notifications"
     ) {
+
         loadNotifications();
+
     }
+
 }
 
 
@@ -475,41 +778,62 @@ function switchView(view) {
 ========================================= */
 
 async function loadClients() {
+
     try {
+
         const data =
             await api(
                 "/api/admin/clients"
             );
 
+
         clients =
             data.clients || [];
 
+
         renderClients();
+
         renderRecentClients();
+
         updateStats();
 
+
     } catch (error) {
+
         clientsList.innerHTML =
             `<div class="empty-state">
-                ${escapeHTML(error.message)}
+                ${escapeHTML(
+                    error.message
+                )}
             </div>`;
+
 
         recentClients.innerHTML =
             `<div class="empty-state">
-                ${escapeHTML(error.message)}
+                ${escapeHTML(
+                    error.message
+                )}
             </div>`;
+
     }
+
 }
 
+
 function renderRecentClients() {
+
     if (!clients.length) {
+
         recentClients.innerHTML =
             `<div class="empty-state">
                 No clients yet.
             </div>`;
 
+
         return;
+
     }
+
 
     recentClients.innerHTML =
         clients
@@ -526,16 +850,21 @@ function renderRecentClients() {
 
                         <span class="client-avatar">
                             ${escapeHTML(
-                                getInitials(client.name)
+                                getInitials(
+                                    client.name
+                                )
                             )}
                         </span>
 
+
                         <span class="client-row-main">
+
                             <strong>
                                 ${escapeHTML(
                                     client.name
                                 )}
                             </strong>
+
 
                             <span>
                                 ${escapeHTML(
@@ -543,7 +872,9 @@ function renderRecentClients() {
                                     client.email
                                 )}
                             </span>
+
                         </span>
+
 
                         <span class="client-row-action">
                             Open →
@@ -555,6 +886,7 @@ function renderRecentClients() {
             })
             .join("");
 
+
     recentClients
         .querySelectorAll(
             "[data-conversation]"
@@ -564,28 +896,41 @@ function renderRecentClients() {
             button.addEventListener(
                 "click",
                 () => {
+
                     const id =
                         button.dataset.conversation;
 
+
                     if (id) {
-                        openConversation(id);
+
+                        openConversation(
+                            id
+                        );
+
                     }
+
                 }
             );
 
         });
+
 }
+
 
 function renderClients() {
 
     if (!clients.length) {
+
         clientsList.innerHTML =
             `<div class="empty-state">
                 No clients yet.
             </div>`;
 
+
         return;
+
     }
+
 
     clientsList.innerHTML =
         clients
@@ -598,22 +943,28 @@ function renderClients() {
 
                             <span class="client-avatar">
                                 ${escapeHTML(
-                                    getInitials(client.name)
+                                    getInitials(
+                                        client.name
+                                    )
                                 )}
                             </span>
 
+
                             <div>
+
                                 <strong>
                                     ${escapeHTML(
                                         client.name
                                     )}
                                 </strong>
 
+
                                 <span>
                                     ${escapeHTML(
                                         client.email
                                     )}
                                 </span>
+
                             </div>
 
                         </div>
@@ -664,6 +1015,7 @@ function renderClients() {
             })
             .join("");
 
+
     clientsList
         .querySelectorAll(
             ".open-conversation"
@@ -673,13 +1025,16 @@ function renderClients() {
             button.addEventListener(
                 "click",
                 () => {
+
                     openConversation(
                         button.dataset.conversation
                     );
+
                 }
             );
 
         });
+
 }
 
 
@@ -690,34 +1045,60 @@ function renderClients() {
 async function openConversation(
     conversationId
 ) {
+
     if (!conversationId) {
         return;
     }
 
+
+    /*
+     * Stop polling the previous conversation.
+     */
+
+    stopConversationPolling();
+
+
     currentConversationId =
         conversationId;
+
+
+    lastConversationMessageId =
+        null;
+
+
+    lastConversationMessageCount =
+        0;
+
 
     switchView(
         "conversation"
     );
+
 
     adminMessages.innerHTML =
         `<div class="empty-state">
             Loading conversation...
         </div>`;
 
-    try {
-        const data =
-            await api(
-                `/api/admin/conversations/${encodeURIComponent(
-                    conversationId
-                )}`
-            );
 
-        renderConversation(
-            data.conversation,
-            data.messages || []
+    try {
+
+        await loadConversation(
+            conversationId,
+            {
+                silent: false,
+                forceRender: true
+            }
         );
+
+
+        /*
+         * Start 2-second polling only
+         * after the conversation has loaded.
+         */
+
+        startConversationPolling();
+
 
     } catch (error) {
 
@@ -727,24 +1108,293 @@ async function openConversation(
                     error.message
                 )}
             </div>`;
+
     }
+
 }
+
+
+/* =========================================
+   LOAD CONVERSATION
+========================================= */
+
+async function loadConversation(
+    conversationId,
+    options = {}
+) {
+
+    const {
+        silent = false,
+        forceRender = false
+    } = options;
+
+
+    /*
+     * Ignore responses belonging to an
+     * older conversation if the admin
+     * switched quickly.
+     */
+
+    if (
+        conversationId !==
+        currentConversationId
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const data =
+            await api(
+                `/api/admin/conversations/${encodeURIComponent(
+                    conversationId
+                )}`
+            );
+
+
+        /*
+         * Conversation may have changed
+         * while the request was in flight.
+         */
+
+        if (
+            conversationId !==
+            currentConversationId
+        ) {
+
+            return;
+
+        }
+
+
+        const messages =
+            data.messages || [];
+
+
+        const newestMessage =
+            messages.length
+                ? messages[messages.length - 1]
+                : null;
+
+
+        const newestMessageId =
+            newestMessage
+                ? newestMessage.id
+                : null;
+
+
+        const messagesChanged =
+            newestMessageId !==
+                lastConversationMessageId ||
+            messages.length !==
+                lastConversationMessageCount;
+
+
+        /*
+         * Only redraw when necessary.
+         */
+
+        if (
+            forceRender ||
+            messagesChanged
+        ) {
+
+            renderConversation(
+                data.conversation,
+                messages
+            );
+
+
+            lastConversationMessageId =
+                newestMessageId;
+
+
+            lastConversationMessageCount =
+                messages.length;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Conversation loading error:",
+            error
+        );
+
+
+        /*
+         * During background polling,
+         * don't destroy the conversation UI
+         * because of a temporary network error.
+         */
+
+        if (!silent) {
+
+            adminMessages.innerHTML =
+                `<div class="empty-state">
+                    ${escapeHTML(
+                        error.message
+                    )}
+                </div>`;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   START CONVERSATION POLLING
+========================================= */
+
+function startConversationPolling() {
+
+    stopConversationPolling();
+
+
+    if (!currentConversationId) {
+        return;
+    }
+
+
+    conversationPollingInterval =
+        setInterval(
+            () => {
+
+                /*
+                 * Don't make requests when the
+                 * admin has another tab active.
+                 */
+
+                if (
+                    document.hidden
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    !currentConversationId
+                ) {
+
+                    return;
+
+                }
+
+
+                loadConversation(
+                    currentConversationId,
+                    {
+                        silent: true,
+                        forceRender: false
+                    }
+                );
+
+            },
+            2000
+        );
+
+}
+
+
+/* =========================================
+   STOP CONVERSATION POLLING
+========================================= */
+
+function stopConversationPolling() {
+
+    if (
+        conversationPollingInterval
+    ) {
+
+        clearInterval(
+            conversationPollingInterval
+        );
+
+    }
+
+
+    conversationPollingInterval =
+        null;
+
+}
+
+
+/* =========================================
+   TAB VISIBILITY
+========================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.hidden
+        ) {
+
+            /*
+             * Keep the interval alive but don't
+             * make requests while hidden.
+             */
+
+            return;
+
+        }
+
+
+        /*
+         * Immediately check for a new message
+         * when returning to the dashboard.
+         */
+
+        if (
+            currentConversationId &&
+            !dashboard.hidden
+        ) {
+
+            loadConversation(
+                currentConversationId,
+                {
+                    silent: true,
+                    forceRender: true
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   RENDER CONVERSATION
+========================================= */
 
 function renderConversation(
     conversation,
     messages
 ) {
+
     document.getElementById(
         "conversation-client-name"
     ).textContent =
         conversation.name ||
         "Client";
 
+
     document.getElementById(
         "conversation-client-details"
     ).textContent =
         conversation.email ||
         "";
+
 
     document.getElementById(
         "conversation-status"
@@ -754,11 +1404,13 @@ function renderConversation(
             "open"
         ).toUpperCase();
 
+
     document.getElementById(
         "client-info-name"
     ).textContent =
         conversation.name ||
         "—";
+
 
     document.getElementById(
         "client-info-email"
@@ -766,11 +1418,13 @@ function renderConversation(
         conversation.email ||
         "—";
 
+
     document.getElementById(
         "client-info-business"
     ).textContent =
         conversation.business ||
         "Not provided";
+
 
     document.getElementById(
         "client-info-website"
@@ -778,14 +1432,19 @@ function renderConversation(
         conversation.website ||
         "Not provided";
 
+
     if (!messages.length) {
+
         adminMessages.innerHTML =
             `<div class="empty-state">
                 No messages yet.
             </div>`;
 
+
         return;
+
     }
+
 
     adminMessages.innerHTML =
         messages
@@ -794,6 +1453,7 @@ function renderConversation(
                 const isAdmin =
                     message.sender_type ===
                     "admin";
+
 
                 return `
                     <div class="message ${
@@ -805,23 +1465,31 @@ function renderConversation(
                         <div>
 
                             <div class="message-bubble">
-                                ${escapeHTML(
+                                ${linkifyMessage(
                                     message.message
                                 )}
                             </div>
 
+
                             <div class="message-meta">
+
                                 ${
                                     isAdmin
                                         ? "You"
-                                        : conversation.name
+                                        : escapeHTML(
+                                            conversation.name ||
+                                            "Client"
+                                        )
                                 }
+
                                 ·
+
                                 ${escapeHTML(
                                     formatDate(
                                         message.created_at
                                     )
                                 )}
+
                             </div>
 
                         </div>
@@ -832,8 +1500,10 @@ function renderConversation(
             })
             .join("");
 
+
     adminMessages.scrollTop =
         adminMessages.scrollHeight;
+
 }
 
 
@@ -847,36 +1517,50 @@ adminMessageForm.addEventListener(
 
         event.preventDefault();
 
+
         adminMessageError.hidden =
             true;
+
 
         const message =
             adminMessageInput.value.trim();
 
+
         if (!currentConversationId) {
+
             showMessageError(
                 "No conversation selected."
             );
 
             return;
+
         }
 
+
         if (!message) {
+
             showMessageError(
                 "Write a message first."
             );
 
             return;
+
         }
+
 
         const sendButton =
             document.getElementById(
                 "admin-send-message"
             );
 
-        sendButton.disabled = true;
+
+        sendButton.disabled =
+            true;
+
+
         sendButton.textContent =
             "Sending...";
+
 
         try {
 
@@ -884,22 +1568,38 @@ adminMessageForm.addEventListener(
                 "/api/admin/messages",
                 {
                     method: "POST",
-                    body: JSON.stringify({
-                        conversationId:
-                            currentConversationId,
-                        message
-                    })
+
+                    body:
+                        JSON.stringify({
+                            conversationId:
+                                currentConversationId,
+
+                            message
+                        })
                 }
             );
+
 
             adminMessageInput.value =
                 "";
 
-            await openConversation(
-                currentConversationId
+
+            /*
+             * Immediately refresh the open
+             * conversation after sending.
+             */
+
+            await loadConversation(
+                currentConversationId,
+                {
+                    silent: false,
+                    forceRender: true
+                }
             );
 
+
             await loadNotifications();
+
 
         } catch (error) {
 
@@ -907,25 +1607,33 @@ adminMessageForm.addEventListener(
                 error.message
             );
 
+
         } finally {
 
             sendButton.disabled =
                 false;
 
+
             sendButton.textContent =
                 "Send Reply →";
+
         }
+
     }
 );
+
 
 function showMessageError(
     message
 ) {
+
     adminMessageError.textContent =
         message;
 
+
     adminMessageError.hidden =
         false;
+
 }
 
 
@@ -940,7 +1648,18 @@ document
     .addEventListener(
         "click",
         () => {
-            switchView("clients");
+
+            currentConversationId =
+                null;
+
+
+            stopConversationPolling();
+
+
+            switchView(
+                "clients"
+            );
+
         }
     );
 
@@ -958,12 +1677,17 @@ async function loadNotifications() {
                 "/api/admin/notifications"
             );
 
+
         notifications =
             data.notifications || [];
 
+
         renderNotifications();
+
         renderRecentNotifications();
+
         updateStats();
+
 
     } catch (error) {
 
@@ -974,14 +1698,18 @@ async function loadNotifications() {
                 )}
             </div>`;
 
+
         recentNotifications.innerHTML =
             `<div class="empty-state">
                 ${escapeHTML(
                     error.message
                 )}
             </div>`;
+
     }
+
 }
+
 
 function notificationHTML(
     notification,
@@ -999,6 +1727,7 @@ function notificationHTML(
                 ●
             </div>
 
+
             <div class="notification-content">
 
                 <strong>
@@ -1007,11 +1736,13 @@ function notificationHTML(
                     )}
                 </strong>
 
+
                 <p>
                     ${escapeHTML(
                         notification.message
                     )}
                 </p>
+
 
                 <time>
                     ${escapeHTML(
@@ -1022,6 +1753,7 @@ function notificationHTML(
                 </time>
 
             </div>
+
 
             ${
                 !compact &&
@@ -1041,7 +1773,9 @@ function notificationHTML(
 
         </article>
     `;
+
 }
+
 
 function renderNotifications() {
 
@@ -1052,8 +1786,11 @@ function renderNotifications() {
                 No notifications.
             </div>`;
 
+
         return;
+
     }
+
 
     notificationsList.innerHTML =
         notifications
@@ -1065,10 +1802,13 @@ function renderNotifications() {
             )
             .join("");
 
+
     attachNotificationHandlers(
         notificationsList
     );
+
 }
+
 
 function renderRecentNotifications() {
 
@@ -1079,8 +1819,11 @@ function renderRecentNotifications() {
                 No notifications yet.
             </div>`;
 
+
         return;
+
     }
+
 
     recentNotifications.innerHTML =
         notifications
@@ -1093,7 +1836,9 @@ function renderRecentNotifications() {
                     )
             )
             .join("");
+
 }
+
 
 function attachNotificationHandlers(
     container
@@ -1115,6 +1860,7 @@ function attachNotificationHandlers(
                             "/api/admin/notifications/read",
                             {
                                 method: "POST",
+
                                 body:
                                     JSON.stringify({
                                         notificationId:
@@ -1123,18 +1869,23 @@ function attachNotificationHandlers(
                             }
                         );
 
+
                         await loadNotifications();
+
 
                     } catch (error) {
 
                         console.error(
                             error
                         );
+
                     }
+
                 }
             );
 
         });
+
 }
 
 
@@ -1147,11 +1898,13 @@ function updateStats() {
     statClients.textContent =
         clients.length;
 
+
     statConversations.textContent =
         clients.filter(
             client =>
                 client.conversation_id
         ).length;
+
 
     statMessages.textContent =
         clients.reduce(
@@ -1167,6 +1920,7 @@ function updateStats() {
             0
         );
 
+
     const unread =
         notifications.filter(
             notification =>
@@ -1175,14 +1929,18 @@ function updateStats() {
                 ) === 0
         ).length;
 
+
     statUnread.textContent =
         unread;
+
 
     notificationCount.textContent =
         unread;
 
+
     notificationCount.hidden =
         unread === 0;
+
 }
 
 
@@ -1198,6 +1956,7 @@ document
         "click",
         loadClients
     );
+
 
 document
     .getElementById(

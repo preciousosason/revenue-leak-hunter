@@ -1268,3 +1268,16 @@ button {
     }
 
 }
+.message-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    word-break: break-word;
+}
+
+.message-link:hover {
+    opacity: 0.75;
+}
+
+.message-email {
+    word-break: break-word;
+}
