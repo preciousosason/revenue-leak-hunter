@@ -1645,6 +1645,307 @@
 
 
 /* =========================================================
+   MESSAGE ATTACHMENTS
+========================================================= */
+
+.message-attachments {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding-top: 13px;
+
+    border-top:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.065
+        );
+}
+
+
+.message-attachments-label {
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.25
+        );
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.16em;
+
+    text-transform: uppercase;
+}
+
+
+.message-file {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+
+    padding:
+        10px 11px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.075
+        );
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.025
+        );
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.message-file:hover {
+    background:
+        rgba(
+            120,
+            145,
+            255,
+            0.07
+        );
+
+    border-color:
+        rgba(
+            130,
+            160,
+            255,
+            0.2
+        );
+
+    transform:
+        translateY(-1px);
+}
+
+
+.message-file-icon {
+    flex:
+        0 0 32px;
+
+    width: 32px;
+
+    height: 32px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(
+            130,
+            160,
+            255,
+            0.14
+        );
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            100,
+            125,
+            255,
+            0.07
+        );
+
+    color:
+        rgba(
+            175,
+            195,
+            255,
+            0.8
+        );
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.03em;
+}
+
+
+.message-file-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.message-file-name {
+    display: block;
+
+    overflow: hidden;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.72
+        );
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.message-file-meta {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.25
+        );
+
+    font-size: 8px;
+
+    letter-spacing: 0.04em;
+}
+
+
+.message-file-download {
+    flex:
+        0 0 auto;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 29px;
+
+    height: 29px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+
+    border-radius: 7px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.025
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.55
+        );
+
+    cursor: pointer;
+
+    font:
+        inherit;
+
+    font-size: 12px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.message-file-download:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+
+    border-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.2
+        );
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-1px);
+}
+
+
+.message-file-download:active {
+    transform:
+        translateY(0);
+}
+
+
+.message-file-download:disabled {
+    opacity: 0.45;
+
+    cursor:
+        wait;
+
+    transform:
+        none;
+}
+
+
+/* =========================================================
    EMPTY / LOADING
 ========================================================= */
 
@@ -1950,6 +2251,373 @@
         );
 }
 
+
+/* =========================================================
+   ATTACHMENT COMPOSER
+========================================================= */
+
+.message-composer-tools {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        0 13px 10px;
+}
+
+
+.file-attach-button {
+    flex:
+        0 0 auto;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 34px;
+
+    padding:
+        0 11px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.1
+        );
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.025
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.55
+        );
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.04em;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.file-attach-button:hover {
+    background:
+        rgba(
+            120,
+            145,
+            255,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            130,
+            160,
+            255,
+            0.25
+        );
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-1px);
+}
+
+
+.file-attach-button:active {
+    transform:
+        translateY(0);
+}
+
+
+.file-attach-icon {
+    display: grid;
+
+    place-items: center;
+
+    width: 16px;
+
+    height: 16px;
+
+    border:
+        1px solid
+        rgba(
+            150,
+            175,
+            255,
+            0.3
+        );
+
+    border-radius: 5px;
+
+    color:
+        rgba(
+            175,
+            195,
+            255,
+            0.85
+        );
+
+    font-size: 13px;
+
+    line-height: 1;
+}
+
+
+.file-selection {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.23
+        );
+
+    font-size: 8px;
+
+    letter-spacing: 0.04em;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SELECTED FILES
+========================================================= */
+
+.selected-files {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    padding:
+        0 13px 11px;
+}
+
+
+.selected-files:empty {
+    display: none;
+}
+
+
+.selected-file {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    max-width: 100%;
+
+    min-width: 0;
+
+    padding:
+        7px 8px 7px 9px;
+
+    border:
+        1px solid
+        rgba(
+            130,
+            160,
+            255,
+            0.14
+        );
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            100,
+            125,
+            255,
+            0.055
+        );
+
+    animation:
+        file-chip-enter 0.25s
+        ease both;
+}
+
+
+@keyframes file-chip-enter {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(4px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+.selected-file-icon {
+    flex:
+        0 0 auto;
+
+    color:
+        rgba(
+            165,
+            190,
+            255,
+            0.75
+        );
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.02em;
+}
+
+
+.selected-file-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.62
+        );
+
+    font-size: 9px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.selected-file-size {
+    flex:
+        0 0 auto;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.23
+        );
+
+    font-size: 7px;
+}
+
+
+.selected-file-remove {
+    flex:
+        0 0 auto;
+
+    width: 20px;
+
+    height: 20px;
+
+    display: grid;
+
+    place-items: center;
+
+    border: 0;
+
+    border-radius: 5px;
+
+    background:
+        transparent;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.3
+        );
+
+    cursor: pointer;
+
+    font:
+        inherit;
+
+    font-size: 12px;
+
+    line-height: 1;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.selected-file-remove:hover {
+    background:
+        rgba(
+            255,
+            80,
+            100,
+            0.12
+        );
+
+    color:
+        rgba(
+            255,
+            160,
+            170,
+            0.9
+        );
+}
+
+
+/* =========================================================
+   MESSAGE FORM FOOTER
+========================================================= */
 
 .message-form-footer {
     display: flex;
@@ -2416,6 +3084,59 @@
     }
 
 
+    .message-file {
+        padding:
+            9px 10px;
+    }
+
+
+    .message-file-name {
+        font-size:
+            10px;
+    }
+
+
+    .message-composer-tools {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap: 7px;
+
+        padding:
+            0 10px 9px;
+    }
+
+
+    .file-attach-button {
+        width:
+            100%;
+    }
+
+
+    .file-selection {
+        width:
+            100%;
+
+        text-align:
+            center;
+    }
+
+
+    .selected-files {
+        padding:
+            0 10px 9px;
+    }
+
+
+    .selected-file {
+        max-width:
+            100%;
+    }
+
+
     .message-form {
         padding:
             12px;
@@ -2565,6 +3286,24 @@
     .message {
         max-width:
             94%;
+    }
+
+
+    .message-file-download {
+        width: 27px;
+
+        height: 27px;
+    }
+
+
+    .selected-file {
+        width:
+            100%;
+    }
+
+
+    .selected-file-name {
+        flex: 1;
     }
 
 

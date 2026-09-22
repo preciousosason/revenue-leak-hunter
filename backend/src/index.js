@@ -2200,21 +2200,29 @@ async function handlePortalSendMessage(
                 .prepare(
                     `SELECT
                         id,
+                        conversation_id,
                         sender_type,
                         message,
                         created_at
                      FROM messages
                      WHERE id = ?`
                 )
-                .bind(messageId)
+                .bind(
+                    messageId
+                )
                 .first();
 
 
         return json({
             success: true,
+
             message: {
                 ...createdMessage,
                 files: []
+            },
+
+            conversation: {
+                id: conversation.id
             }
         });
 

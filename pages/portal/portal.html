@@ -104,6 +104,7 @@
                     id="portal-logout"
                     class="portal-logout"
                 >
+
                     <span>
                         Log Out
                     </span>
@@ -242,9 +243,7 @@
                             Name
                         </span>
 
-                        <strong
-                            id="client-info-name"
-                        >
+                        <strong id="client-info-name">
                             —
                         </strong>
 
@@ -257,9 +256,7 @@
                             Email
                         </span>
 
-                        <strong
-                            id="client-info-email"
-                        >
+                        <strong id="client-info-email">
                             —
                         </strong>
 
@@ -272,9 +269,7 @@
                             Business
                         </span>
 
-                        <strong
-                            id="client-info-business"
-                        >
+                        <strong id="client-info-business">
                             —
                         </strong>
 
@@ -287,9 +282,7 @@
                             Website
                         </span>
 
-                        <strong
-                            id="client-info-website"
-                        >
+                        <strong id="client-info-website">
                             —
                         </strong>
 
@@ -347,6 +340,10 @@
                 </div>
 
 
+                <!-- =================================
+                     MESSAGES
+                ================================== -->
+
                 <div
                     id="messages-container"
                     class="messages-container"
@@ -365,7 +362,9 @@
                 </div>
 
 
-                <!-- MESSAGE COMPOSER -->
+                <!-- =================================
+                     MESSAGE COMPOSER
+                ================================== -->
 
                 <form
                     id="message-form"
@@ -396,6 +395,65 @@
                             required
                         ></textarea>
 
+
+                        <!-- =================================
+                             FILE ATTACHMENTS
+                        ================================== -->
+
+                        <div class="message-composer-tools">
+
+                            <label
+                                for="message-files"
+                                class="file-attach-button"
+                            >
+
+                                <span
+                                    class="file-attach-icon"
+                                    aria-hidden="true"
+                                >
+                                    +
+                                </span>
+
+                                <span>
+                                    Attach Files
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                id="message-files"
+                                type="file"
+                                multiple
+                                hidden
+                                accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                            >
+
+
+                            <span
+                                id="file-selection"
+                                class="file-selection"
+                            >
+                                No files selected
+                            </span>
+
+                        </div>
+
+
+                        <!-- =================================
+                             SELECTED FILES
+                        ================================== -->
+
+                        <div
+                            id="selected-files"
+                            class="selected-files"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <!-- =================================
+                             FORM FOOTER
+                        ================================== -->
 
                         <div class="message-form-footer">
 
