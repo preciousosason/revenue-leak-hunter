@@ -1,9 +1,58 @@
 const CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods":
+        "GET, POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers":
+        "Content-Type, Authorization",
     "Content-Type": "application/json"
 };
+
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const MAX_FILE_SIZE =
+    10 * 1024 * 1024;
+
+
+/*
+ * Keep the initial allowed list deliberately
+ * conservative.
+ *
+ * SVG/HTML are intentionally excluded because
+ * uploaded files should never become executable
+ * content inside the portal.
+ */
+
+const ALLOWED_FILE_TYPES = new Set([
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+
+    "application/pdf",
+
+    "text/plain",
+    "text/csv",
+
+    "application/msword",
+
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+    "application/vnd.ms-excel",
+
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+    "application/vnd.ms-powerpoint",
+
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+]);
+
+
+/* =========================================================
+   GENERAL HELPERS
+========================================================= */
 
 function json(data, status = 200) {
     return new Response(
@@ -15,69 +64,200 @@ function json(data, status = 200) {
     );
 }
 
+
 function createId() {
     return crypto.randomUUID();
 }
 
-function generatePortalToken() {
-    const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    const randomValues = new Uint32Array(16);
 
-    crypto.getRandomValues(randomValues);
+function generatePortalToken() {
+
+    const characters =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    const randomValues =
+        new Uint32Array(16);
+
+    crypto.getRandomValues(
+        randomValues
+    );
 
     const groups = [];
 
-    for (let group = 0; group < 4; group++) {
+
+    for (
+        let group = 0;
+        group < 4;
+        group++
+    ) {
+
         let value = "";
 
-        for (let i = 0; i < 4; i++) {
+
+        for (
+            let i = 0;
+            i < 4;
+            i++
+        ) {
+
             const index =
-                randomValues[group * 4 + i] %
+                randomValues[
+                    group * 4 + i
+                ] %
                 characters.length;
 
-            value += characters[index];
+            value +=
+                characters[index];
+
         }
 
+
         groups.push(value);
+
     }
+
 
     return `LH-${groups.join("-")}`;
 }
 
+
 async function hashToken(token) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(token);
 
-    const hashBuffer = await crypto.subtle.digest(
-        "SHA-256",
-        data
-    );
+    const encoder =
+        new TextEncoder();
 
-    const hashArray = Array.from(
-        new Uint8Array(hashBuffer)
-    );
+    const data =
+        encoder.encode(token);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(
+                hashBuffer
+            )
+        );
 
     return hashArray
         .map((byte) =>
-            byte.toString(16).padStart(2, "0")
+            byte
+                .toString(16)
+                .padStart(2, "0")
         )
         .join("");
 }
+
+
+/* =========================================================
+   FILE HELPERS
+========================================================= */
+
+function getFileExtension(
+    filename
+) {
+
+    const parts =
+        filename
+            .split(".")
+            .filter(Boolean);
+
+
+    if (!parts.length) {
+        return "";
+    }
+
+
+    return parts[
+        parts.length - 1
+    ]
+        .toLowerCase()
+        .replace(
+            /[^a-z0-9]/g,
+            ""
+        );
+
+}
+
+
+function sanitizeFilename(
+    filename
+) {
+
+    return String(filename || "file")
+        .replace(
+            /[\r\n"]/g,
+            ""
+        )
+        .replace(
+            /[^a-zA-Z0-9._()\- ]/g,
+            "_"
+        )
+        .trim()
+        .slice(0, 180) ||
+        "file";
+
+}
+
+
+function getFileCategory(
+    contentType
+) {
+
+    if (
+        contentType.startsWith(
+            "image/"
+        )
+    ) {
+        return "image";
+    }
+
+
+    if (
+        contentType ===
+        "application/pdf"
+    ) {
+        return "pdf";
+    }
+
+
+    if (
+        contentType.startsWith(
+            "text/"
+        )
+    ) {
+        return "text";
+    }
+
+
+    return "document";
+
+}
+
 
 /* =========================================================
    CONTACT
 ========================================================= */
 
 function validateContact(data) {
+
     const errors = {};
+
 
     if (
         !data.name ||
         typeof data.name !== "string" ||
         data.name.trim().length < 2
     ) {
-        errors.name = "Please provide your name.";
+
+        errors.name =
+            "Please provide your name.";
+
     }
+
 
     if (
         !data.email ||
@@ -86,26 +266,35 @@ function validateContact(data) {
             data.email.trim()
         )
     ) {
+
         errors.email =
             "Please provide a valid email address.";
+
     }
+
 
     if (
         !data.offer ||
         typeof data.offer !== "string" ||
         data.offer.trim().length < 3
     ) {
+
         errors.offer =
             "Please describe what you sell.";
+
     }
+
 
     if (
         !data.problem ||
         typeof data.problem !== "string"
     ) {
+
         errors.problem =
             "Please select where you think the leak is.";
+
     }
+
 
     if (
         data.website &&
@@ -114,9 +303,12 @@ function validateContact(data) {
             data.website.length > 500
         )
     ) {
+
         errors.website =
             "Please provide a valid website.";
+
     }
+
 
     if (
         data.message &&
@@ -125,41 +317,70 @@ function validateContact(data) {
             data.message.length > 5000
         )
     ) {
+
         errors.message =
             "Your message is too long.";
+
     }
+
 
     return errors;
 }
 
-async function createContact(data, env) {
-    const name = data.name.trim();
-    const email = data.email.trim().toLowerCase();
 
-    const business = data.business
-        ? data.business.trim()
-        : null;
+async function createContact(
+    data,
+    env
+) {
 
-    const website = data.website
-        ? data.website.trim()
-        : null;
+    const name =
+        data.name.trim();
 
-    const offer = data.offer.trim();
-    const problem = data.problem.trim();
+    const email =
+        data.email
+            .trim()
+            .toLowerCase();
 
-    const message = data.message
-        ? data.message.trim()
-        : "";
+    const business =
+        data.business
+            ? data.business.trim()
+            : null;
+
+    const website =
+        data.website
+            ? data.website.trim()
+            : null;
+
+    const offer =
+        data.offer.trim();
+
+    const problem =
+        data.problem.trim();
+
+    const message =
+        data.message
+            ? data.message.trim()
+            : "";
+
 
     const portalToken =
         generatePortalToken();
 
     const tokenHash =
-        await hashToken(portalToken);
+        await hashToken(
+            portalToken
+        );
 
-    const clientId = createId();
-    const conversationId = createId();
-    const messageId = createId();
+
+    const clientId =
+        createId();
+
+    const conversationId =
+        createId();
+
+    const messageId =
+        createId();
+
 
     const existingClient =
         await env.DB
@@ -171,13 +392,17 @@ async function createContact(data, env) {
             .bind(email)
             .first();
 
+
     if (existingClient) {
+
         return {
             error:
                 "An account already exists for this email address.",
             status: 409
         };
+
     }
+
 
     await env.DB
         .prepare(
@@ -202,6 +427,7 @@ async function createContact(data, env) {
         )
         .run();
 
+
     await env.DB
         .prepare(
             `INSERT INTO conversations
@@ -221,6 +447,7 @@ async function createContact(data, env) {
         )
         .run();
 
+
     const firstMessage = [
         `Business: ${business || "Not provided"}`,
         `Website: ${website || "Not provided"}`,
@@ -231,6 +458,7 @@ async function createContact(data, env) {
         message ||
             "No additional message provided."
     ].join("\n");
+
 
     await env.DB
         .prepare(
@@ -250,6 +478,7 @@ async function createContact(data, env) {
             firstMessage
         )
         .run();
+
 
     await env.DB
         .prepare(
@@ -272,6 +501,7 @@ async function createContact(data, env) {
         )
         .run();
 
+
     return {
         success: true,
         status: 201,
@@ -282,27 +512,45 @@ async function createContact(data, env) {
             portalToken
         }
     };
+
 }
 
-async function handleContact(request, env) {
+
+async function handleContact(
+    request,
+    env
+) {
+
     let data;
 
+
     try {
-        data = await request.json();
+
+        data =
+            await request.json();
+
     } catch {
+
         return json(
             {
                 success: false,
-                error: "Invalid JSON request."
+                error:
+                    "Invalid JSON request."
             },
             400
         );
+
     }
+
 
     const errors =
         validateContact(data);
 
-    if (Object.keys(errors).length > 0) {
+
+    if (
+        Object.keys(errors).length > 0
+    ) {
+
         return json(
             {
                 success: false,
@@ -310,16 +558,21 @@ async function handleContact(request, env) {
             },
             422
         );
+
     }
 
+
     try {
+
         const result =
             await createContact(
                 data,
                 env
             );
 
+
         if (result.error) {
+
             return json(
                 {
                     success: false,
@@ -327,7 +580,9 @@ async function handleContact(request, env) {
                 },
                 result.status
             );
+
         }
+
 
         return json(
             {
@@ -336,11 +591,14 @@ async function handleContact(request, env) {
             },
             result.status
         );
+
     } catch (error) {
+
         console.error(
             "Contact submission error:",
             error
         );
+
 
         return json(
             {
@@ -350,8 +608,11 @@ async function handleContact(request, env) {
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    CLIENT PORTAL SESSIONS
@@ -361,13 +622,17 @@ async function createSession(
     clientId,
     env
 ) {
-    const sessionId = createId();
+
+    const sessionId =
+        createId();
+
 
     const expiresAt =
         new Date(
             Date.now() +
             7 * 24 * 60 * 60 * 1000
         ).toISOString();
+
 
     await env.DB
         .prepare(
@@ -386,20 +651,25 @@ async function createSession(
         )
         .run();
 
+
     return {
         sessionId,
         expiresAt
     };
+
 }
+
 
 async function authenticateSession(
     request,
     env
 ) {
+
     const authorization =
         request.headers.get(
             "Authorization"
         );
+
 
     if (
         !authorization ||
@@ -410,14 +680,17 @@ async function authenticateSession(
         return null;
     }
 
+
     const sessionId =
         authorization
             .substring(7)
             .trim();
 
+
     if (!sessionId) {
         return null;
     }
+
 
     const session =
         await env.DB
@@ -432,15 +705,18 @@ async function authenticateSession(
             .bind(sessionId)
             .first();
 
+
     if (!session) {
         return null;
     }
+
 
     if (
         new Date(
             session.expires_at
         ).getTime() <= Date.now()
     ) {
+
         await env.DB
             .prepare(
                 `DELETE FROM sessions
@@ -449,11 +725,16 @@ async function authenticateSession(
             .bind(sessionId)
             .run();
 
+
         return null;
+
     }
 
+
     return session;
+
 }
+
 
 /* =========================================================
    CLIENT PORTAL LOGIN
@@ -463,24 +744,34 @@ async function handlePortalLogin(
     request,
     env
 ) {
+
     let data;
 
+
     try {
-        data = await request.json();
+
+        data =
+            await request.json();
+
     } catch {
+
         return json(
             {
                 success: false,
-                error: "Invalid JSON request."
+                error:
+                    "Invalid JSON request."
             },
             400
         );
+
     }
+
 
     if (
         !data.token ||
         typeof data.token !== "string"
     ) {
+
         return json(
             {
                 success: false,
@@ -489,18 +780,22 @@ async function handlePortalLogin(
             },
             400
         );
+
     }
+
 
     const token =
         data.token
             .trim()
             .toUpperCase();
 
+
     if (
         !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/.test(
             token
         )
     ) {
+
         return json(
             {
                 success: false,
@@ -509,11 +804,17 @@ async function handlePortalLogin(
             },
             400
         );
+
     }
 
+
     try {
+
         const tokenHash =
-            await hashToken(token);
+            await hashToken(
+                token
+            );
+
 
         const client =
             await env.DB
@@ -531,7 +832,9 @@ async function handlePortalLogin(
                 .bind(tokenHash)
                 .first();
 
+
         if (!client) {
+
             return json(
                 {
                     success: false,
@@ -540,13 +843,16 @@ async function handlePortalLogin(
                 },
                 401
             );
+
         }
+
 
         const session =
             await createSession(
                 client.id,
                 env
             );
+
 
         return json({
             success: true,
@@ -562,11 +868,14 @@ async function handlePortalLogin(
                 website: client.website
             }
         });
+
     } catch (error) {
+
         console.error(
             "Portal login error:",
             error
         );
+
 
         return json(
             {
@@ -576,8 +885,11 @@ async function handlePortalLogin(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    CLIENT PORTAL PROFILE
@@ -587,13 +899,16 @@ async function handlePortalMe(
     request,
     env
 ) {
+
     const session =
         await authenticateSession(
             request,
             env
         );
 
+
     if (!session) {
+
         return json(
             {
                 success: false,
@@ -602,9 +917,12 @@ async function handlePortalMe(
             },
             401
         );
+
     }
 
+
     try {
+
         const client =
             await env.DB
                 .prepare(
@@ -617,10 +935,14 @@ async function handlePortalMe(
                      FROM clients
                      WHERE id = ?`
                 )
-                .bind(session.client_id)
+                .bind(
+                    session.client_id
+                )
                 .first();
 
+
         if (!client) {
+
             return json(
                 {
                     success: false,
@@ -629,7 +951,9 @@ async function handlePortalMe(
                 },
                 404
             );
+
         }
+
 
         return json({
             success: true,
@@ -637,11 +961,14 @@ async function handlePortalMe(
             expiresAt:
                 session.expires_at
         });
+
     } catch (error) {
+
         console.error(
             "Portal session error:",
             error
         );
+
 
         return json(
             {
@@ -651,8 +978,11 @@ async function handlePortalMe(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    CLIENT PORTAL LOGOUT
@@ -662,10 +992,12 @@ async function handlePortalLogout(
     request,
     env
 ) {
+
     const authorization =
         request.headers.get(
             "Authorization"
         );
+
 
     if (
         authorization &&
@@ -673,12 +1005,15 @@ async function handlePortalLogout(
             "Bearer "
         )
     ) {
+
         const sessionId =
             authorization
                 .substring(7)
                 .trim();
 
+
         if (sessionId) {
+
             await env.DB
                 .prepare(
                     `DELETE FROM sessions
@@ -686,13 +1021,861 @@ async function handlePortalLogout(
                 )
                 .bind(sessionId)
                 .run();
+
         }
+
     }
+
 
     return json({
         success: true
     });
+
 }
+
+
+/* =========================================================
+   FILE ATTACHMENTS
+========================================================= */
+
+/*
+ * Gets all attachments belonging to a set
+ * of message IDs.
+ */
+
+async function getMessageFiles(
+    env,
+    messageIds
+) {
+
+    if (!messageIds.length) {
+        return [];
+    }
+
+
+    const placeholders =
+        messageIds
+            .map(() => "?")
+            .join(",");
+
+
+    const result =
+        await env.DB
+            .prepare(
+                `SELECT
+                    id,
+                    message_id,
+                    original_name,
+                    content_type,
+                    file_size,
+                    uploaded_by,
+                    created_at
+                 FROM files
+                 WHERE message_id IN (${placeholders})
+                 ORDER BY created_at ASC`
+            )
+            .bind(
+                ...messageIds
+            )
+            .all();
+
+
+    return result.results || [];
+
+}
+
+
+/*
+ * Adds attachment arrays to messages.
+ */
+
+async function attachFilesToMessages(
+    env,
+    messages
+) {
+
+    if (!messages.length) {
+        return messages;
+    }
+
+
+    const messageIds =
+        messages.map(
+            message => message.id
+        );
+
+
+    const files =
+        await getMessageFiles(
+            env,
+            messageIds
+        );
+
+
+    const filesByMessage =
+        new Map();
+
+
+    for (const file of files) {
+
+        if (
+            !filesByMessage.has(
+                file.message_id
+            )
+        ) {
+
+            filesByMessage.set(
+                file.message_id,
+                []
+            );
+
+        }
+
+
+        filesByMessage
+            .get(file.message_id)
+            .push({
+                id: file.id,
+                name:
+                    file.original_name,
+                contentType:
+                    file.content_type,
+                size:
+                    file.file_size,
+                category:
+                    getFileCategory(
+                        file.content_type
+                    ),
+                uploadedBy:
+                    file.uploaded_by,
+                createdAt:
+                    file.created_at
+            });
+
+    }
+
+
+    return messages.map(
+        message => ({
+            ...message,
+            files:
+                filesByMessage.get(
+                    message.id
+                ) || []
+        })
+    );
+
+}
+
+
+/*
+ * Upload a file for a client.
+ */
+
+async function handlePortalFileUpload(
+    request,
+    env
+) {
+
+    try {
+
+        const session =
+            await authenticateSession(
+                request,
+                env
+            );
+
+
+        if (!session) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        const formData =
+            await request.formData();
+
+
+        const file =
+            formData.get("file");
+
+
+        const conversationId =
+            String(
+                formData.get(
+                    "conversationId"
+                ) || ""
+            ).trim();
+
+
+        const messageId =
+            String(
+                formData.get(
+                    "messageId"
+                ) || ""
+            ).trim();
+
+
+        if (!(file instanceof File)) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "No file was provided."
+                },
+                400
+            );
+
+        }
+
+
+        if (!conversationId) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Conversation ID is required."
+                },
+                400
+            );
+
+        }
+
+
+        if (!messageId) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Message ID is required."
+                },
+                400
+            );
+
+        }
+
+
+        if (file.size <= 0) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "The selected file is empty."
+                },
+                400
+            );
+
+        }
+
+
+        if (
+            file.size >
+            MAX_FILE_SIZE
+        ) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "File is too large. Maximum size is 10 MB."
+                },
+                413
+            );
+
+        }
+
+
+        const contentType =
+            (
+                file.type ||
+                "application/octet-stream"
+            ).toLowerCase();
+
+
+        if (
+            !ALLOWED_FILE_TYPES.has(
+                contentType
+            )
+        ) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "This file type is not supported."
+                },
+                415
+            );
+
+        }
+
+
+        /*
+         * Verify that the conversation belongs
+         * to the authenticated client.
+         */
+
+        const conversation =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        client_id
+                     FROM conversations
+                     WHERE id = ?
+                       AND client_id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    conversationId,
+                    session.client_id
+                )
+                .first();
+
+
+        if (!conversation) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Conversation not found."
+                },
+                404
+            );
+
+        }
+
+
+        /*
+         * Verify that the message belongs
+         * to the same conversation.
+         */
+
+        const message =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        conversation_id
+                     FROM messages
+                     WHERE id = ?
+                       AND conversation_id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    messageId,
+                    conversationId
+                )
+                .first();
+
+
+        if (!message) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Message not found."
+                },
+                404
+            );
+
+        }
+
+
+        const fileId =
+            createId();
+
+
+        const extension =
+            getFileExtension(
+                file.name
+            );
+
+
+        const storageKey =
+            [
+                "clients",
+                session.client_id,
+                "conversations",
+                conversationId,
+                `${fileId}${
+                    extension
+                        ? `.${extension}`
+                        : ""
+                }`
+            ].join("/");
+
+
+        await env.FILES.put(
+            storageKey,
+            file.stream(),
+            {
+                httpMetadata: {
+                    contentType
+                },
+
+                customMetadata: {
+                    originalName:
+                        sanitizeFilename(
+                            file.name
+                        ),
+
+                    clientId:
+                        session.client_id,
+
+                    conversationId,
+
+                    messageId
+                }
+            }
+        );
+
+
+        try {
+
+            await env.DB
+                .prepare(
+                    `INSERT INTO files
+                    (
+                        id,
+                        client_id,
+                        conversation_id,
+                        message_id,
+                        original_name,
+                        storage_key,
+                        content_type,
+                        file_size,
+                        uploaded_by
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+                )
+                .bind(
+                    fileId,
+                    session.client_id,
+                    conversationId,
+                    messageId,
+                    sanitizeFilename(
+                        file.name
+                    ),
+                    storageKey,
+                    contentType,
+                    file.size,
+                    "client"
+                )
+                .run();
+
+        } catch (databaseError) {
+
+            /*
+             * If D1 fails after R2 succeeds,
+             * remove the orphaned R2 object.
+             */
+
+            try {
+
+                await env.FILES.delete(
+                    storageKey
+                );
+
+            } catch (cleanupError) {
+
+                console.error(
+                    "R2 cleanup error:",
+                    cleanupError
+                );
+
+            }
+
+
+            throw databaseError;
+
+        }
+
+
+        /*
+         * Update the conversation timestamp.
+         */
+
+        await env.DB
+            .prepare(
+                `UPDATE conversations
+                 SET updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ?`
+            )
+            .bind(conversationId)
+            .run();
+
+
+        /*
+         * Notify admin.
+         */
+
+        const client =
+            await env.DB
+                .prepare(
+                    `SELECT name
+                     FROM clients
+                     WHERE id = ?`
+                )
+                .bind(
+                    session.client_id
+                )
+                .first();
+
+
+        await env.DB
+            .prepare(
+                `INSERT INTO notifications
+                (
+                    id,
+                    client_id,
+                    type,
+                    title,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?)`
+            )
+            .bind(
+                createId(),
+                session.client_id,
+                "file_upload",
+                "New Client File",
+                `${client?.name || "A client"} uploaded ${sanitizeFilename(file.name)}.`
+            )
+            .run();
+
+
+        return json({
+            success: true,
+
+            file: {
+                id: fileId,
+                name:
+                    sanitizeFilename(
+                        file.name
+                    ),
+                contentType,
+                size: file.size,
+                category:
+                    getFileCategory(
+                        contentType
+                    )
+            }
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Portal file upload error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to upload the file."
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/*
+ * Secure client file download.
+ */
+
+async function handlePortalFileDownload(
+    request,
+    env,
+    fileId
+) {
+
+    try {
+
+        const session =
+            await authenticateSession(
+                request,
+                env
+            );
+
+
+        if (!session) {
+
+            return new Response(
+                "Authentication required.",
+                {
+                    status: 401,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const file =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        client_id,
+                        original_name,
+                        storage_key,
+                        content_type,
+                        file_size
+                     FROM files
+                     WHERE id = ?
+                       AND client_id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    fileId,
+                    session.client_id
+                )
+                .first();
+
+
+        if (!file) {
+
+            return new Response(
+                "File not found.",
+                {
+                    status: 404,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const object =
+            await env.FILES.get(
+                file.storage_key
+            );
+
+
+        if (!object) {
+
+            return new Response(
+                "Stored file not found.",
+                {
+                    status: 404,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const headers =
+            new Headers(
+                CORS_HEADERS
+            );
+
+
+        object.writeHttpMetadata(
+            headers
+        );
+
+
+        headers.set(
+            "Content-Type",
+            file.content_type
+        );
+
+
+        headers.set(
+            "Content-Length",
+            String(
+                file.file_size
+            )
+        );
+
+
+        headers.set(
+            "Content-Disposition",
+            `inline; filename="${sanitizeFilename(file.original_name)}"`
+        );
+
+
+        headers.set(
+            "Cache-Control",
+            "private, no-store"
+        );
+
+
+        return new Response(
+            object.body,
+            {
+                status: 200,
+                headers
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Portal file download error:",
+            error
+        );
+
+
+        return new Response(
+            "Unable to retrieve file.",
+            {
+                status: 500,
+                headers: {
+                    ...CORS_HEADERS,
+                    "Content-Type":
+                        "text/plain"
+                }
+            }
+        );
+
+    }
+
+}
+
+
+/*
+ * Client deletes one of their own files.
+ */
+
+async function handlePortalFileDelete(
+    request,
+    env,
+    fileId
+) {
+
+    try {
+
+        const session =
+            await authenticateSession(
+                request,
+                env
+            );
+
+
+        if (!session) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        const file =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        client_id,
+                        storage_key
+                     FROM files
+                     WHERE id = ?
+                       AND client_id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    fileId,
+                    session.client_id
+                )
+                .first();
+
+
+        if (!file) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "File not found."
+                },
+                404
+            );
+
+        }
+
+
+        await env.FILES.delete(
+            file.storage_key
+        );
+
+
+        await env.DB
+            .prepare(
+                `DELETE FROM files
+                 WHERE id = ?
+                   AND client_id = ?`
+            )
+            .bind(
+                fileId,
+                session.client_id
+            )
+            .run();
+
+
+        return json({
+            success: true
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Portal file delete error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to delete the file."
+            },
+            500
+        );
+
+    }
+
+}
+
 
 /* =========================================================
    CLIENT PORTAL MESSAGES
@@ -702,14 +1885,18 @@ async function handlePortalMessages(
     request,
     env
 ) {
+
     try {
+
         const session =
             await authenticateSession(
                 request,
                 env
             );
 
+
         if (!session) {
+
             return json(
                 {
                     success: false,
@@ -718,7 +1905,9 @@ async function handlePortalMessages(
                 },
                 401
             );
+
         }
+
 
         const conversation =
             await env.DB
@@ -734,10 +1923,14 @@ async function handlePortalMessages(
                      ORDER BY created_at DESC
                      LIMIT 1`
                 )
-                .bind(session.client_id)
+                .bind(
+                    session.client_id
+                )
                 .first();
 
+
         if (!conversation) {
+
             return json(
                 {
                     success: false,
@@ -746,9 +1939,11 @@ async function handlePortalMessages(
                 },
                 404
             );
+
         }
 
-        const messages =
+
+        const messagesResult =
             await env.DB
                 .prepare(
                     `SELECT
@@ -760,20 +1955,32 @@ async function handlePortalMessages(
                      WHERE conversation_id = ?
                      ORDER BY created_at ASC`
                 )
-                .bind(conversation.id)
+                .bind(
+                    conversation.id
+                )
                 .all();
+
+
+        const messages =
+            await attachFilesToMessages(
+                env,
+                messagesResult.results || []
+            );
+
 
         return json({
             success: true,
             conversation,
-            messages:
-                messages.results || []
+            messages
         });
+
     } catch (error) {
+
         console.error(
             "Portal messages error:",
             error
         );
+
 
         return json(
             {
@@ -783,21 +1990,28 @@ async function handlePortalMessages(
             },
             500
         );
+
     }
+
 }
+
 
 async function handlePortalSendMessage(
     request,
     env
 ) {
+
     try {
+
         const session =
             await authenticateSession(
                 request,
                 env
             );
 
+
         if (!session) {
+
             return json(
                 {
                     success: false,
@@ -806,13 +2020,20 @@ async function handlePortalSendMessage(
                 },
                 401
             );
+
         }
+
 
         let data;
 
+
         try {
-            data = await request.json();
+
+            data =
+                await request.json();
+
         } catch {
+
             return json(
                 {
                     success: false,
@@ -821,12 +2042,15 @@ async function handlePortalSendMessage(
                 },
                 400
             );
+
         }
+
 
         if (
             !data.message ||
             typeof data.message !== "string"
         ) {
+
             return json(
                 {
                     success: false,
@@ -835,12 +2059,16 @@ async function handlePortalSendMessage(
                 },
                 400
             );
+
         }
+
 
         const message =
             data.message.trim();
 
+
         if (!message) {
+
             return json(
                 {
                     success: false,
@@ -849,9 +2077,12 @@ async function handlePortalSendMessage(
                 },
                 400
             );
+
         }
 
+
         if (message.length > 5000) {
+
             return json(
                 {
                     success: false,
@@ -860,7 +2091,9 @@ async function handlePortalSendMessage(
                 },
                 422
             );
+
         }
+
 
         const conversation =
             await env.DB
@@ -871,10 +2104,14 @@ async function handlePortalSendMessage(
                      ORDER BY created_at DESC
                      LIMIT 1`
                 )
-                .bind(session.client_id)
+                .bind(
+                    session.client_id
+                )
                 .first();
 
+
         if (!conversation) {
+
             return json(
                 {
                     success: false,
@@ -883,10 +2120,13 @@ async function handlePortalSendMessage(
                 },
                 404
             );
+
         }
+
 
         const messageId =
             createId();
+
 
         await env.DB
             .prepare(
@@ -907,6 +2147,7 @@ async function handlePortalSendMessage(
             )
             .run();
 
+
         await env.DB
             .prepare(
                 `UPDATE conversations
@@ -918,6 +2159,7 @@ async function handlePortalSendMessage(
             )
             .run();
 
+
         const client =
             await env.DB
                 .prepare(
@@ -925,8 +2167,11 @@ async function handlePortalSendMessage(
                      FROM clients
                      WHERE id = ?`
                 )
-                .bind(session.client_id)
+                .bind(
+                    session.client_id
+                )
                 .first();
+
 
         await env.DB
             .prepare(
@@ -949,6 +2194,7 @@ async function handlePortalSendMessage(
             )
             .run();
 
+
         const createdMessage =
             await env.DB
                 .prepare(
@@ -963,15 +2209,22 @@ async function handlePortalSendMessage(
                 .bind(messageId)
                 .first();
 
+
         return json({
             success: true,
-            message: createdMessage
+            message: {
+                ...createdMessage,
+                files: []
+            }
         });
+
     } catch (error) {
+
         console.error(
             "Portal send message error:",
             error
         );
+
 
         return json(
             {
@@ -981,21 +2234,30 @@ async function handlePortalSendMessage(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    ADMIN SESSIONS
 ========================================================= */
 
-async function createAdminSession(env) {
-    const sessionId = createId();
+async function createAdminSession(
+    env
+) {
+
+    const sessionId =
+        createId();
+
 
     const expiresAt =
         new Date(
             Date.now() +
             24 * 60 * 60 * 1000
         ).toISOString();
+
 
     await env.DB
         .prepare(
@@ -1012,20 +2274,25 @@ async function createAdminSession(env) {
         )
         .run();
 
+
     return {
         sessionId,
         expiresAt
     };
+
 }
+
 
 async function authenticateAdmin(
     request,
     env
 ) {
+
     const authorization =
         request.headers.get(
             "Authorization"
         );
+
 
     if (
         !authorization ||
@@ -1036,14 +2303,17 @@ async function authenticateAdmin(
         return null;
     }
 
+
     const sessionId =
         authorization
             .substring(7)
             .trim();
 
+
     if (!sessionId) {
         return null;
     }
+
 
     const session =
         await env.DB
@@ -1057,15 +2327,18 @@ async function authenticateAdmin(
             .bind(sessionId)
             .first();
 
+
     if (!session) {
         return null;
     }
+
 
     if (
         new Date(
             session.expires_at
         ).getTime() <= Date.now()
     ) {
+
         await env.DB
             .prepare(
                 `DELETE FROM admin_sessions
@@ -1074,11 +2347,16 @@ async function authenticateAdmin(
             .bind(sessionId)
             .run();
 
+
         return null;
+
     }
 
+
     return session;
+
 }
+
 
 /* =========================================================
    ADMIN LOGIN
@@ -1088,24 +2366,34 @@ async function handleAdminLogin(
     request,
     env
 ) {
+
     let data;
 
+
     try {
-        data = await request.json();
+
+        data =
+            await request.json();
+
     } catch {
+
         return json(
             {
                 success: false,
-                error: "Invalid JSON request."
+                error:
+                    "Invalid JSON request."
             },
             400
         );
+
     }
+
 
     if (
         !data.password ||
         typeof data.password !== "string"
     ) {
+
         return json(
             {
                 success: false,
@@ -1114,12 +2402,15 @@ async function handleAdminLogin(
             },
             400
         );
+
     }
+
 
     if (
         data.password !==
         env.ADMIN_PASSWORD
     ) {
+
         return json(
             {
                 success: false,
@@ -1128,13 +2419,17 @@ async function handleAdminLogin(
             },
             401
         );
+
     }
 
+
     try {
+
         const session =
             await createAdminSession(
                 env
             );
+
 
         return json({
             success: true,
@@ -1143,11 +2438,14 @@ async function handleAdminLogin(
             expiresAt:
                 session.expiresAt
         });
+
     } catch (error) {
+
         console.error(
             "Admin login error:",
             error
         );
+
 
         return json(
             {
@@ -1157,8 +2455,11 @@ async function handleAdminLogin(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    ADMIN SESSION CHECK
@@ -1168,13 +2469,16 @@ async function handleAdminMe(
     request,
     env
 ) {
+
     const session =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!session) {
+
         return json(
             {
                 success: false,
@@ -1183,14 +2487,18 @@ async function handleAdminMe(
             },
             401
         );
+
     }
+
 
     return json({
         success: true,
         expiresAt:
             session.expires_at
     });
+
 }
+
 
 /* =========================================================
    ADMIN LOGOUT
@@ -1200,10 +2508,12 @@ async function handleAdminLogout(
     request,
     env
 ) {
+
     const authorization =
         request.headers.get(
             "Authorization"
         );
+
 
     if (
         authorization &&
@@ -1211,12 +2521,15 @@ async function handleAdminLogout(
             "Bearer "
         )
     ) {
+
         const sessionId =
             authorization
                 .substring(7)
                 .trim();
 
+
         if (sessionId) {
+
             await env.DB
                 .prepare(
                     `DELETE FROM admin_sessions
@@ -1224,13 +2537,18 @@ async function handleAdminLogout(
                 )
                 .bind(sessionId)
                 .run();
+
         }
+
     }
+
 
     return json({
         success: true
     });
+
 }
+
 
 /* =========================================================
    ADMIN CLIENTS
@@ -1240,13 +2558,16 @@ async function handleAdminClients(
     request,
     env
 ) {
+
     const admin =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!admin) {
+
         return json(
             {
                 success: false,
@@ -1255,9 +2576,12 @@ async function handleAdminClients(
             },
             401
         );
+
     }
 
+
     try {
+
         const clients =
             await env.DB
                 .prepare(
@@ -1289,16 +2613,20 @@ async function handleAdminClients(
                 )
                 .all();
 
+
         return json({
             success: true,
             clients:
                 clients.results || []
         });
+
     } catch (error) {
+
         console.error(
             "Admin clients error:",
             error
         );
+
 
         return json(
             {
@@ -1308,8 +2636,11 @@ async function handleAdminClients(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    ADMIN CONVERSATION
@@ -1320,13 +2651,16 @@ async function handleAdminConversation(
     env,
     conversationId
 ) {
+
     const admin =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!admin) {
+
         return json(
             {
                 success: false,
@@ -1335,9 +2669,12 @@ async function handleAdminConversation(
             },
             401
         );
+
     }
 
+
     try {
+
         const conversation =
             await env.DB
                 .prepare(
@@ -1358,10 +2695,14 @@ async function handleAdminConversation(
                            conversations.client_id
                      WHERE conversations.id = ?`
                 )
-                .bind(conversationId)
+                .bind(
+                    conversationId
+                )
                 .first();
 
+
         if (!conversation) {
+
             return json(
                 {
                     success: false,
@@ -1370,9 +2711,11 @@ async function handleAdminConversation(
                 },
                 404
             );
+
         }
 
-        const messages =
+
+        const messagesResult =
             await env.DB
                 .prepare(
                     `SELECT
@@ -1384,20 +2727,32 @@ async function handleAdminConversation(
                      WHERE conversation_id = ?
                      ORDER BY created_at ASC`
                 )
-                .bind(conversationId)
+                .bind(
+                    conversationId
+                )
                 .all();
+
+
+        const messages =
+            await attachFilesToMessages(
+                env,
+                messagesResult.results || []
+            );
+
 
         return json({
             success: true,
             conversation,
-            messages:
-                messages.results || []
+            messages
         });
+
     } catch (error) {
+
         console.error(
             "Admin conversation error:",
             error
         );
+
 
         return json(
             {
@@ -1407,8 +2762,11 @@ async function handleAdminConversation(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    ADMIN SEND MESSAGE
@@ -1418,13 +2776,16 @@ async function handleAdminSendMessage(
     request,
     env
 ) {
+
     const admin =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!admin) {
+
         return json(
             {
                 success: false,
@@ -1433,13 +2794,20 @@ async function handleAdminSendMessage(
             },
             401
         );
+
     }
+
 
     let data;
 
+
     try {
-        data = await request.json();
+
+        data =
+            await request.json();
+
     } catch {
+
         return json(
             {
                 success: false,
@@ -1448,7 +2816,9 @@ async function handleAdminSendMessage(
             },
             400
         );
+
     }
+
 
     const conversationId =
         typeof data.conversationId ===
@@ -1456,13 +2826,16 @@ async function handleAdminSendMessage(
             ? data.conversationId.trim()
             : "";
 
+
     const message =
         typeof data.message ===
         "string"
             ? data.message.trim()
             : "";
 
+
     if (!conversationId) {
+
         return json(
             {
                 success: false,
@@ -1471,9 +2844,12 @@ async function handleAdminSendMessage(
             },
             400
         );
+
     }
 
+
     if (!message) {
+
         return json(
             {
                 success: false,
@@ -1482,9 +2858,12 @@ async function handleAdminSendMessage(
             },
             400
         );
+
     }
 
+
     if (message.length > 5000) {
+
         return json(
             {
                 success: false,
@@ -1493,9 +2872,12 @@ async function handleAdminSendMessage(
             },
             422
         );
+
     }
 
+
     try {
+
         const conversation =
             await env.DB
                 .prepare(
@@ -1505,10 +2887,14 @@ async function handleAdminSendMessage(
                      FROM conversations
                      WHERE id = ?`
                 )
-                .bind(conversationId)
+                .bind(
+                    conversationId
+                )
                 .first();
 
+
         if (!conversation) {
+
             return json(
                 {
                     success: false,
@@ -1517,10 +2903,13 @@ async function handleAdminSendMessage(
                 },
                 404
             );
+
         }
+
 
         const messageId =
             createId();
+
 
         await env.DB
             .prepare(
@@ -1541,14 +2930,18 @@ async function handleAdminSendMessage(
             )
             .run();
 
+
         await env.DB
             .prepare(
                 `UPDATE conversations
                  SET updated_at = CURRENT_TIMESTAMP
                  WHERE id = ?`
             )
-            .bind(conversationId)
+            .bind(
+                conversationId
+            )
             .run();
+
 
         const client =
             await env.DB
@@ -1561,6 +2954,7 @@ async function handleAdminSendMessage(
                     conversation.client_id
                 )
                 .first();
+
 
         await env.DB
             .prepare(
@@ -1583,6 +2977,7 @@ async function handleAdminSendMessage(
             )
             .run();
 
+
         const createdMessage =
             await env.DB
                 .prepare(
@@ -1597,18 +2992,24 @@ async function handleAdminSendMessage(
                 .bind(messageId)
                 .first();
 
+
         return json({
             success: true,
             clientName:
                 client?.name || "",
-            message:
-                createdMessage
+            message: {
+                ...createdMessage,
+                files: []
+            }
         });
+
     } catch (error) {
+
         console.error(
             "Admin send message error:",
             error
         );
+
 
         return json(
             {
@@ -1618,8 +3019,674 @@ async function handleAdminSendMessage(
             },
             500
         );
+
     }
+
 }
+
+
+/* =========================================================
+   ADMIN FILE UPLOAD
+========================================================= */
+
+async function handleAdminFileUpload(
+    request,
+    env
+) {
+
+    try {
+
+        const admin =
+            await authenticateAdmin(
+                request,
+                env
+            );
+
+
+        if (!admin) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Admin authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        const formData =
+            await request.formData();
+
+
+        const file =
+            formData.get("file");
+
+
+        const conversationId =
+            String(
+                formData.get(
+                    "conversationId"
+                ) || ""
+            ).trim();
+
+
+        const messageId =
+            String(
+                formData.get(
+                    "messageId"
+                ) || ""
+            ).trim();
+
+
+        if (!(file instanceof File)) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "No file was provided."
+                },
+                400
+            );
+
+        }
+
+
+        if (!conversationId) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Conversation ID is required."
+                },
+                400
+            );
+
+        }
+
+
+        if (!messageId) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Message ID is required."
+                },
+                400
+            );
+
+        }
+
+
+        if (file.size <= 0) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "The selected file is empty."
+                },
+                400
+            );
+
+        }
+
+
+        if (
+            file.size >
+            MAX_FILE_SIZE
+        ) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "File is too large. Maximum size is 10 MB."
+                },
+                413
+            );
+
+        }
+
+
+        const contentType =
+            (
+                file.type ||
+                "application/octet-stream"
+            ).toLowerCase();
+
+
+        if (
+            !ALLOWED_FILE_TYPES.has(
+                contentType
+            )
+        ) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "This file type is not supported."
+                },
+                415
+            );
+
+        }
+
+
+        const conversation =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        client_id
+                     FROM conversations
+                     WHERE id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    conversationId
+                )
+                .first();
+
+
+        if (!conversation) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Conversation not found."
+                },
+                404
+            );
+
+        }
+
+
+        const message =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        conversation_id
+                     FROM messages
+                     WHERE id = ?
+                       AND conversation_id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    messageId,
+                    conversationId
+                )
+                .first();
+
+
+        if (!message) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Message not found."
+                },
+                404
+            );
+
+        }
+
+
+        const fileId =
+            createId();
+
+
+        const extension =
+            getFileExtension(
+                file.name
+            );
+
+
+        const storageKey =
+            [
+                "clients",
+                conversation.client_id,
+                "conversations",
+                conversationId,
+                `${fileId}${
+                    extension
+                        ? `.${extension}`
+                        : ""
+                }`
+            ].join("/");
+
+
+        await env.FILES.put(
+            storageKey,
+            file.stream(),
+            {
+                httpMetadata: {
+                    contentType
+                },
+
+                customMetadata: {
+                    originalName:
+                        sanitizeFilename(
+                            file.name
+                        ),
+
+                    clientId:
+                        conversation.client_id,
+
+                    conversationId,
+
+                    messageId
+                }
+            }
+        );
+
+
+        try {
+
+            await env.DB
+                .prepare(
+                    `INSERT INTO files
+                    (
+                        id,
+                        client_id,
+                        conversation_id,
+                        message_id,
+                        original_name,
+                        storage_key,
+                        content_type,
+                        file_size,
+                        uploaded_by
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+                )
+                .bind(
+                    fileId,
+                    conversation.client_id,
+                    conversationId,
+                    messageId,
+                    sanitizeFilename(
+                        file.name
+                    ),
+                    storageKey,
+                    contentType,
+                    file.size,
+                    "admin"
+                )
+                .run();
+
+        } catch (databaseError) {
+
+            try {
+
+                await env.FILES.delete(
+                    storageKey
+                );
+
+            } catch (cleanupError) {
+
+                console.error(
+                    "Admin R2 cleanup error:",
+                    cleanupError
+                );
+
+            }
+
+
+            throw databaseError;
+
+        }
+
+
+        await env.DB
+            .prepare(
+                `UPDATE conversations
+                 SET updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ?`
+            )
+            .bind(
+                conversationId
+            )
+            .run();
+
+
+        await env.DB
+            .prepare(
+                `INSERT INTO notifications
+                (
+                    id,
+                    client_id,
+                    type,
+                    title,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?)`
+            )
+            .bind(
+                createId(),
+                conversation.client_id,
+                "admin_file",
+                "New File From Revenue Leak Hunter",
+                `A file named ${sanitizeFilename(file.name)} was added to your Leak Hunt conversation.`
+            )
+            .run();
+
+
+        return json({
+            success: true,
+
+            file: {
+                id: fileId,
+                name:
+                    sanitizeFilename(
+                        file.name
+                    ),
+                contentType,
+                size: file.size,
+                category:
+                    getFileCategory(
+                        contentType
+                    )
+            }
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Admin file upload error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to upload the file."
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN FILE DOWNLOAD
+========================================================= */
+
+async function handleAdminFileDownload(
+    request,
+    env,
+    fileId
+) {
+
+    try {
+
+        const admin =
+            await authenticateAdmin(
+                request,
+                env
+            );
+
+
+        if (!admin) {
+
+            return new Response(
+                "Admin authentication required.",
+                {
+                    status: 401,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const file =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        original_name,
+                        storage_key,
+                        content_type,
+                        file_size
+                     FROM files
+                     WHERE id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    fileId
+                )
+                .first();
+
+
+        if (!file) {
+
+            return new Response(
+                "File not found.",
+                {
+                    status: 404,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const object =
+            await env.FILES.get(
+                file.storage_key
+            );
+
+
+        if (!object) {
+
+            return new Response(
+                "Stored file not found.",
+                {
+                    status: 404,
+                    headers: {
+                        ...CORS_HEADERS,
+                        "Content-Type":
+                            "text/plain"
+                    }
+                }
+            );
+
+        }
+
+
+        const headers =
+            new Headers(
+                CORS_HEADERS
+            );
+
+
+        object.writeHttpMetadata(
+            headers
+        );
+
+
+        headers.set(
+            "Content-Type",
+            file.content_type
+        );
+
+
+        headers.set(
+            "Content-Length",
+            String(
+                file.file_size
+            )
+        );
+
+
+        headers.set(
+            "Content-Disposition",
+            `inline; filename="${sanitizeFilename(file.original_name)}"`
+        );
+
+
+        headers.set(
+            "Cache-Control",
+            "private, no-store"
+        );
+
+
+        return new Response(
+            object.body,
+            {
+                status: 200,
+                headers
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Admin file download error:",
+            error
+        );
+
+
+        return new Response(
+            "Unable to retrieve file.",
+            {
+                status: 500,
+                headers: {
+                    ...CORS_HEADERS,
+                    "Content-Type":
+                        "text/plain"
+                }
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN FILE DELETE
+========================================================= */
+
+async function handleAdminFileDelete(
+    request,
+    env,
+    fileId
+) {
+
+    try {
+
+        const admin =
+            await authenticateAdmin(
+                request,
+                env
+            );
+
+
+        if (!admin) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Admin authentication required."
+                },
+                401
+            );
+
+        }
+
+
+        const file =
+            await env.DB
+                .prepare(
+                    `SELECT
+                        id,
+                        storage_key
+                     FROM files
+                     WHERE id = ?
+                     LIMIT 1`
+                )
+                .bind(
+                    fileId
+                )
+                .first();
+
+
+        if (!file) {
+
+            return json(
+                {
+                    success: false,
+                    error:
+                        "File not found."
+                },
+                404
+            );
+
+        }
+
+
+        await env.FILES.delete(
+            file.storage_key
+        );
+
+
+        await env.DB
+            .prepare(
+                `DELETE FROM files
+                 WHERE id = ?`
+            )
+            .bind(fileId)
+            .run();
+
+
+        return json({
+            success: true
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Admin file delete error:",
+            error
+        );
+
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to delete the file."
+            },
+            500
+        );
+
+    }
+
+}
+
 
 /* =========================================================
    ADMIN NOTIFICATIONS
@@ -1629,13 +3696,16 @@ async function handleAdminNotifications(
     request,
     env
 ) {
+
     const admin =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!admin) {
+
         return json(
             {
                 success: false,
@@ -1644,9 +3714,12 @@ async function handleAdminNotifications(
             },
             401
         );
+
     }
 
+
     try {
+
         const notifications =
             await env.DB
                 .prepare(
@@ -1669,16 +3742,20 @@ async function handleAdminNotifications(
                 )
                 .all();
 
+
         return json({
             success: true,
             notifications:
                 notifications.results || []
         });
+
     } catch (error) {
+
         console.error(
             "Admin notifications error:",
             error
         );
+
 
         return json(
             {
@@ -1688,8 +3765,11 @@ async function handleAdminNotifications(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    MARK NOTIFICATION AS READ
@@ -1699,13 +3779,16 @@ async function handleAdminMarkNotificationRead(
     request,
     env
 ) {
+
     const admin =
         await authenticateAdmin(
             request,
             env
         );
 
+
     if (!admin) {
+
         return json(
             {
                 success: false,
@@ -1714,13 +3797,20 @@ async function handleAdminMarkNotificationRead(
             },
             401
         );
+
     }
+
 
     let data;
 
+
     try {
-        data = await request.json();
+
+        data =
+            await request.json();
+
     } catch {
+
         return json(
             {
                 success: false,
@@ -1729,13 +3819,16 @@ async function handleAdminMarkNotificationRead(
             },
             400
         );
+
     }
+
 
     if (
         !data.notificationId ||
         typeof data.notificationId !==
             "string"
     ) {
+
         return json(
             {
                 success: false,
@@ -1744,9 +3837,12 @@ async function handleAdminMarkNotificationRead(
             },
             400
         );
+
     }
 
+
     try {
+
         await env.DB
             .prepare(
                 `UPDATE notifications
@@ -1758,14 +3854,18 @@ async function handleAdminMarkNotificationRead(
             )
             .run();
 
+
         return json({
             success: true
         });
+
     } catch (error) {
+
         console.error(
             "Mark notification error:",
             error
         );
+
 
         return json(
             {
@@ -1775,24 +3875,38 @@ async function handleAdminMarkNotificationRead(
             },
             500
         );
+
     }
+
 }
+
 
 /* =========================================================
    WORKER
 ========================================================= */
 
 export default {
-    async fetch(request, env) {
-        const url =
-            new URL(request.url);
 
-        /* CORS */
+    async fetch(
+        request,
+        env
+    ) {
+
+        const url =
+            new URL(
+                request.url
+            );
+
+
+        /* =================================================
+           CORS
+        ================================================= */
 
         if (
             request.method ===
             "OPTIONS"
         ) {
+
             return new Response(
                 null,
                 {
@@ -1801,141 +3915,272 @@ export default {
                         CORS_HEADERS
                 }
             );
+
         }
 
-        /* API STATUS */
+
+        /* =================================================
+           API STATUS
+        ================================================= */
 
         if (
             url.pathname === "/" &&
             request.method === "GET"
         ) {
+
             return json({
                 success: true,
                 service:
                     "Revenue Leak Hunter API",
                 status: "online"
             });
+
         }
 
-        /* CONTACT */
+
+        /* =================================================
+           CONTACT
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/contact" &&
             request.method === "POST"
         ) {
+
             return handleContact(
                 request,
                 env
             );
+
         }
 
-        /* CLIENT PORTAL */
+
+        /* =================================================
+           CLIENT PORTAL LOGIN
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/portal/login" &&
             request.method === "POST"
         ) {
+
             return handlePortalLogin(
                 request,
                 env
             );
+
         }
+
+
+        /* =================================================
+           CLIENT PORTAL PROFILE
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/portal/me" &&
             request.method === "GET"
         ) {
+
             return handlePortalMe(
                 request,
                 env
             );
+
         }
+
+
+        /* =================================================
+           CLIENT PORTAL LOGOUT
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/portal/logout" &&
             request.method === "POST"
         ) {
+
             return handlePortalLogout(
                 request,
                 env
             );
+
         }
+
+
+        /* =================================================
+           CLIENT PORTAL MESSAGES
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/portal/messages" &&
             request.method === "GET"
         ) {
+
             return handlePortalMessages(
                 request,
                 env
             );
+
         }
+
 
         if (
             url.pathname ===
                 "/api/portal/messages" &&
             request.method === "POST"
         ) {
+
             return handlePortalSendMessage(
                 request,
                 env
             );
+
         }
 
-        /* ADMIN LOGIN */
+
+        /* =================================================
+           CLIENT FILE DOWNLOAD / DELETE
+        ================================================= */
+
+        if (
+            url.pathname.startsWith(
+                "/api/portal/files/"
+            )
+        ) {
+
+            const fileId =
+                url.pathname
+                    .split("/")
+                    .pop();
+
+
+            if (
+                request.method ===
+                "GET"
+            ) {
+
+                return handlePortalFileDownload(
+                    request,
+                    env,
+                    fileId
+                );
+
+            }
+
+
+            if (
+                request.method ===
+                "DELETE"
+            ) {
+
+                return handlePortalFileDelete(
+                    request,
+                    env,
+                    fileId
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           CLIENT FILE UPLOAD
+        ================================================= */
+
+        if (
+            url.pathname ===
+                "/api/portal/files" &&
+            request.method === "POST"
+        ) {
+
+            return handlePortalFileUpload(
+                request,
+                env
+            );
+
+        }
+
+
+        /* =================================================
+           ADMIN LOGIN
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/login" &&
             request.method === "POST"
         ) {
+
             return handleAdminLogin(
                 request,
                 env
             );
+
         }
+
+
+        /* =================================================
+           ADMIN SESSION
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/me" &&
             request.method === "GET"
         ) {
+
             return handleAdminMe(
                 request,
                 env
             );
+
         }
+
+
+        /* =================================================
+           ADMIN LOGOUT
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/logout" &&
             request.method === "POST"
         ) {
+
             return handleAdminLogout(
                 request,
                 env
             );
+
         }
 
-        /* ADMIN CLIENTS */
+
+        /* =================================================
+           ADMIN CLIENTS
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/clients" &&
             request.method === "GET"
         ) {
+
             return handleAdminClients(
                 request,
                 env
             );
+
         }
 
-        /* ADMIN CONVERSATION */
+
+        /* =================================================
+           ADMIN CONVERSATION
+        ================================================= */
 
         if (
             url.pathname.startsWith(
@@ -1943,58 +4188,143 @@ export default {
             ) &&
             request.method === "GET"
         ) {
+
             const conversationId =
-                url.pathname.split(
-                    "/"
-                ).pop();
+                url.pathname
+                    .split("/")
+                    .pop();
+
 
             return handleAdminConversation(
                 request,
                 env,
                 conversationId
             );
+
         }
 
-        /* ADMIN SEND MESSAGE */
+
+        /* =================================================
+           ADMIN SEND MESSAGE
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/messages" &&
             request.method === "POST"
         ) {
+
             return handleAdminSendMessage(
                 request,
                 env
             );
+
         }
 
-        /* ADMIN NOTIFICATIONS */
+
+        /* =================================================
+           ADMIN FILE UPLOAD
+        ================================================= */
+
+        if (
+            url.pathname ===
+                "/api/admin/files" &&
+            request.method === "POST"
+        ) {
+
+            return handleAdminFileUpload(
+                request,
+                env
+            );
+
+        }
+
+
+        /* =================================================
+           ADMIN FILE DOWNLOAD / DELETE
+        ================================================= */
+
+        if (
+            url.pathname.startsWith(
+                "/api/admin/files/"
+            )
+        ) {
+
+            const fileId =
+                url.pathname
+                    .split("/")
+                    .pop();
+
+
+            if (
+                request.method ===
+                "GET"
+            ) {
+
+                return handleAdminFileDownload(
+                    request,
+                    env,
+                    fileId
+                );
+
+            }
+
+
+            if (
+                request.method ===
+                "DELETE"
+            ) {
+
+                return handleAdminFileDelete(
+                    request,
+                    env,
+                    fileId
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           ADMIN NOTIFICATIONS
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/notifications" &&
             request.method === "GET"
         ) {
+
             return handleAdminNotifications(
                 request,
                 env
             );
+
         }
 
-        /* MARK NOTIFICATION READ */
+
+        /* =================================================
+           MARK NOTIFICATION READ
+        ================================================= */
 
         if (
             url.pathname ===
                 "/api/admin/notifications/read" &&
             request.method === "POST"
         ) {
+
             return handleAdminMarkNotificationRead(
                 request,
                 env
             );
+
         }
 
-        /* UNKNOWN ROUTE */
+
+        /* =================================================
+           UNKNOWN ROUTE
+        ================================================= */
 
         return json(
             {
@@ -2004,5 +4334,7 @@ export default {
             },
             404
         );
+
     }
+
 };
