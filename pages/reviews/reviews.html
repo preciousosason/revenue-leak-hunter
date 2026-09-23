@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Read reviews and experiences from clients who worked with Revenue Leak Hunter."
+    >
+
+    <title>
+        Client Reviews | Revenue Leak Hunter
+    </title>
+
+
+    <!-- =================================
+         GLOBAL STYLES
+    ================================= -->
+
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+
+    <!-- =================================
+         PAGE STYLES
+    ================================= -->
+
+    <link
+        rel="stylesheet"
+        href="reviews.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================
+         NAVBAR
+    ================================= -->
+
+    <div id="navbar"></div>
+
+
+    <!-- =================================
+         REVIEWS PAGE
+    ================================= -->
+
+    <main class="reviews-page">
+
+
+        <!-- =================================
+             PAGE HERO
+        ================================= -->
+
+        <section class="reviews-hero">
+
+            <div class="container">
+
+                <div class="reviews-hero-content">
+
+                    <span class="reviews-eyebrow">
+                        CLIENT REVIEWS
+                    </span>
+
+                    <h1>
+                        What clients are saying.
+                    </h1>
+
+                    <p>
+                        Real experiences from businesses that
+                        have worked with Revenue Leak Hunter.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             REVIEW SUMMARY
+        ================================= -->
+
+        <section class="reviews-summary-section">
+
+            <div class="container">
+
+                <div class="reviews-summary">
+
+
+                    <!-- OVERALL RATING -->
+
+                    <div class="reviews-overall">
+
+                        <span
+                            class="reviews-overall-rating"
+                            id="reviews-average-rating"
+                        >
+                            0.0
+                        </span>
+
+                        <div
+                            class="reviews-overall-stars"
+                            id="reviews-average-stars"
+                            aria-label="Average rating"
+                        >
+                            ☆☆☆☆☆
+                        </div>
+
+                        <span
+                            class="reviews-overall-count"
+                        >
+                            Based on
+                            <strong
+                                id="reviews-total-count"
+                            >
+                                0
+                            </strong>
+                            reviews
+                        </span>
+
+                    </div>
+
+
+                    <!-- RATING BREAKDOWN -->
+
+                    <div class="reviews-breakdown">
+
+                        <div class="rating-row">
+
+                            <span>5</span>
+
+                            <span>★</span>
+
+                            <div class="rating-bar">
+
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="5"
+                                ></div>
+
+                            </div>
+
+                            <span
+                                data-rating-count="5"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div class="rating-row">
+
+                            <span>4</span>
+
+                            <span>★</span>
+
+                            <div class="rating-bar">
+
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="4"
+                                ></div>
+
+                            </div>
+
+                            <span
+                                data-rating-count="4"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div class="rating-row">
+
+                            <span>3</span>
+
+                            <span>★</span>
+
+                            <div class="rating-bar">
+
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="3"
+                                ></div>
+
+                            </div>
+
+                            <span
+                                data-rating-count="3"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div class="rating-row">
+
+                            <span>2</span>
+
+                            <span>★</span>
+
+                            <div class="rating-bar">
+
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="2"
+                                ></div>
+
+                            </div>
+
+                            <span
+                                data-rating-count="2"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div class="rating-row">
+
+                            <span>1</span>
+
+                            <span>★</span>
+
+                            <div class="rating-bar">
+
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="1"
+                                ></div>
+
+                            </div>
+
+                            <span
+                                data-rating-count="1"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             APPROVED REVIEWS
+        ================================= -->
+
+        <section class="reviews-list-section">
+
+            <div class="container">
+
+                <div class="reviews-section-heading">
+
+                    <div>
+
+                        <span class="reviews-eyebrow">
+                            CLIENT EXPERIENCES
+                        </span>
+
+                        <h2>
+                            Reviews from real clients.
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="reviews-write-button"
+                        id="open-review-form"
+                    >
+                        Leave a review
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="reviews-grid"
+                    id="reviews-list"
+                >
+
+                    <div class="reviews-state">
+                        Loading reviews...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             LEAVE A REVIEW
+        ================================= -->
+
+        <section
+            class="review-form-section"
+            id="review-form-section"
+        >
+
+            <div class="container">
+
+                <div class="review-form-wrapper">
+
+
+                    <div class="review-form-heading">
+
+                        <span class="reviews-eyebrow">
+                            YOUR EXPERIENCE
+                        </span>
+
+                        <h2>
+                            Share your experience.
+                        </h2>
+
+                        <p>
+                            Tell others what your experience
+                            working with Revenue Leak Hunter
+                            was like.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        class="review-form"
+                        id="review-form"
+                        novalidate
+                    >
+
+                        <div
+                            class="review-form-message"
+                            id="review-form-message"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <!-- NAME + BUSINESS -->
+
+                        <div class="review-form-fields">
+
+                            <div class="form-field">
+
+                                <label
+                                    for="review-name"
+                                >
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="review-name"
+                                    name="name"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label
+                                    for="review-business"
+                                >
+                                    Business
+                                    <span>
+                                        Optional
+                                    </span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="review-business"
+                                    name="business"
+                                    maxlength="200"
+                                    autocomplete="organization"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RATING -->
+
+                        <div class="form-field">
+
+                            <label>
+                                Your rating
+                            </label>
+
+                            <div
+                                class="review-rating"
+                                id="review-rating"
+                            >
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="1"
+                                    aria-label="1 star"
+                                >
+                                    ★
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="2"
+                                    aria-label="2 stars"
+                                >
+                                    ★
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="3"
+                                    aria-label="3 stars"
+                                >
+                                    ★
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="4"
+                                    aria-label="4 stars"
+                                >
+                                    ★
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="5"
+                                    aria-label="5 stars"
+                                >
+                                    ★
+                                </button>
+
+                            </div>
+
+                            <input
+                                type="hidden"
+                                id="review-rating-value"
+                                name="rating"
+                            >
+
+                        </div>
+
+
+                        <!-- REVIEW -->
+
+                        <div class="form-field">
+
+                            <label
+                                for="review-text"
+                            >
+                                Your review
+                            </label>
+
+                            <textarea
+                                id="review-text"
+                                name="review"
+                                rows="7"
+                                minlength="10"
+                                maxlength="2000"
+                                required
+                            ></textarea>
+
+                            <div
+                                class="review-character-count"
+                            >
+                                <span
+                                    id="review-character-count"
+                                >
+                                    0
+                                </span>
+                                / 2000
+                            </div>
+
+                        </div>
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            class="review-submit-button"
+                            id="review-submit-button"
+                        >
+                            Submit review
+                        </button>
+
+
+                        <p class="review-form-note">
+                            Reviews are checked before
+                            appearing publicly.
+                        </p>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =================================
+         FOOTER
+    ================================= -->
+
+    <div id="footer"></div>
+
+
+    <!-- =================================
+         SITE CONFIG
+    ================================= -->
+
+    <script
+        src="../../config/site-config.js"
+    ></script>
+
+
+    <!-- =================================
+         COMPONENT LOADER
+    ================================= -->
+
+    <script
+        src="../../config/component-loader.js"
+    ></script>
+
+
+    <!-- =================================
+         PAGE SCRIPT
+    ================================= -->
+
+    <script
+        src="reviews.js"
+    ></script>
+
+
+</body>
+
+</html>

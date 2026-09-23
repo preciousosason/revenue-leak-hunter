@@ -1,21 +1,50 @@
+/* =========================================================
+   CONVERSION LEAK HUNTER
+   ADMIN CONTROL SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   API CONFIGURATION
+   ========================================================= */
+
 const API_URL =
     "https://revenue-leak-hunter-api.preciousosason.workers.dev";
 
 const SESSION_KEY =
     "revenueLeakHunterAdminSession";
 
+
+/* =========================================================
+   APPLICATION STATE
+   ========================================================= */
+
 let adminSession = null;
+
 let clients = [];
+
 let notifications = [];
+
+let reviews = [];
+
+let activeReviewFilter = "all";
+
 let currentConversationId = null;
 
 let conversationPollingInterval = null;
+
 let lastConversationSignature = "";
 
+let selectedFiles = [];
 
-/* =========================================
+let activeClientFilter = "all";
+
+let activeNotificationFilter = "all";
+
+
+/* =========================================================
    FILE CONFIGURATION
-========================================= */
+   ========================================================= */
 
 const MAX_FILES = 5;
 
@@ -63,12 +92,40 @@ const ALLOWED_MIME_TYPES = [
     "application/vnd.openxmlformats-officedocument.presentationml.presentation"
 ];
 
-let selectedFiles = [];
 
-
-/* =========================================
+/* =========================================================
    DOM
-========================================= */
+   ========================================================= */
+
+   const reviewsList =
+    document.getElementById(
+        "reviews-list"
+    );
+
+const reviewsTotal =
+    document.getElementById(
+        "reviews-total"
+    );
+
+const reviewsPending =
+    document.getElementById(
+        "reviews-pending"
+    );
+
+const reviewsApproved =
+    document.getElementById(
+        "reviews-approved"
+    );
+
+const reviewsFooterCount =
+    document.getElementById(
+        "reviews-footer-count"
+    );
+
+const refreshReviews =
+    document.getElementById(
+        "refresh-reviews"
+    );
 
 const loginScreen =
     document.getElementById("admin-login");
@@ -107,62 +164,149 @@ const recentClients =
     document.getElementById("recent-clients");
 
 const recentNotifications =
-    document.getElementById(
-        "recent-notifications"
-    );
+    document.getElementById("recent-notifications");
 
 const clientsList =
     document.getElementById("clients-list");
 
 const notificationsList =
-    document.getElementById(
-        "notifications-list"
-    );
+    document.getElementById("notifications-list");
 
 const notificationCount =
-    document.getElementById(
-        "notification-count"
-    );
+    document.getElementById("notification-count");
+
+const headerNotificationCount =
+    document.getElementById("header-notification-count");
 
 const adminMessages =
-    document.getElementById(
-        "admin-messages"
-    );
+    document.getElementById("admin-messages");
 
 const adminMessageForm =
-    document.getElementById(
-        "admin-message-form"
-    );
+    document.getElementById("admin-message-form");
 
 const adminMessageInput =
-    document.getElementById(
-        "admin-message-input"
-    );
+    document.getElementById("admin-message-input");
 
 const adminMessageError =
-    document.getElementById(
-        "admin-message-error"
-    );
+    document.getElementById("admin-message-error");
 
 const adminMessageFiles =
-    document.getElementById(
-        "admin-message-files"
-    );
+    document.getElementById("admin-message-files");
 
 const adminFileSelection =
-    document.getElementById(
-        "admin-file-selection"
-    );
+    document.getElementById("admin-file-selection");
 
 const adminSelectedFiles =
+    document.getElementById("admin-selected-files");
+
+const sidebar =
+    document.getElementById("admin-sidebar");
+
+const sidebarOverlay =
+    document.getElementById("sidebar-overlay");
+
+const sidebarToggle =
+    document.getElementById("sidebar-toggle");
+
+const contextToggle =
+    document.getElementById("conversation-context-toggle");
+
+const conversationContext =
+    document.querySelector(".conversation-context");
+
+const conversationWorkspace =
+    document.querySelector(".conversation-workspace");
+
+const closeConversationContext =
+    document.getElementById("close-conversation-context");
+
+const characterCount =
+    document.getElementById("character-count");
+
+const clientSearch =
+    document.getElementById("client-search");
+
+const systemClock =
+    document.getElementById("system-clock");
+
+const notificationsTotal =
+    document.getElementById("notifications-total");
+
+const notificationsUnread =
+    document.getElementById("notifications-unread");
+
+const notificationsCritical =
+    document.getElementById("notifications-critical");
+
+const notificationsFooterCount =
     document.getElementById(
-        "admin-selected-files"
+        "notifications-footer-count"
+    );
+
+const conversationClientName =
+    document.getElementById(
+        "conversation-client-name"
+    );
+
+const conversationClientDetails =
+    document.getElementById(
+        "conversation-client-details"
+    );
+
+const conversationStatus =
+    document.getElementById(
+        "conversation-status"
+    );
+
+const clientInfoName =
+    document.getElementById(
+        "client-info-name"
+    );
+
+const clientInfoEmail =
+    document.getElementById(
+        "client-info-email"
+    );
+
+const clientInfoBusiness =
+    document.getElementById(
+        "client-info-business"
+    );
+
+const clientInfoWebsite =
+    document.getElementById(
+        "client-info-website"
+    );
+
+const logoutButton =
+    document.getElementById(
+        "admin-logout"
+    );
+
+const backToClients =
+    document.getElementById(
+        "back-to-clients"
+    );
+
+const notificationTrigger =
+    document.getElementById(
+        "notification-trigger"
+    );
+
+const refreshClients =
+    document.getElementById(
+        "refresh-clients"
+    );
+
+const refreshNotifications =
+    document.getElementById(
+        "refresh-notifications"
     );
 
 
-/* =========================================
+/* =========================================================
    HELPERS
-========================================= */
+   ========================================================= */
 
 function escapeHTML(value) {
 
@@ -183,10 +327,8 @@ function formatDate(dateString) {
         return "Unknown";
     }
 
-
     const date =
         new Date(dateString);
-
 
     if (
         Number.isNaN(
@@ -197,7 +339,6 @@ function formatDate(dateString) {
         return "Unknown";
 
     }
-
 
     return date.toLocaleString(
         undefined,
@@ -210,12 +351,77 @@ function formatDate(dateString) {
 }
 
 
+function formatRelativeTime(dateString) {
+
+    if (!dateString) {
+        return "";
+    }
+
+    const date =
+        new Date(dateString);
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+    const difference =
+        Date.now() -
+        date.getTime();
+
+    const seconds =
+        Math.floor(
+            difference / 1000
+        );
+
+    if (seconds < 60) {
+        return "Just now";
+    }
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+    if (minutes < 60) {
+        return `${minutes}m ago`;
+    }
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+    if (hours < 24) {
+        return `${hours}h ago`;
+    }
+
+    const days =
+        Math.floor(
+            hours / 24
+        );
+
+    if (days < 7) {
+        return `${days}d ago`;
+    }
+
+    return formatDate(
+        dateString
+    );
+
+}
+
+
 function getInitials(name) {
 
     if (!name) {
         return "?";
     }
-
 
     return name
         .trim()
@@ -223,8 +429,7 @@ function getInitials(name) {
         .slice(0, 2)
         .map(
             part =>
-                part[0]
-                    ?.toUpperCase()
+                part[0]?.toUpperCase()
         )
         .join("");
 
@@ -232,6 +437,18 @@ function getInitials(name) {
 
 
 function getAuthHeaders() {
+
+    const headers = {
+        "Authorization":
+            `Bearer ${adminSession}`
+    };
+
+    return headers;
+
+}
+
+
+function getJSONHeaders() {
 
     return {
         "Content-Type":
@@ -244,15 +461,14 @@ function getAuthHeaders() {
 }
 
 
-/* =========================================
+/* =========================================================
    FILE HELPERS
-========================================= */
+   ========================================================= */
 
 function formatFileSize(bytes) {
 
     const size =
         Number(bytes);
-
 
     if (
         !Number.isFinite(size) ||
@@ -263,18 +479,13 @@ function formatFileSize(bytes) {
 
     }
 
-
-    if (
-        size < 1024
-    ) {
-
+    if (size < 1024) {
         return `${size} B`;
-
     }
 
-
     if (
-        size < 1024 * 1024
+        size <
+        1024 * 1024
     ) {
 
         return `${(
@@ -282,7 +493,6 @@ function formatFileSize(bytes) {
         ).toFixed(1)} KB`;
 
     }
-
 
     return `${(
         size /
@@ -296,29 +506,22 @@ function getFileLabel(file) {
 
     const category =
         String(
-            file?.category ||
-            ""
+            file?.category || ""
         ).toLowerCase();
-
 
     const contentType =
         String(
-            file?.contentType ||
-            ""
+            file?.contentType || ""
         ).toLowerCase();
-
 
     if (
         category === "image" ||
-        contentType.startsWith(
-            "image/"
-        )
+        contentType.startsWith("image/")
     ) {
 
         return "IMG";
 
     }
-
 
     if (
         category === "pdf" ||
@@ -330,7 +533,6 @@ function getFileLabel(file) {
 
     }
 
-
     if (
         category === "document"
     ) {
@@ -338,7 +540,6 @@ function getFileLabel(file) {
         return "DOC";
 
     }
-
 
     if (
         category === "spreadsheet"
@@ -348,7 +549,6 @@ function getFileLabel(file) {
 
     }
 
-
     if (
         category === "presentation"
     ) {
@@ -356,7 +556,6 @@ function getFileLabel(file) {
         return "PPT";
 
     }
-
 
     if (
         category === "text"
@@ -366,7 +565,6 @@ function getFileLabel(file) {
 
     }
 
-
     return "FILE";
 
 }
@@ -375,11 +573,8 @@ function getFileLabel(file) {
 function validateFile(file) {
 
     if (!file) {
-
         return "Invalid file.";
-
     }
-
 
     if (
         file.size >
@@ -392,7 +587,6 @@ function validateFile(file) {
 
     }
 
-
     const extension =
         String(
             file.name || ""
@@ -400,7 +594,6 @@ function validateFile(file) {
             .split(".")
             .pop()
             .toLowerCase();
-
 
     if (
         !ALLOWED_EXTENSIONS.includes(
@@ -413,7 +606,6 @@ function validateFile(file) {
         );
 
     }
-
 
     if (
         file.type &&
@@ -428,15 +620,14 @@ function validateFile(file) {
 
     }
 
-
     return null;
 
 }
 
 
-/* =========================================
+/* =========================================================
    SELECTED FILES
-========================================= */
+   ========================================================= */
 
 function renderSelectedFiles() {
 
@@ -444,94 +635,89 @@ function renderSelectedFiles() {
         return;
     }
 
+    if (!selectedFiles.length) {
 
-    adminSelectedFiles.innerHTML =
-        selectedFiles
-            .map(
-                (file, index) => {
+        adminSelectedFiles.innerHTML =
+            "";
 
-                    const extension =
-                        file.name
-                            .split(".")
-                            .pop()
-                            .toUpperCase();
+    } else {
 
+        adminSelectedFiles.innerHTML =
+            selectedFiles
+                .map(
+                    (file, index) => {
 
-                    return `
-                        <div
-                            class="selected-file"
-                            data-file-index="${index}"
-                        >
+                        const extension =
+                            file.name
+                                .split(".")
+                                .pop()
+                                .toUpperCase();
 
-                            <span
-                                class="selected-file-icon"
-                            >
-                                ${escapeHTML(
-                                    extension
-                                )}
-                            </span>
-
-
-                            <span
-                                class="selected-file-name"
-                                title="${escapeHTML(
-                                    file.name
-                                )}"
-                            >
-                                ${escapeHTML(
-                                    file.name
-                                )}
-                            </span>
-
-
-                            <span
-                                class="selected-file-size"
-                            >
-                                ${escapeHTML(
-                                    formatFileSize(
-                                        file.size
-                                    )
-                                )}
-                            </span>
-
-
-                            <button
-                                type="button"
-                                class="selected-file-remove"
+                        return `
+                            <div
+                                class="selected-file attachment-card"
                                 data-file-index="${index}"
-                                aria-label="Remove ${escapeHTML(
-                                    file.name
-                                )}"
-                                title="Remove file"
                             >
-                                ×
-                            </button>
 
-                        </div>
-                    `;
+                                <span
+                                    class="selected-file-icon attachment-icon"
+                                >
+                                    ${escapeHTML(
+                                        extension
+                                    )}
+                                </span>
 
-                }
-            )
-            .join("");
+                                <span
+                                    class="selected-file-name attachment-name"
+                                    title="${escapeHTML(
+                                        file.name
+                                    )}"
+                                >
+                                    ${escapeHTML(
+                                        file.name
+                                    )}
+                                </span>
 
+                                <span
+                                    class="selected-file-size attachment-meta"
+                                >
+                                    ${escapeHTML(
+                                        formatFileSize(
+                                            file.size
+                                        )
+                                    )}
+                                </span>
+
+                                <button
+                                    type="button"
+                                    class="selected-file-remove attachment-remove"
+                                    data-file-index="${index}"
+                                    aria-label="Remove ${escapeHTML(
+                                        file.name
+                                    )}"
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
 
     if (adminFileSelection) {
 
-        if (!selectedFiles.length) {
-
-            adminFileSelection.textContent =
-                "No files selected";
-
-        } else {
-
-            adminFileSelection.textContent =
-                `${selectedFiles.length} ${
+        adminFileSelection.textContent =
+            selectedFiles.length
+                ? `${selectedFiles.length} ${
                     selectedFiles.length === 1
                         ? "file"
                         : "files"
-                } selected`;
-
-        }
+                } selected`
+                : "No files selected";
 
     }
 
@@ -542,22 +728,18 @@ function handleFileSelection(files) {
 
     hideMessageError();
 
-
     const incomingFiles =
         Array.from(
             files || []
         );
 
-
     if (!incomingFiles.length) {
         return;
     }
 
-
     const availableSlots =
         MAX_FILES -
         selectedFiles.length;
-
 
     if (
         availableSlots <= 0
@@ -567,19 +749,12 @@ function handleFileSelection(files) {
             "You can attach a maximum of 5 files to one message."
         );
 
-
         if (adminMessageFiles) {
-
-            adminMessageFiles.value =
-                "";
-
+            adminMessageFiles.value = "";
         }
 
-
         return;
-
     }
-
 
     const filesToAdd =
         incomingFiles.slice(
@@ -587,18 +762,13 @@ function handleFileSelection(files) {
             availableSlots
         );
 
-
     const rejected = [];
-
 
     filesToAdd.forEach(
         file => {
 
             const validationError =
-                validateFile(
-                    file
-                );
-
+                validateFile(file);
 
             if (validationError) {
 
@@ -607,9 +777,7 @@ function handleFileSelection(files) {
                 );
 
                 return;
-
             }
-
 
             const duplicate =
                 selectedFiles.some(
@@ -622,19 +790,16 @@ function handleFileSelection(files) {
                             file.lastModified
                 );
 
+            if (!duplicate) {
 
-            if (duplicate) {
-                return;
+                selectedFiles.push(
+                    file
+                );
+
             }
-
-
-            selectedFiles.push(
-                file
-            );
 
         }
     );
-
 
     if (
         incomingFiles.length >
@@ -647,7 +812,6 @@ function handleFileSelection(files) {
 
     }
 
-
     if (rejected.length) {
 
         showMessageError(
@@ -656,15 +820,10 @@ function handleFileSelection(files) {
 
     }
 
-
     renderSelectedFiles();
 
-
     if (adminMessageFiles) {
-
-        adminMessageFiles.value =
-            "";
-
+        adminMessageFiles.value = "";
     }
 
 }
@@ -681,21 +840,19 @@ function removeSelectedFile(index) {
 
     }
 
-
     selectedFiles.splice(
         index,
         1
     );
-
 
     renderSelectedFiles();
 
 }
 
 
-/* =========================================
-   FILE INPUT
-========================================= */
+/* =========================================================
+   FILE INPUT EVENTS
+   ========================================================= */
 
 if (adminMessageFiles) {
 
@@ -724,20 +881,14 @@ if (adminSelectedFiles) {
                     ".selected-file-remove"
                 );
 
-
             if (!button) {
                 return;
             }
 
-
-            const index =
+            removeSelectedFile(
                 Number(
                     button.dataset.fileIndex
-                );
-
-
-            removeSelectedFile(
-                index
+                )
             );
 
         }
@@ -746,9 +897,9 @@ if (adminSelectedFiles) {
 }
 
 
-/* =========================================
-   CLICKABLE LINKS + EMAILS
-========================================= */
+/* =========================================================
+   MESSAGE LINKING
+   ========================================================= */
 
 function linkifyMessage(value) {
 
@@ -769,7 +920,6 @@ function linkifyMessage(value) {
                 let trailing =
                     "";
 
-
                 while (
                     /[.,!?;:)]$/.test(
                         cleanMatch
@@ -788,7 +938,6 @@ function linkifyMessage(value) {
 
                 }
 
-
                 if (
                     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
                         cleanMatch
@@ -805,14 +954,12 @@ function linkifyMessage(value) {
 
                 }
 
-
                 const href =
                     /^https?:\/\//i.test(
                         cleanMatch
                     )
                         ? cleanMatch
                         : `https://${cleanMatch}`;
-
 
                 return (
                     `<a href="${href}" ` +
@@ -834,31 +981,30 @@ function linkifyMessage(value) {
 }
 
 
-/* =========================================
+/* =========================================================
    API
-========================================= */
+   ========================================================= */
 
 async function api(
     endpoint,
     options = {}
 ) {
 
+    const headers = {
+        ...getJSONHeaders(),
+        ...(options.headers || {})
+    };
+
     const response =
         await fetch(
             `${API_URL}${endpoint}`,
             {
                 ...options,
-
-                headers: {
-                    ...getAuthHeaders(),
-                    ...(options.headers || {})
-                }
+                headers
             }
         );
 
-
-    let data;
-
+    let data = null;
 
     try {
 
@@ -867,21 +1013,31 @@ async function api(
 
     } catch {
 
-        throw new Error(
-            "The server returned an invalid response."
-        );
+        if (!response.ok) {
+
+            if (
+                response.status ===
+                401
+            ) {
+
+                handleExpiredSession();
+
+            }
+
+            throw new Error(
+                "The server returned an invalid response."
+            );
+
+        }
 
     }
 
-
     if (
-        response.status === 401
+        response.status ===
+        401
     ) {
 
-        stopConversationPolling();
-
-        logoutLocal();
-
+        handleExpiredSession();
 
         throw new Error(
             "Your admin session has expired."
@@ -889,143 +1045,161 @@ async function api(
 
     }
 
-
     if (
         !response.ok ||
-        data.success === false
+        data?.success === false
     ) {
 
         throw new Error(
-            data.error ||
+            data?.error ||
             "Something went wrong."
         );
 
     }
 
-
-    return data;
+    return data || {};
 
 }
 
 
-/* =========================================
+/* =========================================================
    LOGIN
-========================================= */
+   ========================================================= */
 
-loginForm.addEventListener(
-    "submit",
-    async event => {
+if (loginForm) {
 
-        event.preventDefault();
+    loginForm.addEventListener(
+        "submit",
+        async event => {
 
+            event.preventDefault();
 
-        loginError.hidden =
-            true;
+            hideLoginError();
 
+            const password =
+                passwordInput
+                    ? passwordInput.value
+                    : "";
 
-        const password =
-            passwordInput.value;
+            if (!password) {
 
-
-        if (!password) {
-
-            showLoginError(
-                "Enter your admin password."
-            );
-
-            return;
-
-        }
-
-
-        loginButton.disabled =
-            true;
-
-
-        loginButton.innerHTML =
-            "<span>Signing in...</span><span>...</span>";
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `${API_URL}/api/admin/login`,
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-                                password
-                            })
-                    }
+                showLoginError(
+                    "Enter your admin password."
                 );
 
-
-            const data =
-                await response.json();
-
-
-            if (
-                !response.ok ||
-                !data.success
-            ) {
-
-                throw new Error(
-                    data.error ||
-                    "Invalid admin credentials."
-                );
+                return;
 
             }
 
+            if (loginButton) {
 
-            adminSession =
-                data.sessionToken;
+                loginButton.disabled =
+                    true;
 
+                loginButton.innerHTML =
+                    "<span>Authenticating...</span><span>...</span>";
 
-            sessionStorage.setItem(
-                SESSION_KEY,
-                adminSession
-            );
+            }
 
+            try {
 
-            passwordInput.value =
-                "";
+                const response =
+                    await fetch(
+                        `${API_URL}/api/admin/login`,
+                        {
+                            method: "POST",
 
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-            showDashboard();
+                            body:
+                                JSON.stringify({
+                                    password
+                                })
+                        }
+                    );
 
+                let data = null;
 
-        } catch (error) {
+                try {
 
-            showLoginError(
-                error.message
-            );
+                    data =
+                        await response.json();
 
+                } catch {
 
-        } finally {
+                    throw new Error(
+                        "The server returned an invalid login response."
+                    );
 
-            loginButton.disabled =
-                false;
+                }
 
+                if (
+                    !response.ok ||
+                    !data?.success ||
+                    !data?.sessionToken
+                ) {
 
-            loginButton.innerHTML =
-                "<span>Enter Dashboard</span><span>→</span>";
+                    throw new Error(
+                        data?.error ||
+                        "Invalid admin credentials."
+                    );
+
+                }
+
+                adminSession =
+                    data.sessionToken;
+
+                sessionStorage.setItem(
+                    SESSION_KEY,
+                    adminSession
+                );
+
+                if (passwordInput) {
+                    passwordInput.value = "";
+                }
+
+                showDashboard();
+
+            } catch (error) {
+
+                console.error(
+                    "Admin login error:",
+                    error
+                );
+
+                showLoginError(
+                    error.message ||
+                    "Unable to authenticate."
+                );
+
+            } finally {
+
+                if (loginButton) {
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.innerHTML =
+                        "<span>Authenticate</span><span>→</span>";
+
+                }
+
+            }
 
         }
+    );
 
+}
+
+
+function showLoginError(message) {
+
+    if (!loginError) {
+        return;
     }
-);
-
-
-function showLoginError(
-    message
-) {
 
     loginError.textContent =
         message;
@@ -1036,29 +1210,53 @@ function showLoginError(
 }
 
 
-/* =========================================
-   SESSION
-========================================= */
+function hideLoginError() {
 
-function logoutLocal() {
+    if (!loginError) {
+        return;
+    }
+
+    loginError.textContent =
+        "";
+
+    loginError.hidden =
+        true;
+
+}
+
+
+/* =========================================================
+   SESSION
+   ========================================================= */
+
+function handleExpiredSession() {
 
     stopConversationPolling();
 
-    adminSession =
-        null;
-
+    adminSession = null;
 
     sessionStorage.removeItem(
         SESSION_KEY
     );
 
+    if (dashboard) {
+        dashboard.hidden = true;
+    }
 
-    dashboard.hidden =
-        true;
+    if (loginScreen) {
+        loginScreen.hidden = false;
+    }
+
+    closeSidebar();
+
+    closeConversationContextPanel();
+
+}
 
 
-    loginScreen.hidden =
-        false;
+function logoutLocal() {
+
+    handleExpiredSession();
 
 }
 
@@ -1067,41 +1265,44 @@ async function logout() {
 
     stopConversationPolling();
 
+    const session =
+        adminSession;
 
     try {
 
-        if (adminSession) {
+        if (session) {
 
             await fetch(
                 `${API_URL}/api/admin/logout`,
                 {
                     method: "POST",
 
-                    headers:
-                        getAuthHeaders()
+                    headers: {
+                        "Authorization":
+                            `Bearer ${session}`
+                    }
                 }
             );
 
         }
 
     } catch {
-
         // Local logout still happens.
-
     }
-
 
     logoutLocal();
 
 }
 
 
-document
-    .getElementById("admin-logout")
-    .addEventListener(
+if (logoutButton) {
+
+    logoutButton.addEventListener(
         "click",
         logout
     );
+
+}
 
 
 async function restoreSession() {
@@ -1111,15 +1312,12 @@ async function restoreSession() {
             SESSION_KEY
         );
 
-
     if (!stored) {
         return false;
     }
 
-
     adminSession =
         stored;
-
 
     try {
 
@@ -1127,17 +1325,18 @@ async function restoreSession() {
             "/api/admin/me"
         );
 
-
         showDashboard();
-
 
         return true;
 
+    } catch (error) {
 
-    } catch {
+        console.warn(
+            "Stored admin session could not be restored:",
+            error
+        );
 
         logoutLocal();
-
 
         return false;
 
@@ -1146,24 +1345,23 @@ async function restoreSession() {
 }
 
 
-/* =========================================
+/* =========================================================
    DASHBOARD
-========================================= */
+   ========================================================= */
 
 function showDashboard() {
 
-    loginScreen.hidden =
-        true;
+    if (loginScreen) {
+        loginScreen.hidden = true;
+    }
 
-
-    dashboard.hidden =
-        false;
-
+    if (dashboard) {
+        dashboard.hidden = false;
+    }
 
     switchView(
         "overview"
     );
-
 
     loadDashboard();
 
@@ -1179,9 +1377,7 @@ async function loadDashboard() {
             loadNotifications()
         ]);
 
-
         updateStats();
-
 
     } catch (error) {
 
@@ -1195,9 +1391,9 @@ async function loadDashboard() {
 }
 
 
-/* =========================================
+/* =========================================================
    NAVIGATION
-========================================= */
+   ========================================================= */
 
 document
     .querySelectorAll(
@@ -1212,6 +1408,8 @@ document
                 switchView(
                     button.dataset.view
                 );
+
+                closeSidebar();
 
             }
         );
@@ -1230,9 +1428,10 @@ function switchView(view) {
 
     }
 
-
     document
-        .querySelectorAll(".nav-item")
+        .querySelectorAll(
+            ".nav-item"
+        )
         .forEach(item => {
 
             item.classList.toggle(
@@ -1242,13 +1441,13 @@ function switchView(view) {
 
         });
 
-
     document
-        .querySelectorAll(".admin-view")
+        .querySelectorAll(
+            ".admin-view"
+        )
         .forEach(section => {
 
-            section.hidden =
-                true;
+            section.hidden = true;
 
             section.classList.remove(
                 "active-view"
@@ -1256,26 +1455,21 @@ function switchView(view) {
 
         });
 
-
     const target =
         document.getElementById(
             `view-${view}`
         );
 
-
     if (!target) {
         return;
     }
 
-
     target.hidden =
         false;
-
 
     target.classList.add(
         "active-view"
     );
-
 
     const titles = {
 
@@ -1285,6 +1479,9 @@ function switchView(view) {
         clients:
             "Clients",
 
+             reviews:
+        "Reviews",
+
         conversation:
             "Conversation",
 
@@ -1293,11 +1490,13 @@ function switchView(view) {
 
     };
 
+    if (pageTitle) {
 
-    pageTitle.textContent =
-        titles[view] ||
-        "Dashboard";
+        pageTitle.textContent =
+            titles[view] ||
+            "Dashboard";
 
+    }
 
     if (
         view ===
@@ -1308,6 +1507,14 @@ function switchView(view) {
 
     }
 
+    if (
+    view ===
+    "reviews"
+) {
+
+    loadReviews();
+
+}
 
     if (
         view ===
@@ -1321,9 +1528,91 @@ function switchView(view) {
 }
 
 
-/* =========================================
+/* =========================================================
+   MOBILE SIDEBAR
+   ========================================================= */
+
+function openSidebar() {
+
+    if (!sidebar) {
+        return;
+    }
+
+    sidebar.classList.add(
+        "is-open"
+    );
+
+    if (sidebarOverlay) {
+
+        sidebarOverlay.classList.add(
+            "active"
+        );
+
+    }
+
+}
+
+
+function closeSidebar() {
+
+    if (sidebar) {
+
+        sidebar.classList.remove(
+            "is-open"
+        );
+
+    }
+
+    if (sidebarOverlay) {
+
+        sidebarOverlay.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+if (sidebarToggle) {
+
+    sidebarToggle.addEventListener(
+        "click",
+        () => {
+
+            if (
+                sidebar?.classList.contains(
+                    "is-open"
+                )
+            ) {
+
+                closeSidebar();
+
+            } else {
+
+                openSidebar();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (sidebarOverlay) {
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+}
+
+
+/* =========================================================
    CLIENTS
-========================================= */
+   ========================================================= */
 
 async function loadClients() {
 
@@ -1334,10 +1623,12 @@ async function loadClients() {
                 "/api/admin/clients"
             );
 
-
         clients =
-            data.clients || [];
-
+            Array.isArray(
+                data.clients
+            )
+                ? data.clients
+                : [];
 
         renderClients();
 
@@ -1345,55 +1636,264 @@ async function loadClients() {
 
         updateStats();
 
-
     } catch (error) {
 
-        clientsList.innerHTML =
-            `<div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>`;
+        console.error(
+            "Client loading error:",
+            error
+        );
 
+        if (clientsList) {
 
-        recentClients.innerHTML =
-            `<div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>`;
+            clientsList.innerHTML =
+                `
+                    <div class="clients-empty">
+
+                        <div class="clients-empty-mark">
+                            !
+                        </div>
+
+                        <strong class="clients-empty-title">
+                            CLIENT DATA UNAVAILABLE
+                        </strong>
+
+                        <p class="clients-empty-description">
+                            ${escapeHTML(
+                                error.message
+                            )}
+                        </p>
+
+                    </div>
+                `;
+
+        }
+
+        if (recentClients) {
+
+            recentClients.innerHTML =
+                `
+                    <div class="empty-state error-state">
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </div>
+                `;
+
+        }
 
     }
 
 }
 
 
+/* =========================================================
+   CLIENT FILTERING
+   ========================================================= */
+
+function getFilteredClients() {
+
+    const searchTerm =
+        clientSearch
+            ? clientSearch.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+    return clients.filter(
+        client => {
+
+            if (
+                activeClientFilter ===
+                "unread"
+            ) {
+
+                const unread =
+                    Number(
+                        client.unread_count ||
+                        client.unread ||
+                        0
+                    );
+
+                if (!unread) {
+                    return false;
+                }
+
+            }
+
+            if (
+                activeClientFilter ===
+                "active"
+            ) {
+
+                const status =
+                    String(
+                        client.status ||
+                        "open"
+                    ).toLowerCase();
+
+                if (
+                    [
+                        "closed",
+                        "resolved",
+                        "archived"
+                    ].includes(status)
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+            if (!searchTerm) {
+                return true;
+            }
+
+            const searchable =
+                [
+                    client.name,
+                    client.email,
+                    client.business,
+                    client.website,
+                    client.id
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+            return searchable.includes(
+                searchTerm
+            );
+
+        }
+    );
+
+}
+
+
+function getClientStatusClass(
+    client
+) {
+
+    const status =
+        String(
+            client.status ||
+            "active"
+        ).toLowerCase();
+
+    if (
+        [
+            "closed",
+            "resolved",
+            "archived",
+            "inactive"
+        ].includes(status)
+    ) {
+
+        return "inactive";
+
+    }
+
+    if (
+        [
+            "pending",
+            "new",
+            "awaiting"
+        ].includes(status)
+    ) {
+
+        return "pending";
+
+    }
+
+    return "active";
+
+}
+
+
+function getClientStatusLabel(
+    client
+) {
+
+    const status =
+        String(
+            client.status ||
+            "active"
+        ).toLowerCase();
+
+    if (
+        [
+            "closed",
+            "resolved",
+            "archived",
+            "inactive"
+        ].includes(status)
+    ) {
+
+        return "INACTIVE";
+
+    }
+
+    if (
+        [
+            "pending",
+            "new",
+            "awaiting"
+        ].includes(status)
+    ) {
+
+        return "PENDING";
+
+    }
+
+    return "ACTIVE";
+
+}
+
+
 function renderRecentClients() {
+
+    if (!recentClients) {
+        return;
+    }
 
     if (!clients.length) {
 
         recentClients.innerHTML =
-            `<div class="empty-state">
-                No clients yet.
-            </div>`;
+            `
+                <div class="empty-state compact-empty">
 
+                    <strong class="empty-state-title">
+                        No clients yet
+                    </strong>
+
+                    <p class="empty-state-description">
+                        New investigations will appear here.
+                    </p>
+
+                </div>
+            `;
 
         return;
 
     }
-
 
     recentClients.innerHTML =
         clients
             .slice(0, 5)
             .map(client => {
 
+                const conversationId =
+                    escapeHTML(
+                        client.conversation_id ||
+                        ""
+                    );
+
                 return `
                     <button
                         class="client-row"
-                        data-conversation="${escapeHTML(
-                            client.conversation_id || ""
-                        )}"
+                        data-conversation="${conversationId}"
+                        type="button"
                     >
 
                         <span class="client-avatar">
@@ -1404,28 +1904,38 @@ function renderRecentClients() {
                             )}
                         </span>
 
-
                         <span class="client-row-main">
 
                             <strong>
                                 ${escapeHTML(
-                                    client.name
+                                    client.name ||
+                                    "Unknown Client"
                                 )}
                             </strong>
-
 
                             <span>
                                 ${escapeHTML(
                                     client.business ||
-                                    client.email
+                                    client.email ||
+                                    "No details"
                                 )}
                             </span>
 
                         </span>
 
+                        <span class="client-row-meta">
+
+                            ${escapeHTML(
+                                formatRelativeTime(
+                                    client.conversation_updated_at ||
+                                    client.created_at
+                                )
+                            )}
+
+                        </span>
 
                         <span class="client-row-action">
-                            Open →
+                            →
                         </span>
 
                     </button>
@@ -1433,7 +1943,6 @@ function renderRecentClients() {
 
             })
             .join("");
-
 
     recentClients
         .querySelectorAll(
@@ -1447,7 +1956,6 @@ function renderRecentClients() {
 
                     const id =
                         button.dataset.conversation;
-
 
                     if (id) {
 
@@ -1467,29 +1975,86 @@ function renderRecentClients() {
 
 function renderClients() {
 
-    if (!clients.length) {
+    if (!clientsList) {
+        return;
+    }
+
+    const filtered =
+        getFilteredClients();
+
+    if (!filtered.length) {
 
         clientsList.innerHTML =
-            `<div class="empty-state">
-                No clients yet.
-            </div>`;
+            `
+                <div class="clients-empty">
 
+                    <div class="clients-empty-mark">
+                        ⌕
+                    </div>
+
+                    <strong class="clients-empty-title">
+                        NO MATCHING CLIENTS
+                    </strong>
+
+                    <p class="clients-empty-description">
+                        No investigation records match the current filters.
+                    </p>
+
+                </div>
+            `;
+
+        updateClientSummary(
+            filtered
+        );
 
         return;
 
     }
 
-
     clientsList.innerHTML =
-        clients
+        filtered
             .map(client => {
 
+                const conversationId =
+                    escapeHTML(
+                        client.conversation_id ||
+                        ""
+                    );
+
+                const unread =
+                    Number(
+                        client.unread_count ||
+                        client.unread ||
+                        0
+                    );
+
+                const messageCount =
+                    Number(
+                        client.message_count ||
+                        0
+                    );
+
+                const statusClass =
+                    getClientStatusClass(
+                        client
+                    );
+
+                const statusLabel =
+                    getClientStatusLabel(
+                        client
+                    );
+
                 return `
-                    <article class="client-card">
+                    <article
+                        class="client-row"
+                        data-client-id="${escapeHTML(
+                            client.id || ""
+                        )}"
+                    >
 
-                        <div class="client-card-name">
+                        <div class="client-row-identity">
 
-                            <span class="client-avatar">
+                            <span class="client-row-avatar">
                                 ${escapeHTML(
                                     getInitials(
                                         client.name
@@ -1497,19 +2062,19 @@ function renderClients() {
                                 )}
                             </span>
 
-
                             <div>
 
-                                <strong>
+                                <strong class="client-row-name">
                                     ${escapeHTML(
-                                        client.name
+                                        client.name ||
+                                        "Unknown Client"
                                     )}
                                 </strong>
 
-
-                                <span>
+                                <span class="client-data muted">
                                     ${escapeHTML(
-                                        client.email
+                                        client.email ||
+                                        "No email"
                                     )}
                                 </span>
 
@@ -1518,43 +2083,59 @@ function renderClients() {
                         </div>
 
 
-                        <div class="client-card-detail">
+                        <div class="client-data">
 
-                            <span>Business</span>
-
-                            <strong>
+                            <span>
                                 ${escapeHTML(
                                     client.business ||
                                     "Not provided"
                                 )}
-                            </strong>
+                            </span>
 
                         </div>
 
 
-                        <div class="client-card-detail">
+                        <div
+                            class="client-status ${statusClass}"
+                        >
 
-                            <span>Last activity</span>
+                            ${statusLabel}
 
-                            <strong>
-                                ${escapeHTML(
-                                    formatDate(
-                                        client.conversation_updated_at ||
-                                        client.created_at
-                                    )
-                                )}
-                            </strong>
+                            ${
+                                unread
+                                    ? `
+                                        <small>
+                                            ${unread} UNREAD
+                                        </small>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+
+                        <div class="client-data mono">
+
+                            ${escapeHTML(
+                                formatRelativeTime(
+                                    client.conversation_updated_at ||
+                                    client.created_at
+                                )
+                            )}
 
                         </div>
 
 
                         <button
-                            class="open-conversation"
-                            data-conversation="${escapeHTML(
-                                client.conversation_id || ""
+                            class="client-row-action open-conversation"
+                            data-conversation="${conversationId}"
+                            type="button"
+                            aria-label="Open conversation with ${escapeHTML(
+                                client.name ||
+                                "client"
                             )}"
                         >
-                            Open Conversation
+                            →
                         </button>
 
                     </article>
@@ -1562,7 +2143,6 @@ function renderClients() {
 
             })
             .join("");
-
 
     clientsList
         .querySelectorAll(
@@ -1574,21 +2154,796 @@ function renderClients() {
                 "click",
                 () => {
 
-                    openConversation(
-                        button.dataset.conversation
-                    );
+                    const conversationId =
+                        button.dataset.conversation;
+
+                    if (
+                        conversationId
+                    ) {
+
+                        openConversation(
+                            conversationId
+                        );
+
+                    }
 
                 }
             );
 
         });
 
+    updateClientSummary(
+        filtered
+    );
+
 }
 
 
-/* =========================================
+function updateClientSummary(
+    filteredClients
+) {
+
+    const summaryValue =
+        document.querySelector(
+            ".clients-summary-value"
+        );
+
+    if (!summaryValue) {
+        return;
+    }
+
+    summaryValue.textContent =
+        filteredClients.length;
+
+}
+
+
+/* =========================================================
+   CLIENT SEARCH
+   ========================================================= */
+
+if (clientSearch) {
+
+    clientSearch.addEventListener(
+        "input",
+        renderClients
+    );
+
+}
+
+
+/* =========================================================
+   CLIENT FILTERS
+   ========================================================= */
+
+document
+    .querySelectorAll(
+        ".client-filter"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                activeClientFilter =
+                    button.dataset.filter ||
+                    "all";
+
+                document
+                    .querySelectorAll(
+                        ".client-filter"
+                    )
+                    .forEach(item => {
+
+                        item.classList.toggle(
+                            "active",
+                            item === button
+                        );
+
+                    });
+
+                renderClients();
+
+            }
+        );
+
+    });
+
+/* =========================================================
+   REVIEWS
+   ========================================================= */
+
+async function loadReviews() {
+
+    try {
+
+        const data =
+            await api(
+                "/api/admin/reviews"
+            );
+
+        reviews =
+            Array.isArray(
+                data.reviews
+            )
+                ? data.reviews
+                : [];
+
+        renderReviews();
+
+        updateReviewSummary();
+
+    } catch (error) {
+
+        console.error(
+            "Review loading error:",
+            error
+        );
+
+        if (reviewsList) {
+
+            reviewsList.innerHTML =
+                `
+                    <div class="reviews-empty">
+
+                        <div class="reviews-empty-mark">
+                            !
+                        </div>
+
+                        <strong class="reviews-empty-title">
+                            REVIEW DATABASE UNAVAILABLE
+                        </strong>
+
+                        <p class="reviews-empty-description">
+                            ${escapeHTML(
+                                error.message
+                            )}
+                        </p>
+
+                    </div>
+                `;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   REVIEW FILTERING
+   ========================================================= */
+
+function getFilteredReviews() {
+
+    if (
+        activeReviewFilter ===
+        "pending"
+    ) {
+
+        return reviews.filter(
+            review =>
+                Number(
+                    review.approved
+                ) !== 1
+        );
+
+    }
+
+    if (
+        activeReviewFilter ===
+        "approved"
+    ) {
+
+        return reviews.filter(
+            review =>
+                Number(
+                    review.approved
+                ) === 1
+        );
+
+    }
+
+    return reviews;
+
+}
+
+
+/* =========================================================
+   REVIEW STARS
+   ========================================================= */
+
+function reviewStars(
+    rating
+) {
+
+    const value =
+        Number(rating) || 0;
+
+    return `
+        <span class="review-stars">
+            ${[1, 2, 3, 4, 5]
+                .map(
+                    star =>
+                        `
+                            <span
+                                class="${
+                                    star <= value
+                                        ? "filled"
+                                        : ""
+                                }"
+                            >
+                                ★
+                            </span>
+                        `
+                )
+                .join("")}
+        </span>
+    `;
+
+}
+
+
+/* =========================================================
+   REVIEW RENDERING
+   ========================================================= */
+
+function renderReview(
+    review
+) {
+
+    const approved =
+        Number(
+            review.approved
+        ) === 1;
+
+    const name =
+        review.name ||
+        "Anonymous Client";
+
+    const business =
+        review.business ||
+        "No business provided";
+
+    const rating =
+        Number(
+            review.rating
+        ) || 0;
+
+    const text =
+        review.review ||
+        "";
+
+    return `
+        <article
+            class="review-row ${
+                approved ? "approved" : "pending"
+            }"
+            data-review-id="${escapeHTML(review.id || "")}">
+
+            <div class="review-client">
+
+                <span class="review-avatar">
+                    ${escapeHTML(
+                        getInitials(
+                            name
+                        )
+                    )}
+                </span>
+
+                <div class="review-client-info">
+
+                    <strong class="review-client-name">
+                        ${escapeHTML(
+                            name
+                        )}
+                    </strong>
+
+                    <span class="review-client-business">
+                        ${escapeHTML(
+                            business
+                        )}
+                    </span>
+
+                    <span class="review-client-date">
+                        ${escapeHTML(
+                            formatRelativeTime(
+                                review.created_at
+                            )
+                        )}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="review-rating">
+
+                ${reviewStars(
+                    rating
+                )}
+
+                <span class="review-rating-number">
+                    ${rating}/5
+                </span>
+
+            </div>
+
+
+            <div class="review-content">
+
+                <p>
+                    ${escapeHTML(
+                        text
+                    )}
+                </p>
+
+            </div>
+
+
+            <div class="review-status">
+
+                <span
+                    class="review-status-badge ${
+                        approved
+                            ? "approved"
+                            : "pending"
+                    }"
+                >
+                    ${
+                        approved
+                            ? "APPROVED"
+                            : "PENDING"
+                    }
+                </span>
+
+            </div>
+
+
+            <div class="review-actions">
+
+                ${
+                    !approved
+                        ? `
+                            <button
+                                type="button"
+                                class="review-action approve"
+                                data-review-action="approve"
+                                data-review-id="${escapeHTML(
+                                    review.id || ""
+                                )}"
+                            >
+                                APPROVE
+                            </button>
+
+                            <button
+                                type="button"
+                                class="review-action reject"
+                                data-review-action="reject"
+                                data-review-id="${escapeHTML(
+                                    review.id || ""
+                                )}"
+                            >
+                                REJECT
+                            </button>
+                        `
+                        : ""
+                }
+
+                <button
+                    type="button"
+                    class="review-action delete"
+                    data-review-action="delete"
+                    data-review-id="${escapeHTML(
+                        review.id || ""
+                    )}"
+                >
+                    DELETE
+                </button>
+
+            </div>
+
+        </article>
+    `;
+
+}
+
+
+/* =========================================================
+   RENDER REVIEWS
+   ========================================================= */
+
+function renderReviews() {
+
+    if (!reviewsList) {
+        return;
+    }
+
+    const filtered =
+        getFilteredReviews();
+
+    if (!filtered.length) {
+
+        const message =
+            activeReviewFilter === "pending"
+                ? "There are no reviews awaiting approval."
+                : activeReviewFilter === "approved"
+                    ? "There are no approved reviews yet."
+                    : "No client reviews have been submitted yet.";
+
+        reviewsList.innerHTML =
+            `
+                <div class="reviews-empty">
+
+                    <div class="reviews-empty-mark">
+                        ◌
+                    </div>
+
+                    <strong class="reviews-empty-title">
+                        NO REVIEWS
+                    </strong>
+
+                    <p class="reviews-empty-description">
+                        ${escapeHTML(
+                            message
+                        )}
+                    </p>
+
+                </div>
+            `;
+
+        updateReviewSummary();
+
+        return;
+
+    }
+
+    reviewsList.innerHTML =
+        filtered
+            .map(
+                review =>
+                    renderReview(
+                        review
+                    )
+            )
+            .join("");
+
+    updateReviewSummary();
+
+}
+
+
+/* =========================================================
+   REVIEW SUMMARY
+   ========================================================= */
+
+function updateReviewSummary() {
+
+    const total =
+        reviews.length;
+
+    const pending =
+        reviews.filter(
+            review =>
+                Number(
+                    review.approved
+                ) !== 1
+        ).length;
+
+    const approved =
+        reviews.filter(
+            review =>
+                Number(
+                    review.approved
+                ) === 1
+        ).length;
+
+    if (reviewsTotal) {
+
+        reviewsTotal.textContent =
+            total;
+
+    }
+
+    if (reviewsPending) {
+
+        reviewsPending.textContent =
+            pending;
+
+    }
+
+    if (reviewsApproved) {
+
+        reviewsApproved.textContent =
+            approved;
+
+    }
+
+    if (reviewsFooterCount) {
+
+        const visible =
+            getFilteredReviews().length;
+
+        reviewsFooterCount.textContent =
+            `${visible} REVIEW${
+                visible === 1
+                    ? ""
+                    : "S"
+            }`;
+
+    }
+
+}
+
+
+/* =========================================================
+   REVIEW ACTIONS
+   ========================================================= */
+
+async function handleReviewAction(
+    action,
+    reviewId,
+    button
+) {
+
+    if (
+        !action ||
+        !reviewId
+    ) {
+
+        return;
+
+    }
+
+    const originalText =
+        button
+            ? button.textContent
+            : "";
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            action === "approve"
+                ? "APPROVING..."
+                : action === "reject"
+                    ? "REJECTING..."
+                    : "DELETING...";
+
+    }
+
+    try {
+
+        if (
+            action ===
+            "approve"
+        ) {
+
+            await api(
+                "/api/admin/reviews/approve",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            reviewId
+                        })
+                }
+            );
+
+        } else if (
+            action ===
+            "reject"
+        ) {
+
+            await api(
+                "/api/admin/reviews/reject",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            reviewId
+                        })
+                }
+            );
+
+        } else if (
+            action ===
+            "delete"
+        ) {
+
+            await api(
+                `/api/admin/reviews/${encodeURIComponent(
+                    reviewId
+                )}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        } else {
+
+            return;
+
+        }
+
+        await loadReviews();
+
+    } catch (error) {
+
+        console.error(
+            `Review ${action} error:`,
+            error
+        );
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                originalText;
+
+        }
+
+        alert(
+            error.message ||
+            `Unable to ${action} review.`
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REVIEW ACTION DELEGATION
+   ========================================================= */
+
+if (reviewsList) {
+
+    reviewsList.addEventListener(
+        "click",
+        async event => {
+
+            const button =
+                event.target.closest(
+                    "[data-review-action]"
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const action =
+                button.dataset.reviewAction;
+
+            const reviewId =
+                button.dataset.reviewId;
+
+            if (
+                !action ||
+                !reviewId
+            ) {
+
+                return;
+
+            }
+
+            if (
+                action === "delete" ||
+                action === "reject"
+            ) {
+
+                const confirmed =
+                    window.confirm(
+                        action === "reject"
+                            ? "Reject and remove this review?"
+                            : "Permanently delete this review?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+            }
+
+            await handleReviewAction(
+                action,
+                reviewId,
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   REVIEW FILTERS
+   ========================================================= */
+
+document
+    .querySelectorAll(
+        ".review-filter"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                activeReviewFilter =
+                    button.dataset.reviewFilter ||
+                    "all";
+
+                document
+                    .querySelectorAll(
+                        ".review-filter"
+                    )
+                    .forEach(item => {
+
+                        item.classList.toggle(
+                            "active",
+                            item === button
+                        );
+
+                    });
+
+                renderReviews();
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   REVIEW REFRESH
+   ========================================================= */
+
+if (refreshReviews) {
+
+    refreshReviews.addEventListener(
+        "click",
+        async () => {
+
+            refreshReviews.disabled =
+                true;
+
+            const originalText =
+                refreshReviews.textContent;
+
+            refreshReviews.textContent =
+                "Refreshing...";
+
+            try {
+
+                await loadReviews();
+
+            } finally {
+
+                refreshReviews.disabled =
+                    false;
+
+                refreshReviews.textContent =
+                    originalText;
+
+            }
+
+        }
+    );
+
+}
+/* =========================================================
    CONVERSATION
-========================================= */
+   ========================================================= */
 
 async function openConversation(
     conversationId
@@ -1598,35 +2953,48 @@ async function openConversation(
         return;
     }
 
-
     stopConversationPolling();
-
 
     currentConversationId =
         conversationId;
 
-
     lastConversationSignature =
         "";
 
-
-    selectedFiles =
-        [];
-
+    selectedFiles = [];
 
     renderSelectedFiles();
 
+    closeSidebar();
 
     switchView(
         "conversation"
     );
 
+    closeConversationContextPanel();
 
-    adminMessages.innerHTML =
-        `<div class="empty-state">
-            Loading conversation...
-        </div>`;
+    if (adminMessages) {
 
+        adminMessages.innerHTML =
+            `
+                <div class="conversation-empty">
+
+                    <div class="conversation-empty-mark">
+                        ◌
+                    </div>
+
+                    <strong class="conversation-empty-title">
+                        LOADING CONVERSATION
+                    </strong>
+
+                    <p class="conversation-empty-description">
+                        Establishing secure communication channel...
+                    </p>
+
+                </div>
+            `;
+
+    }
 
     try {
 
@@ -1638,27 +3006,31 @@ async function openConversation(
             }
         );
 
-
         startConversationPolling();
-
 
     } catch (error) {
 
-        adminMessages.innerHTML =
-            `<div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>`;
+        if (adminMessages) {
+
+            adminMessages.innerHTML =
+                `
+                    <div class="empty-state error-state">
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </div>
+                `;
+
+        }
 
     }
 
 }
 
 
-/* =========================================
+/* =========================================================
    CONVERSATION SIGNATURE
-========================================= */
+   ========================================================= */
 
 function getConversationSignature(
     messages
@@ -1679,10 +3051,10 @@ function getConversationSignature(
                         .join(",")
                     : "";
 
-
             return (
                 `${message.id}:` +
-                `${fileSignature}`
+                `${fileSignature}:` +
+                `${message.message || ""}`
             );
 
         })
@@ -1691,9 +3063,9 @@ function getConversationSignature(
 }
 
 
-/* =========================================
+/* =========================================================
    LOAD CONVERSATION
-========================================= */
+   ========================================================= */
 
 async function loadConversation(
     conversationId,
@@ -1705,7 +3077,6 @@ async function loadConversation(
         forceRender = false
     } = options;
 
-
     if (
         conversationId !==
         currentConversationId
@@ -1714,7 +3085,6 @@ async function loadConversation(
         return;
 
     }
-
 
     try {
 
@@ -1725,7 +3095,6 @@ async function loadConversation(
                 )}`
             );
 
-
         if (
             conversationId !==
             currentConversationId
@@ -1735,21 +3104,21 @@ async function loadConversation(
 
         }
 
-
         const messages =
-            data.messages || [];
-
+            Array.isArray(
+                data.messages
+            )
+                ? data.messages
+                : [];
 
         const conversationSignature =
             getConversationSignature(
                 messages
             );
 
-
         const messagesChanged =
             conversationSignature !==
             lastConversationSignature;
-
 
         if (
             forceRender ||
@@ -1757,16 +3126,14 @@ async function loadConversation(
         ) {
 
             renderConversation(
-                data.conversation,
+                data.conversation || {},
                 messages
             );
-
 
             lastConversationSignature =
                 conversationSignature;
 
         }
-
 
     } catch (error) {
 
@@ -1775,16 +3142,24 @@ async function loadConversation(
             error
         );
 
-
-        if (!silent) {
+        if (
+            !silent &&
+            adminMessages
+        ) {
 
             adminMessages.innerHTML =
-                `<div class="empty-state">
-                    ${escapeHTML(
-                        error.message
-                    )}
-                </div>`;
+                `
+                    <div class="empty-state error-state">
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </div>
+                `;
 
+        }
+
+        if (!silent) {
+            throw error;
         }
 
     }
@@ -1792,41 +3167,30 @@ async function loadConversation(
 }
 
 
-/* =========================================
-   START CONVERSATION POLLING
-========================================= */
+/* =========================================================
+   CONVERSATION POLLING
+   ========================================================= */
 
 function startConversationPolling() {
 
     stopConversationPolling();
 
-
     if (!currentConversationId) {
         return;
     }
-
 
     conversationPollingInterval =
         setInterval(
             () => {
 
                 if (
-                    document.hidden
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
+                    document.hidden ||
                     !currentConversationId
                 ) {
 
                     return;
 
                 }
-
 
                 loadConversation(
                     currentConversationId,
@@ -1843,10 +3207,6 @@ function startConversationPolling() {
 }
 
 
-/* =========================================
-   STOP CONVERSATION POLLING
-========================================= */
-
 function stopConversationPolling() {
 
     if (
@@ -1859,16 +3219,15 @@ function stopConversationPolling() {
 
     }
 
-
     conversationPollingInterval =
         null;
 
 }
 
 
-/* =========================================
+/* =========================================================
    TAB VISIBILITY
-========================================= */
+   ========================================================= */
 
 document.addEventListener(
     "visibilitychange",
@@ -1882,9 +3241,9 @@ document.addEventListener(
 
         }
 
-
         if (
             currentConversationId &&
+            dashboard &&
             !dashboard.hidden
         ) {
 
@@ -1902,13 +3261,11 @@ document.addEventListener(
 );
 
 
-/* =========================================
+/* =========================================================
    RENDER MESSAGE FILES
-========================================= */
+   ========================================================= */
 
-function renderMessageFiles(
-    files
-) {
+function renderMessageFiles(files) {
 
     if (
         !Array.isArray(files) ||
@@ -1919,98 +3276,88 @@ function renderMessageFiles(
 
     }
 
-
     return `
         <div class="message-attachments">
 
             <span class="message-attachments-label">
-                Attachments
+                ATTACHMENTS
             </span>
 
-            ${files.map(
-                file => {
+            <div class="attachment-grid">
 
-                    const fileId =
-                        escapeHTML(
-                            file.id || ""
-                        );
+                ${files.map(
+                    file => {
 
-                    const fileName =
-                        escapeHTML(
-                            file.name ||
-                            "Attached file"
-                        );
+                        const fileId =
+                            escapeHTML(
+                                file.id || ""
+                            );
 
-                    const label =
-                        escapeHTML(
-                            getFileLabel(
-                                file
-                            )
-                        );
+                        const fileName =
+                            escapeHTML(
+                                file.name ||
+                                "Attached file"
+                            );
 
-                    const size =
-                        escapeHTML(
-                            formatFileSize(
-                                file.size
-                            )
-                        );
+                        const label =
+                            escapeHTML(
+                                getFileLabel(
+                                    file
+                                )
+                            );
 
+                        const size =
+                            escapeHTML(
+                                formatFileSize(
+                                    file.size
+                                )
+                            );
 
-                    return `
-                        <div
-                            class="message-file"
-                        >
+                        return `
+                            <div class="message-attachment">
 
-                            <span
-                                class="message-file-icon"
-                                aria-hidden="true"
-                            >
-                                ${label}
-                            </span>
-
-
-                            <div
-                                class="message-file-info"
-                            >
-
-                                <span
-                                    class="message-file-name"
-                                    title="${fileName}"
-                                >
-                                    ${fileName}
-                                </span>
-
-
-                                <span
-                                    class="message-file-meta"
-                                >
+                                <span class="attachment-icon">
                                     ${label}
-                                    ${
-                                        size
-                                            ? ` · ${size}`
-                                            : ""
-                                    }
                                 </span>
+
+                                <div class="attachment-info">
+
+                                    <span
+                                        class="attachment-name"
+                                        title="${fileName}"
+                                    >
+                                        ${fileName}
+                                    </span>
+
+                                    <span class="attachment-size">
+                                        ${label}
+                                        ${
+                                            size
+                                                ? ` · ${size}`
+                                                : ""
+                                        }
+                                    </span>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="attachment-download message-file-download"
+                                    data-file-id="${fileId}"
+                                    data-file-name="${fileName}"
+                                    title="Download file"
+                                    aria-label="Download ${fileName}"
+                                >
+                                    ↓
+                                </button>
 
                             </div>
+                        `;
 
+                    }
+                ).join("")}
 
-                            <button
-                                type="button"
-                                class="message-file-download"
-                                data-file-id="${fileId}"
-                                data-file-name="${fileName}"
-                                title="Download file"
-                                aria-label="Download ${fileName}"
-                            >
-                                ↓
-                            </button>
-
-                        </div>
-                    `;
-
-                }
-            ).join("")}
+            </div>
 
         </div>
     `;
@@ -2018,138 +3365,232 @@ function renderMessageFiles(
 }
 
 
-/* =========================================
+/* =========================================================
+   CONVERSATION STATUS
+   ========================================================= */
+
+function updateConversationStatus(
+    status
+) {
+
+    if (!conversationStatus) {
+        return;
+    }
+
+    const normalized =
+        String(
+            status ||
+            "open"
+        )
+            .toLowerCase();
+
+    const label =
+        normalized.toUpperCase();
+
+    conversationStatus.textContent =
+        label;
+
+    conversationStatus.classList.remove(
+        "active",
+        "critical",
+        "warning"
+    );
+
+    if (
+        [
+            "closed",
+            "blocked",
+            "archived"
+        ].includes(normalized)
+    ) {
+
+        conversationStatus.classList.add(
+            "critical"
+        );
+
+    } else if (
+        [
+            "pending",
+            "waiting"
+        ].includes(normalized)
+    ) {
+
+        conversationStatus.classList.add(
+            "warning"
+        );
+
+    } else {
+
+        conversationStatus.classList.add(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    RENDER CONVERSATION
-========================================= */
+   ========================================================= */
 
 function renderConversation(
     conversation,
     messages
 ) {
 
-    document.getElementById(
-        "conversation-client-name"
-    ).textContent =
-        conversation.name ||
+    const name =
+        conversation?.name ||
         "Client";
 
-
-    document.getElementById(
-        "conversation-client-details"
-    ).textContent =
-        conversation.email ||
+    const email =
+        conversation?.email ||
         "";
 
+    if (conversationClientName) {
 
-    document.getElementById(
-        "conversation-status"
-    ).textContent =
-        (
-            conversation.status ||
-            "open"
-        ).toUpperCase();
+        conversationClientName.textContent =
+            name;
 
+    }
 
-    document.getElementById(
-        "client-info-name"
-    ).textContent =
-        conversation.name ||
-        "—";
+    if (conversationClientDetails) {
 
+        conversationClientDetails.textContent =
+            email ||
+            "Secure client channel";
 
-    document.getElementById(
-        "client-info-email"
-    ).textContent =
-        conversation.email ||
-        "—";
+    }
 
+    updateConversationStatus(
+        conversation?.status
+    );
 
-    document.getElementById(
-        "client-info-business"
-    ).textContent =
-        conversation.business ||
-        "Not provided";
+    if (clientInfoName) {
 
+        clientInfoName.textContent =
+            name;
 
-    document.getElementById(
-        "client-info-website"
-    ).textContent =
-        conversation.website ||
-        "Not provided";
+    }
 
+    if (clientInfoEmail) {
+
+        clientInfoEmail.textContent =
+            email ||
+            "—";
+
+    }
+
+    if (clientInfoBusiness) {
+
+        clientInfoBusiness.textContent =
+            conversation?.business ||
+            "Not provided";
+
+    }
+
+    if (clientInfoWebsite) {
+
+        clientInfoWebsite.textContent =
+            conversation?.website ||
+            "Not provided";
+
+    }
+
+    if (!adminMessages) {
+        return;
+    }
 
     if (!messages.length) {
 
         adminMessages.innerHTML =
-            `<div class="empty-state">
-                No messages yet.
-            </div>`;
+            `
+                <div class="conversation-empty">
 
+                    <div class="conversation-empty-mark">
+                        ◌
+                    </div>
+
+                    <strong class="conversation-empty-title">
+                        NO MESSAGES YET
+                    </strong>
+
+                    <p class="conversation-empty-description">
+                        Start the investigation by sending a reply.
+                    </p>
+
+                </div>
+            `;
 
         return;
 
     }
 
-
     adminMessages.innerHTML =
         messages
-            .map(message => {
+            .map(
+                (message, index) => {
 
-                const isAdmin =
-                    message.sender_type ===
-                    "admin";
+                    const isAdmin =
+                        String(
+                            message.sender_type ||
+                            ""
+                        ).toLowerCase() ===
+                        "admin";
 
-
-                return `
-                    <div class="message ${
+                    const senderName =
                         isAdmin
-                            ? "admin"
-                            : "client"
-                    }">
+                            ? "YOU"
+                            : name;
 
-                        <div>
+                    const direction =
+                        isAdmin
+                            ? "outbound"
+                            : "inbound";
 
-                            <div class="message-bubble">
-                                ${linkifyMessage(
-                                    message.message
-                                )}
+                    return `
+                        <article class="message-group">
+
+                            <div class="message-meta">
+
+                                <span class="message-meta-name">
+                                    ${escapeHTML(
+                                        senderName
+                                    )}
+                                </span>
+
+                                <span class="message-meta-time">
+                                    ${escapeHTML(
+                                        formatDate(
+                                            message.created_at
+                                        )
+                                    )}
+                                </span>
+
                             </div>
 
+                            <div class="message ${direction}">
+
+                                <div class="message-bubble">
+
+                                    ${linkifyMessage(
+                                        message.message
+                                    )}
+
+                                </div>
+
+                            </div>
 
                             ${renderMessageFiles(
                                 message.files
                             )}
 
+                        </article>
+                    `;
 
-                            <div class="message-meta">
-
-                                ${
-                                    isAdmin
-                                        ? "You"
-                                        : escapeHTML(
-                                            conversation.name ||
-                                            "Client"
-                                        )
-                                }
-
-                                ·
-
-                                ${escapeHTML(
-                                    formatDate(
-                                        message.created_at
-                                    )
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                `;
-
-            })
+                }
+            )
             .join("");
-
 
     adminMessages.scrollTop =
         adminMessages.scrollHeight;
@@ -2157,9 +3598,9 @@ function renderConversation(
 }
 
 
-/* =========================================
+/* =========================================================
    DOWNLOAD ADMIN ATTACHMENT
-========================================= */
+   ========================================================= */
 
 async function downloadAdminFile(
     fileId,
@@ -2171,12 +3612,10 @@ async function downloadAdminFile(
         return;
     }
 
-
     const originalContent =
         button
             ? button.innerHTML
             : "";
-
 
     try {
 
@@ -2190,7 +3629,6 @@ async function downloadAdminFile(
 
         }
 
-
         const response =
             await fetch(
                 `${API_URL}/api/admin/files/${encodeURIComponent(
@@ -2199,33 +3637,28 @@ async function downloadAdminFile(
                 {
                     method: "GET",
 
-                    headers: {
-                        "Authorization":
-                            `Bearer ${adminSession}`
-                    }
+                    headers:
+                        getAuthHeaders()
                 }
             );
-
 
         if (!response.ok) {
 
             let errorMessage =
                 "Unable to download file.";
 
-
             try {
 
                 const result =
                     await response.json();
-
 
                 errorMessage =
                     result.error ||
                     errorMessage;
 
             } catch {
+                // Ignore malformed error body.
             }
-
 
             if (
                 response.status ===
@@ -2236,49 +3669,39 @@ async function downloadAdminFile(
 
             }
 
-
             throw new Error(
                 errorMessage
             );
 
         }
 
-
         const blob =
             await response.blob();
-
 
         const url =
             URL.createObjectURL(
                 blob
             );
 
-
         const anchor =
             document.createElement(
                 "a"
             );
 
-
         anchor.href =
             url;
-
 
         anchor.download =
             fileName ||
             "download";
 
-
         document.body.appendChild(
             anchor
         );
 
-
         anchor.click();
 
-
         anchor.remove();
-
 
         setTimeout(
             () => {
@@ -2291,7 +3714,6 @@ async function downloadAdminFile(
             1000
         );
 
-
     } catch (error) {
 
         console.error(
@@ -2299,12 +3721,10 @@ async function downloadAdminFile(
             error
         );
 
-
         showMessageError(
             error.message ||
             "Unable to download file."
         );
-
 
     } finally {
 
@@ -2323,9 +3743,9 @@ async function downloadAdminFile(
 }
 
 
-/* =========================================
+/* =========================================================
    ATTACHMENT DOWNLOAD DELEGATION
-========================================= */
+   ========================================================= */
 
 if (adminMessages) {
 
@@ -2338,11 +3758,9 @@ if (adminMessages) {
                     ".message-file-download"
                 );
 
-
             if (!button) {
                 return;
             }
-
 
             downloadAdminFile(
                 button.dataset.fileId,
@@ -2357,9 +3775,9 @@ if (adminMessages) {
 }
 
 
-/* =========================================
+/* =========================================================
    UPLOAD ADMIN FILE
-========================================= */
+   ========================================================= */
 
 async function uploadAdminFile(
     file,
@@ -2370,24 +3788,20 @@ async function uploadAdminFile(
     const formData =
         new FormData();
 
-
     formData.append(
         "file",
         file
     );
-
 
     formData.append(
         "conversationId",
         conversationId
     );
 
-
     formData.append(
         "messageId",
         messageId
     );
-
 
     const response =
         await fetch(
@@ -2395,19 +3809,15 @@ async function uploadAdminFile(
             {
                 method: "POST",
 
-                headers: {
-                    "Authorization":
-                        `Bearer ${adminSession}`
-                },
+                headers:
+                    getAuthHeaders(),
 
                 body:
                     formData
             }
         );
 
-
     let result = null;
-
 
     try {
 
@@ -2418,7 +3828,6 @@ async function uploadAdminFile(
         result = null;
     }
 
-
     if (
         response.status ===
         401
@@ -2426,13 +3835,11 @@ async function uploadAdminFile(
 
         logoutLocal();
 
-
         throw new Error(
             "Your admin session has expired."
         );
 
     }
-
 
     if (
         !response.ok ||
@@ -2446,287 +3853,292 @@ async function uploadAdminFile(
 
     }
 
-
     return result;
 
 }
 
 
-/* =========================================
+/* =========================================================
    SEND ADMIN MESSAGE
-========================================= */
+   ========================================================= */
 
-adminMessageForm.addEventListener(
-    "submit",
-    async event => {
+if (adminMessageForm) {
 
-        event.preventDefault();
+    adminMessageForm.addEventListener(
+        "submit",
+        async event => {
 
+            event.preventDefault();
 
-        hideMessageError();
+            hideMessageError();
 
+            const message =
+                adminMessageInput
+                    ? adminMessageInput.value.trim()
+                    : "";
 
-        const message =
-            adminMessageInput.value.trim();
+            if (!currentConversationId) {
 
+                showMessageError(
+                    "No conversation selected."
+                );
 
-        if (!currentConversationId) {
+                return;
 
-            showMessageError(
-                "No conversation selected."
-            );
+            }
 
-            return;
+            if (!message) {
 
-        }
+                showMessageError(
+                    "Write a message first."
+                );
 
+                return;
 
-        if (!message) {
+            }
 
-            showMessageError(
-                "Write a message first."
-            );
+            const sendButton =
+                document.getElementById(
+                    "admin-send-message"
+                );
 
-            return;
+            const filesBeingSent =
+                [...selectedFiles];
 
-        }
+            if (sendButton) {
+                sendButton.disabled = true;
+            }
 
+            try {
 
-        const sendButton =
-            document.getElementById(
-                "admin-send-message"
-            );
+                if (sendButton) {
+                    sendButton.textContent =
+                        "Sending...";
+                }
 
+                const result =
+                    await api(
+                        "/api/admin/messages",
+                        {
+                            method: "POST",
 
-        const filesBeingSent =
-            [...selectedFiles];
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
+                            body:
+                                JSON.stringify({
+                                    conversationId:
+                                        currentConversationId,
 
-        sendButton.disabled =
-            true;
+                                    message
+                                })
+                        }
+                    );
 
+                const messageId =
+                    result.message?.id ||
+                    result.id;
 
-        try {
+                const conversationId =
+                    result.message?.conversation_id ||
+                    result.conversation?.id ||
+                    currentConversationId;
 
-            /*
-             * STEP 1:
-             * Send the admin message.
-             */
+                if (
+                    filesBeingSent.length &&
+                    !messageId
+                ) {
 
-            sendButton.textContent =
-                "Sending...";
+                    throw new Error(
+                        "Your reply was sent, but the server did not return the message ID needed for file uploads."
+                    );
 
+                }
 
-            const result =
-                await api(
-                    "/api/admin/messages",
+                if (adminMessageInput) {
+
+                    adminMessageInput.value =
+                        "";
+
+                }
+
+                updateCharacterCount();
+
+                const uploadResults = {
+                    successful: [],
+                    failed: []
+                };
+
+                for (
+                    let index = 0;
+                    index <
+                    filesBeingSent.length;
+                    index++
+                ) {
+
+                    const file =
+                        filesBeingSent[index];
+
+                    if (sendButton) {
+
+                        sendButton.textContent =
+                            `Uploading ${
+                                index + 1
+                            }/${filesBeingSent.length}...`;
+
+                    }
+
+                    try {
+
+                        await uploadAdminFile(
+                            file,
+                            conversationId,
+                            messageId
+                        );
+
+                        uploadResults.successful.push(
+                            file
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            `Admin file upload failed: ${file.name}`,
+                            error
+                        );
+
+                        uploadResults.failed.push({
+                            file,
+                            error
+                        });
+
+                    }
+
+                }
+
+                selectedFiles = [];
+
+                renderSelectedFiles();
+
+                await loadConversation(
+                    currentConversationId,
                     {
-                        method: "POST",
-
-                        body:
-                            JSON.stringify({
-                                conversationId:
-                                    currentConversationId,
-
-                                message
-                            })
+                        silent: false,
+                        forceRender: true
                     }
                 );
 
+                await loadNotifications();
 
-            /*
-             * The backend should return the
-             * created message. We support the
-             * common response shapes.
-             */
+                if (
+                    uploadResults.failed.length
+                ) {
 
-            const messageId =
-                result.message?.id ||
-                result.id;
+                    const failedNames =
+                        uploadResults.failed
+                            .map(
+                                item =>
+                                    item.file.name
+                            )
+                            .join(", ");
 
+                    showMessageError(
+                        `Your reply was sent, but these files could not be uploaded: ${failedNames}`
+                    );
 
-            const conversationId =
-                result.message?.conversation_id ||
-                result.conversation?.id ||
-                currentConversationId;
+                }
 
+            } catch (error) {
 
-            if (
-                filesBeingSent.length &&
-                !messageId
-            ) {
-
-                throw new Error(
-                    "Your reply was sent, but the server did not return the message ID needed for file uploads."
+                console.error(
+                    "Admin send message error:",
+                    error
                 );
-
-            }
-
-
-            adminMessageInput.value =
-                "";
-
-
-            /*
-             * STEP 2:
-             * Upload selected files.
-             */
-
-            const uploadResults = {
-                successful: [],
-                failed: []
-            };
-
-
-            for (
-                let index = 0;
-                index <
-                filesBeingSent.length;
-                index++
-            ) {
-
-                const file =
-                    filesBeingSent[index];
-
-
-                sendButton.textContent =
-                    `Uploading ${
-                        index + 1
-                    }/${filesBeingSent.length}...`;
-
-
-                try {
-
-                    await uploadAdminFile(
-                        file,
-                        conversationId,
-                        messageId
-                    );
-
-
-                    uploadResults.successful.push(
-                        file
-                    );
-
-
-                } catch (error) {
-
-                    console.error(
-                        `Admin file upload failed: ${file.name}`,
-                        error
-                    );
-
-
-                    uploadResults.failed.push({
-                        file,
-                        error
-                    });
-
-                }
-
-            }
-
-
-            /*
-             * Clear selected files only after
-             * the upload attempt has completed.
-             */
-
-            selectedFiles =
-                [];
-
-
-            renderSelectedFiles();
-
-
-            /*
-             * STEP 3:
-             * Refresh conversation.
-             */
-
-            await loadConversation(
-                currentConversationId,
-                {
-                    silent: false,
-                    forceRender: true
-                }
-            );
-
-
-            await loadNotifications();
-
-
-            /*
-             * Tell admin about partial upload
-             * failures without pretending the
-             * message itself failed.
-             */
-
-            if (
-                uploadResults.failed.length
-            ) {
-
-                const failedNames =
-                    uploadResults.failed
-                        .map(
-                            item =>
-                                item.file.name
-                        )
-                        .join(", ");
-
 
                 showMessageError(
-                    `Your reply was sent, but these files could not be uploaded: ${failedNames}`
+                    error.message ||
+                    "Unable to send your reply."
                 );
+
+            } finally {
+
+                if (sendButton) {
+
+                    sendButton.disabled =
+                        false;
+
+                    sendButton.textContent =
+                        "Send Reply →";
+
+                }
 
             }
 
-
-        } catch (error) {
-
-            console.error(
-                "Admin send message error:",
-                error
-            );
-
-
-            showMessageError(
-                error.message ||
-                "Unable to send your reply."
-            );
-
-
-        } finally {
-
-            sendButton.disabled =
-                false;
-
-
-            sendButton.textContent =
-                "Send Reply →";
-
         }
+    );
+
+}
+
+
+/* =========================================================
+   CHARACTER COUNTER
+   ========================================================= */
+
+function updateCharacterCount() {
+
+    if (
+        !adminMessageInput ||
+        !characterCount
+    ) {
+
+        return;
 
     }
-);
+
+    const current =
+        adminMessageInput.value.length;
+
+    const maximum =
+        Number(
+            adminMessageInput.maxLength
+        ) || 5000;
+
+    characterCount.textContent =
+        `${current} / ${maximum}`;
+
+    characterCount.classList.toggle(
+        "critical",
+        current >=
+            maximum * 0.9
+    );
+
+}
 
 
-/* =========================================
+if (adminMessageInput) {
+
+    adminMessageInput.addEventListener(
+        "input",
+        updateCharacterCount
+    );
+
+}
+
+
+/* =========================================================
    MESSAGE ERROR
-========================================= */
+   ========================================================= */
 
-function showMessageError(
-    message
-) {
+function showMessageError(message) {
 
     if (!adminMessageError) {
         return;
     }
 
-
     adminMessageError.textContent =
         message;
-
 
     adminMessageError.hidden =
         false;
@@ -2740,10 +4152,8 @@ function hideMessageError() {
         return;
     }
 
-
     adminMessageError.textContent =
         "";
-
 
     adminMessageError.hidden =
         true;
@@ -2751,35 +4161,111 @@ function hideMessageError() {
 }
 
 
-/* =========================================
-   BACK TO CLIENTS
-========================================= */
+/* =========================================================
+   CONVERSATION CONTEXT PANEL
+   ========================================================= */
 
-document
-    .getElementById(
-        "back-to-clients"
-    )
-    .addEventListener(
+function openConversationContext() {
+
+    if (!conversationContext) {
+        return;
+    }
+
+    conversationContext.classList.add(
+        "is-open"
+    );
+
+    if (conversationWorkspace) {
+
+        conversationWorkspace.classList.add(
+            "context-open"
+        );
+
+    }
+
+}
+
+
+function closeConversationContextPanel() {
+
+    if (conversationContext) {
+
+        conversationContext.classList.remove(
+            "is-open"
+        );
+
+    }
+
+    if (conversationWorkspace) {
+
+        conversationWorkspace.classList.remove(
+            "context-open"
+        );
+
+    }
+
+}
+
+
+if (contextToggle) {
+
+    contextToggle.addEventListener(
+        "click",
+        () => {
+
+            if (
+                conversationContext?.classList.contains(
+                    "is-open"
+                )
+            ) {
+
+                closeConversationContextPanel();
+
+            } else {
+
+                openConversationContext();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (closeConversationContext) {
+
+    closeConversationContext.addEventListener(
+        "click",
+        closeConversationContextPanel
+    );
+
+}
+
+
+/* =========================================================
+   BACK TO CLIENTS
+   ========================================================= */
+
+if (backToClients) {
+
+    backToClients.addEventListener(
         "click",
         () => {
 
             currentConversationId =
                 null;
 
-
             lastConversationSignature =
                 "";
 
-
-            selectedFiles =
-                [];
-
+            selectedFiles = [];
 
             renderSelectedFiles();
 
-
             stopConversationPolling();
 
+            closeConversationContextPanel();
 
             switchView(
                 "clients"
@@ -2788,10 +4274,12 @@ document
         }
     );
 
+}
 
-/* =========================================
+
+/* =========================================================
    NOTIFICATIONS
-========================================= */
+   ========================================================= */
 
 async function loadNotifications() {
 
@@ -2802,99 +4290,361 @@ async function loadNotifications() {
                 "/api/admin/notifications"
             );
 
-
         notifications =
-            data.notifications || [];
-
+            Array.isArray(
+                data.notifications
+            )
+                ? data.notifications
+                : [];
 
         renderNotifications();
 
         renderRecentNotifications();
 
-        updateStats();
+        updateNotificationSummary();
 
+        updateStats();
 
     } catch (error) {
 
-        notificationsList.innerHTML =
-            `<div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>`;
+        console.error(
+            "Notification loading error:",
+            error
+        );
 
+        if (notificationsList) {
 
-        recentNotifications.innerHTML =
-            `<div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>`;
+            notificationsList.innerHTML =
+                `
+                    <div class="notifications-empty">
+
+                        <div class="notifications-empty-mark">
+                            !
+                        </div>
+
+                        <strong class="notifications-empty-title">
+                            SIGNAL FEED UNAVAILABLE
+                        </strong>
+
+                        <p class="notifications-empty-description">
+                            ${escapeHTML(
+                                error.message
+                            )}
+                        </p>
+
+                    </div>
+                `;
+
+        }
+
+        if (recentNotifications) {
+
+            recentNotifications.innerHTML =
+                `
+                    <div class="empty-state error-state">
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </div>
+                `;
+
+        }
 
     }
 
 }
 
 
+/* =========================================================
+   NOTIFICATION CLASSIFICATION
+   ========================================================= */
+
+function getNotificationCategory(
+    notification
+) {
+
+    const raw =
+        String(
+            notification?.type ||
+            notification?.category ||
+            ""
+        ).toLowerCase();
+
+    if (
+        raw.includes("message")
+    ) {
+
+        return "messages";
+
+    }
+
+    if (
+        raw.includes("client")
+    ) {
+
+        return "clients";
+
+    }
+
+    return "activity";
+
+}
+
+
+function getNotificationSeverity(
+    notification
+) {
+
+    const raw =
+        String(
+            notification?.severity ||
+            notification?.level ||
+            notification?.type ||
+            notification?.category ||
+            ""
+        ).toLowerCase();
+
+    if (
+        raw.includes("critical") ||
+        raw.includes("error") ||
+        raw.includes("danger")
+    ) {
+
+        return "critical";
+
+    }
+
+    if (
+        raw.includes("warning") ||
+        raw.includes("warn")
+    ) {
+
+        return "warning";
+
+    }
+
+    if (
+        raw.includes("success") ||
+        raw.includes("complete") ||
+        raw.includes("resolved")
+    ) {
+
+        return "success";
+
+    }
+
+    return "info";
+
+}
+
+
+function getNotificationTypeLabel(
+    severity
+) {
+
+    const labels = {
+        info: "INFO",
+        success: "OK",
+        warning: "WARN",
+        critical: "CRITICAL"
+    };
+
+    return (
+        labels[severity] ||
+        "INFO"
+    );
+
+}
+
+
+function isNotificationUnread(
+    notification
+) {
+
+    const value =
+        notification?.read;
+
+    if (
+        value === true ||
+        value === "true"
+    ) {
+
+        return false;
+
+    }
+
+    return (
+        Number(value) === 0 ||
+        value === null ||
+        value === undefined
+    );
+
+}
+
+
+function getFilteredNotifications() {
+
+    if (
+        activeNotificationFilter ===
+        "all"
+    ) {
+
+        return notifications;
+
+    }
+
+    return notifications.filter(
+        notification => {
+
+            if (
+                activeNotificationFilter ===
+                "unread"
+            ) {
+
+                return isNotificationUnread(
+                    notification
+                );
+
+            }
+
+            return (
+                getNotificationCategory(
+                    notification
+                ) ===
+                activeNotificationFilter
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NOTIFICATION RENDERING
+   ========================================================= */
+
 function notificationHTML(
     notification,
     compact = false
 ) {
 
-    return `
-        <article class="notification-item ${
-            Number(notification.read) === 0
-                ? "unread"
-                : ""
-        }">
+    const unread =
+        isNotificationUnread(
+            notification
+        );
 
-            <div class="notification-icon">
-                ●
+    const category =
+        getNotificationCategory(
+            notification
+        );
+
+    const severity =
+        getNotificationSeverity(
+            notification
+        );
+
+    const title =
+        notification.title ||
+        "System Notification";
+
+    const description =
+        notification.message ||
+        notification.description ||
+        "";
+
+    const source =
+        notification.source ||
+        (
+            category === "messages"
+                ? "CLIENT COMMUNICATION"
+                : category === "clients"
+                    ? "CLIENT DATABASE"
+                    : "SYSTEM"
+        );
+
+    return `
+        <article
+            class="
+                notification-row
+                ${unread ? "unread" : ""}
+                ${severity}
+            "
+            data-category="${escapeHTML(
+                category
+            )}"
+            data-severity="${escapeHTML(
+                severity
+            )}"
+        >
+
+            <div class="notification-type ${severity}">
+                ${escapeHTML(
+                    getNotificationTypeLabel(
+                        severity
+                    )
+                )}
             </div>
 
 
             <div class="notification-content">
 
-                <strong>
+                <strong class="notification-title">
                     ${escapeHTML(
-                        notification.title
+                        title
                     )}
                 </strong>
 
-
-                <p>
+                <p class="notification-description">
                     ${escapeHTML(
-                        notification.message
+                        description
                     )}
                 </p>
 
-
-                <time>
+                <span class="notification-source">
                     ${escapeHTML(
-                        formatDate(
-                            notification.created_at
-                        )
+                        source
                     )}
-                </time>
+                </span>
 
             </div>
 
 
-            ${
-                !compact &&
-                Number(notification.read) === 0
-                    ? `
-                        <button
-                            class="mark-read"
-                            data-notification="${escapeHTML(
-                                notification.id
-                            )}"
-                        >
-                            Mark read
-                        </button>
-                    `
-                    : ""
-            }
+            <time class="notification-time">
+                ${escapeHTML(
+                    formatRelativeTime(
+                        notification.created_at
+                    )
+                )}
+            </time>
+
+
+            <div class="notification-action">
+
+                ${
+                    !compact &&
+                    unread
+                        ? `
+                            <button
+                                class="notification-read-button"
+                                data-notification="${escapeHTML(
+                                    notification.id || ""
+                                )}"
+                                type="button"
+                            >
+                                MARK READ
+                            </button>
+                        `
+                        : unread
+                            ? `
+                                <span class="notification-new">
+                                    NEW
+                                </span>
+                            `
+                            : ""
+                }
+
+            </div>
 
         </article>
     `;
@@ -2904,21 +4654,42 @@ function notificationHTML(
 
 function renderNotifications() {
 
-    if (!notifications.length) {
+    if (!notificationsList) {
+        return;
+    }
+
+    const filtered =
+        getFilteredNotifications();
+
+    if (!filtered.length) {
 
         notificationsList.innerHTML =
-            `<div class="empty-state">
-                No notifications.
-            </div>`;
+            `
+                <div class="notifications-empty">
 
+                    <div class="notifications-empty-mark">
+                        ◌
+                    </div>
+
+                    <strong class="notifications-empty-title">
+                        NO SIGNALS
+                    </strong>
+
+                    <p class="notifications-empty-description">
+                        There are no notifications matching this filter.
+                    </p>
+
+                </div>
+            `;
+
+        updateNotificationSummary();
 
         return;
 
     }
 
-
     notificationsList.innerHTML =
-        notifications
+        filtered
             .map(
                 notification =>
                     notificationHTML(
@@ -2927,28 +4698,35 @@ function renderNotifications() {
             )
             .join("");
 
-
-    attachNotificationHandlers(
-        notificationsList
-    );
-
 }
 
 
 function renderRecentNotifications() {
 
+    if (!recentNotifications) {
+        return;
+    }
+
     if (!notifications.length) {
 
         recentNotifications.innerHTML =
-            `<div class="empty-state">
-                No notifications yet.
-            </div>`;
+            `
+                <div class="empty-state compact-empty">
 
+                    <strong class="empty-state-title">
+                        No notifications
+                    </strong>
+
+                    <p class="empty-state-description">
+                        No new system signals.
+                    </p>
+
+                </div>
+            `;
 
         return;
 
     }
-
 
     recentNotifications.innerHTML =
         notifications
@@ -2965,73 +4743,218 @@ function renderRecentNotifications() {
 }
 
 
-function attachNotificationHandlers(
-    container
-) {
+/* =========================================================
+   NOTIFICATION READ ACTION
+   ========================================================= */
 
-    container
-        .querySelectorAll(
-            ".mark-read"
-        )
-        .forEach(button => {
+if (notificationsList) {
 
-            button.addEventListener(
-                "click",
-                async () => {
+    notificationsList.addEventListener(
+        "click",
+        async event => {
 
-                    try {
+            const button =
+                event.target.closest(
+                    ".notification-read-button"
+                );
 
-                        await api(
-                            "/api/admin/notifications/read",
-                            {
-                                method: "POST",
+            if (!button) {
+                return;
+            }
 
-                                body:
-                                    JSON.stringify({
-                                        notificationId:
-                                            button.dataset.notification
-                                    })
-                            }
-                        );
+            const notificationId =
+                button.dataset.notification;
 
+            if (!notificationId) {
+                return;
+            }
 
-                        await loadNotifications();
+            button.disabled =
+                true;
 
+            const originalText =
+                button.textContent;
 
-                    } catch (error) {
+            button.textContent =
+                "UPDATING...";
 
-                        console.error(
-                            error
-                        );
+            try {
 
+                await api(
+                    "/api/admin/notifications/read",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                notificationId
+                            })
                     }
+                );
 
-                }
-            );
+                await loadNotifications();
 
-        });
+            } catch (error) {
+
+                console.error(
+                    "Notification read error:",
+                    error
+                );
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    originalText;
+
+            }
+
+        }
+    );
 
 }
 
 
-/* =========================================
+/* =========================================================
+   NOTIFICATION FILTERS
+   ========================================================= */
+
+document
+    .querySelectorAll(
+        ".notification-filter"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                activeNotificationFilter =
+                    button.dataset.filter ||
+                    "all";
+
+                document
+                    .querySelectorAll(
+                        ".notification-filter"
+                    )
+                    .forEach(item => {
+
+                        item.classList.toggle(
+                            "active",
+                            item === button
+                        );
+
+                    });
+
+                renderNotifications();
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   NOTIFICATION SUMMARY
+   ========================================================= */
+
+function updateNotificationSummary() {
+
+    const total =
+        notifications.length;
+
+    const unread =
+        notifications.filter(
+            notification =>
+                isNotificationUnread(
+                    notification
+                )
+        ).length;
+
+    const critical =
+        notifications.filter(
+            notification =>
+                getNotificationSeverity(
+                    notification
+                ) === "critical"
+        ).length;
+
+    if (notificationsTotal) {
+
+        notificationsTotal.textContent =
+            total;
+
+    }
+
+    if (notificationsUnread) {
+
+        notificationsUnread.textContent =
+            unread;
+
+    }
+
+    if (notificationsCritical) {
+
+        notificationsCritical.textContent =
+            critical;
+
+    }
+
+    if (notificationsFooterCount) {
+
+        notificationsFooterCount.textContent =
+            `${getFilteredNotifications().length} SIGNAL${
+                getFilteredNotifications().length === 1
+                    ? ""
+                    : "S"
+            }`;
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFICATION HEADER
+   ========================================================= */
+
+if (notificationTrigger) {
+
+    notificationTrigger.addEventListener(
+        "click",
+        () => {
+
+            switchView(
+                "notifications"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    STATS
-========================================= */
+   ========================================================= */
 
 function updateStats() {
 
-    statClients.textContent =
+    const totalClients =
         clients.length;
 
-
-    statConversations.textContent =
+    const totalConversations =
         clients.filter(
             client =>
                 client.conversation_id
         ).length;
 
-
-    statMessages.textContent =
+    const totalMessages =
         clients.reduce(
             (
                 total,
@@ -3045,63 +4968,196 @@ function updateStats() {
             0
         );
 
-
     const unread =
         notifications.filter(
             notification =>
-                Number(
-                    notification.read
-                ) === 0
+                isNotificationUnread(
+                    notification
+                )
         ).length;
 
+    if (statClients) {
 
-    statUnread.textContent =
-        unread;
+        statClients.textContent =
+            totalClients;
 
+    }
 
-    notificationCount.textContent =
-        unread;
+    if (statConversations) {
 
+        statConversations.textContent =
+            totalConversations;
 
-    notificationCount.hidden =
-        unread === 0;
+    }
+
+    if (statMessages) {
+
+        statMessages.textContent =
+            totalMessages;
+
+    }
+
+    if (statUnread) {
+
+        statUnread.textContent =
+            unread;
+
+    }
+
+    if (notificationCount) {
+
+        notificationCount.textContent =
+            unread;
+
+        notificationCount.hidden =
+            unread === 0;
+
+    }
+
+    if (headerNotificationCount) {
+
+        headerNotificationCount.textContent =
+            unread;
+
+        headerNotificationCount.hidden =
+            unread === 0;
+
+    }
+
+    updateNotificationSummary();
 
 }
 
 
-/* =========================================
+/* =========================================================
    REFRESH BUTTONS
-========================================= */
+   ========================================================= */
 
-document
-    .getElementById(
-        "refresh-clients"
-    )
-    .addEventListener(
+if (refreshClients) {
+
+    refreshClients.addEventListener(
         "click",
-        loadClients
+        async () => {
+
+            refreshClients.disabled =
+                true;
+
+            try {
+
+                await loadClients();
+
+            } finally {
+
+                refreshClients.disabled =
+                    false;
+
+            }
+
+        }
     );
 
+}
 
-document
-    .getElementById(
-        "refresh-notifications"
-    )
-    .addEventListener(
+
+if (refreshNotifications) {
+
+    refreshNotifications.addEventListener(
         "click",
-        loadNotifications
+        async () => {
+
+            refreshNotifications.disabled =
+                true;
+
+            try {
+
+                await loadNotifications();
+
+            } finally {
+
+                refreshNotifications.disabled =
+                    false;
+
+            }
+
+        }
     );
 
+}
 
-/* =========================================
-   INITIAL FILE UI
-========================================= */
+
+/* =========================================================
+   SYSTEM CLOCK
+   ========================================================= */
+
+function updateSystemClock() {
+
+    if (!systemClock) {
+        return;
+    }
+
+    const now =
+        new Date();
+
+    systemClock.textContent =
+        now.toLocaleTimeString(
+            undefined,
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            }
+        );
+
+}
+
+
+updateSystemClock();
+
+setInterval(
+    updateSystemClock,
+    1000
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !==
+            "Escape"
+        ) {
+
+            return;
+
+        }
+
+        closeSidebar();
+
+        closeConversationContextPanel();
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL UI
+   ========================================================= */
 
 renderSelectedFiles();
 
+updateCharacterCount();
 
-/* =========================================
-   INITIALIZE
-========================================= */
+updateNotificationSummary();
+
+
+/* =========================================================
+   INITIALIZE APPLICATION
+   ========================================================= */
 
 restoreSession();

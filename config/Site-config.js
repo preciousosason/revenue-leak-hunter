@@ -31,6 +31,8 @@ const SITE_CONFIG = {
 
         blog: "pages/blog/blog.html",
 
+        reviews: "pages/reviews/reviews.html",
+
         contact: "pages/contact/contact.html",
 
         audit: "pages/leak-audit/leak-audit.html"
@@ -54,6 +56,11 @@ const SITE_CONFIG = {
             href: "index.html#process",
             homepageOnly: true
         },
+
+        {
+    label: "Reviews",
+    route: "reviews"
+},
 
         {
             label: "Services",

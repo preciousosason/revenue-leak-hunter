@@ -1,0 +1,6 @@
+﻿{
+  "name": "Delete Test",
+  "business": "Delete Test Business",
+  "rating": 3,
+  "review": "This review exists only to test the rejection system."
+}

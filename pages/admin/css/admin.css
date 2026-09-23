@@ -1,0 +1,145 @@
+/* =========================================================
+   ADMIN CONTROL SYSTEM
+   MASTER STYLESHEET
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   CORE
+   --------------------------------------------------------- */
+
+@import url("./core/variables.css");
+@import url("./core/reset.css");
+@import url("./core/base.css");
+
+/* ---------------------------------------------------------
+   LOGIN
+   --------------------------------------------------------- */
+
+@import url("./login/login.css");
+
+/* ---------------------------------------------------------
+   CONTROL ROOM SHELL
+   --------------------------------------------------------- */
+
+@import url("./shell/layout.css");
+@import url("./shell/sidebar.css");
+@import url("./shell/header.css");
+
+/* ---------------------------------------------------------
+   ADMIN PAGES
+   --------------------------------------------------------- */
+
+@import url("./pages/dashboard.css");
+@import url("./pages/clients.css");
+@import url("./pages/conversations.css");
+@import url("./pages/notifications.css");
+@import url("./pages/states.css");
+
+@import url("./pages/reviews.css");
+
+@import url("./responsive/responsive.css");
+
+/* =========================================================
+   GLOBAL ADMIN UTILITIES
+   ========================================================= */
+
+.admin-hidden {
+    display: none !important;
+}
+
+.admin-visible {
+    display: block !important;
+}
+
+.admin-mono {
+    font-family: var(--font-mono);
+}
+
+.admin-muted {
+    color: var(--text-muted);
+}
+
+.admin-primary {
+    color: var(--primary);
+}
+
+.admin-success {
+    color: var(--success);
+}
+
+.admin-warning {
+    color: var(--warning);
+}
+
+.admin-danger {
+    color: var(--danger);
+}
+
+/* ---------------------------------------------------------
+   GLOBAL FOCUS
+   --------------------------------------------------------- */
+
+.admin-main button:focus-visible,
+.admin-main input:focus-visible,
+.admin-main textarea:focus-visible,
+.admin-main select:focus-visible,
+.admin-main a:focus-visible {
+    outline: 1px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   GLOBAL SCROLLBAR
+   --------------------------------------------------------- */
+
+.admin-main,
+.admin-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+}
+
+.admin-main::-webkit-scrollbar,
+.admin-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.admin-main::-webkit-scrollbar-track,
+.admin-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.admin-main::-webkit-scrollbar-thumb,
+.admin-sidebar::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background: var(--border-strong);
+}
+
+.admin-main::-webkit-scrollbar-thumb:hover,
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* ---------------------------------------------------------
+   GLOBAL SELECTION
+   --------------------------------------------------------- */
+
+.admin-main ::selection {
+    background: rgba(70, 230, 255, 0.18);
+    color: var(--text-primary);
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE GLOBAL ADJUSTMENTS
+   --------------------------------------------------------- */
+
+@media (max-width: 800px) {
+    .admin-main {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-main {
+        overflow-x: hidden;
+    }
+}

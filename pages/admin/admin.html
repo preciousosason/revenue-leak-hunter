@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,867 +9,1890 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Admin | Revenue Leak Hunter</title>
+    <meta
+        name="theme-color"
+        content="#05070A"
+    >
+
+    <title>Admin | Conversion Leak Hunter</title>
 
     <link
         rel="stylesheet"
-        href="./admin.css"
+        href="./css/admin.css"
     >
-
 </head>
 
 
 <body>
 
-
-    <!-- ================================
-         LOGIN
-    ================================= -->
-
-    <main
-        id="admin-login"
-        class="admin-login"
-    >
-
-        <div class="login-card">
-
-
-            <div class="login-brand">
-
-                <span class="brand-mark">
-                    RLH
-                </span>
-
-                <div>
-
-                    <strong>
-                        Revenue Leak Hunter
-                    </strong>
-
-                    <span>
-                        Private Admin
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="login-heading">
-
-                <span class="eyebrow">
-                    PRIVATE ACCESS
-                </span>
-
-                <h1>
-                    Admin Dashboard
-                </h1>
-
-                <p>
-                    Manage clients, investigations,
-                    messages and notifications.
-                </p>
-
-            </div>
-
-
-            <form id="admin-login-form">
-
-                <label for="admin-password">
-                    Admin Password
-                </label>
-
-                <input
-                    type="password"
-                    id="admin-password"
-                    name="password"
-                    autocomplete="current-password"
-                    placeholder="Enter your password"
-                    required
-                >
-
-
-                <button
-                    type="submit"
-                    id="admin-login-button"
-                >
-
-                    <span>
-                        Enter Dashboard
-                    </span>
-
-                    <span>
-                        →
-                    </span>
-
-                </button>
-
-
-                <p
-                    id="admin-login-error"
-                    class="form-error"
-                    hidden
-                ></p>
-
-            </form>
-
-
-        </div>
-
-    </main>
-
-
-
-    <!-- ================================
-         DASHBOARD
-    ================================= -->
-
     <div
-        id="admin-dashboard"
-        class="admin-dashboard"
-        hidden
+        id="admin-app"
+        class="admin-shell"
     >
 
+        <!-- =================================================
+             LOGIN
+             ================================================= -->
 
-        <!-- ============================
-             SIDEBAR
-        ============================= -->
+        <main
+            id="admin-login"
+            class="admin-login login-screen"
+        >
 
-        <aside class="admin-sidebar">
+            <div class="login-background-grid"></div>
 
+            <div class="login-panel login-card">
 
-            <div class="sidebar-brand">
+                <div class="login-brand">
 
-                <span class="brand-mark">
-                    RLH
-                </span>
-
-                <div>
-
-                    <strong>
-                        Revenue Leak Hunter
-                    </strong>
-
-                    <span>
-                        Admin
+                    <span class="brand-mark">
+                        CLH
                     </span>
+
+                    <div class="brand-copy">
+                        <strong>
+                            Conversion Leak Hunter
+                        </strong>
+
+                        <span>
+                            PRIVATE ADMIN SYSTEM
+                        </span>
+                    </div>
 
                 </div>
 
-            </div>
 
-
-            <nav class="admin-nav">
-
-
-                <button
-                    class="nav-item active"
-                    data-view="overview"
-                >
-
-                    <span class="nav-icon">
-                        ⌂
-                    </span>
-
-                    <span>
-                        Overview
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="nav-item"
-                    data-view="clients"
-                >
-
-                    <span class="nav-icon">
-                        ◉
-                    </span>
-
-                    <span>
-                        Clients
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="nav-item"
-                    data-view="notifications"
-                >
-
-                    <span class="nav-icon">
-                        ◌
-                    </span>
-
-                    <span>
-                        Notifications
-                    </span>
-
-
-                    <span
-                        id="notification-count"
-                        class="notification-count"
-                        hidden
-                    >
-                        0
-                    </span>
-
-                </button>
-
-
-            </nav>
-
-
-            <div class="sidebar-bottom">
-
-
-                <a
-                    href="/"
-                    class="back-site"
-                >
-                    ← View Website
-                </a>
-
-
-                <button
-                    id="admin-logout"
-                    class="logout-button"
-                >
-                    Log Out
-                </button>
-
-
-            </div>
-
-
-        </aside>
-
-
-
-        <!-- ============================
-             MAIN
-        ============================= -->
-
-        <main class="admin-main">
-
-
-            <header class="admin-header">
-
-
-                <div>
+                <div class="login-heading">
 
                     <span class="eyebrow">
-                        CONTROL CENTER
+                        SECURE ACCESS // 01
                     </span>
 
-                    <h1 id="page-title">
-                        Overview
+                    <h1>
+                        Control Center
                     </h1>
+
+                    <p>
+                        Manage clients, investigations,
+                        communications and system activity.
+                    </p>
 
                 </div>
 
 
-                <div class="header-status">
+                <div class="system-status login-system-status">
 
                     <span class="status-dot"></span>
 
-                    System Online
+                    <span>
+                        SYSTEM READY
+                    </span>
 
                 </div>
 
 
-            </header>
+                <form
+                    id="admin-login-form"
+                    class="login-form"
+                >
 
+                    <div class="form-group">
 
+                        <label for="admin-password">
+                            Administrator Password
+                        </label>
 
-            <!-- ==========================
-                 OVERVIEW
-            =========================== -->
+                        <div class="input-frame">
 
-            <section
-                id="view-overview"
-                class="admin-view active-view"
-            >
-
-
-                <div class="stats-grid">
-
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Total Clients
-                        </span>
-
-                        <strong
-                            id="stat-clients"
-                            class="stat-value"
-                        >
-                            0
-                        </strong>
-
-                        <span class="stat-note">
-                            Registered investigations
-                        </span>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Conversations
-                        </span>
-
-                        <strong
-                            id="stat-conversations"
-                            class="stat-value"
-                        >
-                            0
-                        </strong>
-
-                        <span class="stat-note">
-                            Active client threads
-                        </span>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Messages
-                        </span>
-
-                        <strong
-                            id="stat-messages"
-                            class="stat-value"
-                        >
-                            0
-                        </strong>
-
-                        <span class="stat-note">
-                            Across all investigations
-                        </span>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Unread
-                        </span>
-
-                        <strong
-                            id="stat-unread"
-                            class="stat-value"
-                        >
-                            0
-                        </strong>
-
-                        <span class="stat-note">
-                            Notifications waiting
-                        </span>
-
-                    </article>
-
-
-                </div>
-
-
-
-                <div class="dashboard-grid">
-
-
-                    <section class="panel">
-
-
-                        <div class="panel-header">
-
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    RECENT ACTIVITY
-                                </span>
-
-                                <h2>
-                                    Latest clients
-                                </h2>
-
-                            </div>
-
-
-                            <button
-                                class="text-button"
-                                data-view="clients"
+                            <input
+                                type="password"
+                                id="admin-password"
+                                name="password"
+                                autocomplete="current-password"
+                                placeholder="Enter secure access key"
+                                required
                             >
-                                View all →
-                            </button>
-
 
                         </div>
-
-
-                        <div
-                            id="recent-clients"
-                            class="recent-list"
-                        >
-
-                            <div class="empty-state">
-                                Loading clients...
-                            </div>
-
-                        </div>
-
-
-                    </section>
-
-
-
-                    <section class="panel">
-
-
-                        <div class="panel-header">
-
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    INBOX
-                                </span>
-
-                                <h2>
-                                    Notifications
-                                </h2>
-
-                            </div>
-
-
-                            <button
-                                class="text-button"
-                                data-view="notifications"
-                            >
-                                View all →
-                            </button>
-
-
-                        </div>
-
-
-                        <div
-                            id="recent-notifications"
-                            class="notification-list"
-                        >
-
-                            <div class="empty-state">
-                                Loading notifications...
-                            </div>
-
-                        </div>
-
-
-                    </section>
-
-
-                </div>
-
-
-            </section>
-
-
-
-            <!-- ==========================
-                 CLIENTS
-            =========================== -->
-
-            <section
-                id="view-clients"
-                class="admin-view"
-                hidden
-            >
-
-
-                <div class="section-intro">
-
-
-                    <div>
-
-                        <span class="eyebrow">
-                            CLIENT MANAGEMENT
-                        </span>
-
-                        <h2>
-                            Your investigations
-                        </h2>
-
-                        <p>
-                            Every client, conversation and
-                            active investigation in one place.
-                        </p>
 
                     </div>
 
 
                     <button
-                        id="refresh-clients"
-                        class="secondary-button"
+                        type="submit"
+                        id="admin-login-button"
+                        class="primary-button login-submit"
                     >
-                        Refresh
-                    </button>
 
-
-                </div>
-
-
-                <div
-                    id="clients-list"
-                    class="clients-list"
-                >
-
-                    <div class="empty-state">
-                        Loading clients...
-                    </div>
-
-                </div>
-
-
-            </section>
-
-
-
-            <!-- ==========================
-                 CONVERSATION
-            =========================== -->
-
-            <section
-                id="view-conversation"
-                class="admin-view"
-                hidden
-            >
-
-
-                <div class="conversation-page">
-
-
-                    <div class="conversation-topbar">
-
-
-                        <button
-                            id="back-to-clients"
-                            class="back-button"
-                        >
-                            ← Clients
-                        </button>
-
-
-                        <div>
-
-                            <span
-                                id="conversation-status"
-                                class="conversation-status"
-                            >
-                                OPEN
-                            </span>
-
-
-                            <h2
-                                id="conversation-client-name"
-                            >
-                                Client
-                            </h2>
-
-
-                            <p
-                                id="conversation-client-details"
-                            >
-                                Loading...
-                            </p>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="conversation-layout">
-
-
-                        <!-- =====================
-                             CLIENT INFORMATION
-                        ====================== -->
-
-                        <aside class="client-info-card">
-
-
-                            <span class="panel-kicker">
-                                CLIENT
-                            </span>
-
-
-                            <h3 id="client-info-name">
-                                —
-                            </h3>
-
-
-                            <div class="client-detail">
-
-                                <span>
-                                    Email
-                                </span>
-
-                                <strong id="client-info-email">
-                                    —
-                                </strong>
-
-                            </div>
-
-
-                            <div class="client-detail">
-
-                                <span>
-                                    Business
-                                </span>
-
-                                <strong id="client-info-business">
-                                    —
-                                </strong>
-
-                            </div>
-
-
-                            <div class="client-detail">
-
-                                <span>
-                                    Website
-                                </span>
-
-                                <strong id="client-info-website">
-                                    —
-                                </strong>
-
-                            </div>
-
-
-                        </aside>
-
-
-
-                        <!-- =====================
-                             CONVERSATION
-                        ====================== -->
-
-                        <div class="conversation-card">
-
-
-                            <div
-                                id="admin-messages"
-                                class="admin-messages"
-                            >
-
-                                <div class="empty-state">
-                                    Loading conversation...
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- =================
-                                 ADMIN COMPOSER
-                            ================== -->
-
-                            <form
-                                id="admin-message-form"
-                                class="admin-message-form"
-                            >
-
-
-                                <textarea
-                                    id="admin-message-input"
-                                    placeholder="Write your reply..."
-                                    maxlength="5000"
-                                    required
-                                ></textarea>
-
-
-
-                                <!-- ATTACHMENT TOOLS -->
-
-                                <div
-                                    class="message-composer-tools"
-                                >
-
-
-                                    <label
-                                        for="admin-message-files"
-                                        class="file-attach-button"
-                                    >
-
-                                        <span
-                                            class="file-attach-icon"
-                                            aria-hidden="true"
-                                        >
-                                            +
-                                        </span>
-
-                                        <span>
-                                            Attach Files
-                                        </span>
-
-                                    </label>
-
-
-                                    <input
-                                        id="admin-message-files"
-                                        type="file"
-                                        multiple
-                                        hidden
-                                        accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-                                    >
-
-
-                                    <span
-                                        id="admin-file-selection"
-                                        class="file-selection"
-                                    >
-                                        No files selected
-                                    </span>
-
-
-                                </div>
-
-
-
-                                <!-- SELECTED FILES -->
-
-                                <div
-                                    id="admin-selected-files"
-                                    class="selected-files"
-                                    aria-live="polite"
-                                ></div>
-
-
-
-                                <!-- FORM FOOTER -->
-
-                                <div
-                                    class="message-form-bottom"
-                                >
-
-
-                                    <span>
-                                        Reply as Revenue Leak Hunter
-                                    </span>
-
-
-                                    <button
-                                        type="submit"
-                                        id="admin-send-message"
-                                        class="send-button"
-                                    >
-                                        Send Reply →
-                                    </button>
-
-
-                                </div>
-
-
-
-                                <p
-                                    id="admin-message-error"
-                                    class="form-error"
-                                    hidden
-                                ></p>
-
-
-                            </form>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </section>
-
-
-
-            <!-- ==========================
-                 NOTIFICATIONS
-            =========================== -->
-
-            <section
-                id="view-notifications"
-                class="admin-view"
-                hidden
-            >
-
-
-                <div class="section-intro">
-
-
-                    <div>
-
-                        <span class="eyebrow">
-                            ACTIVITY
+                        <span>
+                            Authenticate
                         </span>
 
-                        <h2>
-                            Notifications
-                        </h2>
+                        <span aria-hidden="true">
+                            →
+                        </span>
 
-                        <p>
-                            New clients and messages requiring
-                            your attention.
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        id="refresh-notifications"
-                        class="secondary-button"
-                    >
-                        Refresh
                     </button>
 
 
+                    <p
+                        id="admin-login-error"
+                        class="form-error"
+                        hidden
+                    ></p>
+
+                </form>
+
+
+                <div class="login-footer">
+
+                    <span>
+                        CLH // PRIVATE OPERATIONS
+                    </span>
+
+                    <span>
+                        SECURE CHANNEL
+                    </span>
+
                 </div>
 
-
-                <div
-                    id="notifications-list"
-                    class="notifications-full"
-                >
-
-                    <div class="empty-state">
-                        Loading notifications...
-                    </div>
-
-                </div>
-
-
-            </section>
-
+            </div>
 
         </main>
 
 
+        <!-- =================================================
+             ADMIN APPLICATION
+             ================================================= -->
+
+        <div
+            id="admin-dashboard"
+            class="admin-dashboard control-room"
+            hidden
+        >
+
+            <!-- MOBILE OVERLAY -->
+
+            <div
+                id="sidebar-overlay"
+                class="sidebar-overlay"
+            ></div>
+
+
+            <!-- =================================================
+                 SIDEBAR
+                 ================================================= -->
+
+            <aside
+                id="admin-sidebar"
+                class="admin-sidebar sidebar"
+            >
+
+                <div class="sidebar-header">
+
+                    <div class="sidebar-brand">
+
+                        <span class="brand-mark">
+                            CLH
+                        </span>
+
+                        <div class="brand-copy">
+
+                            <strong>
+                                Conversion Leak Hunter
+                            </strong>
+
+                            <span>
+                                ADMIN // CONTROL
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="sidebar-system-state">
+
+                        <span class="status-dot"></span>
+
+                        <span>
+                            ONLINE
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <nav
+                    class="admin-nav sidebar-nav"
+                    aria-label="Admin navigation"
+                >
+
+                    <span class="sidebar-section-label">
+                        OPERATIONS
+                    </span>
+
+
+                    <button
+                        class="nav-item sidebar-link active"
+                        data-view="overview"
+                        type="button"
+                    >
+
+                        <span class="nav-icon">
+                            ⌂
+                        </span>
+
+                        <span class="nav-label">
+                            Overview
+                        </span>
+
+                        <span class="nav-indicator"></span>
+
+                    </button>
+
+
+                    <button
+                        class="nav-item sidebar-link"
+                        data-view="clients"
+                        type="button"
+                    >
+
+                        <span class="nav-icon">
+                            ◉
+                        </span>
+
+                        <span class="nav-label">
+                            Clients
+                        </span>
+
+                        <span class="nav-indicator"></span>
+
+                    </button>
+<button
+    class="nav-item"
+    data-view="reviews"
+    type="button"
+>
+    <span class="nav-item-icon">★</span>
+    <span class="nav-item-label">Reviews</span>
+</button>
+
+                    <button
+                        class="nav-item sidebar-link"
+                        data-view="notifications"
+                        type="button"
+                    >
+
+                        <span class="nav-icon">
+                            ◌
+                        </span>
+
+                        <span class="nav-label">
+                            Notifications
+                        </span>
+
+                        <span
+                            id="notification-count"
+                            class="notification-count notification-badge"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <span class="sidebar-section-label">
+                        SYSTEM
+                    </span>
+
+
+                    <div class="sidebar-system-readout">
+
+                        <div class="readout-line">
+                            <span>NETWORK</span>
+                            <strong>SECURE</strong>
+                        </div>
+
+                        <div class="readout-line">
+                            <span>CHANNEL</span>
+                            <strong>ENCRYPTED</strong>
+                        </div>
+
+                        <div class="readout-line">
+                            <span>STATUS</span>
+                            <strong>ACTIVE</strong>
+                        </div>
+
+                    </div>
+
+                </nav>
+
+
+                <div class="sidebar-bottom">
+
+                    <a
+                        href="/"
+                        class="back-site sidebar-link"
+                    >
+
+                        <span class="nav-icon">
+                            ↗
+                        </span>
+
+                        <span>
+                            View Website
+                        </span>
+
+                    </a>
+
+
+                    <button
+                        id="admin-logout"
+                        class="logout-button sidebar-link"
+                        type="button"
+                    >
+
+                        <span class="nav-icon">
+                            ⇥
+                        </span>
+
+                        <span>
+                            Log Out
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </aside>
+
+
+            <!-- =================================================
+                 MAIN
+                 ================================================= -->
+
+            <main class="admin-main main-content">
+
+
+                <!-- =================================================
+                     HEADER
+                     ================================================= -->
+
+                <header class="admin-header topbar">
+
+                    <div class="header-left">
+
+                        <button
+                            id="sidebar-toggle"
+                            class="sidebar-toggle header-action"
+                            type="button"
+                            aria-label="Open navigation"
+                        >
+                            ☰
+                        </button>
+
+
+                        <div class="header-title-block">
+
+                            <span class="eyebrow">
+                                CONTROL CENTER //
+                                <span id="system-clock">LIVE</span>
+                            </span>
+
+                            <h1 id="page-title">
+                                Overview
+                            </h1>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="header-right">
+
+                        <div class="header-status system-status">
+
+                            <span class="status-dot"></span>
+
+                            <span class="header-status-text">
+                                System Online
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            id="notification-trigger"
+                            class="notification-trigger header-action"
+                            type="button"
+                            aria-label="Notifications"
+                        >
+
+                            <span aria-hidden="true">
+                                ◌
+                            </span>
+
+                            <span
+                                id="header-notification-count"
+                                class="notification-badge"
+                                hidden
+                            >
+                                0
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </header>
+
+
+                <div class="page-content">
+
+
+                    <!-- =================================================
+                         DASHBOARD
+                         ================================================= -->
+
+                    <section
+                        id="view-overview"
+                        class="admin-view active-view dashboard"
+                    >
+
+                        <header class="dashboard-header">
+
+                            <div class="dashboard-header-main">
+
+                                <div class="dashboard-kicker">
+                                    OPERATIONS // OVERVIEW
+                                </div>
+
+                                <h2 class="dashboard-title">
+                                    System Overview
+                                </h2>
+
+                                <p class="dashboard-description">
+                                    Monitor active clients,
+                                    investigations and communication activity.
+                                </p>
+
+                            </div>
+
+
+                            <div class="dashboard-readout">
+
+                                <div class="readout-item">
+
+                                    <span class="readout-label">
+                                        CURRENT STATE
+                                    </span>
+
+                                    <strong class="readout-value">
+                                        ACTIVE
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </header>
+
+
+                        <!-- METRICS -->
+
+                        <div class="dashboard-metrics">
+
+                            <article class="metric">
+
+                                <div class="metric-header">
+
+                                    <span class="metric-label">
+                                        CLIENTS
+                                    </span>
+
+                                    <span class="metric-index">
+                                        01
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="stat-clients"
+                                    class="metric-value"
+                                >
+                                    0
+                                </strong>
+
+                                <div class="metric-footer">
+
+                                    <span class="metric-description">
+                                        Registered investigations
+                                    </span>
+
+                                    <span class="metric-change">
+                                        ACTIVE
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+
+                            <article class="metric">
+
+                                <div class="metric-header">
+
+                                    <span class="metric-label">
+                                        CONVERSATIONS
+                                    </span>
+
+                                    <span class="metric-index">
+                                        02
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="stat-conversations"
+                                    class="metric-value"
+                                >
+                                    0
+                                </strong>
+
+                                <div class="metric-footer">
+
+                                    <span class="metric-description">
+                                        Active client threads
+                                    </span>
+
+                                    <span class="metric-change">
+                                        LIVE
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+
+                            <article class="metric">
+
+                                <div class="metric-header">
+
+                                    <span class="metric-label">
+                                        MESSAGES
+                                    </span>
+
+                                    <span class="metric-index">
+                                        03
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="stat-messages"
+                                    class="metric-value"
+                                >
+                                    0
+                                </strong>
+
+                                <div class="metric-footer">
+
+                                    <span class="metric-description">
+                                        Across all investigations
+                                    </span>
+
+                                    <span class="metric-change">
+                                        TRACKED
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+
+                            <article class="metric">
+
+                                <div class="metric-header">
+
+                                    <span class="metric-label">
+                                        UNREAD
+                                    </span>
+
+                                    <span class="metric-index">
+                                        04
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="stat-unread"
+                                    class="metric-value"
+                                >
+                                    0
+                                </strong>
+
+                                <div class="metric-footer">
+
+                                    <span class="metric-description">
+                                        Notifications waiting
+                                    </span>
+
+                                    <span class="metric-change critical">
+                                        ATTENTION
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+
+                        <!-- PRIMARY DATA -->
+
+                        <div class="dashboard-main-grid">
+
+
+                            <!-- RECENT ACTIVITY -->
+
+                            <section class="system-panel">
+
+                                <header class="system-panel-header">
+
+                                    <div class="system-panel-heading">
+
+                                        <span class="system-panel-index">
+                                            01
+                                        </span>
+
+                                        <div>
+
+                                            <span class="dashboard-kicker">
+                                                INTELLIGENCE
+                                            </span>
+
+                                            <h3 class="system-panel-title">
+                                                Latest Clients
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        class="text-action"
+                                        data-view="clients"
+                                        type="button"
+                                    >
+                                        View all →
+                                    </button>
+
+                                </header>
+
+
+                                <div
+                                    id="recent-clients"
+                                    class="system-panel-body activity-list"
+                                >
+
+                                    <div class="system-state loading">
+
+                                        <div class="system-state-mark"></div>
+
+                                        <div class="system-state-content">
+
+                                            <h3 class="system-state-title">
+                                                Loading clients
+                                            </h3>
+
+                                            <p class="system-state-description">
+                                                Retrieving investigation data...
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+
+                            <!-- NOTIFICATIONS -->
+
+                            <section class="system-panel">
+
+                                <header class="system-panel-header">
+
+                                    <div class="system-panel-heading">
+
+                                        <span class="system-panel-index">
+                                            02
+                                        </span>
+
+                                        <div>
+
+                                            <span class="dashboard-kicker">
+                                                SIGNALS
+                                            </span>
+
+                                            <h3 class="system-panel-title">
+                                                Recent Notifications
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        class="text-action"
+                                        data-view="notifications"
+                                        type="button"
+                                    >
+                                        View all →
+                                    </button>
+
+                                </header>
+
+
+                                <div
+                                    id="recent-notifications"
+                                    class="system-panel-body activity-list"
+                                >
+
+                                    <div class="system-state loading">
+
+                                        <div class="system-state-mark"></div>
+
+                                        <div class="system-state-content">
+
+                                            <h3 class="system-state-title">
+                                                Loading notifications
+                                            </h3>
+
+                                            <p class="system-state-description">
+                                                Scanning incoming signals...
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+
+                        <!-- SECONDARY READOUT -->
+
+                        <div class="dashboard-secondary-grid">
+
+                            <section class="system-panel">
+
+                                <header class="system-panel-header">
+
+                                    <div class="system-panel-heading">
+
+                                        <span class="system-panel-index">
+                                            03
+                                        </span>
+
+                                        <div>
+
+                                            <span class="dashboard-kicker">
+                                                SYSTEM
+                                            </span>
+
+                                            <h3 class="system-panel-title">
+                                                Operational Status
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+                                </header>
+
+
+                                <div class="system-panel-body">
+
+                                    <div class="data-readout">
+
+                                        <div class="data-readout-row">
+                                            <span>NETWORK</span>
+                                            <strong>SECURE</strong>
+                                        </div>
+
+                                        <div class="data-readout-row">
+                                            <span>DATABASE</span>
+                                            <strong>CONNECTED</strong>
+                                        </div>
+
+                                        <div class="data-readout-row">
+                                            <span>MESSAGING</span>
+                                            <strong>ACTIVE</strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         CLIENTS
+                         ================================================= -->
+
+                    <section
+                        id="view-clients"
+                        class="admin-view clients-page"
+                        hidden
+                    >
+
+                        <header class="clients-header">
+
+                            <div class="clients-header-main">
+
+                                <div class="clients-kicker">
+                                    DATABASE // CLIENTS
+                                </div>
+
+                                <h2 class="clients-title">
+                                    Client Intelligence
+                                </h2>
+
+                                <p class="clients-description">
+                                    Every client, conversation and active
+                                    investigation in one operational database.
+                                </p>
+
+                            </div>
+
+
+                            <div class="clients-summary">
+
+                                <div class="clients-summary-item">
+
+                                    <span class="clients-summary-label">
+                                        TOTAL
+                                    </span>
+
+                                    <strong
+                                        id="clients-total"
+                                        class="clients-summary-value"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="clients-summary-item">
+
+                                    <span class="clients-summary-label">
+                                        ACTIVE
+                                    </span>
+
+                                    <strong
+                                        id="clients-active"
+                                        class="clients-summary-value"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="clients-summary-item">
+
+                                    <span class="clients-summary-label">
+                                        UNREAD
+                                    </span>
+
+                                    <strong
+                                        id="clients-unread"
+                                        class="clients-summary-value"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </header>
+
+
+                        <div class="clients-toolbar">
+
+                            <div class="client-search">
+
+                                <span
+                                    class="client-search-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⌕
+                                </span>
+
+                                <input
+                                    id="client-search"
+                                    type="search"
+                                    placeholder="Search client database..."
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <div class="clients-filters">
+
+                                <button
+                                    class="client-filter active"
+                                    type="button"
+                                    data-filter="all"
+                                >
+                                    All
+                                </button>
+
+                                <button
+                                    class="client-filter"
+                                    type="button"
+                                    data-filter="active"
+                                >
+                                    Active
+                                </button>
+
+                                <button
+                                    class="client-filter"
+                                    type="button"
+                                    data-filter="unread"
+                                >
+                                    Unread
+                                </button>
+
+                            </div>
+
+
+                            <button
+                                id="refresh-clients"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                ↻ Refresh
+                            </button>
+
+                        </div>
+
+
+                        <div class="clients-database">
+
+                            <div class="database-header">
+
+                                <span>
+                                    CLIENT
+                                </span>
+
+                                <span>
+                                    CONTACT
+                                </span>
+
+                                <span>
+                                    STATUS
+                                </span>
+
+                                <span>
+                                    ACTIVITY
+                                </span>
+
+                                <span></span>
+
+                            </div>
+
+
+                            <div
+                                id="clients-list"
+                                class="clients-list"
+                            >
+
+                                <div class="system-state loading">
+
+                                    <div class="system-state-mark"></div>
+
+                                    <div class="system-state-content">
+
+                                        <h3 class="system-state-title">
+                                            Loading clients
+                                        </h3>
+
+                                        <p class="system-state-description">
+                                            Retrieving client records...
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <footer class="clients-footer">
+
+                            <span
+                                id="clients-footer-count"
+                                class="clients-footer-count"
+                            >
+                                0 RECORDS
+                            </span>
+
+                        </footer>
+
+                    </section>
+<section
+    id="view-reviews"
+    class="admin-view reviews-page"
+    hidden
+>
+
+    <div class="reviews-header">
+
+        <div class="reviews-header-main">
+
+            <span class="reviews-kicker">
+                CLIENT FEEDBACK
+            </span>
+
+            <h1 class="reviews-title">
+                Reviews
+            </h1>
+
+            <p class="reviews-description">
+                Review, moderate, and publish client feedback
+                before it appears publicly.
+            </p>
+
+        </div>
+
+        <div class="reviews-summary">
+
+            <div class="reviews-summary-item">
+
+                <span class="reviews-summary-label">
+                    TOTAL
+                </span>
+
+                <strong
+                    id="reviews-total"
+                    class="reviews-summary-value"
+                >
+                    0
+                </strong>
+
+            </div>
+
+            <div class="reviews-summary-item">
+
+                <span class="reviews-summary-label">
+                    PENDING
+                </span>
+
+                <strong
+                    id="reviews-pending"
+                    class="reviews-summary-value"
+                >
+                    0
+                </strong>
+
+            </div>
+
+            <div class="reviews-summary-item">
+
+                <span class="reviews-summary-label">
+                    APPROVED
+                </span>
+
+                <strong
+                    id="reviews-approved"
+                    class="reviews-summary-value"
+                >
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
     </div>
 
 
+    <div class="reviews-toolbar">
+
+        <div class="reviews-filters">
+
+            <button
+                class="review-filter active"
+                data-review-filter="all"
+                type="button"
+            >
+                All
+            </button>
+
+            <button
+                class="review-filter"
+                data-review-filter="pending"
+                type="button"
+            >
+                Pending
+            </button>
+
+            <button
+                class="review-filter"
+                data-review-filter="approved"
+                type="button"
+            >
+                Approved
+            </button>
+
+        </div>
+
+        <button
+            id="refresh-reviews"
+            class="reviews-refresh"
+            type="button"
+        >
+            Refresh
+        </button>
+
+    </div>
+
+
+    <div class="reviews-database">
+
+        <div class="reviews-list-header">
+
+            <span>
+                CLIENT
+            </span>
+
+            <span>
+                RATING
+            </span>
+
+            <span>
+                REVIEW
+            </span>
+
+            <span>
+                STATUS
+            </span>
+
+            <span>
+                ACTIONS
+            </span>
+
+        </div>
+
+        <div id="reviews-list">
+
+            <div class="reviews-empty">
+
+                <div class="reviews-empty-mark">
+                    ★
+                </div>
+
+                <strong class="reviews-empty-title">
+                    LOADING REVIEWS
+                </strong>
+
+                <p class="reviews-empty-description">
+                    Loading client feedback...
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="reviews-footer">
+
+            <span>
+                REVIEW DATABASE
+            </span>
+
+            <span
+                id="reviews-footer-count"
+                class="reviews-footer-count"
+            >
+                0 REVIEWS
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+                    <!-- =================================================
+                         CONVERSATION
+                         ================================================= -->
+
+                    <section
+                        id="view-conversation"
+                        class="admin-view conversation-page"
+                        hidden
+                    >
+
+                        <header class="conversation-header">
+
+                            <div class="conversation-header-left">
+
+                                <button
+                                    id="back-to-clients"
+                                    class="conversation-back"
+                                    type="button"
+                                >
+                                    ← Clients
+                                </button>
+
+
+                                <div class="conversation-identity">
+
+                                    <span class="conversation-kicker">
+                                        SECURE COMMUNICATION // CLIENT
+                                    </span>
+
+                                    <h2
+                                        id="conversation-client-name"
+                                        class="conversation-title"
+                                    >
+                                        Client
+                                    </h2>
+
+                                    <p
+                                        id="conversation-client-details"
+                                        class="conversation-subtitle"
+                                    >
+                                        Loading...
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="conversation-header-right">
+
+                                <span
+                                    id="conversation-status"
+                                    class="conversation-status status-badge active"
+                                >
+                                    OPEN
+                                </span>
+
+                                <button
+                                    id="conversation-context-toggle"
+                                    class="header-action"
+                                    type="button"
+                                    aria-label="Client information"
+                                >
+                                    ☰
+                                </button>
+
+                            </div>
+
+                        </header>
+
+
+                        <div class="conversation-workspace">
+
+
+                            <!-- CLIENT CONTEXT -->
+
+                            <aside class="conversation-context">
+
+                                <header class="conversation-context-header">
+
+                                    <div class="system-panel-heading">
+
+                                        <span class="context-index">
+                                            01
+                                        </span>
+
+                                        <div>
+
+                                            <span class="conversation-kicker">
+                                                INTELLIGENCE
+                                            </span>
+
+                                            <h3 class="context-heading">
+                                                Client Profile
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        id="close-conversation-context"
+                                        class="context-action"
+                                        type="button"
+                                        aria-label="Close client information"
+                                    >
+                                        ×
+                                    </button>
+
+                                </header>
+
+
+                                <div class="conversation-context-body">
+
+                                    <div class="conversation-profile">
+
+                                        <div
+                                            id="client-info-avatar"
+                                            class="conversation-avatar"
+                                        >
+                                            —
+                                        </div>
+
+                                        <h3
+                                            id="client-info-name"
+                                            class="conversation-profile-name"
+                                        >
+                                            —
+                                        </h3>
+
+                                        <p
+                                            id="client-info-email"
+                                            class="conversation-profile-email"
+                                        >
+                                            —
+                                        </p>
+
+                                    </div>
+
+
+                                    <div class="context-data">
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                BUSINESS
+                                            </span>
+
+                                            <strong
+                                                id="client-info-business"
+                                                class="context-data-value"
+                                            >
+                                                —
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                WEBSITE
+                                            </span>
+
+                                            <strong
+                                                id="client-info-website"
+                                                class="context-data-value mono"
+                                            >
+                                                —
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                CHANNEL
+                                            </span>
+
+                                            <strong class="context-data-value">
+                                                SECURE
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                CONNECTION
+                                            </span>
+
+                                            <strong class="context-data-value">
+                                                ACTIVE
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </aside>
+
+
+                            <!-- MESSAGE STREAM -->
+
+                            <div class="conversation-center">
+
+                                <div
+                                    id="admin-messages"
+                                    class="message-stream"
+                                >
+
+                                    <div class="system-state loading">
+
+                                        <div class="system-state-mark"></div>
+
+                                        <div class="system-state-content">
+
+                                            <h3 class="system-state-title">
+                                                Loading conversation
+                                            </h3>
+
+                                            <p class="system-state-description">
+                                                Establishing secure communication
+                                                channel...
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- COMPOSER -->
+
+                                <form
+                                    id="admin-message-form"
+                                    class="message-composer"
+                                >
+
+                                    <div class="composer-status">
+
+                                        <span class="status-dot"></span>
+
+                                        <span>
+                                            SECURE CHANNEL
+                                        </span>
+
+                                    </div>
+
+
+                                    <textarea
+                                        id="admin-message-input"
+                                        class="composer-input"
+                                        placeholder="Write your reply..."
+                                        maxlength="5000"
+                                        required
+                                    ></textarea>
+
+
+                                    <div class="composer-footer">
+
+                                        <div class="composer-tools">
+
+                                            <label
+                                                for="admin-message-files"
+                                                class="composer-tool"
+                                            >
+
+                                                <span>
+                                                    +
+                                                </span>
+
+                                                <span>
+                                                    Attach Files
+                                                </span>
+
+                                            </label>
+
+
+                                            <input
+                                                id="admin-message-files"
+                                                type="file"
+                                                multiple
+                                                hidden
+                                                accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                                            >
+
+
+                                            <span
+                                                id="admin-file-selection"
+                                                class="file-selection"
+                                            >
+                                                No files selected
+                                            </span>
+
+
+                                            <span
+                                                id="character-count"
+                                                class="character-count"
+                                            >
+                                                0 / 5000
+                                            </span>
+
+                                        </div>
+
+
+                                        <button
+                                            id="admin-send-message"
+                                            class="composer-send"
+                                            type="submit"
+                                        >
+                                            Send Reply →
+                                        </button>
+
+                                    </div>
+
+
+                                    <div
+                                        id="admin-selected-files"
+                                        class="message-attachments"
+                                        aria-live="polite"
+                                    ></div>
+
+
+                                    <p
+                                        id="admin-message-error"
+                                        class="form-error"
+                                        hidden
+                                    ></p>
+
+                                </form>
+
+                            </div>
+
+
+                            <!-- SYSTEM CONTEXT -->
+
+                            <aside class="conversation-context system-context">
+
+                                <header class="conversation-context-header">
+
+                                    <div class="system-panel-heading">
+
+                                        <span class="context-index">
+                                            02
+                                        </span>
+
+                                        <div>
+
+                                            <span class="conversation-kicker">
+                                                SYSTEM
+                                            </span>
+
+                                            <h3 class="context-heading">
+                                                Data Readout
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+                                </header>
+
+
+                                <div class="conversation-context-body">
+
+                                    <div class="context-data">
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                STATUS
+                                            </span>
+
+                                            <strong class="context-data-value">
+                                                ACTIVE
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                CHANNEL
+                                            </span>
+
+                                            <strong class="context-data-value">
+                                                ENCRYPTED
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="context-data-item">
+
+                                            <span class="context-data-label">
+                                                MONITORING
+                                            </span>
+
+                                            <strong class="context-data-value">
+                                                LIVE
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </aside>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         NOTIFICATIONS
+                         ================================================= -->
+
+                    <section
+                        id="view-notifications"
+                        class="admin-view notifications-page"
+                        hidden
+                    >
+
+                        <header class="notifications-header">
+
+                            <div class="notifications-header-main">
+
+                                <div class="notifications-kicker">
+                                    SYSTEM // ACTIVITY
+                                </div>
+
+                                <h2 class="notifications-title">
+                                    Notifications
+                                </h2>
+
+                                <p class="notifications-description">
+                                    New clients, messages and system events
+                                    requiring attention.
+                                </p>
+
+                            </div>
+
+
+                            <div class="notifications-header-actions">
+
+                                <button
+                                    id="refresh-notifications"
+                                    class="secondary-button"
+                                    type="button"
+                                >
+                                    ↻ Refresh
+                                </button>
+
+                            </div>
+
+                        </header>
+
+
+                        <div class="notifications-summary">
+
+                            <div class="notifications-summary-item">
+
+                                <span class="notifications-summary-label">
+                                    TOTAL
+                                </span>
+
+                                <strong
+                                    id="notifications-total"
+                                    class="notifications-summary-value"
+                                >
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="notifications-summary-item unread">
+
+                                <span class="notifications-summary-label">
+                                    UNREAD
+                                </span>
+
+                                <strong
+                                    id="notifications-unread"
+                                    class="notifications-summary-value"
+                                >
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="notifications-summary-item critical">
+
+                                <span class="notifications-summary-label">
+                                    CRITICAL
+                                </span>
+
+                                <strong
+                                    id="notifications-critical"
+                                    class="notifications-summary-value"
+                                >
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="notifications-toolbar">
+
+                            <div class="notifications-filter-group">
+
+                                <button
+                                    class="notification-filter active"
+                                    data-filter="all"
+                                    type="button"
+                                >
+                                    All
+                                </button>
+
+                                <button
+                                    class="notification-filter"
+                                    data-filter="unread"
+                                    type="button"
+                                >
+                                    Unread
+                                </button>
+
+                                <button
+                                    class="notification-filter"
+                                    data-filter="clients"
+                                    type="button"
+                                >
+                                    Clients
+                                </button>
+
+                                <button
+                                    class="notification-filter"
+                                    data-filter="messages"
+                                    type="button"
+                                >
+                                    Messages
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="notifications-database">
+
+                            <div class="notifications-database-header">
+
+                                <span class="notifications-column-label">
+                                    TYPE
+                                </span>
+
+                                <span class="notifications-column-label">
+                                    EVENT
+                                </span>
+
+                                <span class="notifications-column-label">
+                                    SOURCE
+                                </span>
+
+                                <span class="notifications-column-label">
+                                    TIME
+                                </span>
+
+                                <span></span>
+
+                            </div>
+
+
+                            <div
+                                id="notifications-list"
+                                class="notifications-list"
+                            >
+
+                                <div class="system-state loading">
+
+                                    <div class="system-state-mark"></div>
+
+                                    <div class="system-state-content">
+
+                                        <h3 class="system-state-title">
+                                            Loading notifications
+                                        </h3>
+
+                                        <p class="system-state-description">
+                                            Scanning system activity...
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <footer class="notifications-footer">
+
+                            <span
+                                id="notifications-footer-count"
+                                class="notifications-footer-count"
+                            >
+                                0 SIGNALS
+                            </span>
+
+                        </footer>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SYSTEM TOASTS
+         ===================================================== -->
+
+    <div
+        id="notification-toasts"
+        class="system-toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
 
     <script src="./admin.js"></script>
-
 
 </body>
 
