@@ -487,8 +487,14 @@ const SERVICES_COMPONENTS = [
         html: "components/services-page/cta.html",
 
         css: "components/services-page/cta.css"
-    }
+    },
 
+    {
+        id: "testimonials",
+        html: "components/testimonials/testimonials.html",
+        css: "components/testimonials/testimonials.css",
+        js: "components/testimonials/testimonials.js"
+    }
 ];
 
 
