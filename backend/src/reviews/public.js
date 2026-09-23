@@ -6,8 +6,18 @@ import {
     createId
 } from "../utils/ids.js";
 
+
 function validateReview(data) {
     const errors = {};
+
+    if (
+        !data ||
+        typeof data !== "object"
+    ) {
+        errors.review =
+            "Invalid review data.";
+        return errors;
+    }
 
     if (
         !data.name ||
@@ -55,57 +65,68 @@ function validateReview(data) {
     return errors;
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| CREATE PUBLIC REVIEW
+|--------------------------------------------------------------------------
+*/
+
 export async function handlePublicReviewCreate(
     request,
     env
 ) {
-    let data;
-
     try {
         const rawBody =
             await request.text();
 
-        console.log(
-            "REVIEW RAW BODY:",
-            rawBody
-        );
+        if (!rawBody) {
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Request body is empty."
+                },
+                400
+            );
+        }
 
-        data =
-            JSON.parse(rawBody);
+        let data;
 
-    } catch (error) {
+        try {
+            data =
+                JSON.parse(rawBody);
+        } catch (error) {
+            console.error(
+                "Review JSON parse error:",
+                error?.stack || error
+            );
 
-        console.error(
-            "REVIEW JSON ERROR:",
-            error?.stack || error
-        );
+            return json(
+                {
+                    success: false,
+                    error:
+                        "Invalid JSON request."
+                },
+                400
+            );
+        }
 
-        return json(
-            {
-                success: false,
-                error:
-                    "Invalid JSON request."
-            },
-            400
-        );
-    }
+        const errors =
+            validateReview(data);
 
-    const errors =
-        validateReview(data);
+        if (
+            Object.keys(errors).length > 0
+        ) {
+            return json(
+                {
+                    success: false,
+                    errors
+                },
+                422
+            );
+        }
 
-    if (
-        Object.keys(errors).length > 0
-    ) {
-        return json(
-            {
-                success: false,
-                errors
-            },
-            422
-        );
-    }
-
-    try {
         const id =
             createId();
 
@@ -146,9 +167,8 @@ export async function handlePublicReviewCreate(
         );
 
     } catch (error) {
-
         console.error(
-            "Public review error:",
+            "Public review creation error:",
             error?.stack || error
         );
 
@@ -163,12 +183,19 @@ export async function handlePublicReviewCreate(
     }
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| GET APPROVED PUBLIC REVIEWS
+|--------------------------------------------------------------------------
+*/
+
 export async function handlePublicApprovedReviews(
     request,
     env
 ) {
     try {
-        const reviews =
+        const result =
             await env.DB
                 .prepare(
                     `SELECT
@@ -188,20 +215,22 @@ export async function handlePublicApprovedReviews(
         return json({
             success: true,
             reviews:
-                reviews.results || []
+                result.results || []
         });
-    }     catch (error) {
-    console.error(
-        "Approved reviews error:",
-        error?.stack || error
-    );
 
-    return json(
-        {
-            success: false,
-            error: "Unable to load reviews."
-        },
-        500
-    );
-}
+    } catch (error) {
+        console.error(
+            "Approved reviews error:",
+            error?.stack || error
+        );
+
+        return json(
+            {
+                success: false,
+                error:
+                    "Unable to load reviews."
+            },
+            500
+        );
+    }
 }
