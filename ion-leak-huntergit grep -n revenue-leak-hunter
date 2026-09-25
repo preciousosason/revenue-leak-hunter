@@ -6,7 +6,7 @@
                  createId(),[m
                  conversation.client_id,[m
                  "admin_file",[m
-[31m-                "New File From Revenue Leak Hunter",[m
+[31m-                "New File From Conversion Leak Hunter",[m
 [32m+[m[32m                "New File From Conversion Leak Hunter",[m
                  `A file named ${sanitizeFilename(file.name)} was added to your Leak Hunt conversation.`[m
              )[m
@@ -19,7 +19,7 @@
                  createId(),[m
                  conversation.client_id,[m
                  "admin_message",[m
-[31m-                "New Message From Revenue Leak Hunter",[m
+[31m-                "New Message From Conversion Leak Hunter",[m
 [32m+[m[32m                "New Message From Conversion Leak Hunter",[m
                  "You have received a new message regarding your Leak Hunt."[m
              )[m
@@ -32,7 +32,7 @@
                  return json({[m
                      success: true,[m
                      message:[m
-[31m-                        "Revenue Leak Hunter API is running."[m
+[31m-                        "Conversion Leak Hunter API is running."[m
 [32m+[m[32m                        "Conversion Leak Hunter API is running."[m
                  });[m
              }[m
@@ -45,7 +45,7 @@
  [m
      name: "Precious",[m
  [m
-[31m-    title: "Revenue Leak Hunter",[m
+[31m-    title: "Conversion Leak Hunter",[m
 [32m+[m[32m    title: "Conversion Leak Hunter",[m
  [m
      tagline:[m

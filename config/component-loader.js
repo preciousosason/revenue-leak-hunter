@@ -397,14 +397,6 @@ const HOMEPAGE_COMPONENTS = [
     },
 
 
-    {
-        id: "proof",
-
-        html: "components/proof/proof.html",
-
-        css: "components/proof/proof.css"
-    },
-
 
     {
         id: "testimonials",
@@ -535,15 +527,6 @@ const SERVICE_DETAIL_COMPONENTS = [
         html: "components/service-detail/process.html",
 
         css: "components/service-detail/process.css"
-    },
-
-
-    {
-        id: "serviceProof",
-
-        html: "components/service-detail/proof.html",
-
-        css: "components/service-detail/proof.css"
     },
 
 
