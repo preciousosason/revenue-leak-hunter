@@ -2,7 +2,7 @@ const SITE_CONFIG = {
 
     name: "Precious",
 
-    title: "Revenue Leak Hunter",
+    title: "Conversion Leak Hunter",
 
     tagline:
         "Find the leaks. Fix the journey. Improve the conversion.",

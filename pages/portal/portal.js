@@ -721,7 +721,7 @@ document.addEventListener(
                                         ${
                                             isClient
                                                 ? "You"
-                                                : "Revenue Leak Hunter"
+                                                : "Conversion Leak Hunter"
                                         }
                                     </strong>
 

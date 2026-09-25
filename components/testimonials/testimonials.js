@@ -1,298 +1,711 @@
-/* =================================
-TESTIMONIALS
-Loads approved reviews from API
-================================= */
-
 (function () {
 
-"use strict";
+    "use strict";
 
 
-/* =================================
-   CONFIG
-================================= */
-
-const API_URL =
-    "https://revenue-leak-hunter-api.preciousosason.workers.dev/api/reviews";
+    const API_URL =
+        "https://revenue-leak-hunter-api.preciousosason.workers.dev/api/reviews";
 
 
-/* =================================
-   HELPERS
-================================= */
-
-function escapeHtml(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+    const CHANGE_INTERVAL = 5000;
 
 
-function getInitials(name) {
+    let reviews = [];
 
-    if (!name) {
-        return "?";
-    }
+    let currentIndex = 0;
 
-    const parts =
-        name
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean);
+    let timer = null;
+
+    let isPaused = false;
+
+    let isRendering = false;
 
 
-    if (parts.length === 1) {
+    /* =================================
+       HELPERS
+    ================================= */
 
-        return parts[0]
-            .substring(0, 2)
-            .toUpperCase();
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
 
-    return (
-        parts[0].charAt(0) +
-        parts[parts.length - 1].charAt(0)
-    ).toUpperCase();
-}
+    function getInitials(name) {
+
+        if (!name) {
+            return "?";
+        }
+
+        const parts =
+            name
+                .trim()
+                .split(/\s+/);
 
 
-function renderStars(rating) {
+        if (parts.length === 1) {
 
-    const number =
-        Number(rating);
+            return parts[0]
+                .slice(0, 2)
+                .toUpperCase();
+
+        }
 
 
-    if (
-        !Number.isInteger(number) ||
-        number < 1 ||
-        number > 5
-    ) {
-        return "";
+        return (
+            parts[0][0] +
+            parts[parts.length - 1][0]
+        ).toUpperCase();
+
     }
 
 
-    return (
-        '<span class="testimonial-stars">' +
-        ("★".repeat(number) + "☆".repeat(5 - number)) +
-        '</span>'
-    );
-}
+    function renderStars(rating) {
+
+        const value =
+            Number(rating);
 
 
-/* =================================
-   RENDER
-================================= */
+        if (
+            !Number.isInteger(value) ||
+            value < 1 ||
+            value > 5
+        ) {
+            return "";
+        }
 
-function renderReviews(reviews) {
 
-    const grid =
-        document.getElementById(
-            "testimonials-grid"
+        return `
+            <div
+                class="testimonial-rating"
+                aria-label="${value} out of 5 stars"
+            >
+                ${"★".repeat(value)}
+                ${"☆".repeat(5 - value)}
+            </div>
+        `;
+
+    }
+
+
+    /* =================================
+       DOM
+    ================================= */
+
+    function getElements() {
+
+        return {
+
+            stage:
+                document.getElementById(
+                    "testimonials-stage"
+                ),
+
+            progress:
+                document.getElementById(
+                    "testimonial-progress"
+                ),
+
+            previous:
+                document.getElementById(
+                    "testimonial-prev"
+                ),
+
+            next:
+                document.getElementById(
+                    "testimonial-next"
+                )
+
+        };
+
+    }
+
+
+    /* =================================
+       RENDER REVIEW
+    ================================= */
+
+    function renderReview() {
+
+        const {
+            stage,
+            progress
+        } = getElements();
+
+
+        if (!stage || !progress) {
+            return;
+        }
+
+
+        if (!reviews.length) {
+            return;
+        }
+
+
+        const review =
+            reviews[currentIndex];
+
+
+        if (!review) {
+            return;
+        }
+
+
+        isRendering = true;
+
+
+        const name =
+            escapeHtml(
+                review.name ||
+                "Client"
+            );
+
+
+        const business =
+            escapeHtml(
+                review.business ||
+                "Client"
+            );
+
+
+        const message =
+            escapeHtml(
+                review.review ||
+                ""
+            );
+
+
+        const initials =
+            escapeHtml(
+                getInitials(
+                    review.name
+                )
+            );
+
+
+        stage.innerHTML = `
+
+            <article
+                class="testimonial-card"
+                tabindex="0"
+                aria-label="Client review"
+            >
+
+                <div
+                    class="testimonial-quote-mark"
+                    aria-hidden="true"
+                >
+                    “
+                </div>
+
+
+                <blockquote>
+                    ${message}
+                </blockquote>
+
+
+                ${renderStars(review.rating)}
+
+
+                <div class="testimonial-author">
+
+                    <div
+                        class="testimonial-avatar"
+                        aria-hidden="true"
+                    >
+                        ${initials}
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            ${name}
+                        </strong>
+
+                        <span>
+                            ${business}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        `;
+
+
+        progress.innerHTML =
+            reviews
+                .map(
+                    (item, index) => `
+                        <button
+                            type="button"
+                            class="${
+                                index === currentIndex
+                                    ? "active"
+                                    : ""
+                            }"
+                            aria-label="Show review ${
+                                index + 1
+                            }"
+                            aria-current="${
+                                index === currentIndex
+                                    ? "true"
+                                    : "false"
+                            }"
+                            data-review-index="${index}"
+                        ></button>
+                    `
+                )
+                .join("");
+
+
+        progress
+            .querySelectorAll(
+                "button"
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const index =
+                            Number(
+                                this.dataset.reviewIndex
+                            );
+
+
+                        if (
+                            Number.isInteger(index)
+                        ) {
+
+                            currentIndex =
+                                index;
+
+                            renderReview();
+
+                            restartTimer();
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+        const card =
+            stage.querySelector(
+                ".testimonial-card"
+            );
+
+
+        if (card) {
+
+            card.addEventListener(
+                "pointerdown",
+                pauseRotation
+            );
+
+            card.addEventListener(
+                "pointerup",
+                resumeRotation
+            );
+
+            card.addEventListener(
+                "pointercancel",
+                resumeRotation
+            );
+
+            card.addEventListener(
+                "pointerleave",
+                resumeRotation
+            );
+
+            card.addEventListener(
+                "focus",
+                pauseRotation
+            );
+
+            card.addEventListener(
+                "blur",
+                resumeRotation
+            );
+
+        }
+
+
+        isRendering = false;
+
+    }
+
+
+    /* =================================
+       NAVIGATION
+    ================================= */
+
+    function nextReview() {
+
+        if (!reviews.length) {
+            return;
+        }
+
+
+        currentIndex =
+            (currentIndex + 1) %
+            reviews.length;
+
+
+        renderReview();
+
+    }
+
+
+    function previousReview() {
+
+        if (!reviews.length) {
+            return;
+        }
+
+
+        currentIndex =
+            (
+                currentIndex -
+                1 +
+                reviews.length
+            ) %
+            reviews.length;
+
+
+        renderReview();
+
+    }
+
+
+    /* =================================
+       AUTO ROTATION
+    ================================= */
+
+    function startTimer() {
+
+        stopTimer();
+
+
+        if (
+            reviews.length <= 1 ||
+            isPaused
+        ) {
+            return;
+        }
+
+
+        timer =
+            setInterval(
+                function () {
+
+                    if (!isPaused) {
+                        nextReview();
+                    }
+
+                },
+                CHANGE_INTERVAL
+            );
+
+    }
+
+
+    function stopTimer() {
+
+        if (timer) {
+
+            clearInterval(timer);
+
+            timer = null;
+
+        }
+
+    }
+
+
+    function restartTimer() {
+
+        stopTimer();
+
+        startTimer();
+
+    }
+
+
+    function pauseRotation() {
+
+        isPaused = true;
+
+        stopTimer();
+
+    }
+
+
+    function resumeRotation() {
+
+        isPaused = false;
+
+        restartTimer();
+
+    }
+
+
+    /* =================================
+       LOAD REVIEWS
+    ================================= */
+
+    async function loadTestimonials() {
+
+        const {
+            stage,
+            previous,
+            next
+        } = getElements();
+
+
+        if (!stage) {
+
+            console.error(
+                "[Testimonials] Stage not found."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "[Testimonials] JavaScript loaded."
         );
 
 
-    if (!grid) {
+        try {
 
-        console.warn(
-            "Testimonials: grid not found."
-        );
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "GET",
 
-        return;
-    }
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        },
 
-
-    if (
-        !Array.isArray(reviews) ||
-        reviews.length === 0
-    ) {
-
-        grid.innerHTML =
-            '<div class="testimonials-empty">' +
-            'Client reviews will appear here once approved.' +
-            '</div>';
-
-        return;
-    }
+                        cache: "no-store"
+                    }
+                );
 
 
-    /*
-     * Homepage should stay compact.
-     * Show the three most recent approved reviews.
-     */
-
-    const visibleReviews =
-        reviews.slice(0, 3);
+            console.log(
+                "[Testimonials] API status:",
+                response.status
+            );
 
 
-    grid.innerHTML =
-        visibleReviews
-            .map((review, index) => {
+            if (!response.ok) {
 
-                const name =
-                    escapeHtml(
-                        review.name ||
-                        "Client"
-                    );
+                throw new Error(
+                    `API returned ${response.status}`
+                );
+
+            }
 
 
-                const business =
-                    escapeHtml(
-                        review.business ||
-                        "Client"
-                    );
+            const data =
+                await response.json();
 
 
-                const message =
-                    escapeHtml(
-                        review.review ||
-                        ""
-                    );
+            if (!data.success) {
+
+                throw new Error(
+                    data.error ||
+                    "Unable to load reviews."
+                );
+
+            }
 
 
-                const initials =
-                    escapeHtml(
-                        getInitials(
-                            review.name
-                        )
-                    );
+            reviews =
+                Array.isArray(data.reviews)
+                    ? data.reviews
+                    : [];
 
 
-                const featured =
-                    index === 1
-                        ? " testimonial-card-featured"
-                        : "";
+            if (!reviews.length) {
+
+                stage.innerHTML = `
+                    <div class="testimonials-empty">
+                        No approved client reviews yet.
+                    </div>
+                `;
+
+                return;
+
+            }
 
 
-                const stars =
-                    renderStars(
-                        review.rating
-                    );
+            /*
+             * Keep the homepage focused.
+             * The full reviews page can show everything.
+             */
+            reviews =
+                reviews.slice(0, 10);
 
 
-                return [
-                    '<article class="testimonial-card' + featured + '">',
-                    '<div class="testimonial-quote-mark" aria-hidden="true">',
-                    '"',
-                    '</div>',
-                    '<blockquote>',
-                    message,
-                    '</blockquote>',
-                    stars,
-                    '<div class="testimonial-author">',
-                    '<div class="testimonial-avatar" aria-hidden="true">',
-                    initials,
-                    '</div>',
-                    '<div>',
-                    '<strong>',
-                    name,
-                    '</strong>',
-                    '<span>',
-                    business,
-                    '</span>',
-                    '</div>',
-                    '</div>',
-                    '</article>'
-                ].join("");
-            })
-            .join("");
-}
+            currentIndex = 0;
 
 
-/* =================================
-   LOAD
-================================= */
-
-async function loadReviews() {
-
-    const grid =
-        document.getElementById(
-            "testimonials-grid"
-        );
+            renderReview();
 
 
-    if (!grid) {
-        return;
-    }
+            if (previous) {
+
+                previous.addEventListener(
+                    "click",
+                    function () {
+
+                        previousReview();
+
+                        restartTimer();
+
+                    }
+                );
+
+            }
 
 
-    try {
+            if (next) {
 
-        const response =
-            await fetch(
-                API_URL,
-                {
-                    method: "GET",
+                next.addEventListener(
+                    "click",
+                    function () {
 
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    },
+                        nextReview();
 
-                    cache: "no-store"
+                        restartTimer();
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * Pause when the visitor's pointer
+             * enters the review area.
+             */
+            stage.addEventListener(
+                "mouseenter",
+                pauseRotation
+            );
+
+
+            stage.addEventListener(
+                "mouseleave",
+                resumeRotation
+            );
+
+
+            /*
+             * Pause while the visitor is
+             * pressing/holding the review.
+             */
+            stage.addEventListener(
+                "pointerdown",
+                pauseRotation
+            );
+
+
+            stage.addEventListener(
+                "pointerup",
+                resumeRotation
+            );
+
+
+            stage.addEventListener(
+                "pointercancel",
+                resumeRotation
+            );
+
+
+            /*
+             * Keyboard accessibility.
+             */
+            stage.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "ArrowLeft"
+                    ) {
+
+                        previousReview();
+
+                        restartTimer();
+
+                    }
+
+
+                    if (
+                        event.key === "ArrowRight"
+                    ) {
+
+                        nextReview();
+
+                        restartTimer();
+
+                    }
+
                 }
             );
 
 
-        if (!response.ok) {
+            startTimer();
 
-            throw new Error(
-                "HTTP " + response.status
+
+            console.log(
+                "[Testimonials] Reviews loaded:",
+                reviews.length
             );
+
+        } catch (error) {
+
+            console.error(
+                "[Testimonials] Failed:",
+                error
+            );
+
+
+            stage.innerHTML = `
+                <div class="testimonials-error">
+                    Client feedback could not be loaded.
+                </div>
+            `;
 
         }
 
-
-        const data =
-            await response.json();
-
-
-        if (
-            !data ||
-            data.success !== true
-        ) {
-
-            throw new Error(
-                (data && data.error) ||
-                "Invalid reviews response."
-            );
-
-        }
-
-
-        renderReviews(
-            data.reviews || []
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Testimonials API error:",
-            error
-        );
-
-
-        /*
-         * Don't expose technical API errors
-         * to visitors.
-         */
-
-        grid.innerHTML =
-            '<div class="testimonials-error">' +
-            'Client feedback is temporarily unavailable.' +
-            '</div>';
     }
-}
 
 
-/* =================================
-   START
-================================= */
+    /* =================================
+       INITIALIZE
+    ================================= */
 
-loadReviews();
+    loadTestimonials();
 
 })();

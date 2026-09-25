@@ -52,7 +52,7 @@ export default {
                 return json({
                     success: true,
                     message:
-                        "Revenue Leak Hunter API is running."
+                        "Conversion Leak Hunter API is running."
                 });
             }
 

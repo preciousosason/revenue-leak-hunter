@@ -1,0 +1,52 @@
+[1mdiff --git a/backend/src/admin/files.js b/backend/src/admin/files.js[m
+[1mindex 10ab9ad..84b7ce0 100644[m
+[1m--- a/backend/src/admin/files.js[m
+[1m+++ b/backend/src/admin/files.js[m
+[36m@@ -310,7 +310,7 @@[m [mexport async function handleAdminFileUpload([m
+                 createId(),[m
+                 conversation.client_id,[m
+                 "admin_file",[m
+[31m-                "New File From Revenue Leak Hunter",[m
+[32m+[m[32m                "New File From Conversion Leak Hunter",[m
+                 `A file named ${sanitizeFilename(file.name)} was added to your Leak Hunt conversation.`[m
+             )[m
+             .run();[m
+[1mdiff --git a/backend/src/admin/messages.js b/backend/src/admin/messages.js[m
+[1mindex 4ed2be8..78e6e90 100644[m
+[1m--- a/backend/src/admin/messages.js[m
+[1m+++ b/backend/src/admin/messages.js[m
+[36m@@ -182,7 +182,7 @@[m [mexport async function handleAdminSendMessage([m
+                 createId(),[m
+                 conversation.client_id,[m
+                 "admin_message",[m
+[31m-                "New Message From Revenue Leak Hunter",[m
+[32m+[m[32m                "New Message From Conversion Leak Hunter",[m
+                 "You have received a new message regarding your Leak Hunt."[m
+             )[m
+             .run();[m
+[1mdiff --git a/backend/src/index.js b/backend/src/index.js[m
+[1mindex 08a6298..b01c1bc 100644[m
+[1m--- a/backend/src/index.js[m
+[1m+++ b/backend/src/index.js[m
+[36m@@ -52,7 +52,7 @@[m [mexport default {[m
+                 return json({[m
+                     success: true,[m
+                     message:[m
+[31m-                        "Revenue Leak Hunter API is running."[m
+[32m+[m[32m                        "Conversion Leak Hunter API is running."[m
+                 });[m
+             }[m
+ [m
+[1mdiff --git a/config/Site-config.js b/config/Site-config.js[m
+[1mindex 5b470e6..06ad99d 100644[m
+[1m--- a/config/Site-config.js[m
+[1m+++ b/config/Site-config.js[m
+[36m@@ -2,7 +2,7 @@[m [mconst SITE_CONFIG = {[m
+ [m
+     name: "Precious",[m
+ [m
+[31m-    title: "Revenue Leak Hunter",[m
+[32m+[m[32m    title: "Conversion Leak Hunter",[m
+ [m
+     tagline:[m
+         "Find the leaks. Fix the journey. Improve the conversion.",[m

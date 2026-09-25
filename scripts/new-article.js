@@ -141,7 +141,7 @@ async function createArticle() {
     >
 
     <title>
-        ${escapeHtml(title)} | Revenue Leak Hunter
+        ${escapeHtml(title)} | Conversion Leak Hunter
     </title>
 
     <meta

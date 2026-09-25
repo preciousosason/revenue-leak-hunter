@@ -3,15 +3,17 @@
 ================================= */
 
 .site-navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 1000;
+
+    z-index: 9999;
 
     width: 100%;
 
-    background: rgba(8, 8, 8, 0.85);
+    background: rgba(8, 8, 8, 0.92);
 
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom:
+        1px solid var(--color-border-light);
 
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -55,12 +57,16 @@
     place-items: center;
 
     border: 1px solid var(--color-primary);
-    border-radius: var(--border-radius-sm);
+
+    border-radius:
+        var(--border-radius-sm);
 
     color: var(--color-primary);
 
     font-size: 0.95rem;
-    font-weight: var(--weight-black);
+
+    font-weight:
+        var(--weight-black);
 }
 
 
@@ -68,7 +74,9 @@
     color: var(--color-text);
 
     font-size: 0.85rem;
-    font-weight: var(--weight-bold);
+
+    font-weight:
+        var(--weight-bold);
 
     letter-spacing: 0.16em;
 }
@@ -96,7 +104,9 @@
     color: var(--color-text-secondary);
 
     font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
+
+    font-weight:
+        var(--weight-medium);
 
     transition:
         color var(--transition-normal);
@@ -109,7 +119,9 @@
 }
 
 
-/* Underline */
+/* =================================
+   UNDERLINE
+================================= */
 
 .navbar-link::after {
     content: "";
@@ -122,7 +134,8 @@
     width: 0;
     height: 1px;
 
-    background: var(--color-primary);
+    background:
+        var(--color-primary);
 
     transition:
         width var(--transition-normal);
@@ -162,15 +175,20 @@
 
     align-items: center;
     justify-content: center;
+
     flex-direction: column;
 
     gap: 5px;
 
     background: transparent;
 
-    border: 1px solid var(--color-border);
+    border:
+        1px solid var(--color-border);
 
-    border-radius: var(--border-radius-md);
+    border-radius:
+        var(--border-radius-md);
+
+    cursor: pointer;
 }
 
 
@@ -180,7 +198,8 @@
     width: 18px;
     height: 2px;
 
-    background: var(--color-text);
+    background:
+        var(--color-text);
 
     transition:
         transform var(--transition-normal),
@@ -197,23 +216,33 @@
 
     flex-direction: column;
 
-    padding: 1rem var(--container-padding) 1.5rem;
+    padding:
+        1rem
+        var(--container-padding)
+        1.5rem;
 
-    border-top: 1px solid var(--color-border-light);
+    border-top:
+        1px solid var(--color-border-light);
 
-    background: var(--color-bg);
+    background:
+        rgba(8, 8, 8, 0.97);
 }
 
 
 .mobile-nav-link {
     padding: 0.9rem 0;
 
-    color: var(--color-text-secondary);
+    color:
+        var(--color-text-secondary);
 
-    font-size: var(--text-md);
-    font-weight: var(--weight-medium);
+    font-size:
+        var(--text-md);
 
-    border-bottom: 1px solid var(--color-border-light);
+    font-weight:
+        var(--weight-medium);
+
+    border-bottom:
+        1px solid var(--color-border-light);
 
     transition:
         color var(--transition-normal);
@@ -221,7 +250,8 @@
 
 
 .mobile-nav-link:hover {
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 
@@ -234,23 +264,34 @@
    MOBILE MENU OPEN STATE
 ================================= */
 
-.site-navbar.menu-open .mobile-navigation {
+.site-navbar.menu-open
+.mobile-navigation {
     display: flex;
 }
 
 
-.site-navbar.menu-open .navbar-menu-toggle span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+.site-navbar.menu-open
+.navbar-menu-toggle
+span:nth-child(1) {
+    transform:
+        translateY(7px)
+        rotate(45deg);
 }
 
 
-.site-navbar.menu-open .navbar-menu-toggle span:nth-child(2) {
+.site-navbar.menu-open
+.navbar-menu-toggle
+span:nth-child(2) {
     opacity: 0;
 }
 
 
-.site-navbar.menu-open .navbar-menu-toggle span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+.site-navbar.menu-open
+.navbar-menu-toggle
+span:nth-child(3) {
+    transform:
+        translateY(-7px)
+        rotate(-45deg);
 }
 
 
@@ -280,6 +321,22 @@
 
     .navbar-menu-toggle {
         display: flex;
+    }
+
+}
+
+
+/* =================================
+   REDUCED MOTION
+================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .navbar-link,
+    .navbar-link::after,
+    .navbar-menu-toggle span,
+    .mobile-nav-link {
+        transition: none;
     }
 
 }

@@ -310,7 +310,7 @@ export async function handleAdminFileUpload(
                 createId(),
                 conversation.client_id,
                 "admin_file",
-                "New File From Revenue Leak Hunter",
+                "New File From Conversion Leak Hunter",
                 `A file named ${sanitizeFilename(file.name)} was added to your Leak Hunt conversation.`
             )
             .run();

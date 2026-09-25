@@ -330,6 +330,15 @@ const GLOBAL_COMPONENTS = [
         css: "components/footer/footer.css",
 
         js: "components/footer/footer.js"
+    },
+
+
+    {
+        id: "investigation-room",
+
+        html: "components/investigation-room/investigation-room.html",
+
+        css: "components/investigation-room/investigation-room.css"
     }
 
 ];
@@ -402,7 +411,9 @@ const HOMEPAGE_COMPONENTS = [
 
         html: "components/testimonials/testimonials.html",
 
-        css: "components/testimonials/testimonials.css"
+        css: "components/testimonials/testimonials.css",
+
+        js: "components/testimonials/testimonials.js"
     },
 
 
@@ -487,14 +498,8 @@ const SERVICES_COMPONENTS = [
         html: "components/services-page/cta.html",
 
         css: "components/services-page/cta.css"
-    },
-
-    {
-        id: "testimonials",
-        html: "components/testimonials/testimonials.html",
-        css: "components/testimonials/testimonials.css",
-        js: "components/testimonials/testimonials.js"
     }
+
 ];
 
 
@@ -563,7 +568,8 @@ const PAGE_COMPONENTS = {
 
     services: SERVICES_COMPONENTS,
 
-    "service-detail": SERVICE_DETAIL_COMPONENTS
+    "service-detail":
+        SERVICE_DETAIL_COMPONENTS
 
 };
 
@@ -589,6 +595,41 @@ async function loadComponentGroup(components) {
 
 
 /* =================================
+   CREATE GLOBAL MOUNTS
+================================= */
+
+function createGlobalComponentMounts() {
+
+    /*
+       Investigation Room is a global
+       component, so create its mount
+       automatically on every page.
+    */
+
+    if (
+        !document.getElementById(
+            "investigation-room"
+        )
+    ) {
+
+        const investigationRoom =
+            document.createElement("div");
+
+
+        investigationRoom.id =
+            "investigation-room";
+
+
+        document.body.appendChild(
+            investigationRoom
+        );
+
+    }
+
+}
+
+
+/* =================================
    INITIALIZE
 ================================= */
 
@@ -606,6 +647,13 @@ async function initializeComponents() {
     console.log(
         `Initializing page: ${pageType}`
     );
+
+
+    /* ==============================
+       CREATE GLOBAL COMPONENT MOUNTS
+    ============================== */
+
+    createGlobalComponentMounts();
 
 
     /* ==============================

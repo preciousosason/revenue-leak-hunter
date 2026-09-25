@@ -182,7 +182,7 @@ export async function handleAdminSendMessage(
                 createId(),
                 conversation.client_id,
                 "admin_message",
-                "New Message From Revenue Leak Hunter",
+                "New Message From Conversion Leak Hunter",
                 "You have received a new message regarding your Leak Hunt."
             )
             .run();
