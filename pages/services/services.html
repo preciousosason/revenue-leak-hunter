@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,11 +54,11 @@
         rel="stylesheet"
         href="../../pages/services/services.css"
     >
-<body data-page="services"></body>
+
 </head>
 
 
-<body>
+<body data-page="services">
 
 
     <!-- =================================
@@ -113,25 +114,14 @@
 
                         </p>
 
-
-                
-
                     </div>
 
-
-                    
-
-                    </div>
 
                 </div>
 
             </div>
 
         </section>
-
-
-
-
 
 
         <!-- =================================
@@ -179,886 +169,170 @@
 
                 <!-- =================================
                      SERVICE GRID
+
+                     Cards are rendered from:
+                     data/services/
                 ================================= -->
 
-                <div class="service-grid">
+                <div
+                    class="service-grid"
+                    id="servicesGrid"
+                ></div>
 
 
-                    <!-- SERVICE 01 -->
+            </div>
 
-                    <a
-                        href="./conversion-leak-hunting/conversion-leak-hunting.html"
-                        class="service-card"
-                    >
+        </section>
 
-                        <div class="service-card-top">
 
-                            <span class="service-number">
-                                01
-                            </span>
+        <!-- =================================
+             LEAK AUDIT
+        ================================= -->
 
-                            <span class="service-icon">
-                                ↗
-                            </span>
+        <section
+            class="leak-audit-section"
+            id="leak-audit"
+        >
+
+            <div class="leak-audit-container">
+
+                <!-- HEADER -->
+
+                <div class="leak-audit-header">
+
+                    <span class="section-eyebrow">
+                        NOT SURE WHERE TO START?
+                    </span>
+
+                    <h2>
+                        Don't know where the leak is?
+                    </h2>
+
+                    <p>
+                        You don't need to guess which service you need.
+                        Start with a Leak Audit and find out where your
+                        customer journey is losing momentum.
+                    </p>
+
+                </div>
+
+
+                <!-- AUDIT CONTENT -->
+
+                <div class="leak-audit-content">
+
+                    <!-- VISUAL -->
+
+                    <div class="leak-audit-visual">
+
+                        <div class="audit-visual-label">
+                            CUSTOMER JOURNEY
+                        </div>
+
+                        <div class="audit-journey">
+
+                            <div class="audit-stage">
+                                <span class="audit-stage-number">01</span>
+                                <span class="audit-stage-name">ATTENTION</span>
+                            </div>
+
+                            <div class="audit-connector"></div>
+
+                            <div class="audit-stage">
+                                <span class="audit-stage-number">02</span>
+                                <span class="audit-stage-name">TRUST</span>
+                            </div>
+
+                            <div class="audit-connector audit-leak"></div>
+
+                            <div class="audit-stage audit-stage-leak">
+                                <span class="audit-stage-number">03</span>
+                                <span class="audit-stage-name">ACTION</span>
+                                <span class="audit-leak-label">LEAK</span>
+                            </div>
+
+                            <div class="audit-connector"></div>
+
+                            <div class="audit-stage">
+                                <span class="audit-stage-number">04</span>
+                                <span class="audit-stage-name">REVENUE</span>
+                            </div>
 
                         </div>
 
+                        <div class="audit-visual-footer">
 
-                        <span class="service-category">
-                            FIND
+                            <span>PEOPLE ENTER</span>
+
+                            <span class="audit-loss">
+                                FRICTION
+                            </span>
+
+                            <span>PEOPLE CONVERT</span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INFORMATION -->
+
+                    <div class="leak-audit-info">
+
+                        <span class="leak-audit-info-label">
+                            THE LEAK AUDIT
                         </span>
 
-
                         <h3>
-                            Conversion Leak Hunting
+                            Find the problem before you pay to fix the wrong one.
                         </h3>
 
-
                         <p>
-
-                            Find the moments where attention
-                            turns into hesitation, confusion,
-                            or abandonment, and uncover what
-                            is stopping people from moving forward.
-
+                            I'll trace the journey from the first interaction
+                            to the final decision, looking for the friction,
+                            confusion, weak messaging, and missed opportunities
+                            that cause people to drop off.
                         </p>
 
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I investigate
-                        </h4>
-
-
-                        <ul>
+                        <ul class="leak-audit-points">
 
                             <li>
-                                Conversion friction
+                                <span>01</span>
+                                Identify where people drop off
                             </li>
 
                             <li>
-                                Landing pages
+                                <span>02</span>
+                                Understand what is causing the friction
                             </li>
 
                             <li>
-                                Calls-to-action
+                                <span>03</span>
+                                Prioritize what needs fixing first
                             </li>
 
                             <li>
-                                Offers and decision points
+                                <span>04</span>
+                                Match the problem to the right solution
                             </li>
 
                         </ul>
 
-
-                        <span class="service-link">
-
-                            Explore service
-
+                        <a
+                            href="../leak-audit/leak-audit.html"
+                            class="leak-audit-button"
+                        >
+                            Start a Leak Audit
                             <span>→</span>
+                        </a>
 
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 02 -->
-
-                    <a
-                        href="./websites/websites.html"
-                        class="service-card featured-service"
-                    >
-
-                        <div class="service-card-badge">
-                            BUILD
-                        </div>
-
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                02
-                            </span>
-
-                            <span class="service-icon">
-                                ◇
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            BUILD
-                        </span>
-
-
-                        <h3>
-                            Websites That Move People
-                        </h3>
-
-
-                        <p>
-
-                            Build a digital experience that makes
-                            the next step obvious, removes unnecessary
-                            friction, and turns attention into action.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I build
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Conversion-focused websites
-                            </li>
-
-                            <li>
-                                Landing pages
-                            </li>
-
-                            <li>
-                                UX and responsive design
-                            </li>
-
-                            <li>
-                                Performance and structure
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 03 -->
-
-                    <a
-                        href="./funnels/funnels.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                03
-                            </span>
-
-                            <span class="service-icon">
-                                ⌁
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            CONNECT
-                        </span>
-
-
-                        <h3>
-                            Funnels That Don't Leak
-                        </h3>
-
-
-                        <p>
-
-                            Connect every step from first click
-                            to final action so prospects don't
-                            disappear between stages.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I connect
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Funnel architecture
-                            </li>
-
-                            <li>
-                                Landing pages
-                            </li>
-
-                            <li>
-                                Lead capture
-                            </li>
-
-                            <li>
-                                Follow-up journeys
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 04 -->
-
-                    <a
-                        href="./messaging/messaging.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                04
-                            </span>
-
-                            <span class="service-icon">
-                                Aa
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            CLARIFY
-                        </span>
-
-
-                        <h3>
-                            Messaging That Makes Sense
-                        </h3>
-
-
-                        <p>
-
-                            Turn complicated offers into words
-                            people understand quickly enough to
-                            care, trust, and act.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I clarify
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Website and landing-page copy
-                            </li>
-
-                            <li>
-                                Headlines and offers
-                            </li>
-
-                            <li>
-                                Value propositions
-                            </li>
-
-                            <li>
-                                Calls-to-action
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 05 -->
-
-                    <a
-                        href="./search-visibility/search-visibility.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                05
-                            </span>
-
-                            <span class="service-icon">
-                                ◎
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            DISCOVER
-                        </span>
-
-
-                        <h3>
-                            Search Visibility Engineering
-                        </h3>
-
-
-                        <p>
-
-                            Build the structure, content, and signals
-                            that help the right people discover you
-                            when they are already looking.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I optimize
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Technical SEO
-                            </li>
-
-                            <li>
-                                Search-intent strategy
-                            </li>
-
-                            <li>
-                                Content architecture
-                            </li>
-
-                            <li>
-                                GEO and AI search visibility
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 06 -->
-
-                    <a
-                        href="./email-systems/email-systems.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                06
-                            </span>
-
-                            <span class="service-icon">
-                                ◌
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            RETAIN
-                        </span>
-
-
-                        <h3>
-                            Email Systems That Keep Working
-                        </h3>
-
-
-                        <p>
-
-                            Turn leads and customers into an owned
-                            audience with sequences, automation,
-                            and retention systems.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I automate
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Email sequences
-                            </li>
-
-                            <li>
-                                Lead nurturing
-                            </li>
-
-                            <li>
-                                Retention and re-engagement
-                            </li>
-
-                            <li>
-                                Automated customer journeys
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 07 -->
-
-                    <a
-                        href="./customer-journey/customer-journey.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                07
-                            </span>
-
-                            <span class="service-icon">
-                                ◉
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            EXPERIENCE
-                        </span>
-
-
-                        <h3>
-                            Customer Journey Engineering
-                        </h3>
-
-
-                        <p>
-
-                            Trace the experience from first interaction
-                            to final decision and remove friction that
-                            quietly pushes customers away.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I map
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Customer journey mapping
-                            </li>
-
-                            <li>
-                                Touchpoint analysis
-                            </li>
-
-                            <li>
-                                UX and onboarding
-                            </li>
-
-                            <li>
-                                Cross-channel handoffs
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 08 -->
-
-                    <a
-                        href="./conversion-intelligence/conversion-intelligence.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                08
-                            </span>
-
-                            <span class="service-icon">
-                                ◫
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            MEASURE
-                        </span>
-
-
-                        <h3>
-                            Conversion Intelligence
-                        </h3>
-
-
-                        <p>
-
-                            Turn customer behavior into evidence
-                            about where people hesitate, disappear,
-                            and convert.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I measure
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Conversion tracking
-                            </li>
-
-                            <li>
-                                Funnel analytics
-                            </li>
-
-                            <li>
-                                Event tracking
-                            </li>
-
-                            <li>
-                                Behavioral insights
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
-
-
-                    <!-- SERVICE 09 -->
-
-                    <a
-                        href="./growth-systems/growth-systems.html"
-                        class="service-card"
-                    >
-
-                        <div class="service-card-top">
-
-                            <span class="service-number">
-                                09
-                            </span>
-
-                            <span class="service-icon">
-                                ⚙
-                            </span>
-
-                        </div>
-
-
-                        <span class="service-category">
-                            AUTOMATE
-                        </span>
-
-
-                        <h3>
-                            Growth Systems & Automation
-                        </h3>
-
-
-                        <p>
-
-                            Replace repetitive manual work with
-                            connected systems that capture, organize,
-                            follow up, and move opportunities forward.
-
-                        </p>
-
-
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            I systemize
-                        </h4>
-
-
-                        <ul>
-
-                            <li>
-                                Lead automation
-                            </li>
-
-                            <li>
-                                Marketing workflows
-                            </li>
-
-                            <li>
-                                CRM systems
-                            </li>
-
-                            <li>
-                                Internal growth tools
-                            </li>
-
-                        </ul>
-
-
-                        <span class="service-link">
-
-                            Explore service
-
-                            <span>→</span>
-
-                        </span>
-
-                    </a>
-
+                    </div>
 
                 </div>
 
             </div>
 
         </section>
-<!-- =================================
-     LEAK AUDIT
-================================= -->
-
-<section class="leak-audit-section" id="leak-audit">
-
-    <div class="leak-audit-container">
-
-        <!-- HEADER -->
-
-        <div class="leak-audit-header">
-
-            <span class="section-eyebrow">
-                NOT SURE WHERE TO START?
-            </span>
-
-            <h2>
-                Don't know where the leak is?
-            </h2>
-
-            <p>
-                You don't need to guess which service you need.
-                Start with a Leak Audit and find out where your
-                customer journey is losing momentum.
-            </p>
-
-        </div>
-
-
-        <!-- AUDIT CONTENT -->
-
-        <div class="leak-audit-content">
-
-            <!-- VISUAL -->
-
-            <div class="leak-audit-visual">
-
-                <div class="audit-visual-label">
-                    CUSTOMER JOURNEY
-                </div>
-
-                <div class="audit-journey">
-
-                    <div class="audit-stage">
-                        <span class="audit-stage-number">01</span>
-                        <span class="audit-stage-name">ATTENTION</span>
-                    </div>
-
-                    <div class="audit-connector"></div>
-
-                    <div class="audit-stage">
-                        <span class="audit-stage-number">02</span>
-                        <span class="audit-stage-name">TRUST</span>
-                    </div>
-
-                    <div class="audit-connector audit-leak"></div>
-
-                    <div class="audit-stage audit-stage-leak">
-                        <span class="audit-stage-number">03</span>
-                        <span class="audit-stage-name">ACTION</span>
-                        <span class="audit-leak-label">LEAK</span>
-                    </div>
-
-                    <div class="audit-connector"></div>
-
-                    <div class="audit-stage">
-                        <span class="audit-stage-number">04</span>
-                        <span class="audit-stage-name">REVENUE</span>
-                    </div>
-
-                </div>
-
-                <div class="audit-visual-footer">
-
-                    <span>PEOPLE ENTER</span>
-
-                    <span class="audit-loss">
-                        FRICTION
-                    </span>
-
-                    <span>PEOPLE CONVERT</span>
-
-                </div>
-
-            </div>
-
-
-            <!-- INFORMATION -->
-
-            <div class="leak-audit-info">
-
-                <span class="leak-audit-info-label">
-                    THE LEAK AUDIT
-                </span>
-
-                <h3>
-                    Find the problem before you pay to fix the wrong one.
-                </h3>
-
-                <p>
-                    I'll trace the journey from the first interaction
-                    to the final decision, looking for the friction,
-                    confusion, weak messaging, and missed opportunities
-                    that cause people to drop off.
-                </p>
-
-                <ul class="leak-audit-points">
-
-                    <li>
-                        <span>01</span>
-                        Identify where people drop off
-                    </li>
-
-                    <li>
-                        <span>02</span>
-                        Understand what is causing the friction
-                    </li>
-
-                    <li>
-                        <span>03</span>
-                        Prioritize what needs fixing first
-                    </li>
-
-                    <li>
-                        <span>04</span>
-                        Match the problem to the right solution
-                    </li>
-
-                </ul>
-
-                <a
-                    href="../leak-audit/leak-audit.html"
-                    class="leak-audit-button"
-                >
-                    Start a Leak Audit
-                    <span>→</span>
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
 
 
         <!-- =================================
@@ -1195,12 +469,12 @@
 
                     </div>
 
+
                 </div>
 
             </div>
 
         </section>
-
 
 
         <!-- =================================
@@ -1355,68 +629,60 @@
         </section>
 
 
+    </main>
 
-        
 
-                </div>
+    <!-- =================================
+         LEAK AUDIT NOTIFICATION
+    ================================= -->
+
+    <div
+        class="audit-notification"
+        id="auditNotification"
+        aria-hidden="true"
+    >
+
+        <div class="audit-notification-content">
+
+            <div class="audit-notification-icon">
+                ?
+            </div>
+
+            <div class="audit-notification-text">
+
+                <span class="audit-notification-label">
+                    NOT SURE WHERE TO START?
+                </span>
+
+                <p>
+                    Don't know where the leak is?
+                    Start with the Leak Audit.
+                </p>
 
             </div>
 
-        </section>
+            <button
+                class="audit-notification-action"
+                id="auditNotificationAction"
+                type="button"
+            >
+                Yes, show me
+                <span>→</span>
+            </button>
 
-
-    </main>
-
-<!-- =================================
-     LEAK AUDIT NOTIFICATION
-================================= -->
-
-<div
-    class="audit-notification"
-    id="auditNotification"
-    aria-hidden="true"
->
-
-    <div class="audit-notification-content">
-
-        <div class="audit-notification-icon">
-            ?
-        </div>
-
-        <div class="audit-notification-text">
-
-            <span class="audit-notification-label">
-                NOT SURE WHERE TO START?
-            </span>
-
-            <p>
-                Don't know where the leak is?
-                Start with the Leak Audit.
-            </p>
+            <button
+                class="audit-notification-close"
+                id="auditNotificationClose"
+                type="button"
+                aria-label="Close notification"
+            >
+                ×
+            </button>
 
         </div>
-
-        <button
-            class="audit-notification-action"
-            id="auditNotificationAction"
-            type="button"
-        >
-            Yes, show me
-            <span>→</span>
-        </button>
-
-        <button
-            class="audit-notification-close"
-            id="auditNotificationClose"
-            type="button"
-            aria-label="Close notification"
-        >
-            ×
-        </button>
 
     </div>
 
-</div>
 
     <!-- =================================
          FOOTER
@@ -1424,8 +690,42 @@
 
     <div id="footer"></div>
 
+<!-- =================================
+     SERVICE MODAL
+================================= -->
+
+<div
+    class="service-modal"
+    id="service-modal"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="service-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="service-modal-title"
+    >
+
+        <button
+            type="button"
+            class="service-modal-close"
+            id="service-modal-close"
+            aria-label="Close service"
+        >
+            ×
+        </button>
 
 
+        <div
+            class="service-modal-body"
+            id="service-modal-body"
+        ></div>
+
+    </div>
+
+</div>
     <!-- =================================
          CONFIG
     ================================= -->
@@ -1435,8 +735,7 @@
     ></script>
 
 
-    <!-- ===================
-     ==============
+    <!-- =================================
          COMPONENT LOADER
     ================================= -->
 
@@ -1450,6 +749,7 @@
     ================================= -->
 
     <script
+        type="module"
         src="services.js"
     ></script>
 

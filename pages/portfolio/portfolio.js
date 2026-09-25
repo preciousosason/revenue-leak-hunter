@@ -1,374 +1,574 @@
-/* =================================
-   PORTFOLIO PAGE
-================================= */
+document.addEventListener("DOMContentLoaded", () => {
 
+    const grid =
+        document.getElementById("case-studies-grid");
 
-/* =================================
-   DOM ELEMENTS
-================================= */
+    const emptyState =
+        document.getElementById("portfolio-empty");
 
-const caseStudiesGrid =
-    document.getElementById(
-        "case-studies-grid"
-    );
+    const modal =
+        document.getElementById("case-modal");
 
+    const modalBody =
+        document.getElementById("case-modal-body");
 
-const portfolioEmpty =
-    document.getElementById(
-        "portfolio-empty"
-    );
+    const closeButton =
+        document.getElementById("case-modal-close");
 
 
-
-/* =================================
-   GET CASE STUDIES
-================================= */
-
-function getCaseStudies() {
-
-    /*
-     * Support several common names
-     * so the page remains flexible.
-     */
-
-    if (
-        typeof caseStudies !== "undefined"
-    ) {
-
-        return caseStudies;
-
-    }
-
-
-    if (
-        typeof caseStudiesData !== "undefined"
-    ) {
-
-        return caseStudiesData;
-
-    }
-
-
-    if (
-        typeof CASE_STUDIES !== "undefined"
-    ) {
-
-        return CASE_STUDIES;
-
-    }
-
-
-    return [];
-
-}
-
-
-
-/* =================================
-   CREATE CASE CARD
-================================= */
-
-function createCaseCard(
-    study,
-    index
-) {
-
-    const card =
-        document.createElement("article");
-
-
-    card.className =
-        "case-card";
-
-
-    const title =
-        study.title
-        || study.name
-        || "Untitled Case Study";
-
-
-    const category =
-        study.category
-        || study.type
-        || "Revenue Leak";
-
-
-    const summary =
-        study.summary
-        || study.description
-        || "A revenue leak investigation.";
-
-
-    const problem =
-        study.problem
-        || study.challenge
-        || "Conversion friction detected.";
-
-
-    const outcome =
-        study.outcome
-        || study.result
-        || study.impact
-        || "Opportunity identified.";
-
-
-    card.innerHTML = `
-
-        <div class="case-card-top">
-
-            <span class="case-number">
-                CASE ${String(index + 1).padStart(2, "0")}
-            </span>
-
-            <span class="case-category">
-                ${escapeHTML(category)}
-            </span>
-
-        </div>
-
-
-        <h3>
-            ${escapeHTML(title)}
-        </h3>
-
-
-        <p class="case-card-summary">
-            ${escapeHTML(summary)}
-        </p>
-
-
-        <div class="case-card-meta">
-
-            <div class="case-meta">
-
-                <span>
-                    The Problem
-                </span>
-
-                <strong>
-                    ${escapeHTML(
-                        shorten(problem, 70)
-                    )}
-                </strong>
-
-            </div>
-
-
-            <div class="case-meta">
-
-                <span>
-                    The Opportunity
-                </span>
-
-                <strong>
-                    ${escapeHTML(
-                        shorten(outcome, 70)
-                    )}
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <button
-            type="button"
-            class="case-card-button"
-            data-case-index="${index}"
-        >
-
-            <span>
-                Open Case File
-            </span>
-
-            <span>
-                →
-            </span>
-
-        </button>
-
-    `;
-
-
-    return card;
-
-}
-
-
-
-/* =================================
-   RENDER CASE STUDIES
-================================= */
-
-function renderCaseStudies() {
-
-    if (!caseStudiesGrid) {
-
+    if (!grid || !modal || !modalBody) {
         return;
-
     }
 
 
     const studies =
-        getCaseStudies();
+        Array.isArray(window.caseStudies)
+            ? window.caseStudies
+            : (typeof caseStudies !== "undefined"
+                ? caseStudies
+                : []);
 
 
-    caseStudiesGrid.innerHTML = "";
+    function escapeHTML(value) {
 
-
-    if (
-        !Array.isArray(studies)
-        || studies.length === 0
-    ) {
-
-        if (portfolioEmpty) {
-
-            portfolioEmpty.hidden = false;
-
-        }
-
-        return;
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
 
-    if (portfolioEmpty) {
+    function formatParagraphs(text) {
 
-        portfolioEmpty.hidden = true;
+        return String(text || "")
+            .trim()
+            .split(/\n\s*\n/)
+            .map(paragraph => {
+
+                const cleaned =
+                    paragraph
+                        .replace(/\s+/g, " ")
+                        .trim();
+
+                return cleaned
+                    ? `<p>${escapeHTML(cleaned)}</p>`
+                    : "";
+
+            })
+            .join("");
 
     }
 
 
-    studies.forEach(
-        (study, index) => {
+    function renderJourney(items) {
 
-            const card =
-                createCaseCard(
-                    study,
-                    index
-                );
+        return `
+            <div class="journey">
+                ${items.map((item, index) => `
+
+                    <span class="journey-step">
+                        ${escapeHTML(item)}
+                    </span>
+
+                    ${
+                        index < items.length - 1
+                            ? `<span
+                                class="journey-arrow"
+                                aria-hidden="true"
+                            >→</span>`
+                            : ""
+                    }
+
+                `).join("")}
+            </div>
+        `;
+
+    }
 
 
-            caseStudiesGrid.appendChild(
-                card
-            );
+    function renderLeak(leak) {
 
+        return `
+            <article class="leak-item">
+
+                <div class="leak-item-header">
+
+                    <div>
+
+                        <span class="leak-number">
+                            ${escapeHTML(leak.number)}
+                        </span>
+
+                        <h4>
+                            ${escapeHTML(leak.title)}
+                        </h4>
+
+                    </div>
+
+                    <span class="leak-severity">
+                        ${escapeHTML(leak.severity)}
+                    </span>
+
+                </div>
+
+
+                <div class="leak-detail">
+
+                    <span class="leak-detail-label">
+                        What's Happening
+                    </span>
+
+                    <p>
+                        ${escapeHTML(leak.what)}
+                    </p>
+
+                </div>
+
+
+                <div class="leak-detail">
+
+                    <span class="leak-detail-label">
+                        Why It Matters
+                    </span>
+
+                    <p>
+                        ${escapeHTML(leak.why)}
+                    </p>
+
+                </div>
+
+
+                <div class="leak-detail">
+
+                    <span class="leak-detail-label">
+                        What I'd Change
+                    </span>
+
+                    <p>
+                        ${escapeHTML(leak.fix)}
+                    </p>
+
+                </div>
+
+
+                <div class="leak-detail">
+
+                    <span class="leak-detail-label">
+                        Journey Stage
+                    </span>
+
+                    <p>
+                        ${escapeHTML(leak.stage)}
+                    </p>
+
+                </div>
+
+            </article>
+        `;
+
+    }
+
+
+    function renderInvestigation(study) {
+
+        const currentPath =
+            study.currentPath || [];
+
+        const proposedPath =
+            study.proposedPath || [];
+
+        modalBody.innerHTML = `
+
+            <header class="case-modal-header">
+
+                <span class="eyebrow">
+                    ${escapeHTML(study.number)}
+                </span>
+
+                <h2 id="case-modal-title">
+                    ${escapeHTML(study.title)}
+                </h2>
+
+                <p>
+                    ${escapeHTML(study.summary)}
+                </p>
+
+            </header>
+
+
+            <div class="modal-file-meta">
+
+                <div class="modal-highlight">
+
+                    <span>
+                        Type
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(study.type)}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-highlight">
+
+                    <span>
+                        Industry
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(study.category)}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-highlight">
+
+                    <span>
+                        Investigation Focus
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(study.focus)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    01 / THE SITUATION
+                </span>
+
+                <h3>
+                    The problem starts before the obvious problem.
+                </h3>
+
+                ${formatParagraphs(study.situation)}
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    02 / THE JOURNEY
+                </span>
+
+                <h3>
+                    Follow the customer.
+                </h3>
+
+                <p>
+                    Before changing anything, I map the path the
+                    customer is expected to take.
+                </p>
+
+                ${renderJourney(study.journey)}
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    03 / THE PRIMARY LEAK
+                </span>
+
+                <div class="modal-quote">
+                    ${escapeHTML(study.primaryLeak)}
+                </div>
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    04 / THE LEAKS
+                </span>
+
+                <h3>
+                    Where the journey starts losing momentum.
+                </h3>
+
+                <div class="leak-list">
+
+                    ${study.leaks
+                        .map(renderLeak)
+                        .join("")}
+
+                </div>
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    05 / THE FIX
+                </span>
+
+                <h3>
+                    Rebuild the journey around the decision.
+                </h3>
+
+                <p>
+                    The goal is not to add more information.
+                    The goal is to make the right information appear
+                    at the right point in the decision.
+                </p>
+
+
+                <div class="modal-grid">
+
+                    <div class="modal-highlight">
+
+                        <span>
+                            Current Path
+                        </span>
+
+                        ${renderJourney(currentPath)}
+
+                    </div>
+
+
+                    <div class="modal-highlight">
+
+                        <span>
+                            Proposed Path
+                        </span>
+
+                        ${renderJourney(proposedPath)}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <span class="eyebrow">
+                    06 / EXPECTED IMPACT
+                </span>
+
+                <h3>
+                    What the changes are designed to improve.
+                </h3>
+
+                <p>
+                    ${escapeHTML(study.impact)}
+                </p>
+
+            </section>
+
+
+            <section class="modal-section">
+
+                <div class="modal-conclusion">
+
+                    <span class="eyebrow">
+                        THE HUNT
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(study.conclusion)}
+                    </h3>
+
+                    <p>
+                        This is an illustrative investigation,
+                        not a client result.
+                    </p>
+
+                </div>
+
+            </section>
+
+        `;
+
+    }
+
+
+    function renderCards() {
+
+        if (!studies.length) {
+
+            emptyState.hidden = false;
+
+            return;
         }
-    );
 
 
+        emptyState.hidden = true;
 
-    /* ============================
-       BUTTON EVENTS
-    ============================ */
 
-    const buttons =
-        caseStudiesGrid.querySelectorAll(
-            "[data-case-index]"
+        grid.innerHTML =
+            studies.map(study => `
+
+                <article
+                    class="case-card"
+                    data-case-id="${escapeHTML(study.id)}"
+                >
+
+                    <div class="case-card-top">
+
+                        <span class="case-number">
+                            ${escapeHTML(study.number)}
+                        </span>
+
+                        <span class="case-category">
+                            ${escapeHTML(study.category)}
+                        </span>
+
+                    </div>
+
+
+                    <span class="case-type">
+                        ${escapeHTML(study.type)}
+                    </span>
+
+
+                    <h3>
+                        ${escapeHTML(study.title)}
+                    </h3>
+
+
+                    <p class="case-card-summary">
+                        ${escapeHTML(study.summary)}
+                    </p>
+
+
+                    <div class="case-card-meta">
+
+                        <div class="case-meta">
+
+                            <span>
+                                Focus
+                            </span>
+
+                            <strong>
+                                ${escapeHTML(study.focus)}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="case-meta">
+
+                            <span>
+                                Primary Leak
+                            </span>
+
+                            <strong>
+                                ${escapeHTML(study.primaryLeak)}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="case-card-button"
+                        data-case-id="${escapeHTML(study.id)}"
+                    >
+
+                        <span>
+                            Open Investigation
+                        </span>
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </button>
+
+                </article>
+
+            `).join("");
+
+    }
+
+
+    function openModal(id) {
+
+        const study =
+            studies.find(item => item.id === id);
+
+        if (!study) {
+            return;
+        }
+
+
+        renderInvestigation(study);
+
+
+        modal.hidden = false;
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
         );
 
 
-    buttons.forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const index =
-                    Number(
-                        button.dataset.caseIndex
-                    );
+        document.body.style.overflow =
+            "hidden";
 
 
-                openCaseStudy(
-                    studies[index]
-                );
+        closeButton?.focus();
 
-            }
+    }
+
+
+    function closeModal() {
+
+        modal.hidden = true;
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+
+    grid.addEventListener("click", event => {
+
+        const button =
+            event.target.closest(
+                "[data-case-id]"
+            );
+
+        if (!button) {
+            return;
+        }
+
+
+        openModal(
+            button.dataset.caseId
         );
 
     });
 
-}
 
-
-
-/* =================================
-   CREATE MODAL
-================================= */
-
-function createModal() {
-
-    let modal =
-        document.getElementById(
-            "case-modal"
-        );
-
-
-    if (modal) {
-
-        return modal;
-
-    }
-
-
-    modal =
-        document.createElement("div");
-
-
-    modal.id =
-        "case-modal";
-
-
-    modal.className =
-        "case-modal";
-
-
-    modal.hidden = true;
-
-
-    modal.innerHTML = `
-
-        <div
-            class="case-modal-content"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="case-modal-title"
-        >
-
-            <button
-                type="button"
-                class="case-modal-close"
-                id="case-modal-close"
-                aria-label="Close case study"
-            >
-                ×
-            </button>
-
-
-            <div
-                id="case-modal-body"
-            ></div>
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        modal
-    );
-
-
-    const closeButton =
-        document.getElementById(
-            "case-modal-close"
-        );
-
-
-    closeButton.addEventListener(
+    closeButton?.addEventListener(
         "click",
-        closeCaseStudy
+        closeModal
     );
 
 
@@ -380,7 +580,7 @@ function createModal() {
                 event.target === modal
             ) {
 
-                closeCaseStudy();
+                closeModal();
 
             }
 
@@ -393,11 +593,11 @@ function createModal() {
         event => {
 
             if (
-                event.key === "Escape"
-                && !modal.hidden
+                event.key === "Escape" &&
+                !modal.hidden
             ) {
 
-                closeCaseStudy();
+                closeModal();
 
             }
 
@@ -405,321 +605,6 @@ function createModal() {
     );
 
 
-    return modal;
+    renderCards();
 
-}
-
-
-
-/* =================================
-   OPEN CASE STUDY
-================================= */
-
-function openCaseStudy(study) {
-
-    if (!study) {
-
-        return;
-
-    }
-
-
-    const modal =
-        createModal();
-
-
-    const body =
-        document.getElementById(
-            "case-modal-body"
-        );
-
-
-    const title =
-        study.title
-        || study.name
-        || "Case Study";
-
-
-    const category =
-        study.category
-        || study.type
-        || "Revenue Leak";
-
-
-    const summary =
-        study.summary
-        || study.description
-        || "";
-
-
-    const problem =
-        study.problem
-        || study.challenge
-        || "Not specified.";
-
-
-    const investigation =
-        study.investigation
-        || study.approach
-        || study.process
-        || "Investigation focused on identifying friction throughout the customer journey.";
-
-
-    const findings =
-        study.findings
-        || study.leak
-        || study.discovery
-        || "A potential leak was identified within the journey.";
-
-
-    const solution =
-        study.solution
-        || study.fix
-        || study.recommendation
-        || "A targeted improvement was recommended.";
-
-
-    const outcome =
-        study.outcome
-        || study.result
-        || study.impact
-        || "Improved conversion opportunity identified.";
-
-
-    body.innerHTML = `
-
-        <div class="case-modal-header">
-
-            <span class="eyebrow">
-                ${escapeHTML(category)}
-            </span>
-
-
-            <h2 id="case-modal-title">
-                ${escapeHTML(title)}
-            </h2>
-
-
-            <p>
-                ${escapeHTML(summary)}
-            </p>
-
-        </div>
-
-
-        <div class="modal-section">
-
-            <h3>
-                The Problem
-            </h3>
-
-            <p>
-                ${escapeHTML(problem)}
-            </p>
-
-        </div>
-
-
-        <div class="modal-section">
-
-            <h3>
-                The Investigation
-            </h3>
-
-            <p>
-                ${escapeHTML(investigation)}
-            </p>
-
-        </div>
-
-
-        <div class="modal-section">
-
-            <h3>
-                What Was Found
-            </h3>
-
-            <p>
-                ${escapeHTML(findings)}
-            </p>
-
-        </div>
-
-
-        <div class="modal-section">
-
-            <h3>
-                The Fix
-            </h3>
-
-            <p>
-                ${escapeHTML(solution)}
-            </p>
-
-        </div>
-
-
-        <div class="modal-section">
-
-            <h3>
-                The Opportunity
-            </h3>
-
-            <p>
-                ${escapeHTML(outcome)}
-            </p>
-
-        </div>
-
-    `;
-
-
-    modal.hidden = false;
-
-
-    document.body.style.overflow =
-        "hidden";
-
-}
-
-
-
-/* =================================
-   CLOSE CASE STUDY
-================================= */
-
-function closeCaseStudy() {
-
-    const modal =
-        document.getElementById(
-            "case-modal"
-        );
-
-
-    if (!modal) {
-
-        return;
-
-    }
-
-
-    modal.hidden = true;
-
-
-    document.body.style.overflow =
-        "";
-
-}
-
-
-
-/* =================================
-   SHORTEN TEXT
-================================= */
-
-function shorten(
-    text,
-    maxLength
-) {
-
-    if (!text) {
-
-        return "";
-
-    }
-
-
-    const value =
-        String(text);
-
-
-    if (
-        value.length <= maxLength
-    ) {
-
-        return value;
-
-    }
-
-
-    return (
-        value.substring(
-            0,
-            maxLength
-        ).trim()
-        + "..."
-    );
-
-}
-
-
-
-/* =================================
-   ESCAPE HTML
-================================= */
-
-function escapeHTML(value) {
-
-    if (value === null || value === undefined) {
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-
-/* =================================
-   INITIALIZE
-================================= */
-
-function initPortfolio() {
-
-    renderCaseStudies();
-
-}
-
-
-
-/* =================================
-   START
-================================= */
-
-if (
-    document.readyState === "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initPortfolio
-    );
-
-} else {
-
-    initPortfolio();
-
-}
+});

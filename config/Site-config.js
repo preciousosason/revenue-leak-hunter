@@ -35,7 +35,7 @@ const SITE_CONFIG = {
 
         contact: "pages/contact/contact.html",
 
-        audit: "pages/leak-audit/leak-audit.html"
+        audit: "pages/contact/contact.html"
 
     },
 
