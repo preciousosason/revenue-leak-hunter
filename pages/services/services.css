@@ -1,10 +1,16 @@
 /* =========================================================
    SERVICES PAGE
+   Responsive structure:
+   1200px+  Large desktop
+   1100px   Desktop / tablet transition
+   800px    Tablet
+   600px    Mobile
+   420px    Small mobile
 ========================================================= */
 
 
 /* =========================================================
-   HERO
+   01. SERVICES HERO
 ========================================================= */
 
 .services-hero {
@@ -24,6 +30,7 @@
     content: "";
     position: absolute;
     inset: 0;
+
     pointer-events: none;
 
     background-image:
@@ -66,9 +73,41 @@
     max-width: 720px;
 }
 
+.services-hero h1 {
+    max-width: 780px;
+
+    margin: 0;
+
+    font-size:
+        clamp(
+            3rem,
+            6vw,
+            5.4rem
+        );
+
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+}
+
+.services-hero h1 span {
+    color: var(--color-primary);
+}
+
+.services-hero-description {
+    max-width: 650px;
+
+    margin:
+        2rem 0 2.25rem;
+
+    font-size: 1.08rem;
+    line-height: 1.8;
+
+    color: var(--color-text-muted);
+}
+
 
 /* =========================================================
-   EYEBROW
+   02. SHARED EYEBROW
 ========================================================= */
 
 .eyebrow {
@@ -105,54 +144,11 @@
 
 
 /* =========================================================
-   HERO HEADING
+   03. BUTTONS
 ========================================================= */
-
-.services-hero h1 {
-    max-width: 780px;
-    margin: 0;
-
-    font-size:
-        clamp(
-            3rem,
-            6vw,
-            5.4rem
-        );
-
-    line-height: 0.98;
-    letter-spacing: -0.055em;
-}
-
-.services-hero h1 span {
-    color: var(--color-primary);
-}
-
-.services-hero-description {
-    max-width: 650px;
-
-    margin:
-        2rem 0 2.25rem;
-
-    font-size: 1.08rem;
-    line-height: 1.8;
-
-    color: var(--color-text-muted);
-}
-
-
-/* =========================================================
-   HERO BUTTONS
-========================================================= */
-
-.services-hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
 
 .btn {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
@@ -182,15 +178,19 @@
 
 .btn-primary {
     color: #fff;
-    background: var(--color-primary);
+
+    background:
+        var(--color-primary);
 }
 
 .btn-primary:hover {
-    background: var(--color-primary-hover);
+    background:
+        var(--color-primary-hover);
 }
 
 .btn-secondary {
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     border:
         1px solid
@@ -201,12 +201,20 @@
 }
 
 .btn-secondary:hover {
-    border-color: var(--color-primary);
+    border-color:
+        var(--color-primary);
+}
+
+.services-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 1rem;
 }
 
 
 /* =========================================================
-   SCANNER VISUAL
+   04. HERO SCANNER
 ========================================================= */
 
 .services-hero-visual {
@@ -309,7 +317,8 @@
 }
 
 .funnel-stage:hover {
-    transform: translateX(4px);
+    transform:
+        translateX(4px);
 
     border-color:
         rgba(255, 50, 50, 0.22);
@@ -341,14 +350,16 @@
 
     font-size: 0.7rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .stage-number {
     font-size: 0.7rem;
     font-weight: 700;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .stage-status {
@@ -378,7 +389,8 @@
 }
 
 .stage-status.danger {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     background:
         rgba(255, 50, 50, 0.1);
@@ -414,30 +426,23 @@
 }
 
 .hunt-card-footer span:first-child {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 
 /* =========================================================
-   INTRO
+   05. SHARED SECTION HEADINGS
 ========================================================= */
-
-.services-intro {
-    padding: 7rem 0;
-
-    border-top:
-        1px solid
-        var(--color-border);
-}
 
 .section-heading {
     max-width: 720px;
+
     margin-bottom: 3rem;
 }
 
 .section-heading.centered {
-    margin-right: auto;
-    margin-left: auto;
+    margin-inline: auto;
 
     text-align: center;
 }
@@ -457,7 +462,8 @@
 }
 
 .section-heading h2 span {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 .section-heading p {
@@ -466,12 +472,26 @@
     font-size: 1rem;
     line-height: 1.8;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   JOURNEY STRIP
+   06. INTRO
+========================================================= */
+
+.services-intro {
+    padding: 7rem 0;
+
+    border-top:
+        1px solid
+        var(--color-border);
+}
+
+
+/* =========================================================
+   07. JOURNEY STRIP
 ========================================================= */
 
 .journey-strip {
@@ -507,7 +527,8 @@
 
     font-size: 0.65rem;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 .journey-item strong {
@@ -523,16 +544,18 @@
 
     margin-top: 0.35rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .journey-arrow {
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   SERVICES LIST
+   08. SERVICES LIST
 ========================================================= */
 
 .services-list {
@@ -552,10 +575,13 @@
     top: 0;
     left: 50%;
 
-    width: min(900px, 80%);
+    width:
+        min(900px, 80%);
+
     height: 1px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     background:
         linear-gradient(
@@ -568,7 +594,7 @@
 
 
 /* =========================================================
-   SERVICE GRID
+   09. SERVICE GRID
 ========================================================= */
 
 .service-grid {
@@ -584,7 +610,7 @@
 
 
 /* =========================================================
-   SERVICE CARD
+   10. SERVICE CARD
 ========================================================= */
 
 .service-card {
@@ -614,7 +640,8 @@
             rgba(255, 255, 255, 0.012)
         );
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     text-decoration: none;
 
@@ -728,7 +755,7 @@
 
 
 /* =========================================================
-   FEATURED SERVICE
+   11. FEATURED SERVICE
 ========================================================= */
 
 .featured-service {
@@ -758,7 +785,8 @@
     background:
         rgba(255, 50, 50, 0.08);
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 0.56rem;
     font-weight: 800;
@@ -768,7 +796,7 @@
 
 
 /* =========================================================
-   SERVICE CARD TOP
+   12. SERVICE CARD CONTENT
 ========================================================= */
 
 .service-card-top {
@@ -786,7 +814,8 @@
 
     letter-spacing: 0.1em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .service-icon {
@@ -808,7 +837,8 @@
     background:
         rgba(255, 255, 255, 0.02);
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 1rem;
 
@@ -829,11 +859,6 @@
         rgba(255, 50, 50, 0.06);
 }
 
-
-/* =========================================================
-   SERVICE CATEGORY
-========================================================= */
-
 .service-category {
     display: block;
 
@@ -846,13 +871,9 @@
 
     text-transform: uppercase;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
-
-
-/* =========================================================
-   SERVICE TITLE
-========================================================= */
 
 .service-card h3 {
     max-width: 340px;
@@ -875,17 +896,13 @@
     margin:
         1rem 0 1.5rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
     line-height: 1.7;
 
     font-size: 0.9rem;
 }
-
-
-/* =========================================================
-   SERVICE DIVIDER
-========================================================= */
 
 .service-divider {
     width: 100%;
@@ -897,11 +914,6 @@
         var(--color-border);
 }
 
-
-/* =========================================================
-   SERVICE LIST LABEL
-========================================================= */
-
 .service-card h4 {
     margin:
         0 0 0.9rem;
@@ -912,17 +924,12 @@
 
     letter-spacing: 0.1em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
-
-
-/* =========================================================
-   SERVICE BULLETS
-========================================================= */
 
 .service-card ul {
     display: flex;
-
     flex-direction: column;
 
     gap: 0.65rem;
@@ -942,7 +949,8 @@
 
     line-height: 1.45;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .service-card li::before {
@@ -966,11 +974,6 @@
         rgba(255, 50, 50, 0.45);
 }
 
-
-/* =========================================================
-   SERVICE LINK
-========================================================= */
-
 .service-link {
     display: inline-flex;
 
@@ -982,7 +985,8 @@
 
     padding-top: 1.75rem;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     font-size: 0.8rem;
     font-weight: 700;
@@ -993,7 +997,8 @@
 .service-link span {
     display: inline-block;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     transition:
         transform 250ms ease;
@@ -1003,11 +1008,6 @@
     transform:
         translateX(5px);
 }
-
-
-/* =========================================================
-   KEYBOARD ACCESSIBILITY
-========================================================= */
 
 .service-card:focus-visible {
     outline:
@@ -1019,7 +1019,7 @@
 
 
 /* =========================================================
-   LEAK AUDIT
+   13. LEAK AUDIT
 ========================================================= */
 
 .leak-audit-section {
@@ -1041,10 +1041,13 @@
     top: 0;
     left: 50%;
 
-    width: min(900px, 80%);
+    width:
+        min(900px, 80%);
+
     height: 1px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     background:
         linear-gradient(
@@ -1066,7 +1069,8 @@
     width: 700px;
     height: 500px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     pointer-events: none;
 
@@ -1080,7 +1084,6 @@
 
 .leak-audit-container {
     position: relative;
-
     z-index: 1;
 
     width:
@@ -1097,7 +1100,7 @@
 
 
 /* =========================================================
-   LEAK AUDIT HEADER
+   14. AUDIT HEADER
 ========================================================= */
 
 .leak-audit-header {
@@ -1111,7 +1114,8 @@
 
     margin-bottom: 1rem;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 0.7rem;
     font-weight: 800;
@@ -1145,12 +1149,13 @@
 
     line-height: 1.8;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   LEAK AUDIT CONTENT
+   15. AUDIT CONTENT
 ========================================================= */
 
 .leak-audit-content {
@@ -1167,7 +1172,7 @@
 
 
 /* =========================================================
-   AUDIT VISUAL
+   16. AUDIT VISUAL
 ========================================================= */
 
 .leak-audit-visual {
@@ -1176,7 +1181,6 @@
     min-height: 380px;
 
     display: flex;
-
     flex-direction: column;
 
     justify-content: center;
@@ -1204,7 +1208,6 @@
     content: "";
 
     position: absolute;
-
     inset: 0;
 
     pointer-events: none;
@@ -1266,21 +1269,20 @@
 
     letter-spacing: 0.14em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   AUDIT JOURNEY
+   17. AUDIT JOURNEY
 ========================================================= */
 
 .audit-journey {
     position: relative;
-
     z-index: 2;
 
     display: flex;
-
     align-items: center;
 
     width: 100%;
@@ -1331,7 +1333,8 @@
 
     letter-spacing: 0.08em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .audit-stage-name {
@@ -1340,7 +1343,8 @@
 
     letter-spacing: 0.08em;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 .audit-connector {
@@ -1383,7 +1387,8 @@
 
 .audit-stage-leak .audit-stage-number,
 .audit-stage-leak .audit-stage-name {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 .audit-leak-label {
@@ -1400,10 +1405,12 @@
 
     letter-spacing: 0.14em;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 @keyframes auditLeakPulse {
+
     0%,
     100% {
         transform: scale(1);
@@ -1426,12 +1433,11 @@
 
 
 /* =========================================================
-   AUDIT VISUAL FOOTER
+   18. AUDIT VISUAL FOOTER
 ========================================================= */
 
 .audit-visual-footer {
     position: relative;
-
     z-index: 2;
 
     display: flex;
@@ -1451,16 +1457,18 @@
 
     letter-spacing: 0.12em;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .audit-loss {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 
 /* =========================================================
-   AUDIT INFORMATION
+   19. AUDIT INFORMATION
 ========================================================= */
 
 .leak-audit-info {
@@ -1476,7 +1484,8 @@
 
     margin-bottom: 1rem;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 0.65rem;
     font-weight: 800;
@@ -1513,17 +1522,12 @@
 
     line-height: 1.8;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
-
-
-/* =========================================================
-   AUDIT POINTS
-========================================================= */
 
 .leak-audit-points {
     display: flex;
-
     flex-direction: column;
 
     gap: 0;
@@ -1556,7 +1560,8 @@
 
     font-size: 0.78rem;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 .leak-audit-points li span {
@@ -1567,13 +1572,9 @@
     font-size: 0.6rem;
     font-weight: 800;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
-
-
-/* =========================================================
-   AUDIT BUTTON
-========================================================= */
 
 .leak-audit-button {
     display: inline-flex;
@@ -1636,7 +1637,7 @@
 
 
 /* =========================================================
-   METHOD
+   20. METHOD
 ========================================================= */
 
 .service-process {
@@ -1649,14 +1650,14 @@
     grid-template-columns:
         repeat(4, 1fr);
 
+    overflow: hidden;
+
     border:
         1px solid
         var(--color-border);
 
     border-radius:
         var(--border-radius-lg);
-
-    overflow: hidden;
 }
 
 .method-card {
@@ -1694,7 +1695,8 @@
 
     margin-bottom: 2rem;
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 0.7rem;
     font-weight: 800;
@@ -1725,12 +1727,13 @@
 
     line-height: 1.75;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   FIT
+   21. FIT
 ========================================================= */
 
 .service-fit {
@@ -1770,7 +1773,8 @@
 }
 
 .fit-content h2 span {
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 }
 
 .fit-content p {
@@ -1778,7 +1782,8 @@
 
     margin-top: 1.25rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 
     line-height: 1.8;
 }
@@ -1849,7 +1854,8 @@
     background:
         rgba(255, 50, 50, 0.08);
 
-    color: var(--color-primary);
+    color:
+        var(--color-primary);
 
     font-size: 0.75rem;
     font-weight: 800;
@@ -1869,12 +1875,13 @@
 
     line-height: 1.6;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 
 /* =========================================================
-   FINAL CTA
+   22. FINAL CTA
 ========================================================= */
 
 .services-cta {
@@ -1915,7 +1922,6 @@
     content: "";
 
     position: absolute;
-
     inset: 0;
 
     pointer-events: none;
@@ -1964,7 +1970,8 @@
     margin:
         1.25rem 0 2rem;
 
-    color: var(--color-text-muted);
+    color:
+        var(--color-text-muted);
 }
 
 .services-cta-content .btn {
@@ -1974,7 +1981,7 @@
 
 
 /* =========================================================
-   CTA SCANNER
+   23. CTA SCANNER
 ========================================================= */
 
 .cta-scanner {
@@ -2022,7 +2029,7 @@
 
 
 /* =========================================================
-   AUDIT NOTIFICATION
+   24. AUDIT NOTIFICATION
 ========================================================= */
 
 .audit-notification {
@@ -2112,7 +2119,8 @@
     font-size: 13px;
     font-weight: 700;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 .audit-notification-text {
@@ -2131,7 +2139,8 @@
 
     letter-spacing: 0.14em;
 
-    color: var(--color-muted);
+    color:
+        var(--color-muted);
 }
 
 .audit-notification-text p {
@@ -2141,7 +2150,8 @@
 
     line-height: 1.45;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 .audit-notification-action {
@@ -2164,7 +2174,8 @@
 
     background: transparent;
 
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     font: inherit;
 
@@ -2223,7 +2234,8 @@
 
     background: transparent;
 
-    color: var(--color-muted);
+    color:
+        var(--color-muted);
 
     font-size: 17px;
     line-height: 1;
@@ -2236,7 +2248,8 @@
 }
 
 .audit-notification-close:hover {
-    color: var(--color-text);
+    color:
+        var(--color-text);
 
     transform:
         rotate(90deg);
@@ -2244,7 +2257,682 @@
 
 
 /* =========================================================
-   RESPONSIVE
+   25. SERVICE MODAL
+========================================================= */
+
+.service-modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 2rem;
+
+    background:
+        rgba(0, 0, 0, 0.82);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    overflow-y: auto;
+}
+
+.service-modal[hidden] {
+    display: none;
+}
+
+.service-modal-content {
+    position: relative;
+
+    width:
+        min(980px, 100%);
+
+    max-height:
+        calc(100vh - 4rem);
+
+    overflow-y: auto;
+
+    padding: 3rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 18, 18, 0.98),
+            rgba(8, 8, 8, 0.98)
+        );
+
+    box-shadow:
+        0 40px 120px
+        rgba(0, 0, 0, 0.6);
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255, 50, 50, 0.35)
+        transparent;
+}
+
+.service-modal-content::-webkit-scrollbar {
+    width: 7px;
+}
+
+.service-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.service-modal-content::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background:
+        rgba(255, 50, 50, 0.35);
+}
+
+
+/* =========================================================
+   26. MODAL CLOSE
+========================================================= */
+
+.service-modal-close {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    float: right;
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        -0.75rem
+        -0.75rem
+        1rem
+        1rem;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    color:
+        var(--color-text);
+
+    font-size: 1.6rem;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 200ms ease,
+        border-color 200ms ease,
+        color 200ms ease,
+        transform 200ms ease;
+}
+
+.service-modal-close:hover {
+    border-color:
+        rgba(255, 50, 50, 0.4);
+
+    background:
+        rgba(255, 50, 50, 0.08);
+
+    color:
+        var(--color-primary);
+
+    transform:
+        rotate(90deg);
+}
+
+.service-modal-close:focus-visible {
+    outline:
+        2px solid
+        var(--color-primary);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   27. MODAL HEADER
+========================================================= */
+
+.service-modal .case-modal-header {
+    max-width: 760px;
+
+    margin-bottom: 2.5rem;
+}
+
+.service-modal .case-modal-header h2 {
+    margin: 0;
+
+    font-size:
+        clamp(
+            2.3rem,
+            5vw,
+            4.2rem
+        );
+
+    line-height: 1;
+
+    letter-spacing: -0.045em;
+}
+
+.service-modal .case-modal-header > p {
+    max-width: 700px;
+
+    margin-top: 1.25rem;
+
+    font-size: 1rem;
+
+    line-height: 1.8;
+
+    color:
+        var(--color-text-muted);
+}
+
+
+/* =========================================================
+   28. MODAL META
+========================================================= */
+
+.service-modal .modal-file-meta {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 1px;
+
+    margin-bottom: 4rem;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--color-border);
+
+    border-radius: 14px;
+
+    background:
+        var(--color-border);
+}
+
+.service-modal .modal-highlight {
+    padding: 1.25rem;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.service-modal .modal-highlight > span {
+    display: block;
+
+    margin-bottom: 0.65rem;
+
+    font-size: 0.58rem;
+    font-weight: 800;
+
+    letter-spacing: 0.13em;
+
+    text-transform: uppercase;
+
+    color:
+        var(--color-text-muted);
+}
+
+.service-modal .modal-highlight strong {
+    display: block;
+
+    font-size: 0.82rem;
+
+    line-height: 1.45;
+
+    color:
+        var(--color-text);
+}
+
+
+/* =========================================================
+   29. MODAL SECTIONS
+========================================================= */
+
+.service-modal .modal-section {
+    padding:
+        0 0 3.5rem;
+
+    margin-bottom: 3.5rem;
+
+    border-bottom:
+        1px solid
+        var(--color-border);
+}
+
+.service-modal .modal-section:last-child {
+    margin-bottom: 0;
+
+    border-bottom: none;
+}
+
+.service-modal .modal-section h3 {
+    max-width: 720px;
+
+    margin:
+        0 0 1.25rem;
+
+    font-size:
+        clamp(
+            1.7rem,
+            3vw,
+            2.6rem
+        );
+
+    line-height: 1.08;
+
+    letter-spacing: -0.035em;
+}
+
+.service-modal .modal-section > p {
+    max-width: 760px;
+
+    margin-top: 1rem;
+
+    font-size: 0.92rem;
+
+    line-height: 1.85;
+
+    color:
+        var(--color-text-muted);
+}
+
+.service-modal .modal-section > .eyebrow {
+    margin-bottom: 1rem;
+}
+
+
+/* =========================================================
+   30. MODAL QUOTE
+========================================================= */
+
+.service-modal .modal-quote {
+    max-width: 780px;
+
+    padding:
+        1.5rem 1.75rem;
+
+    border-left:
+        3px solid
+        var(--color-primary);
+
+    background:
+        rgba(255, 50, 50, 0.045);
+
+    color:
+        var(--color-text);
+
+    font-size:
+        clamp(
+            1.15rem,
+            2.2vw,
+            1.55rem
+        );
+
+    line-height: 1.5;
+
+    letter-spacing: -0.015em;
+}
+
+
+/* =========================================================
+   31. MODAL GRID + JOURNEY
+========================================================= */
+
+.service-modal .modal-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+}
+
+.service-modal .modal-grid .modal-highlight {
+    border:
+        1px solid
+        var(--color-border);
+
+    border-radius: 12px;
+}
+
+.service-modal .journey {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 0.55rem;
+
+    margin-top: 0.75rem;
+}
+
+.service-modal .journey-step {
+    padding:
+        0.45rem 0.65rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.09);
+
+    border-radius: 6px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    letter-spacing: 0.05em;
+
+    color:
+        var(--color-text);
+}
+
+.service-modal .journey-arrow {
+    color:
+        var(--color-primary);
+
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   32. MODAL SERVICE AREAS
+========================================================= */
+
+.service-modal .leak-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+}
+
+.service-modal .leak-item {
+    padding: 1.4rem;
+
+    border:
+        1px solid
+        var(--color-border);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+}
+
+.service-modal .leak-item-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.4rem;
+}
+
+.service-modal .leak-item-header > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+}
+
+.service-modal .leak-number {
+    font-size: 0.62rem;
+    font-weight: 800;
+
+    color:
+        var(--color-primary);
+}
+
+.service-modal .leak-item h4 {
+    margin: 0;
+
+    font-size: 1rem;
+}
+
+.service-modal .leak-severity {
+    flex-shrink: 0;
+
+    padding:
+        0.35rem 0.55rem;
+
+    border:
+        1px solid
+        rgba(255, 50, 50, 0.16);
+
+    border-radius: 5px;
+
+    color:
+        var(--color-primary);
+
+    font-size: 0.54rem;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.service-modal .leak-detail {
+    padding:
+        0.85rem 0;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.055);
+}
+
+.service-modal .leak-detail-label {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
+    font-size: 0.57rem;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+
+    color:
+        var(--color-text-muted);
+}
+
+.service-modal .leak-detail p {
+    margin: 0;
+
+    font-size: 0.8rem;
+
+    line-height: 1.7;
+
+    color:
+        var(--color-text);
+}
+
+
+/* =========================================================
+   33. MODAL PROCESS
+========================================================= */
+
+.service-modal-process {
+    display: flex;
+
+    flex-direction: column;
+
+    margin-top: 1.5rem;
+
+    border-top:
+        1px solid
+        var(--color-border);
+}
+
+.service-process-step {
+    display: grid;
+
+    grid-template-columns:
+        45px 1fr;
+
+    gap: 1rem;
+
+    padding:
+        1.2rem 0;
+
+    border-bottom:
+        1px solid
+        var(--color-border);
+}
+
+.service-process-step > span {
+    font-size: 0.62rem;
+    font-weight: 800;
+
+    color:
+        var(--color-primary);
+}
+
+.service-process-step strong {
+    display: block;
+
+    font-size: 0.9rem;
+}
+
+.service-process-step p {
+    margin:
+        0.4rem 0 0;
+
+    font-size: 0.78rem;
+
+    line-height: 1.7;
+
+    color:
+        var(--color-text-muted);
+}
+
+
+/* =========================================================
+   34. MODAL DELIVERABLES
+========================================================= */
+
+.service-modal-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 0.75rem;
+
+    margin-top: 1.5rem;
+}
+
+.service-modal-list-item {
+    display: grid;
+
+    grid-template-columns:
+        34px 1fr;
+
+    gap: 0.8rem;
+
+    align-items: center;
+
+    min-height: 64px;
+
+    padding: 0.85rem;
+
+    border:
+        1px solid
+        var(--color-border);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+}
+
+.service-modal-list-item > span {
+    font-size: 0.6rem;
+    font-weight: 800;
+
+    color:
+        var(--color-primary);
+}
+
+.service-modal-list-item strong {
+    font-size: 0.78rem;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   35. MODAL CONCLUSION
+========================================================= */
+
+.service-modal .modal-conclusion {
+    padding: 2rem;
+
+    border:
+        1px solid
+        rgba(255, 50, 50, 0.22);
+
+    border-radius: 14px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255, 50, 50, 0.07),
+            transparent 55%
+        ),
+        rgba(255, 255, 255, 0.018);
+}
+
+.service-modal .modal-conclusion h3 {
+    margin-top: 0.5rem;
+}
+
+
+/* =========================================================
+   36. DESKTOP / TABLET
 ========================================================= */
 
 @media (max-width: 1100px) {
@@ -2296,11 +2984,12 @@
     .fit-grid {
         gap: 4rem;
     }
+
 }
 
 
 /* =========================================================
-   TABLET
+   37. TABLET
 ========================================================= */
 
 @media (max-width: 800px) {
@@ -2345,14 +3034,20 @@
     .leak-audit-visual {
         min-height: 340px;
     }
+
 }
 
 
 /* =========================================================
-   MOBILE
+   38. MOBILE
 ========================================================= */
 
 @media (max-width: 600px) {
+
+    .services-hero {
+        padding:
+            5rem 0 4rem;
+    }
 
     .services-hero h1 {
         font-size:
@@ -2387,8 +3082,18 @@
 
         gap: 0.7rem;
 
+        min-height: 68px;
+
         padding:
             0.7rem;
+    }
+
+    .funnel-stage strong {
+        font-size: 0.72rem;
+    }
+
+    .funnel-stage small {
+        font-size: 0.64rem;
     }
 
     .service-grid {
@@ -2583,11 +3288,307 @@
         top: 7px;
         right: 8px;
     }
+
 }
 
 
 /* =========================================================
-   REDUCED MOTION
+   39. SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .services-hero {
+        padding:
+            4.25rem 0 3.5rem;
+    }
+
+    .services-hero h1 {
+        font-size:
+            2.55rem;
+
+        letter-spacing:
+            -0.05em;
+    }
+
+    .services-hero-description {
+        margin:
+            1.5rem 0 1.75rem;
+
+        font-size:
+            0.9rem;
+
+        line-height:
+            1.7;
+    }
+
+    .hunt-card {
+        padding:
+            0.8rem;
+    }
+
+    .hunt-card-header,
+    .hunt-card-footer {
+        font-size:
+            0.56rem;
+    }
+
+    .funnel-stage {
+        grid-template-columns:
+            24px 1fr 24px;
+
+        gap:
+            0.55rem;
+
+        min-height:
+            62px;
+
+        padding:
+            0.6rem;
+    }
+
+    .funnel-stage strong {
+        font-size:
+            0.68rem;
+    }
+
+    .funnel-stage small {
+        font-size:
+            0.58rem;
+    }
+
+    .stage-status {
+        width:
+            23px;
+
+        height:
+            23px;
+
+        font-size:
+            0.62rem;
+    }
+
+    .journey-strip {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            1.25rem;
+
+        padding:
+            1.25rem;
+    }
+
+    .service-card {
+        padding:
+            1.2rem;
+    }
+
+    .service-card h3 {
+        font-size:
+            1.25rem;
+    }
+
+    .service-card > p {
+        font-size:
+            0.84rem;
+    }
+
+    .service-card li {
+        font-size:
+            0.76rem;
+    }
+
+    .services-cta-inner {
+        min-height:
+            330px;
+
+        padding:
+            1.5rem 1rem;
+    }
+
+    .services-cta-content h2 {
+        font-size:
+            2.25rem;
+    }
+
+    .leak-audit-visual {
+        min-height:
+            270px;
+    }
+
+    .audit-journey {
+        transform:
+            scale(0.62);
+    }
+
+    .audit-visual-footer {
+        font-size:
+            0.42rem;
+    }
+
+}
+
+
+/* =========================================================
+   40. MODAL RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .service-modal {
+        align-items: flex-start;
+
+        padding:
+            0.75rem;
+    }
+
+    .service-modal-content {
+        max-height:
+            calc(100vh - 1.5rem);
+
+        padding:
+            1.5rem;
+
+        border-radius:
+            16px;
+    }
+
+    .service-modal .modal-file-meta {
+        grid-template-columns:
+            1fr;
+    }
+
+    .service-modal .modal-grid,
+    .service-modal-list {
+        grid-template-columns:
+            1fr;
+    }
+
+    .service-modal .case-modal-header h2 {
+        font-size:
+            2.2rem;
+    }
+
+    .service-modal .modal-section {
+        padding-bottom:
+            2.5rem;
+
+        margin-bottom:
+            2.5rem;
+    }
+
+    .service-modal .leak-item-header {
+        flex-direction:
+            column;
+    }
+
+    .service-modal .leak-item-header > div {
+        align-items:
+            flex-start;
+    }
+
+    .service-modal .journey {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+    .service-modal .journey-arrow {
+        transform:
+            rotate(90deg);
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .service-modal {
+        padding:
+            0.5rem;
+    }
+
+    .service-modal-content {
+        max-height:
+            calc(100vh - 1rem);
+
+        padding:
+            1.15rem;
+
+        border-radius:
+            14px;
+    }
+
+    .service-modal-close {
+        width:
+            38px;
+
+        height:
+            38px;
+
+        font-size:
+            1.4rem;
+    }
+
+    .service-modal .case-modal-header {
+        margin-bottom:
+            2rem;
+    }
+
+    .service-modal .case-modal-header h2 {
+        font-size:
+            1.9rem;
+    }
+
+    .service-modal .case-modal-header > p {
+        font-size:
+            0.88rem;
+
+        line-height:
+            1.7;
+    }
+
+    .service-modal .modal-section h3 {
+        font-size:
+            1.55rem;
+    }
+
+    .service-modal .modal-quote {
+        padding:
+            1.15rem;
+
+        font-size:
+            1rem;
+    }
+
+    .service-modal .leak-item {
+        padding:
+            1.1rem;
+    }
+
+    .service-modal .leak-item h4 {
+        font-size:
+            0.9rem;
+    }
+
+    .service-modal .leak-detail p {
+        font-size:
+            0.76rem;
+    }
+
+    .service-modal .modal-conclusion {
+        padding:
+            1.25rem;
+    }
+
+}
+
+
+/* =========================================================
+   41. REDUCED MOTION
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2615,801 +3616,7 @@
     .btn,
     .service-icon,
     .service-link span,
-    .fit-item {
-        transition: none;
-    }
-}
-/* =========================================================
-   SERVICE MODAL
-========================================================= */
-
-.service-modal {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 10000;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 2rem;
-
-    background:
-        rgba(0, 0, 0, 0.82);
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    opacity: 1;
-
-    overflow-y: auto;
-}
-
-.service-modal[hidden] {
-    display: none;
-}
-
-
-.service-modal-content {
-    position: relative;
-
-    width:
-        min(
-            980px,
-            100%
-        );
-
-    max-height:
-        calc(
-            100vh - 4rem
-        );
-
-    overflow-y: auto;
-
-    padding: 3rem;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.10);
-
-    border-radius: 20px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(18, 18, 18, 0.98),
-            rgba(8, 8, 8, 0.98)
-        );
-
-    box-shadow:
-        0 40px 120px
-        rgba(0, 0, 0, 0.6);
-
-    scrollbar-width: thin;
-
-    scrollbar-color:
-        rgba(255, 50, 50, 0.35)
-        transparent;
-}
-
-
-.service-modal-content::-webkit-scrollbar {
-    width: 7px;
-}
-
-
-.service-modal-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-
-.service-modal-content::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-
-    background:
-        rgba(255, 50, 50, 0.35);
-}
-
-
-.service-modal-close {
-    position: sticky;
-
-    top: 0;
-
-    z-index: 10;
-
-    float: right;
-
-    width: 42px;
-    height: 42px;
-
-    display: grid;
-
-    place-items: center;
-
-    margin:
-        -0.75rem
-        -0.75rem
-        1rem
-        1rem;
-
-    padding: 0;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.10);
-
-    border-radius: 50%;
-
-    background:
-        rgba(255, 255, 255, 0.035);
-
-    color:
-        var(--color-text);
-
-    font-size: 1.6rem;
-
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        background 200ms ease,
-        border-color 200ms ease,
-        color 200ms ease,
-        transform 200ms ease;
-}
-
-
-.service-modal-close:hover {
-    border-color:
-        rgba(255, 50, 50, 0.4);
-
-    background:
-        rgba(255, 50, 50, 0.08);
-
-    color:
-        var(--color-primary);
-
-    transform:
-        rotate(90deg);
-}
-
-
-.service-modal-close:focus-visible {
-    outline:
-        2px solid
-        var(--color-primary);
-
-    outline-offset: 3px;
-}
-
-
-/* =========================================================
-   MODAL HEADER
-========================================================= */
-
-.service-modal .case-modal-header {
-    max-width: 760px;
-
-    margin-bottom: 2.5rem;
-}
-
-
-.service-modal .case-modal-header h2 {
-    margin: 0;
-
-    font-size:
-        clamp(
-            2.3rem,
-            5vw,
-            4.2rem
-        );
-
-    line-height: 1;
-
-    letter-spacing: -0.045em;
-}
-
-
-.service-modal .case-modal-header > p {
-    max-width: 700px;
-
-    margin-top: 1.25rem;
-
-    font-size: 1rem;
-
-    line-height: 1.8;
-
-    color:
-        var(--color-text-muted);
-}
-
-
-/* =========================================================
-   MODAL META
-========================================================= */
-
-.service-modal .modal-file-meta {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 1px;
-
-    margin-bottom: 4rem;
-
-    overflow: hidden;
-
-    border:
-        1px solid
-        var(--color-border);
-
-    border-radius: 14px;
-
-    background:
-        var(--color-border);
-}
-
-
-.service-modal .modal-highlight {
-    padding: 1.25rem;
-
-    background:
-        rgba(255, 255, 255, 0.025);
-}
-
-
-.service-modal .modal-highlight > span {
-    display: block;
-
-    margin-bottom: 0.65rem;
-
-    font-size: 0.58rem;
-    font-weight: 800;
-
-    letter-spacing: 0.13em;
-
-    text-transform: uppercase;
-
-    color:
-        var(--color-text-muted);
-}
-
-
-.service-modal .modal-highlight strong {
-    display: block;
-
-    font-size: 0.82rem;
-
-    line-height: 1.45;
-
-    color:
-        var(--color-text);
-}
-
-
-/* =========================================================
-   MODAL SECTIONS
-========================================================= */
-
-.service-modal .modal-section {
-    padding:
-        0 0 3.5rem;
-
-    margin-bottom: 3.5rem;
-
-    border-bottom:
-        1px solid
-        var(--color-border);
-}
-
-
-.service-modal .modal-section:last-child {
-    margin-bottom: 0;
-
-    border-bottom: none;
-}
-
-
-.service-modal .modal-section h3 {
-    max-width: 720px;
-
-    margin:
-        0 0 1.25rem;
-
-    font-size:
-        clamp(
-            1.7rem,
-            3vw,
-            2.6rem
-        );
-
-    line-height: 1.08;
-
-    letter-spacing: -0.035em;
-}
-
-
-.service-modal .modal-section > p {
-    max-width: 760px;
-
-    margin-top: 1rem;
-
-    font-size: 0.92rem;
-
-    line-height: 1.85;
-
-    color:
-        var(--color-text-muted);
-}
-
-
-.service-modal .modal-section > .eyebrow {
-    margin-bottom: 1rem;
-}
-
-
-/* =========================================================
-   MODAL QUOTE
-========================================================= */
-
-.service-modal .modal-quote {
-    max-width: 780px;
-
-    padding:
-        1.5rem 1.75rem;
-
-    border-left:
-        3px solid
-        var(--color-primary);
-
-    background:
-        rgba(255, 50, 50, 0.045);
-
-    color:
-        var(--color-text);
-
-    font-size:
-        clamp(
-            1.15rem,
-            2.2vw,
-            1.55rem
-        );
-
-    line-height: 1.5;
-
-    letter-spacing: -0.015em;
-}
-
-
-/* =========================================================
-   MODAL GRID
-========================================================= */
-
-.service-modal .modal-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 1rem;
-
-    margin-top: 1.5rem;
-}
-
-
-.service-modal .modal-grid .modal-highlight {
-    border:
-        1px solid
-        var(--color-border);
-
-    border-radius: 12px;
-}
-
-
-/* =========================================================
-   JOURNEY
-========================================================= */
-
-.service-modal .journey {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    align-items: center;
-
-    gap: 0.55rem;
-
-    margin-top: 0.75rem;
-}
-
-
-.service-modal .journey-step {
-    padding:
-        0.45rem 0.65rem;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.09);
-
-    border-radius: 6px;
-
-    background:
-        rgba(255, 255, 255, 0.025);
-
-    font-size: 0.65rem;
-    font-weight: 700;
-
-    letter-spacing: 0.05em;
-
-    color:
-        var(--color-text);
-}
-
-
-.service-modal .journey-arrow {
-    color:
-        var(--color-primary);
-
-    font-size: 0.8rem;
-}
-
-
-/* =========================================================
-   SERVICE AREAS
-========================================================= */
-
-.service-modal .leak-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 1rem;
-
-    margin-top: 1.5rem;
-}
-
-
-.service-modal .leak-item {
-    padding: 1.4rem;
-
-    border:
-        1px solid
-        var(--color-border);
-
-    border-radius: 12px;
-
-    background:
-        rgba(255, 255, 255, 0.018);
-}
-
-
-.service-modal .leak-item-header {
-    display: flex;
-
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 1rem;
-
-    margin-bottom: 1.4rem;
-}
-
-
-.service-modal .leak-item-header > div {
-    display: flex;
-
-    align-items: center;
-
-    gap: 0.75rem;
-}
-
-
-.service-modal .leak-number {
-    font-size: 0.62rem;
-    font-weight: 800;
-
-    color:
-        var(--color-primary);
-}
-
-
-.service-modal .leak-item h4 {
-    margin: 0;
-
-    font-size: 1rem;
-}
-
-
-.service-modal .leak-severity {
-    flex-shrink: 0;
-
-    padding:
-        0.35rem 0.55rem;
-
-    border:
-        1px solid
-        rgba(255, 50, 50, 0.16);
-
-    border-radius: 5px;
-
-    color:
-        var(--color-primary);
-
-    font-size: 0.54rem;
-    font-weight: 800;
-
-    letter-spacing: 0.1em;
-
-    text-transform: uppercase;
-}
-
-
-.service-modal .leak-detail {
-    padding:
-        0.85rem 0;
-
-    border-top:
-        1px solid
-        rgba(255, 255, 255, 0.055);
-}
-
-
-.service-modal .leak-detail-label {
-    display: block;
-
-    margin-bottom: 0.4rem;
-
-    font-size: 0.57rem;
-    font-weight: 800;
-
-    letter-spacing: 0.1em;
-
-    text-transform: uppercase;
-
-    color:
-        var(--color-text-muted);
-}
-
-
-.service-modal .leak-detail p {
-    margin: 0;
-
-    font-size: 0.8rem;
-
-    line-height: 1.7;
-
-    color:
-        var(--color-text);
-}
-
-
-/* =========================================================
-   SERVICE PROCESS
-========================================================= */
-
-.service-modal-process {
-    display: flex;
-
-    flex-direction: column;
-
-    margin-top: 1.5rem;
-
-    border-top:
-        1px solid
-        var(--color-border);
-}
-
-
-.service-process-step {
-    display: grid;
-
-    grid-template-columns:
-        45px 1fr;
-
-    gap: 1rem;
-
-    padding:
-        1.2rem 0;
-
-    border-bottom:
-        1px solid
-        var(--color-border);
-}
-
-
-.service-process-step > span {
-    font-size: 0.62rem;
-    font-weight: 800;
-
-    color:
-        var(--color-primary);
-}
-
-
-.service-process-step strong {
-    display: block;
-
-    font-size: 0.9rem;
-}
-
-
-.service-process-step p {
-    margin:
-        0.4rem 0 0;
-
-    font-size: 0.78rem;
-
-    line-height: 1.7;
-
-    color:
-        var(--color-text-muted);
-}
-
-
-/* =========================================================
-   SERVICE DELIVERABLES
-========================================================= */
-
-.service-modal-list {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 0.75rem;
-
-    margin-top: 1.5rem;
-}
-
-
-.service-modal-list-item {
-    display: grid;
-
-    grid-template-columns:
-        34px 1fr;
-
-    gap: 0.8rem;
-
-    align-items: center;
-
-    min-height: 64px;
-
-    padding: 0.85rem;
-
-    border:
-        1px solid
-        var(--color-border);
-
-    border-radius: 10px;
-
-    background:
-        rgba(255, 255, 255, 0.018);
-}
-
-
-.service-modal-list-item > span {
-    font-size: 0.6rem;
-    font-weight: 800;
-
-    color:
-        var(--color-primary);
-}
-
-
-.service-modal-list-item strong {
-    font-size: 0.78rem;
-
-    line-height: 1.4;
-}
-
-
-/* =========================================================
-   MODAL CONCLUSION
-========================================================= */
-
-.service-modal .modal-conclusion {
-    padding: 2rem;
-
-    border:
-        1px solid
-        rgba(255, 50, 50, 0.22);
-
-    border-radius: 14px;
-
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(255, 50, 50, 0.07),
-            transparent 55%
-        ),
-        rgba(255, 255, 255, 0.018);
-}
-
-
-.service-modal .modal-conclusion h3 {
-    margin-top: 0.5rem;
-}
-
-
-/* =========================================================
-   MODAL RESPONSIVE
-========================================================= */
-
-@media (max-width: 700px) {
-
-    .service-modal {
-        align-items: flex-start;
-
-        padding: 0.75rem;
-    }
-
-
-    .service-modal-content {
-        max-height:
-            calc(100vh - 1.5rem);
-
-        padding: 1.5rem;
-
-        border-radius: 16px;
-    }
-
-
-    .service-modal .modal-file-meta {
-        grid-template-columns: 1fr;
-    }
-
-
-    .service-modal .modal-grid,
-    .service-modal-list {
-        grid-template-columns: 1fr;
-    }
-
-
-    .service-modal .case-modal-header h2 {
-        font-size: 2.2rem;
-    }
-
-
-    .service-modal .modal-section {
-        padding-bottom: 2.5rem;
-
-        margin-bottom: 2.5rem;
-    }
-
-
-    .service-modal .leak-item-header {
-        flex-direction: column;
-    }
-
-
-    .service-modal .leak-item-header > div {
-        align-items: flex-start;
-    }
-
-
-    .service-modal .journey {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-
-
-    .service-modal .journey-arrow {
-        transform:
-            rotate(90deg);
-    }
-
-}
-
-
-@media (prefers-reduced-motion: reduce) {
-
+    .fit-item,
     .service-modal-close {
         transition: none;
     }

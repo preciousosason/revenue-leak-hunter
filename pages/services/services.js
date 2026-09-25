@@ -91,7 +91,10 @@ function formatParagraphs(text) {
 
 function renderJourney(items) {
 
-    if (!Array.isArray(items) || !items.length) {
+    if (
+        !Array.isArray(items) ||
+        !items.length
+    ) {
         return "";
     }
 
@@ -134,6 +137,11 @@ function renderJourney(items) {
 
 function renderServiceArea(area) {
 
+    if (!area) {
+        return "";
+    }
+
+
     return `
         <article class="leak-item">
 
@@ -152,63 +160,107 @@ function renderServiceArea(area) {
                 </div>
 
 
-                <span class="leak-severity">
-                    ${escapeHTML(area.severity)}
-                </span>
+                ${
+                    area.severity
+                        ? `
+                            <span class="leak-severity">
+                                ${escapeHTML(
+                                    area.severity
+                                )}
+                            </span>
+                        `
+                        : ""
+                }
 
             </div>
 
 
-            <div class="leak-detail">
+            ${
+                area.what
+                    ? `
+                        <div class="leak-detail">
 
-                <span class="leak-detail-label">
-                    What I Look For
-                </span>
+                            <span class="leak-detail-label">
+                                ${escapeHTML(
+                                    area.whatLabel ||
+                                    "What I Look For"
+                                )}
+                            </span>
 
-                <p>
-                    ${escapeHTML(area.what)}
-                </p>
+                            <p>
+                                ${escapeHTML(area.what)}
+                            </p>
 
-            </div>
-
-
-            <div class="leak-detail">
-
-                <span class="leak-detail-label">
-                    Why It Matters
-                </span>
-
-                <p>
-                    ${escapeHTML(area.why)}
-                </p>
-
-            </div>
+                        </div>
+                    `
+                    : ""
+            }
 
 
-            <div class="leak-detail">
+            ${
+                area.why
+                    ? `
+                        <div class="leak-detail">
 
-                <span class="leak-detail-label">
-                    What I Work On
-                </span>
+                            <span class="leak-detail-label">
+                                ${escapeHTML(
+                                    area.whyLabel ||
+                                    "Why It Matters"
+                                )}
+                            </span>
 
-                <p>
-                    ${escapeHTML(area.fix)}
-                </p>
+                            <p>
+                                ${escapeHTML(area.why)}
+                            </p>
 
-            </div>
+                        </div>
+                    `
+                    : ""
+            }
 
 
-            <div class="leak-detail">
+            ${
+                area.fix
+                    ? `
+                        <div class="leak-detail">
 
-                <span class="leak-detail-label">
-                    Focus
-                </span>
+                            <span class="leak-detail-label">
+                                ${escapeHTML(
+                                    area.fixLabel ||
+                                    "What I Work On"
+                                )}
+                            </span>
 
-                <p>
-                    ${escapeHTML(area.stage)}
-                </p>
+                            <p>
+                                ${escapeHTML(area.fix)}
+                            </p>
 
-            </div>
+                        </div>
+                    `
+                    : ""
+            }
+
+
+            ${
+                area.stage
+                    ? `
+                        <div class="leak-detail">
+
+                            <span class="leak-detail-label">
+                                ${escapeHTML(
+                                    area.stageLabel ||
+                                    "Focus"
+                                )}
+                            </span>
+
+                            <p>
+                                ${escapeHTML(area.stage)}
+                            </p>
+
+                        </div>
+                    `
+                    : ""
+            }
 
         </article>
     `;
@@ -217,17 +269,169 @@ function renderServiceArea(area) {
 
 
 /* =========================================================
-   RENDER SERVICE MODAL
+   RENDER PROCESS
+========================================================= */
+
+function renderProcess(process) {
+
+    if (
+        !Array.isArray(process) ||
+        !process.length
+    ) {
+        return "";
+    }
+
+
+    return `
+        <div class="service-modal-process">
+
+            ${process.map(
+                (item, index) => {
+
+                    const title =
+                        typeof item === "string"
+                            ? item
+                            : item?.title || "";
+
+
+                    const description =
+                        typeof item === "string"
+                            ? ""
+                            : item?.description || "";
+
+
+                    return `
+                        <div class="service-process-step">
+
+                            <span>
+                                ${String(
+                                    index + 1
+                                ).padStart(2, "0")}
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHTML(title)}
+                                </strong>
+
+
+                                ${
+                                    description
+                                        ? `
+                                            <p>
+                                                ${escapeHTML(
+                                                    description
+                                                )}
+                                            </p>
+                                        `
+                                        : ""
+                                }
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            ).join("")}
+
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
+   RENDER DELIVERABLES
+========================================================= */
+
+function renderDeliverables(deliverables) {
+
+    if (
+        !Array.isArray(deliverables) ||
+        !deliverables.length
+    ) {
+        return "";
+    }
+
+
+    return `
+        <div class="service-modal-list">
+
+            ${deliverables.map(
+                (item, index) => `
+
+                    <div class="service-modal-list-item">
+
+                        <span>
+                            ${String(
+                                index + 1
+                            ).padStart(2, "0")}
+                        </span>
+
+                        <strong>
+                            ${escapeHTML(item)}
+                        </strong>
+
+                    </div>
+
+                `
+            ).join("")}
+
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
+   GET SECTION CONTENT
+========================================================= */
+
+function getSection(
+    service,
+    key,
+    fallbackEyebrow,
+    fallbackTitle
+) {
+
+    const section =
+        service.sections?.[key] || {};
+
+
+    return {
+
+        eyebrow:
+            section.eyebrow ||
+            fallbackEyebrow,
+
+        title:
+            section.title ||
+            fallbackTitle
+
+    };
+
+}
+
+
+/* =========================================================
+   RENDER SERVICE
 ========================================================= */
 
 function renderService(service) {
 
     const currentPath =
-        service.currentPath || [];
+        Array.isArray(service.currentPath)
+            ? service.currentPath
+            : [];
 
 
     const proposedPath =
-        service.proposedPath || [];
+        Array.isArray(service.proposedPath)
+            ? service.proposedPath
+            : [];
 
 
     const areas =
@@ -248,69 +452,88 @@ function renderService(service) {
             : [];
 
 
-    const deliverablesHTML =
-        deliverables.length
-            ? `
-                <div class="service-modal-list">
+    /* -----------------------------------------------------
+       SECTION COPY
+    ----------------------------------------------------- */
 
-                    ${deliverables.map(
-                        (item, index) => `
+    const problemSection =
+        getSection(
+            service,
+            "problem",
+            "01 / START HERE",
+            "Start with what is actually happening."
+        );
 
-                            <div class="service-modal-list-item">
 
-                                <span>
-                                    ${String(index + 1).padStart(2, "0")}
-                                </span>
+    const primaryLeakSection =
+        getSection(
+            service,
+            "primaryLeak",
+            "02 / THE REAL GAP",
+            "Find the part that is getting in the way."
+        );
 
-                                <strong>
-                                    ${escapeHTML(item)}
-                                </strong>
 
-                            </div>
+    const investigationSection =
+        getSection(
+            service,
+            "investigation",
+            "03 / FOLLOW THE CLUES",
+            "Look closer at what is really happening."
+        );
 
-                        `
-                    ).join("")}
 
-                </div>
-            `
-            : "";
+    const approachSection =
+        getSection(
+            service,
+            "approach",
+            "04 / HOW I WORK",
+            "Follow the problem before trying to fix it."
+        );
+
+
+    const journeySection =
+        getSection(
+            service,
+            "journey",
+            "05 / THE SHIFT",
+            "Move from guessing to seeing what is actually happening."
+        );
+
+
+    const deliverablesSection =
+        getSection(
+            service,
+            "deliverables",
+            "06 / WHAT I WORK ON",
+            "The work follows what we find."
+        );
+
+
+    const impactSection =
+        getSection(
+            service,
+            "impact",
+            "07 / WHAT CHANGES",
+            "Turn what we find into something useful."
+        );
 
 
     const processHTML =
-        process.length
-            ? `
-                <div class="service-modal-process">
+        renderProcess(process);
 
-                    ${process.map(
-                        (item, index) => `
 
-                            <div class="service-process-step">
-
-                                <span>
-                                    ${String(index + 1).padStart(2, "0")}
-                                </span>
-
-                                <div>
-                                    <strong>
-                                        ${escapeHTML(item.title)}
-                                    </strong>
-
-                                    <p>
-                                        ${escapeHTML(item.description)}
-                                    </p>
-                                </div>
-
-                            </div>
-
-                        `
-                    ).join("")}
-
-                </div>
-            `
-            : "";
+    const deliverablesHTML =
+        renderDeliverables(
+            deliverables
+        );
 
 
     return `
+
+        <!-- =============================================
+             HEADER
+        ============================================== -->
 
         <header class="case-modal-header">
 
@@ -325,11 +548,17 @@ function renderService(service) {
 
 
             <p>
-                ${escapeHTML(service.summary)}
+                ${escapeHTML(
+                    service.summary
+                )}
             </p>
 
         </header>
 
+
+        <!-- =============================================
+             META
+        ============================================== -->
 
         <div class="modal-file-meta">
 
@@ -340,7 +569,9 @@ function renderService(service) {
                 </span>
 
                 <strong>
-                    ${escapeHTML(service.type)}
+                    ${escapeHTML(
+                        service.type
+                    )}
                 </strong>
 
             </div>
@@ -353,7 +584,9 @@ function renderService(service) {
                 </span>
 
                 <strong>
-                    ${escapeHTML(service.category)}
+                    ${escapeHTML(
+                        service.category
+                    )}
                 </strong>
 
             </div>
@@ -366,7 +599,9 @@ function renderService(service) {
                 </span>
 
                 <strong>
-                    ${escapeHTML(service.focus)}
+                    ${escapeHTML(
+                        service.focus
+                    )}
                 </strong>
 
             </div>
@@ -374,175 +609,315 @@ function renderService(service) {
         </div>
 
 
-        <section class="modal-section">
+        <!-- =============================================
+             01 / PROBLEM
+        ============================================== -->
 
-            <span class="eyebrow">
-                01 / THE PROBLEM
-            </span>
+        ${
+            service.situation
+                ? `
+                    <section class="modal-section">
 
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                problemSection.eyebrow
+                            )}
+                        </span>
 
-            <h3>
-                The service starts with the problem, not the tactic.
-            </h3>
 
+                        <h3>
+                            ${escapeHTML(
+                                problemSection.title
+                            )}
+                        </h3>
 
-            ${formatParagraphs(service.situation)}
 
-        </section>
+                        ${formatParagraphs(
+                            service.situation
+                        )}
 
+                    </section>
+                `
+                : ""
+        }
 
-        <section class="modal-section">
 
-            <span class="eyebrow">
-                02 / THE PRIMARY LEAK
-            </span>
+        <!-- =============================================
+             02 / PRIMARY PROBLEM
+        ============================================== -->
 
+        ${
+            service.primaryProblem
+                ? `
+                    <section class="modal-section">
 
-            <div class="modal-quote">
-                ${escapeHTML(service.primaryProblem)}
-            </div>
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                primaryLeakSection.eyebrow
+                            )}
+                        </span>
 
-        </section>
 
+                        <h3>
+                            ${escapeHTML(
+                                primaryLeakSection.title
+                            )}
+                        </h3>
 
-        <section class="modal-section">
 
-            <span class="eyebrow">
-                03 / WHAT I INVESTIGATE
-            </span>
+                        <div class="modal-quote">
+                            ${escapeHTML(
+                                service.primaryProblem
+                            )}
+                        </div>
 
+                    </section>
+                `
+                : ""
+        }
 
-            <h3>
-                Where the experience can start losing momentum.
-            </h3>
 
+        <!-- =============================================
+             03 / INVESTIGATION
+        ============================================== -->
 
-            <div class="leak-list">
+        ${
+            areas.length
+                ? `
+                    <section class="modal-section">
 
-                ${areas
-                    .map(renderServiceArea)
-                    .join("")}
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                investigationSection.eyebrow
+                            )}
+                        </span>
 
-            </div>
 
-        </section>
+                        <h3>
+                            ${escapeHTML(
+                                investigationSection.title
+                            )}
+                        </h3>
 
 
-        <section class="modal-section">
+                        <div class="leak-list">
 
-            <span class="eyebrow">
-                04 / THE APPROACH
-            </span>
+                            ${areas
+                                .map(
+                                    renderServiceArea
+                                )
+                                .join("")}
 
+                        </div>
 
-            <h3>
-                Understand the system before changing it.
-            </h3>
+                    </section>
+                `
+                : ""
+        }
 
 
-            ${processHTML}
+        <!-- =============================================
+             04 / APPROACH
+        ============================================== -->
 
-        </section>
+        ${
+            processHTML
+                ? `
+                    <section class="modal-section">
 
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                approachSection.eyebrow
+                            )}
+                        </span>
 
-        <section class="modal-section">
 
-            <span class="eyebrow">
-                05 / THE JOURNEY
-            </span>
+                        <h3>
+                            ${escapeHTML(
+                                approachSection.title
+                            )}
+                        </h3>
 
 
-            <h3>
-                Follow the path from problem to action.
-            </h3>
+                        ${processHTML}
 
+                    </section>
+                `
+                : ""
+        }
 
-            <div class="modal-grid">
 
-                <div class="modal-highlight">
+        <!-- =============================================
+             05 / JOURNEY
+        ============================================== -->
 
-                    <span>
-                        Current Path
-                    </span>
+        ${
+            currentPath.length ||
+            proposedPath.length
+                ? `
+                    <section class="modal-section">
 
-                    ${renderJourney(currentPath)}
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                journeySection.eyebrow
+                            )}
+                        </span>
 
-                </div>
 
+                        <h3>
+                            ${escapeHTML(
+                                journeySection.title
+                            )}
+                        </h3>
 
-                <div class="modal-highlight">
 
-                    <span>
-                        Improved Path
-                    </span>
+                        <div class="modal-grid">
 
-                    ${renderJourney(proposedPath)}
+                            ${
+                                currentPath.length
+                                    ? `
+                                        <div class="modal-highlight">
 
-                </div>
+                                            <span>
+                                                Current Path
+                                            </span>
 
-            </div>
+                                            ${renderJourney(
+                                                currentPath
+                                            )}
 
-        </section>
+                                        </div>
+                                    `
+                                    : ""
+                            }
 
 
-        <section class="modal-section">
+                            ${
+                                proposedPath.length
+                                    ? `
+                                        <div class="modal-highlight">
 
-            <span class="eyebrow">
-                06 / WHAT YOU GET
-            </span>
+                                            <span>
+                                                Better Path
+                                            </span>
 
+                                            ${renderJourney(
+                                                proposedPath
+                                            )}
 
-            <h3>
-                Practical work built around the actual problem.
-            </h3>
+                                        </div>
+                                    `
+                                    : ""
+                            }
 
+                        </div>
 
-            ${deliverablesHTML}
+                    </section>
+                `
+                : ""
+        }
 
-        </section>
 
+        <!-- =============================================
+             06 / DELIVERABLES
+        ============================================== -->
 
-        <section class="modal-section">
+        ${
+            deliverablesHTML
+                ? `
+                    <section class="modal-section">
 
-            <span class="eyebrow">
-                07 / INTENDED IMPACT
-            </span>
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                deliverablesSection.eyebrow
+                            )}
+                        </span>
 
 
-            <h3>
-                What the work is designed to improve.
-            </h3>
+                        <h3>
+                            ${escapeHTML(
+                                deliverablesSection.title
+                            )}
+                        </h3>
 
 
-            <p>
-                ${escapeHTML(service.impact)}
-            </p>
+                        ${deliverablesHTML}
 
-        </section>
+                    </section>
+                `
+                : ""
+        }
 
 
-        <section class="modal-section">
+        <!-- =============================================
+             07 / IMPACT
+        ============================================== -->
 
-            <div class="modal-conclusion">
+        ${
+            service.impact
+                ? `
+                    <section class="modal-section">
 
-                <span class="eyebrow">
-                    THE HUNT
-                </span>
+                        <span class="eyebrow">
+                            ${escapeHTML(
+                                impactSection.eyebrow
+                            )}
+                        </span>
 
 
-                <h3>
-                    ${escapeHTML(service.conclusion)}
-                </h3>
+                        <h3>
+                            ${escapeHTML(
+                                impactSection.title
+                            )}
+                        </h3>
 
 
-                <p>
-                    This describes the service approach,
-                    not a claimed client result.
-                </p>
+                        <p>
+                            ${escapeHTML(
+                                service.impact
+                            )}
+                        </p>
 
-            </div>
+                    </section>
+                `
+                : ""
+        }
 
-        </section>
+
+        <!-- =============================================
+             CONCLUSION
+        ============================================== -->
+
+        ${
+            service.conclusion
+                ? `
+                    <section class="modal-section">
+
+                        <div class="modal-conclusion">
+
+                            <span class="eyebrow">
+                                THE HUNT
+                            </span>
+
+
+                            <h3>
+                                ${escapeHTML(
+                                    service.conclusion
+                                )}
+                            </h3>
+
+
+                            <p>
+                                This describes the service approach,
+                                not a claimed client result.
+                            </p>
+
+                        </div>
+
+                    </section>
+                `
+                : ""
+        }
 
     `;
 
@@ -580,19 +955,25 @@ function renderServices(serviceData) {
                     service.badge
                         ? `
                             <span class="service-card-badge">
-                                ${escapeHTML(service.badge)}
+                                ${escapeHTML(
+                                    service.badge
+                                )}
                             </span>
                         `
                         : "";
 
 
                 const bullets =
-                    Array.isArray(service.bullets)
+                    Array.isArray(
+                        service.bullets
+                    )
                         ? service.bullets
                             .map(
                                 bullet => `
                                     <li>
-                                        ${escapeHTML(bullet)}
+                                        ${escapeHTML(
+                                            bullet
+                                        )}
                                     </li>
                                 `
                             )
@@ -603,26 +984,36 @@ function renderServices(serviceData) {
                 return `
                     <article
                         class="service-card${featuredClass}"
-                        data-service-id="${escapeHTML(service.id)}"
+                        data-service-id="${escapeHTML(
+                            service.id
+                        )}"
                         tabindex="0"
                         role="button"
-                        aria-label="Explore ${escapeHTML(service.title)}"
+                        aria-label="Explore ${escapeHTML(
+                            service.title
+                        )}"
                     >
 
                         <div class="service-card-top">
 
                             <span class="service-number">
-                                ${escapeHTML(service.number)}
+                                ${escapeHTML(
+                                    service.number
+                                )}
                             </span>
 
 
                             <span class="service-icon">
-                                ${escapeHTML(service.icon)}
+                                ${escapeHTML(
+                                    service.icon
+                                )}
                             </span>
 
 
                             <span class="service-category">
-                                ${escapeHTML(service.category)}
+                                ${escapeHTML(
+                                    service.category
+                                )}
                             </span>
 
 
@@ -632,7 +1023,9 @@ function renderServices(serviceData) {
 
 
                         <h3>
-                            ${escapeHTML(service.title)}
+                            ${escapeHTML(
+                                service.title
+                            )}
                         </h3>
 
 
@@ -648,7 +1041,10 @@ function renderServices(serviceData) {
 
 
                         <h4>
-                            ${escapeHTML(service.listLabel)}
+                            ${escapeHTML(
+                                service.listLabel ||
+                                "I investigate"
+                            )}
                         </h4>
 
 
@@ -678,6 +1074,149 @@ function renderServices(serviceData) {
 
 
     return true;
+
+}
+
+
+/* =========================================================
+   TYPEWRITER REVEAL
+========================================================= */
+
+function revealModalText(modalBody) {
+
+    const walker =
+        document.createTreeWalker(
+            modalBody,
+            NodeFilter.SHOW_TEXT
+        );
+
+
+    const textNodes = [];
+
+
+    let node;
+
+
+    while (
+        (node = walker.nextNode())
+    ) {
+
+        const text =
+            node.nodeValue || "";
+
+
+        if (
+            text.trim()
+        ) {
+
+            textNodes.push({
+                node,
+                text
+            });
+
+        }
+
+    }
+
+
+    textNodes.forEach(item => {
+
+        item.node.nodeValue = "";
+
+    });
+
+
+    let nodeIndex = 0;
+    let characterIndex = 0;
+
+
+    const typeNext = () => {
+
+        if (
+            nodeIndex >=
+            textNodes.length
+        ) {
+            return;
+        }
+
+
+        const current =
+            textNodes[nodeIndex];
+
+
+        const original =
+            current.text;
+
+
+        current.node.nodeValue =
+            original.slice(
+                0,
+                characterIndex + 1
+            );
+
+
+        characterIndex++;
+
+
+        if (
+            characterIndex >=
+            original.length
+        ) {
+
+            nodeIndex++;
+
+            characterIndex = 0;
+
+
+            requestAnimationFrame(
+                typeNext
+            );
+
+
+            return;
+
+        }
+
+
+        const currentCharacter =
+            original[
+                characterIndex - 1
+            ];
+
+
+        /*
+         * 20ms per character.
+         *
+         * The previous 0.2 was effectively
+         * instant because JavaScript timers
+         * use milliseconds.
+         */
+
+        const delay =
+            /\s/.test(
+                currentCharacter
+            )
+                ? 0
+                : 20;
+
+
+        const timer =
+            setTimeout(
+                typeNext,
+                delay
+            );
+
+
+        typewriterTimers.push(
+            timer
+        );
+
+    };
+
+
+    requestAnimationFrame(
+        typeNext
+    );
 
 }
 
@@ -718,15 +1257,61 @@ function initServiceModal(serviceData) {
         !grid
     ) {
         return;
+    }
+
+
+    let loadingTimer = null;
+
+
+    let typewriterTimers = [];
+
+
+    let openingSequence = 0;
+
+
+    function clearModalSequence() {
+
+        openingSequence++;
+
+
+        if (loadingTimer) {
+
+            clearTimeout(
+                loadingTimer
+            );
+
+            loadingTimer = null;
+
+        }
+
+
+        typewriterTimers.forEach(
+            timer => {
+
+                clearTimeout(
+                    timer
+                );
+
+            }
+        );
+
+
+        typewriterTimers = [];
 
     }
 
 
     function openModal(id) {
 
+        if (!modal.hidden) {
+            return;
+        }
+
+
         const service =
             serviceData.find(
-                item => item.id === id
+                item =>
+                    item.id === id
             );
 
 
@@ -735,8 +1320,32 @@ function initServiceModal(serviceData) {
         }
 
 
-        modalBody.innerHTML =
-            renderService(service);
+        clearModalSequence();
+
+
+        const currentSequence =
+            openingSequence;
+
+
+        /*
+         * -------------------------------------------------
+         * LOADING STATE
+         * -------------------------------------------------
+         */
+
+        modalBody.innerHTML = `
+            <div
+                class="modal-section"
+                role="status"
+                aria-live="polite"
+            >
+
+                <p>
+                    Preparing this for you…
+                </p>
+
+            </div>
+        `;
 
 
         modal.hidden = false;
@@ -754,10 +1363,56 @@ function initServiceModal(serviceData) {
 
         closeButton?.focus();
 
+
+        /*
+         * -------------------------------------------------
+         * WAIT 3 SECONDS
+         * -------------------------------------------------
+         */
+
+        loadingTimer =
+            setTimeout(() => {
+
+                loadingTimer = null;
+
+
+                if (
+                    modal.hidden ||
+                    currentSequence !==
+                        openingSequence
+                ) {
+                    return;
+                }
+
+
+                /*
+                 * Insert the actual
+                 * service content.
+                 */
+
+                modalBody.innerHTML =
+                    renderService(
+                        service
+                    );
+
+
+                /*
+                 * Then type it out.
+                 */
+
+                revealModalText(
+                    modalBody
+                );
+
+            }, 3000);
+
     }
 
 
     function closeModal() {
+
+        clearModalSequence();
+
 
         modal.hidden = true;
 
@@ -768,11 +1423,19 @@ function initServiceModal(serviceData) {
         );
 
 
+        modalBody.innerHTML =
+            "";
+
+
         document.body.style.overflow =
             "";
 
     }
 
+
+    /* -----------------------------------------------------
+       CLICK
+    ----------------------------------------------------- */
 
     grid.addEventListener(
         "click",
@@ -796,6 +1459,10 @@ function initServiceModal(serviceData) {
         }
     );
 
+
+    /* -----------------------------------------------------
+       KEYBOARD
+    ----------------------------------------------------- */
 
     grid.addEventListener(
         "keydown",
@@ -830,11 +1497,19 @@ function initServiceModal(serviceData) {
     );
 
 
+    /* -----------------------------------------------------
+       CLOSE BUTTON
+    ----------------------------------------------------- */
+
     closeButton?.addEventListener(
         "click",
         closeModal
     );
 
+
+    /* -----------------------------------------------------
+       BACKDROP
+    ----------------------------------------------------- */
 
     modal.addEventListener(
         "click",
@@ -851,6 +1526,10 @@ function initServiceModal(serviceData) {
         }
     );
 
+
+    /* -----------------------------------------------------
+       ESCAPE
+    ----------------------------------------------------- */
 
     document.addEventListener(
         "keydown",
@@ -872,50 +1551,10 @@ function initServiceModal(serviceData) {
 
 
 /* =========================================================
-   PAGE INITIALIZATION
+   SERVICE CARD REVEAL
 ========================================================= */
 
-async function initServicesPage() {
-
-    try {
-
-        const serviceData =
-            await loadServices();
-
-
-        const rendered =
-            renderServices(
-                serviceData
-            );
-
-
-        if (!rendered) {
-            return;
-        }
-
-
-        initServiceModal(
-            serviceData
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Failed to load services:",
-            error
-        );
-
-        return;
-
-    }
-
-
-    /*
-     * -----------------------------------------------------
-     * SERVICE CARD REVEAL
-     * -----------------------------------------------------
-     */
+function initServiceCardReveal() {
 
     const revealElements =
         document.querySelectorAll(
@@ -946,23 +1585,31 @@ async function initServicesPage() {
             }
         );
 
-    } else {
 
-        revealElements.forEach(
-            (element, index) => {
+        return;
 
-                element.style.transitionDelay =
-                    `${Math.min(index * 60, 360)}ms`;
-
-            }
-        );
+    }
 
 
-        const observer =
-            new IntersectionObserver(
-                entries => {
+    revealElements.forEach(
+        (element, index) => {
 
-                    entries.forEach(entry => {
+            element.style.transitionDelay =
+                `${Math.min(
+                    index * 60,
+                    360
+                )}ms`;
+
+        }
+    );
+
+
+    const observer =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
 
                         if (
                             !entry.isIntersecting
@@ -980,35 +1627,36 @@ async function initServicesPage() {
                             entry.target
                         );
 
-                    });
-
-                },
-                {
-                    threshold: 0.12,
-                    rootMargin:
-                        "0px 0px -40px 0px"
-                }
-            );
-
-
-        revealElements.forEach(
-            element => {
-
-                observer.observe(
-                    element
+                    }
                 );
 
+            },
+            {
+                threshold: 0.12,
+                rootMargin:
+                    "0px 0px -40px 0px"
             }
         );
 
-    }
+
+    revealElements.forEach(
+        element => {
+
+            observer.observe(
+                element
+            );
+
+        }
+    );
+
+}
 
 
-    /*
-     * -----------------------------------------------------
-     * SERVICE CARD INTERACTION
-     * -----------------------------------------------------
-     */
+/* =========================================================
+   SERVICE CARD INTERACTION
+========================================================= */
+
+function initServiceCardInteraction() {
 
     const serviceCards =
         document.querySelectorAll(
@@ -1134,12 +1782,14 @@ async function initServicesPage() {
 
     });
 
+}
 
-    /*
-     * -----------------------------------------------------
-     * SCANNER STAGE INTERACTION
-     * -----------------------------------------------------
-     */
+
+/* =========================================================
+   SCANNER STAGE INTERACTION
+========================================================= */
+
+function initScannerStages() {
 
     const funnelStages =
         document.querySelectorAll(
@@ -1147,52 +1797,109 @@ async function initServicesPage() {
         );
 
 
-    if (
-        funnelStages.length &&
-        !prefersReducedMotion
-    ) {
-
-        let activeStage = 0;
+    if (!funnelStages.length) {
+        return;
+    }
 
 
-        const activateStage = () => {
+    const prefersReducedMotion =
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
 
-            funnelStages.forEach(
-                stage => {
 
-                    stage.classList.remove(
-                        "scanner-active"
-                    );
+    if (prefersReducedMotion) {
+        return;
+    }
 
-                }
+
+    let activeStage = 0;
+
+
+    const activateStage = () => {
+
+        funnelStages.forEach(
+            stage => {
+
+                stage.classList.remove(
+                    "scanner-active"
+                );
+
+            }
+        );
+
+
+        if (
+            funnelStages[activeStage]
+        ) {
+
+            funnelStages[activeStage]
+                .classList.add(
+                    "scanner-active"
+                );
+
+        }
+
+
+        activeStage =
+            (
+                activeStage + 1
+            ) %
+            funnelStages.length;
+
+    };
+
+
+    activateStage();
+
+
+    setInterval(
+        activateStage,
+        2200
+    );
+
+}
+
+
+/* =========================================================
+   PAGE INITIALIZATION
+========================================================= */
+
+async function initServicesPage() {
+
+    try {
+
+        const serviceData =
+            await loadServices();
+
+
+        const rendered =
+            renderServices(
+                serviceData
             );
 
 
-            if (
-                funnelStages[activeStage]
-            ) {
-
-                funnelStages[activeStage]
-                    .classList.add(
-                        "scanner-active"
-                    );
-
-            }
+        if (!rendered) {
+            return;
+        }
 
 
-            activeStage =
-                (activeStage + 1) %
-                funnelStages.length;
-
-        };
+        initServiceModal(
+            serviceData
+        );
 
 
-        activateStage();
+        initServiceCardReveal();
 
+        initServiceCardInteraction();
 
-        setInterval(
-            activateStage,
-            2200
+        initScannerStages();
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load services:",
+            error
         );
 
     }

@@ -1,148 +1,408 @@
+/* =========================================================
+   MESSAGING THAT MAKES SENSE
+========================================================= */
+
 export default {
-    id: "service-005",
-    slug: "search-visibility",
-    number: "05",
-    type: "DISCOVERY ENGINEERING",
-    category: "DISCOVER",
-    title: "Search Visibility Engineering",
-    icon: "◎",
+
+    id: "service-004",
+
+    slug: "messaging",
+
+    number: "04",
+
+    type: "MESSAGE CLARITY",
+
+    category: "CLARIFY",
+
+    title: "Messaging That Makes Sense",
+
+    icon: "Aa",
+
+
+    /* =====================================================
+       CARD
+    ===================================================== */
 
     summary:
-        "Build the structure, content, and signals that help the right people discover you when they are already looking.",
+        "Turn complicated offers into clear words people can understand, care about, and act on.",
 
     featured: false,
 
-    listLabel: "I optimize",
+    listLabel: "I clarify",
 
     bullets: [
-        "Technical SEO",
-        "Search-intent strategy",
-        "Content architecture",
-        "GEO and AI search visibility"
+        "Website and landing-page copy",
+        "Headlines and offers",
+        "Value propositions",
+        "Calls-to-action"
     ],
 
+
+    /* =====================================================
+       CORE FOCUS
+    ===================================================== */
+
     focus:
-        "Making the business easier for search systems and people to understand and discover.",
+        "Making the value of an offer easier to understand, easier to believe, and easier to act on.",
+
+
+    /* =====================================================
+       PRIMARY PROBLEM
+    ===================================================== */
 
     primaryProblem:
-        "Useful information exists, but search engines and AI systems may not have a clear enough structure to understand where it belongs.",
+        "You understand your offer because you built it. Your visitor does not have that advantage, so the message has to do the explaining for you.",
+
+
+    /* =====================================================
+       01 / THE SITUATION
+    ===================================================== */
 
     situation: `
-        Visibility is not just about adding more keywords.
-        Search systems need understandable structure, useful content,
-        technical accessibility, and clear relationships between topics.
+        You know what you sell.
 
-        The same principle increasingly applies to AI-driven discovery,
-        where systems need reliable context before they can surface or
-        reference information.
+        You know how it works.
+        You know why it is useful.
+        You know what makes it different.
+
+        Your visitor does not.
+
+        They are seeing your offer for the first time.
+
+        So they have a few simple questions running through their head.
+
+        What is this?
+
+        Is it for me?
+
+        Why should I care?
+
+        Can I believe what they are saying?
+
+        And what am I supposed to do next?
+
+        If the message does not answer those questions clearly, people have to do the work themselves.
+
+        They start interpreting.
+        They start comparing.
+        They start wondering.
+
+        And the longer they have to figure things out, the easier it becomes to leave.
+
+        That is why clear messaging is not just about finding better words.
+
+        It is about helping someone understand the offer in the right order.
+
+        We look at what the visitor needs to understand, what they need to believe, and what they need to know before they can make a decision.
+
+        Then we build the message around that journey.
     `,
 
+
+    /* =====================================================
+       SERVICE-SPECIFIC SECTION HEADINGS
+    ===================================================== */
+
+    sections: {
+
+        problem: {
+            eyebrow: "01 / START HERE",
+            title:
+                "You understand the offer. Your visitor is still figuring it out."
+        },
+
+
+        primaryLeak: {
+            eyebrow: "02 / THE MESSAGE GAP",
+            title:
+                "When people have to figure out what you mean, the message is doing too little work."
+        },
+
+
+        investigation: {
+            eyebrow: "03 / FOLLOW THE CONFUSION",
+            title:
+                "So we look at where the message creates questions instead of answers."
+        },
+
+
+        approach: {
+            eyebrow: "04 / HOW I CLARIFY IT",
+            title:
+                "We build the message around the decisions the reader needs to make."
+        },
+
+
+        journey: {
+            eyebrow: "05 / THE SHIFT",
+            title:
+                "The goal is to move people from trying to understand to being ready to decide."
+        },
+
+
+        deliverables: {
+            eyebrow: "06 / WHAT I WORK ON",
+            title:
+                "The words change, but the reasoning behind them matters more."
+        },
+
+
+        impact: {
+            eyebrow: "07 / WHAT CHANGES",
+            title:
+                "The offer becomes easier to understand without having to explain itself over and over."
+        }
+
+    },
+
+
+    /* =====================================================
+       INVESTIGATION AREAS
+    ===================================================== */
+
     areas: [
+
         {
             number: "01",
-            title: "Technical Barriers",
-            severity: "TECHNICAL",
+
+            title: "Message Fog",
+
+            severity: "CLARITY GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Technical issues make important pages harder to crawl, understand, render, or index effectively.",
+                "The headline and opening message talk about the business, but leave the visitor unsure about the problem, value, or outcome.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Good content cannot perform its intended discovery role if the underlying structure creates unnecessary barriers.",
+                "People decide very quickly whether a page is worth their attention. If the message is unclear at the start, they may never stay long enough to understand the offer.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Audit technical foundations, indexing signals, page structure, metadata, and performance.",
+                "We bring the problem, audience, value, or outcome that matters most into clearer focus.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
-                "Crawl and indexing"
+                "First impression"
         },
+
 
         {
             number: "02",
-            title: "Intent Mismatch",
-            severity: "STRATEGIC",
+
+            title: "A Value Proposition That Blends In",
+
+            severity: "DIFFERENTIATION GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Content targets topics without sufficiently matching what people are actually trying to accomplish.",
+                "The offer sounds reasonable, but the same words could describe several competitors or alternatives.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Ranking for attention that does not match the offer creates weak discovery value.",
+                "If the message does not make the difference clear, the visitor has little reason to understand why this option deserves more attention.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Align content and landing pages with meaningful search intent and business relevance.",
+                "We make the value, audience, mechanism, outcome, and meaningful difference more specific.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
-                "Search intent"
+                "Evaluation"
         },
+
 
         {
             number: "03",
-            title: "Content Gaps",
-            severity: "CONTENT",
+
+            title: "Proof That Arrives Too Late",
+
+            severity: "TRUST GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Important questions in the customer's decision process are not addressed clearly.",
+                "Testimonials, evidence, examples, or explanations exist, but do not clearly support the claims or questions appearing around them.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Missing information can prevent the business from becoming useful during research.",
+                "A claim creates a question. Good proof helps answer that question. When the two are disconnected, the evidence has less chance to do useful work.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Build content around real questions, topics, entities, comparisons, and decision stages.",
+                "We connect proof to the claims, doubts, objections, and decision points where it can actually help.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
-                "Content discovery"
+                "Trust"
         },
+
 
         {
             number: "04",
-            title: "AI Discovery Gap",
-            severity: "EMERGING",
+
+            title: "A CTA Without a Decision",
+
+            severity: "ACTION GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "The site's information is difficult for AI systems to interpret or connect to relevant questions.",
+                "The call-to-action tells people what to click, but the page has not made the reason for taking that step clear enough.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "AI-assisted discovery depends on clear, structured, trustworthy information.",
+                "A button can point people somewhere, but it cannot create a decision that the rest of the message has not prepared them to make.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Improve topical clarity, structured information, entity context, and answer-oriented content.",
+                "We make the next step specific, relevant, and consistent with what the visitor has just understood.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
-                "AI discovery"
+                "Decision"
         }
+
     ],
+
+
+    /* =====================================================
+       CURRENT VS BETTER PATH
+    ===================================================== */
 
     currentPath: [
-        "Publish",
-        "Wait",
-        "Hope",
-        "Disappear"
+        "Read",
+        "Interpret",
+        "Question",
+        "Doubt",
+        "Leave"
     ],
+
 
     proposedPath: [
-        "Research",
-        "Structure",
-        "Publish",
-        "Signal",
-        "Discover"
+        "Read",
+        "Understand",
+        "Believe",
+        "Decide",
+        "Act"
     ],
 
-    deliverables: [
-        "Technical SEO analysis",
-        "Search-intent strategy",
-        "Content architecture",
-        "GEO and AI-search recommendations"
-    ],
+
+    /* =====================================================
+       HOW I WORK
+    ===================================================== */
 
     process: [
-        "Audit discovery foundations",
-        "Map search intent",
-        "Build content structure",
-        "Strengthen discovery signals"
+
+        {
+            title:
+                "Understand the reader",
+
+            description:
+                "We start with the person on the other side of the message, what they already know, what they want, and what they are likely to question."
+        },
+
+
+        {
+            title:
+                "Clarify the offer",
+
+            description:
+                "We strip away the unnecessary language and make the actual value, problem, audience, outcome, and difference easier to see."
+        },
+
+
+        {
+            title:
+                "Build the message",
+
+            description:
+                "We arrange the information around the questions and decisions the visitor naturally moves through."
+        },
+
+
+        {
+            title:
+                "Connect the proof",
+
+            description:
+                "We place evidence, examples, reassurance, and supporting details where they help answer the doubts created by the message."
+        },
+
+
+        {
+            title:
+                "Refine for action",
+
+            description:
+                "We make the next step feel like a natural continuation of the decision instead of a random button at the bottom of the page."
+        }
+
     ],
 
+
+    /* =====================================================
+       DELIVERABLES
+    ===================================================== */
+
+    deliverables: [
+
+        "Website and landing-page copy",
+
+        "Headlines and value propositions",
+
+        "Offer and message structure",
+
+        "CTA and decision-path copy",
+
+        "Messaging recommendations"
+
+    ],
+
+
+    /* =====================================================
+       IMPACT
+    ===================================================== */
+
     impact:
-        "The goal is to create a stronger discovery foundation so the right information can be found, understood, and connected to relevant searches.",
+        "Instead of making visitors work to understand what you mean, the message gives them a clearer path from knowing what the offer is to understanding why it matters and what they can do next.",
+
+
+    /* =====================================================
+       CONCLUSION
+    ===================================================== */
 
     conclusion:
-        "Visibility starts with being understandable."
+        "If people have to decode the offer before they can value it, the message is already creating friction."
+
 };

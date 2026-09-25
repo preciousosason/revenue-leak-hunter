@@ -1,14 +1,30 @@
+/* =========================================================
+   CONVERSION INTELLIGENCE
+========================================================= */
+
 export default {
+
     id: "service-008",
+
     slug: "conversion-intelligence",
+
     number: "08",
-    type: "BEHAVIORAL MEASUREMENT",
+
+    type: "BEHAVIOR MEASUREMENT",
+
     category: "MEASURE",
+
     title: "Conversion Intelligence",
+
     icon: "◫",
 
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
     summary:
-        "Turn customer behavior into evidence about where people hesitate, disappear, and convert.",
+        "See what people do, where they stop, and where they leave, so you know what needs attention.",
 
     featured: false,
 
@@ -16,132 +32,371 @@ export default {
 
     bullets: [
         "Conversion tracking",
-        "Funnel analytics",
+        "Funnel tracking",
         "Event tracking",
-        "Behavioral insights"
+        "Behavior insights"
     ],
 
+
+    /* =====================================================
+       CORE FOCUS
+    ===================================================== */
+
     focus:
-        "Replacing assumptions about customer behavior with useful evidence.",
+        "Finding out what people actually do on the way to becoming customers, so decisions are based on what you can see instead of what you assume.",
+
+
+    /* =====================================================
+       PRIMARY PROBLEM
+    ===================================================== */
 
     primaryProblem:
-        "The business knows the final numbers but cannot clearly explain what is happening between the beginning and the outcome.",
+        "You can see how many people visit, buy, or sign up. But if you cannot see what happens in between, you are still guessing.",
+
+
+    /* =====================================================
+       01 / THE SITUATION
+    ===================================================== */
 
     situation: `
-        A conversion number tells you what happened.
-        It does not always tell you why.
+        You can see the final numbers.
 
-        Useful measurement connects important customer actions across the
-        journey so that friction, drop-off, and successful behavior become
-        easier to investigate.
+        You can see how many people visited.
+        You can see how many signed up.
+        You can see how many bought.
+
+        But what happened between those numbers?
+
+        Someone visits your site.
+
+        They look around.
+        They click something.
+        Maybe they read your offer.
+        Maybe they start a form.
+        Maybe they come back later.
+
+        And then they leave.
+
+        The final number can tell you that they did not convert.
+
+        But it cannot always show you where the journey started to go wrong.
+
+        That is where the real problem begins.
+
+        When you cannot see the steps between the visit and the conversion, you have to guess what happened.
+
+        So instead of staring at one final number, we follow the journey that created it.
+
+        We look at the actions that matter, where people move forward, where they stop, and where their behavior changes.
+
+        Because once you can see the journey, you have something useful to investigate.
     `,
 
+
+    /* =====================================================
+       SERVICE-SPECIFIC SECTION HEADINGS
+    ===================================================== */
+
+    sections: {
+
+        problem: {
+            eyebrow: "01 / START HERE",
+            title:
+                "You can see the result. But can you see the journey?"
+        },
+
+
+        primaryLeak: {
+            eyebrow: "02 / THE REAL GAP",
+            title:
+                "The problem is not always the final number."
+        },
+
+
+        investigation: {
+            eyebrow: "03 / FOLLOW THE JOURNEY",
+            title:
+                "So we look at what people actually do."
+        },
+
+
+        approach: {
+            eyebrow: "04 / HOW I TRACE IT",
+            title:
+                "First we make the journey visible. Then we follow the clues."
+        },
+
+
+        journey: {
+            eyebrow: "05 / FROM GUESSING TO KNOWING",
+            title:
+                "This is the shift we are looking for."
+        },
+
+
+        deliverables: {
+            eyebrow: "06 / WHAT I WORK ON",
+            title:
+                "The work follows what the evidence shows us."
+        },
+
+
+        impact: {
+            eyebrow: "07 / WHAT CHANGES",
+            title:
+                "You get a clearer picture of what needs attention."
+        }
+
+    },
+
+
+    /* =====================================================
+       INVESTIGATION AREAS
+    ===================================================== */
+
     areas: [
+
         {
             number: "01",
-            title: "Measurement Blind Spot",
-            severity: "CRITICAL",
+
+            title: "Make the Journey Visible",
+
+            severity: "VISIBILITY GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Important actions in the journey are not being tracked consistently.",
+                "Important actions in the customer journey that are missing, unclear, or not being tracked properly.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Missing data creates gaps between what the business thinks is happening and what visitors actually do.",
+                "If you cannot see an important step, you cannot properly investigate what happens there.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Define the important events and establish a reliable measurement structure.",
+                "We identify the actions that matter and create a clear tracking structure around them.",
+
+            stageLabel:
+                "Focus",
 
             stage:
-                "Tracking"
+                "Visibility"
         },
+
 
         {
             number: "02",
-            title: "Funnel Drop-off",
-            severity: "HIGH FRICTION",
+
+            title: "Find Where People Drop",
+
+            severity: "DROP-OFF",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "The business can see that conversion is low but cannot isolate where the largest drop-offs occur.",
+                "The points in the funnel where people stop moving forward.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Without stage-level visibility, optimization becomes guesswork.",
+                "Knowing that conversion is low is not enough. You need to know where the biggest loss is happening.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Track meaningful funnel stages and compare progression between them.",
+                "We track the important stages and compare how people move from one step to the next.",
+
+            stageLabel:
+                "Focus",
 
             stage:
                 "Funnel"
         },
 
+
         {
             number: "03",
-            title: "Behavior Gap",
-            severity: "ANALYTICAL",
+
+            title: "Look Closer at the Behavior",
+
+            severity: "BEHAVIOR GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Aggregate metrics hide important differences in how visitors interact with the experience.",
+                "Differences in how people interact with the journey across useful groups, devices, traffic sources, or stages.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Different traffic sources, devices, or user groups may encounter different problems.",
+                "A problem that looks small overall can become much clearer when you look at who is actually experiencing it.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Segment useful behavioral data and investigate meaningful patterns.",
+                "We break useful behavior into meaningful groups and look for patterns that help explain the drop.",
+
+            stageLabel:
+                "Focus",
 
             stage:
                 "Behavior"
         },
 
+
         {
             number: "04",
-            title: "Insight Delay",
-            severity: "OPERATIONAL",
+
+            title: "Turn the Signals Into Action",
+
+            severity: "DECISION GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Data exists but is difficult to interpret or connect to an actual decision.",
+                "Patterns that are visible in the data but have not yet been turned into a clear decision.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Measurement has limited value when it does not influence action.",
+                "More data does not automatically create better decisions. Someone still has to understand what the signal means.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Turn important signals into clear questions, investigations, and priorities.",
+                "We turn the strongest findings into clear priorities and practical areas to investigate or improve.",
+
+            stageLabel:
+                "Focus",
 
             stage:
                 "Decision"
         }
+
     ],
+
+
+    /* =====================================================
+       CURRENT VS BETTER PATH
+    ===================================================== */
 
     currentPath: [
-        "Collect data",
-        "View numbers",
-        "Guess",
-        "Change things"
+        "Look at the numbers",
+        "Wonder what happened",
+        "Guess where the problem is",
+        "Make a change",
+        "Hope it works"
     ],
+
 
     proposedPath: [
-        "Define events",
-        "Track behavior",
-        "Find patterns",
-        "Investigate",
-        "Improve"
+        "Track the journey",
+        "See what people do",
+        "Find where they drop",
+        "Understand the pattern",
+        "Make the right change"
     ],
 
-    deliverables: [
-        "Conversion tracking plan",
-        "Funnel measurement",
-        "Event tracking structure",
-        "Behavioral analysis"
-    ],
+
+    /* =====================================================
+       HOW I WORK
+    ===================================================== */
 
     process: [
-        "Define important actions",
-        "Implement measurement",
-        "Analyze behavior",
-        "Turn signals into decisions"
+
+        {
+            title:
+                "Map the journey",
+
+            description:
+                "We start with the steps that matter, from the first useful interaction to the action you want people to take."
+        },
+
+
+        {
+            title:
+                "Track what matters",
+
+            description:
+                "We make the important clicks, starts, sign-ups, purchases, and other key actions visible."
+        },
+
+
+        {
+            title:
+                "Follow the behavior",
+
+            description:
+                "We look at how people move through the journey and where that movement starts to change."
+        },
+
+
+        {
+            title:
+                "Find the pattern",
+
+            description:
+                "We compare useful groups, stages, and traffic sources to see where the problem becomes clearer."
+        },
+
+
+        {
+            title:
+                "Turn it into action",
+
+            description:
+                "We use what we find to identify what deserves attention and what should be investigated next."
+        }
+
     ],
 
+
+    /* =====================================================
+       DELIVERABLES
+    ===================================================== */
+
+    deliverables: [
+
+        "Conversion event map",
+
+        "Funnel tracking structure",
+
+        "Key event tracking",
+
+        "Behavior analysis",
+
+        "Priority findings"
+
+    ],
+
+
+    /* =====================================================
+       IMPACT
+    ===================================================== */
+
     impact:
-        "The goal is to make customer behavior easier to observe and turn measurement into evidence that can guide practical improvements.",
+        "Instead of staring at a final conversion number and wondering what went wrong, you can see how people move through the journey, where they drop, and what deserves attention next.",
+
+
+    /* =====================================================
+       CONCLUSION
+    ===================================================== */
 
     conclusion:
-        "Measure the journey, not just the destination."
+        "You cannot fix what you cannot see. Make the journey visible, find where it breaks, and follow the evidence."
+
 };

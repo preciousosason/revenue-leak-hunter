@@ -1,14 +1,26 @@
 export default {
+
     id: "service-009",
+
     slug: "growth-systems",
+
     number: "09",
+
     type: "SYSTEM AUTOMATION",
+
     category: "AUTOMATE",
+
     title: "Growth Systems & Automation",
+
     icon: "⚙",
 
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
     summary:
-        "Replace repetitive manual work with connected systems that capture, organize, follow up, and move opportunities forward.",
+        "Turn repetitive growth work into connected systems that capture, organize, follow up, and keep opportunities moving.",
 
     featured: false,
 
@@ -21,96 +33,264 @@ export default {
         "Internal growth tools"
     ],
 
+
+    /* =====================================================
+       CORE FOCUS
+    ===================================================== */
+
     focus:
-        "Connecting repetitive growth operations into systems that can run consistently.",
+        "Finding repetitive work that can be connected, simplified, and automated without removing the human judgment the business still needs.",
+
+
+    /* =====================================================
+       PRIMARY PROBLEM
+    ===================================================== */
 
     primaryProblem:
-        "Important growth tasks depend on repetitive manual work that becomes difficult to maintain as activity increases.",
+        "The business keeps doing the same work by hand, and as activity grows, that repetition starts creating delays, mistakes, and missed opportunities.",
+
+
+    /* =====================================================
+       01 / THE SITUATION
+    ===================================================== */
 
     situation: `
-        Growth creates operational complexity.
+        Growth sounds simple until the work starts piling up.
 
-        Leads arrive from different places. Information gets copied between
-        systems. Follow-ups are forgotten. Internal tasks are repeated.
-        Reports require manual assembly.
+        A lead comes in.
+        Someone copies the details.
+        Someone sends a message.
+        Someone updates the CRM.
+        Someone creates a task.
+        Someone remembers to follow up.
 
-        Automation should remove unnecessary repetition without turning
-        the business into an unreadable pile of workflows.
+        Then another lead arrives.
+
+        And another.
+
+        Before long, people are spending time moving information around instead of doing the work that actually needs a person.
+
+        The problem is not that the team is not working hard.
+
+        The problem is that too much of the work keeps repeating.
+
+        And when a process depends on someone remembering every step, things eventually get missed.
+
+        A follow-up gets forgotten.
+        A record does not get updated.
+        The same information gets entered twice.
+        A useful opportunity sits somewhere nobody is looking.
+
+        That is where a good system can help.
+
+        I look at the work that keeps repeating, find the parts that follow clear rules, and connect them into a system that can handle the repetition.
+
+        But I do not automate everything just because I can.
+
+        The goal is to remove unnecessary work while keeping people involved where judgment, context, or a real decision is still needed.
     `,
 
+
+    /* =====================================================
+       SERVICE-SPECIFIC SECTION HEADINGS
+    ===================================================== */
+
+    sections: {
+
+        problem: {
+            eyebrow: "01 / START HERE",
+            title:
+                "Growth gets harder when the same work keeps repeating."
+        },
+
+
+        primaryLeak: {
+            eyebrow: "02 / THE REAL PROBLEM",
+            title:
+                "The bottleneck is often the work happening between the important work."
+        },
+
+
+        investigation: {
+            eyebrow: "03 / FOLLOW THE WORK",
+            title:
+                "So we look at what gets repeated, moved, copied, and forgotten."
+        },
+
+
+        approach: {
+            eyebrow: "04 / HOW I SYSTEMIZE IT",
+            title:
+                "First we understand the work. Then we decide what should run automatically."
+        },
+
+
+        journey: {
+            eyebrow: "05 / THE SHIFT",
+            title:
+                "Move from repeating the process to running the process."
+        },
+
+
+        deliverables: {
+            eyebrow: "06 / WHAT I BUILD",
+            title:
+                "The system follows the way the business actually works."
+        },
+
+
+        impact: {
+            eyebrow: "07 / WHAT CHANGES",
+            title:
+                "Less repetition. Better visibility. More room for useful work."
+        }
+
+    },
+
+
+    /* =====================================================
+       INVESTIGATION AREAS
+    ===================================================== */
+
     areas: [
+
         {
             number: "01",
-            title: "Lead Routing Gap",
-            severity: "OPERATIONAL",
+
+            title: "Leads Without a Clear Path",
+
+            severity: "ROUTING GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "New opportunities arrive without a reliable system for organizing, assigning, or prioritizing them.",
+                "New leads arrive from different places without a reliable way to capture, organize, assign, or prioritize them.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Manual handling creates delays and inconsistent follow-up.",
+                "When every new opportunity has to be handled manually, response time and follow-up can depend too much on someone's memory.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Define clear routing rules and automate repeatable lead handling.",
+                "We create clear rules for capturing, organizing, assigning, and moving new opportunities through the right next step.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Lead capture"
         },
 
+
         {
             number: "02",
-            title: "Workflow Repetition",
-            severity: "EFFICIENCY",
+
+            title: "Work That Keeps Repeating",
+
+            severity: "REPETITION",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "The same administrative actions are repeatedly performed by people even though the process follows predictable rules.",
+                "People repeatedly perform the same predictable steps even though those steps follow rules that a system could handle.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Repetition consumes time and increases the chance of human error.",
+                "Repeated manual work takes time away from higher-value tasks and creates more chances for small mistakes to enter the process.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Identify repeatable processes and automate the steps that do not require judgment.",
+                "We separate the repeatable steps from the work that requires human judgment, then automate the parts that can safely run on their own.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Operations"
         },
 
+
         {
             number: "03",
-            title: "System Disconnect",
-            severity: "STRUCTURAL",
+
+            title: "Disconnected Systems",
+
+            severity: "SYSTEM GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Important information sits across separate tools without a reliable flow between them.",
+                "Important information lives in different tools, while people are left to move that information from one place to another.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Disconnected systems create duplicate work and incomplete visibility.",
+                "Disconnected tools create duplicate work, missing information, and a process that becomes harder to understand as more tools are added.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Connect the systems around a defined source of truth and clear data handoffs.",
+                "We connect the relevant systems around clear data handoffs and a defined source of truth.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Integration"
         },
 
+
         {
             number: "04",
-            title: "Visibility Gap",
-            severity: "ANALYTICAL",
+
+            title: "Work You Cannot Easily See",
+
+            severity: "VISIBILITY GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "The business performs many activities but lacks a simple view of what entered the system, what moved forward, and what stalled.",
+                "The business is doing a lot of work, but there is no simple way to see what entered the system, what moved forward, what is waiting, and what has stalled.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Without visibility, operational problems remain hidden until they become expensive.",
+                "A process can appear to be working while small problems quietly build up inside it.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Create useful status, tracking, notification, and reporting layers around the workflow.",
+                "We add useful tracking, status changes, notifications, and reporting so important movement is easier to see.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Monitoring"
         }
+
     ],
+
+
+    /* =====================================================
+       CURRENT VS BETTER PATH
+    ===================================================== */
 
     currentPath: [
         "Capture",
@@ -120,6 +300,7 @@ export default {
         "Repeat"
     ],
 
+
     proposedPath: [
         "Capture",
         "Organize",
@@ -128,22 +309,92 @@ export default {
         "Intervene"
     ],
 
-    deliverables: [
-        "Lead workflows",
-        "Marketing automation",
-        "CRM structures",
-        "Internal growth tools"
-    ],
+
+    /* =====================================================
+       HOW I WORK
+    ===================================================== */
 
     process: [
-        "Map repetitive work",
-        "Define system rules",
-        "Connect the workflow",
-        "Monitor and refine"
+
+        {
+            title:
+                "Map the work",
+
+            description:
+                "We follow how information and tasks move through the business, from the moment something enters the system to what happens next."
+        },
+
+
+        {
+            title:
+                "Separate rules from judgment",
+
+            description:
+                "We identify which steps are predictable enough to automate and which ones still need a person to make the decision."
+        },
+
+
+        {
+            title:
+                "Build the connections",
+
+            description:
+                "We connect the relevant tools, triggers, actions, and handoffs so information can move without unnecessary manual work."
+        },
+
+
+        {
+            title:
+                "Put the right signals in place",
+
+            description:
+                "We make important events visible through statuses, notifications, tracking, and useful reporting."
+        },
+
+
+        {
+            title:
+                "Monitor and refine",
+
+            description:
+                "A system is not finished just because it runs. We look at what happens in practice and improve the workflow where it creates friction."
+        }
+
     ],
 
+
+    /* =====================================================
+       DELIVERABLES
+    ===================================================== */
+
+    deliverables: [
+
+        "Lead capture and routing workflows",
+
+        "Marketing automation",
+
+        "CRM workflow structures",
+
+        "System integrations",
+
+        "Internal growth tools",
+
+        "Workflow monitoring"
+
+    ],
+
+
+    /* =====================================================
+       IMPACT
+    ===================================================== */
+
     impact:
-        "The goal is to reduce repetitive work, improve consistency, and give the business clearer visibility into how opportunities move through its systems.",
+        "Instead of relying on people to remember every repeated step, the business gets a clearer system for moving information and opportunities forward, while people stay involved where judgment actually matters.",
+
+
+    /* =====================================================
+       CONCLUSION
+    ===================================================== */
 
     conclusion:
         "Automate the repetition. Keep the judgment human."

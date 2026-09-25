@@ -1,14 +1,26 @@
 export default {
+
     id: "service-006",
+
     slug: "email-systems",
+
     number: "06",
+
     type: "RETENTION SYSTEM",
+
     category: "RETAIN",
+
     title: "Email Systems That Keep Working",
+
     icon: "◌",
 
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
     summary:
-        "Turn leads and customers into an owned audience with sequences, automation, and retention systems.",
+        "Keep useful conversations moving with email sequences and automation that follow where each lead or customer is in the journey.",
 
     featured: false,
 
@@ -21,127 +33,371 @@ export default {
         "Automated customer journeys"
     ],
 
+
+    /* =====================================================
+       CORE FOCUS
+    ===================================================== */
+
     focus:
-        "Creating useful automated communication around the customer's stage and intent.",
+        "Building automated communication that responds to where people are in the customer journey instead of sending the same message to everyone.",
+
+
+    /* =====================================================
+       PRIMARY PROBLEM
+    ===================================================== */
 
     primaryProblem:
-        "Leads and customers enter the system, but communication depends too heavily on manual follow-up.",
+        "A lead or customer enters the system, but the conversation starts depending on someone remembering what to send, when to send it, and who needs it.",
+
+
+    /* =====================================================
+       01 / THE SITUATION
+    ===================================================== */
 
     situation: `
-        Email becomes valuable when it is connected to the customer's
-        journey rather than treated as a collection of broadcasts.
+        Someone shows interest.
 
-        A useful system can welcome new leads, answer common questions,
-        nurture interest, support decisions, retain customers, and
-        re-engage people who stopped responding.
+        They fill out a form.
+        They download something.
+        They ask a question.
+        Maybe they buy.
+
+        And then what happens?
+
+        If the next message depends on someone remembering to send it, the conversation can easily go quiet.
+
+        Not because the person stopped being interested.
+
+        Sometimes, they simply did not hear from you at the right time.
+
+        And even when you do follow up, one message rarely makes sense for everyone.
+
+        A new lead needs something different from someone who has already bought.
+
+        Someone who is considering your offer may need answers and proof.
+
+        Someone who has already bought may need help, education, or a reason to come back.
+
+        That is where a good email system becomes useful.
+
+        Instead of starting every conversation from scratch, we build the right messages around the moments that matter.
+
+        Someone takes an action.
+
+        The system responds.
+
+        They move forward.
+
+        The communication changes with them.
+
+        And when they go quiet, the system can give the conversation another useful reason to continue.
     `,
 
+
+    /* =====================================================
+       SERVICE-SPECIFIC SECTION HEADINGS
+    ===================================================== */
+
+    sections: {
+
+        problem: {
+            eyebrow: "01 / START HERE",
+            title:
+                "A lead comes in. What happens after that?"
+        },
+
+
+        primaryLeak: {
+            eyebrow: "02 / THE REAL GAP",
+            title:
+                "Interest can disappear when the conversation stops."
+        },
+
+
+        investigation: {
+            eyebrow: "03 / FOLLOW THE CONVERSATION",
+            title:
+                "So we look at what people should hear, and when they should hear it."
+        },
+
+
+        approach: {
+            eyebrow: "04 / HOW I BUILD IT",
+            title:
+                "The system follows the customer, not the other way around."
+        },
+
+
+        journey: {
+            eyebrow: "05 / THE SHIFT",
+            title:
+                "Move from manual follow-up to communication that keeps moving."
+        },
+
+
+        deliverables: {
+            eyebrow: "06 / WHAT I WORK ON",
+            title:
+                "The messages and automation follow the journey."
+        },
+
+
+        impact: {
+            eyebrow: "07 / WHAT CHANGES",
+            title:
+                "Important conversations keep moving without someone having to remember every step."
+        }
+
+    },
+
+
+    /* =====================================================
+       INVESTIGATION AREAS
+    ===================================================== */
+
     areas: [
+
         {
             number: "01",
-            title: "Lead Follow-up Gap",
-            severity: "HIGH FRICTION",
+
+            title: "The Follow-up Gap",
+
+            severity: "CONVERSATION GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "New leads are captured without a consistent sequence that continues the conversation.",
+                "New leads enter the system, but there is no clear sequence that continues the conversation after the first interaction.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "The context created during acquisition can disappear quickly without timely follow-up.",
+                "Interest can cool quickly when someone takes the next step and then hears nothing useful afterward.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Create a structured welcome and nurture sequence tied to the original intent.",
+                "We build a welcome and nurture sequence that continues from the original interaction and gives the lead a clear reason to keep moving.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Lead nurture"
         },
 
+
         {
             number: "02",
-            title: "Generic Communication",
-            severity: "FRICTION",
+
+            title: "One Message for Everyone",
+
+            severity: "RELEVANCE GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Every subscriber receives essentially the same message regardless of where they are in the journey.",
+                "People receive the same communication even though they have different needs, questions, interests, or levels of intent.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Different stages require different information and expectations.",
+                "A message that makes sense for a new lead may be completely wrong for someone who has already bought.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Use segmentation and behavioral triggers where they provide meaningful relevance.",
+                "We use useful segments, actions, and triggers to make communication more relevant to where each person is in the journey.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Personalization"
         },
 
+
         {
             number: "03",
-            title: "Retention Leak",
-            severity: "HIGH FRICTION",
+
+            title: "The Post-Purchase Silence",
+
+            severity: "RETENTION GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Existing customers receive little structured communication after the initial transaction.",
+                "The communication becomes quiet once someone has bought, even though there are still useful reasons to stay connected.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "The relationship can become inactive even when another useful interaction is possible.",
+                "The sale may be complete, but the customer relationship is not. Without useful follow-up, another opportunity to help or reconnect can simply disappear.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Design post-purchase, education, retention, and re-engagement journeys.",
+                "We create post-purchase, education, retention, and re-engagement journeys that keep the relationship useful after the first transaction.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Retention"
         },
 
+
         {
             number: "04",
-            title: "Manual Dependency",
-            severity: "OPERATIONAL",
+
+            title: "Too Much Depends on Memory",
+
+            severity: "MANUAL GAP",
+
+            whatLabel:
+                "What I Look For",
 
             what:
-                "Important communication relies on someone remembering to send the right message at the right time.",
+                "Important messages depend on someone remembering who needs what, when they need it, and what should happen next.",
+
+            whyLabel:
+                "Why It Matters",
 
             why:
-                "Manual processes become inconsistent as volume grows.",
+                "Manual follow-up becomes harder to keep consistent as the number of leads and customers grows.",
+
+            fixLabel:
+                "What I Work On",
 
             fix:
-                "Automate repeatable journeys while keeping human intervention where it actually matters.",
+                "We automate the repeatable parts of the journey while leaving important moments open for real human attention.",
+
+            stageLabel:
+                "Where It Happens",
 
             stage:
                 "Automation"
         }
+
     ],
+
+
+    /* =====================================================
+       CURRENT VS BETTER PATH
+    ===================================================== */
 
     currentPath: [
         "Capture",
-        "Manual follow-up",
-        "Inconsistent contact",
-        "Drop-off"
+        "Remember to follow up",
+        "Send something",
+        "Lose track",
+        "Go quiet"
     ],
+
 
     proposedPath: [
         "Capture",
-        "Segment",
-        "Nurture",
-        "Convert",
+        "Understand the stage",
+        "Send the right message",
+        "Continue the journey",
         "Retain"
     ],
 
-    deliverables: [
-        "Email sequence architecture",
-        "Lead nurture flows",
-        "Retention sequences",
-        "Re-engagement automation"
-    ],
+
+    /* =====================================================
+       HOW I WORK
+    ===================================================== */
 
     process: [
-        "Map communication triggers",
-        "Define customer stages",
-        "Write the sequences",
-        "Connect automation"
+
+        {
+            title:
+                "Map the conversation",
+
+            description:
+                "We look at what happens after someone becomes a lead or customer and identify the moments where communication should continue."
+        },
+
+
+        {
+            title:
+                "Define the stages",
+
+            description:
+                "We separate the journey into useful stages so a new lead, active prospect, and existing customer do not all receive the same treatment."
+        },
+
+
+        {
+            title:
+                "Build the messages",
+
+            description:
+                "We create the emails around the questions, decisions, actions, and moments that matter at each stage."
+        },
+
+
+        {
+            title:
+                "Connect the triggers",
+
+            description:
+                "We connect the messages to useful actions and conditions so the right communication can happen without someone manually starting it every time."
+        },
+
+
+        {
+            title:
+                "Keep improving the system",
+
+            description:
+                "Once the system is running, we can look at what people engage with, where they stop responding, and where the journey can be improved."
+        }
+
     ],
 
+
+    /* =====================================================
+       DELIVERABLES
+    ===================================================== */
+
+    deliverables: [
+
+        "Email sequence architecture",
+
+        "Lead nurture flows",
+
+        "Customer retention journeys",
+
+        "Re-engagement automation",
+
+        "Trigger and segmentation structure"
+
+    ],
+
+
+    /* =====================================================
+       IMPACT
+    ===================================================== */
+
     impact:
-        "The goal is to keep useful communication moving without requiring the business to manually restart every customer conversation.",
+        "Instead of relying on someone to remember every follow-up, the system keeps useful communication moving around the customer's stage, actions, and needs.",
+
+
+    /* =====================================================
+       CONCLUSION
+    ===================================================== */
 
     conclusion:
-        "Build the follow-up once, then let the system keep the conversation moving."
+        "Build the right conversation once, then let the system keep it moving when people are ready to hear from you."
+
 };
