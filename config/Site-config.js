@@ -97,7 +97,7 @@ const SITE_CONFIG = {
 
     primaryCTA: {
 
-        label: "Start a Leak Hunt",
+        label: "Begin Investigation",
 
         route: "audit"
 
