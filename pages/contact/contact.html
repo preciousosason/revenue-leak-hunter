@@ -6,7 +6,7 @@
 
 <meta
   name="description"
-  content="Start a conversation about finding hidden conversion leaks, funnel friction, and revenue leaks in your business."
+  content="Start an investigation into hidden conversion leaks, funnel friction, messaging problems, and broken customer journeys."
 >
 
 <meta name="author" content="Precious">
@@ -78,8 +78,10 @@
         </p>
 
         <p class="contact-secondary">
-          Give me a picture of what's happening. I'll use it to
-          understand where the investigation should begin.
+          Give me enough context to see where the journey starts
+          breaking down. I don't need the whole story yet. I need
+          to understand what you're offering, what people are doing,
+          and where they start getting stuck.
         </p>
 
 
@@ -276,6 +278,7 @@
                 id="business"
                 name="business"
                 placeholder="Your business name"
+                autocomplete="organization"
               >
 
             </div>
@@ -295,6 +298,7 @@
                 id="website"
                 name="website"
                 placeholder="https://yourwebsite.com"
+                autocomplete="url"
               >
 
             </div>
@@ -305,14 +309,14 @@
             <div class="form-group">
 
               <label for="offer">
-                What do you sell?
+                What do you offer?
               </label>
 
               <textarea
                 id="offer"
                 name="offer"
                 rows="3"
-                placeholder="Briefly describe your product, service, or offer."
+                placeholder="Briefly describe your product, service, or business."
                 required
               ></textarea>
 
@@ -355,6 +359,14 @@
 
                 <option value="messaging">
                   Our messaging isn't connecting
+                </option>
+
+                <option value="trust">
+                  People show interest, but they don't seem to trust the offer
+                </option>
+
+                <option value="friction">
+                  Something makes the process harder than it should be
                 </option>
 
                 <option value="customer-journey">
@@ -436,13 +448,14 @@
             </span>
 
             <h2>
-              Your Investigation Has Started.
+              Your Investigation Request Is In.
             </h2>
 
             <p>
               Your private conversation portal has been created.
-              Your access token is shown below. Save it somewhere
-              secure because you'll need it to access your portal.
+              Your access token is shown below. Keep it somewhere
+              secure. You'll use it to return to the conversation
+              and follow the investigation.
             </p>
 
 
@@ -634,7 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "../../components/footer/footer.js"
   );
 
-});
+})
 </script>
 
 </body>
