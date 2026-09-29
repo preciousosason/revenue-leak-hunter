@@ -1,27 +1,27 @@
-
 export const MAX_FILE_SIZE =
     10 * 1024 * 1024;
 
-export const ALLOWED_FILE_TYPES = {
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "image/webp": "webp",
-    "image/gif": "gif",
+export const ALLOWED_FILE_TYPES =
+    new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
 
-    "application/pdf": "pdf",
+        "application/pdf",
 
-    "text/plain": "txt",
-    "text/csv": "csv",
+        "text/plain",
+        "text/csv",
 
-    "application/msword": "doc",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        "docx",
+        "application/msword",
 
-    "application/vnd.ms-excel": "xls",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        "xlsx",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 
-    "application/vnd.ms-powerpoint": "ppt",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-        "pptx"
-};
+        "application/vnd.ms-excel",
+
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+        "application/vnd.ms-powerpoint",
+
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ]);
