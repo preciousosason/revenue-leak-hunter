@@ -22,6 +22,10 @@ import {
     handleAdminRoutes
 } from "./admin/admin.routes.js";
 
+import {
+    handleAnalyticsRoutes
+} from "./analytics/analytics.routes.js";
+
 
 export default {
     async fetch(request, env) {
@@ -96,6 +100,20 @@ export default {
 
             if (portalResponse) {
                 return portalResponse;
+            }
+
+            // --------------------------------------------------
+            // ANALYTICS ROUTES
+            // --------------------------------------------------
+
+            const analyticsResponse =
+                await handleAnalyticsRoutes(
+                    request,
+                    env
+                );
+
+            if (analyticsResponse) {
+                return analyticsResponse;
             }
 
             // --------------------------------------------------
