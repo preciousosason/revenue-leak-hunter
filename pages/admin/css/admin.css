@@ -31,14 +31,18 @@
 
 @import url("./pages/dashboard.css");
 @import url("./pages/clients.css");
-@import url("./pages/conversations.css");
 @import url("./pages/notifications.css");
 @import url("./pages/states.css");
-
 @import url("./pages/reviews.css");
 @import url("./pages/analytics.css");
 
+/* ---------------------------------------------------------
+   GLOBAL RESPONSIVE OVERRIDES
+   Must remain last
+   --------------------------------------------------------- */
+
 @import url("./responsive/responsive.css");
+
 
 /* =========================================================
    GLOBAL ADMIN UTILITIES
@@ -61,47 +65,52 @@
 }
 
 .admin-primary {
-    color: var(--primary);
+    color: var(--color-primary);
 }
 
 .admin-success {
-    color: var(--success);
+    color: var(--color-success);
 }
 
 .admin-warning {
-    color: var(--warning);
+    color: var(--color-warning);
 }
 
 .admin-danger {
-    color: var(--danger);
+    color: var(--color-danger);
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    GLOBAL FOCUS
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .admin-main button:focus-visible,
 .admin-main input:focus-visible,
 .admin-main textarea:focus-visible,
 .admin-main select:focus-visible,
 .admin-main a:focus-visible {
-    outline: 1px solid var(--primary);
+    outline: 1px solid var(--color-primary);
     outline-offset: 2px;
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    GLOBAL SCROLLBAR
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .admin-main,
 .admin-sidebar {
     scrollbar-width: thin;
-    scrollbar-color: var(--border-strong) transparent;
+    scrollbar-color:
+        var(--color-border-strong)
+        transparent;
 }
 
 .admin-main::-webkit-scrollbar,
 .admin-sidebar::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
 }
 
 .admin-main::-webkit-scrollbar-track,
@@ -112,35 +121,62 @@
 .admin-main::-webkit-scrollbar-thumb,
 .admin-sidebar::-webkit-scrollbar-thumb {
     border-radius: 0;
-    background: var(--border-strong);
+    background: var(--color-border-strong);
 }
 
 .admin-main::-webkit-scrollbar-thumb:hover,
 .admin-sidebar::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
+    background: var(--color-primary);
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    GLOBAL SELECTION
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .admin-main ::selection {
-    background: rgba(70, 230, 255, 0.18);
+    background: var(--color-primary-soft);
     color: var(--text-primary);
 }
 
-/* ---------------------------------------------------------
-   RESPONSIVE GLOBAL ADJUSTMENTS
-   --------------------------------------------------------- */
 
-@media (max-width: 800px) {
-    .admin-main {
-        width: 100%;
-    }
+/* =========================================================
+   GLOBAL VIEW SAFETY
+   ========================================================= */
+
+.admin-main,
+.page-content,
+.admin-view {
+    min-width: 0;
 }
 
+.admin-view {
+    width: 100%;
+}
+
+
+/* =========================================================
+   RESPONSIVE GLOBAL ADJUSTMENTS
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .admin-main {
+        width: 100%;
+        margin-left: 0;
+    }
+
+}
+
+
 @media (max-width: 480px) {
+
     .admin-main {
         overflow-x: hidden;
     }
+
+    .page-content {
+        min-width: 0;
+    }
+
 }
