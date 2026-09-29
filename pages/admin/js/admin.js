@@ -62,6 +62,11 @@ import {
     initFiles,
     configureFiles
 } from "./components/files.js";
+import {
+    initAnalytics,
+    loadAnalytics
+} from "./views/analytics.js";
+
 
 
 /* =========================================================
@@ -121,7 +126,9 @@ configureNavigation({
 
     loadReviews,
 
-    loadNotifications
+    loadNotifications,
+
+    loadAnalytics
 
 });
 
@@ -157,7 +164,9 @@ configureConversation({
 
     closeSidebar,
 
-    loadNotifications
+    loadNotifications,
+
+    loadAnalytics
 
 });
 
@@ -198,6 +207,8 @@ initClients();
 initReviews();
 
 initNotifications();
+
+initAnalytics();
 
 initConversation();
 

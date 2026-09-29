@@ -25,6 +25,7 @@ function resolveSitePath(path) {
     }
 
     return new URL(path, SITE_ROOT).href;
+
 }
 
 
@@ -210,6 +211,109 @@ function loadScript(path) {
 
 
 /* =================================
+   LOAD MODULE SCRIPT
+================================= */
+
+function loadModuleScript(path) {
+
+    if (!path) {
+        return Promise.resolve();
+    }
+
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const url =
+                resolveSitePath(path);
+
+
+            const existing =
+                document.querySelector(
+                    `script[data-global-module="${url}"]`
+                );
+
+
+            if (existing) {
+
+                if (
+                    existing.dataset.loaded ===
+                    "true"
+                ) {
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                existing.addEventListener(
+                    "load",
+                    resolve,
+                    {
+                        once: true
+                    }
+                );
+
+
+                existing.addEventListener(
+                    "error",
+                    reject,
+                    {
+                        once: true
+                    }
+                );
+
+
+                return;
+
+            }
+
+
+            const script =
+                document.createElement("script");
+
+
+            script.type = "module";
+
+            script.src = url;
+
+            script.dataset.globalModule = url;
+
+
+            script.onload = () => {
+
+                script.dataset.loaded =
+                    "true";
+
+                resolve();
+
+            };
+
+
+            script.onerror = () => {
+
+                reject(
+                    new Error(
+                        `Failed to load module ${url}`
+                    )
+                );
+
+            };
+
+
+            document.head.appendChild(
+                script
+            );
+
+        }
+    );
+
+}
+
+
+/* =================================
    LOAD COMPONENT
 ================================= */
 
@@ -314,31 +418,39 @@ const GLOBAL_COMPONENTS = [
     {
         id: "navbar",
 
-        html: "components/navbar/navbar.html",
+        html:
+            "components/navbar/navbar.html",
 
-        css: "components/navbar/navbar.css",
+        css:
+            "components/navbar/navbar.css",
 
-        js: "components/navbar/navbar.js"
+        js:
+            "components/navbar/navbar.js"
     },
 
 
     {
         id: "footer",
 
-        html: "components/footer/footer.html",
+        html:
+            "components/footer/footer.html",
 
-        css: "components/footer/footer.css",
+        css:
+            "components/footer/footer.css",
 
-        js: "components/footer/footer.js"
+        js:
+            "components/footer/footer.js"
     },
 
 
     {
         id: "investigation-room",
 
-        html: "components/investigation-room/investigation-room.html",
+        html:
+            "components/investigation-room/investigation-room.html",
 
-        css: "components/investigation-room/investigation-room.css"
+        css:
+            "components/investigation-room/investigation-room.css"
     }
 
 ];
@@ -353,79 +465,97 @@ const HOMEPAGE_COMPONENTS = [
     {
         id: "hero",
 
-        html: "components/hero/hero.html",
+        html:
+            "components/hero/hero.html",
 
-        css: "components/hero/hero.css",
+        css:
+            "components/hero/hero.css",
 
-        js: "components/hero/hero.js"
+        js:
+            "components/hero/hero.js"
     },
 
 
     {
         id: "problem",
 
-        html: "components/problem/problem.html",
+        html:
+            "components/problem/problem.html",
 
-        css: "components/problem/problem.css"
+        css:
+            "components/problem/problem.css"
     },
 
 
     {
         id: "leaks",
 
-        html: "components/leaks/leaks.html",
+        html:
+            "components/leaks/leaks.html",
 
-        css: "components/leaks/leaks.css"
+        css:
+            "components/leaks/leaks.css"
     },
 
 
     {
         id: "process",
 
-        html: "components/process/process.html",
+        html:
+            "components/process/process.html",
 
-        css: "components/process/process.css"
+        css:
+            "components/process/process.css"
     },
 
 
     {
         id: "services",
 
-        html: "components/services/services.html",
+        html:
+            "components/services/services.html",
 
-        css: "components/services/services.css"
+        css:
+            "components/services/services.css"
     },
-
 
 
     {
         id: "testimonials",
 
-        html: "components/testimonials/testimonials.html",
+        html:
+            "components/testimonials/testimonials.html",
 
-        css: "components/testimonials/testimonials.css",
+        css:
+            "components/testimonials/testimonials.css",
 
-        js: "components/testimonials/testimonials.js"
+        js:
+            "components/testimonials/testimonials.js"
     },
 
 
     {
         id: "faq",
 
-        html: "components/faq/faq.html",
+        html:
+            "components/faq/faq.html",
 
-        css: "components/faq/faq.css",
+        css:
+            "components/faq/faq.css",
 
-        js: "components/faq/faq.js"
+        js:
+            "components/faq/faq.js"
     },
 
 
     {
         id: "cta",
 
-        html: "components/cta/cta.html",
+        html:
+            "components/cta/cta.html",
 
-        css: "components/cta/cta.css"
+        css:
+            "components/cta/cta.css"
     }
 
 ];
@@ -440,56 +570,69 @@ const SERVICES_COMPONENTS = [
     {
         id: "servicesHero",
 
-        html: "components/services-page/hero.html",
+        html:
+            "components/services-page/hero.html",
 
-        css: "components/services-page/hero.css",
+        css:
+            "components/services-page/hero.css",
 
-        js: "components/services-page/hero.js"
+        js:
+            "components/services-page/hero.js"
     },
 
 
     {
         id: "servicesIntro",
 
-        html: "components/services-page/intro.html",
+        html:
+            "components/services-page/intro.html",
 
-        css: "components/services-page/intro.css"
+        css:
+            "components/services-page/intro.css"
     },
 
 
     {
         id: "servicesList",
 
-        html: "components/services-page/services.html",
+        html:
+            "components/services-page/services.html",
 
-        css: "components/services-page/services.css"
+        css:
+            "components/services-page/services.css"
     },
 
 
     {
         id: "serviceProcess",
 
-        html: "components/services-page/process.html",
+        html:
+            "components/services-page/process.html",
 
-        css: "components/services-page/process.css"
+        css:
+            "components/services-page/process.css"
     },
 
 
     {
         id: "serviceFit",
 
-        html: "components/services-page/fit.html",
+        html:
+            "components/services-page/fit.html",
 
-        css: "components/services-page/fit.css"
+        css:
+            "components/services-page/fit.css"
     },
 
 
     {
         id: "servicesCTA",
 
-        html: "components/services-page/cta.html",
+        html:
+            "components/services-page/cta.html",
 
-        css: "components/services-page/cta.css"
+        css:
+            "components/services-page/cta.css"
     }
 
 ];
@@ -504,38 +647,47 @@ const SERVICE_DETAIL_COMPONENTS = [
     {
         id: "serviceHero",
 
-        html: "components/service-detail/hero.html",
+        html:
+            "components/service-detail/hero.html",
 
-        css: "components/service-detail/hero.css",
+        css:
+            "components/service-detail/hero.css",
 
-        js: "components/service-detail/hero.js"
+        js:
+            "components/service-detail/hero.js"
     },
 
 
     {
         id: "serviceContent",
 
-        html: "components/service-detail/content.html",
+        html:
+            "components/service-detail/content.html",
 
-        css: "components/service-detail/content.css"
+        css:
+            "components/service-detail/content.css"
     },
 
 
     {
         id: "serviceProcess",
 
-        html: "components/service-detail/process.html",
+        html:
+            "components/service-detail/process.html",
 
-        css: "components/service-detail/process.css"
+        css:
+            "components/service-detail/process.css"
     },
 
 
     {
         id: "serviceCTA",
 
-        html: "components/service-detail/cta.html",
+        html:
+            "components/service-detail/cta.html",
 
-        css: "components/service-detail/cta.css"
+        css:
+            "components/service-detail/cta.css"
     }
 
 ];
@@ -547,9 +699,11 @@ const SERVICE_DETAIL_COMPONENTS = [
 
 const PAGE_COMPONENTS = {
 
-    home: HOMEPAGE_COMPONENTS,
+    home:
+        HOMEPAGE_COMPONENTS,
 
-    services: SERVICES_COMPONENTS,
+    services:
+        SERVICES_COMPONENTS,
 
     "service-detail":
         SERVICE_DETAIL_COMPONENTS
@@ -561,17 +715,25 @@ const PAGE_COMPONENTS = {
    LOAD COMPONENT GROUP
 ================================= */
 
-async function loadComponentGroup(components) {
+async function loadComponentGroup(
+    components
+) {
 
-    if (!components || !components.length) {
+    if (
+        !components ||
+        !components.length
+    ) {
         return;
     }
 
 
     await Promise.all(
-        components.map(component =>
-            loadComponent(component)
+
+        components.map(
+            component =>
+                loadComponent(component)
         )
+
     );
 
 }
@@ -613,6 +775,41 @@ function createGlobalComponentMounts() {
 
 
 /* =================================
+   LOAD GLOBAL ANALYTICS
+================================= */
+
+async function loadGlobalAnalytics() {
+
+    try {
+
+        await loadModuleScript(
+            "assets/js/analytics.js"
+        );
+
+
+        console.log(
+            "Analytics tracker initialized."
+        );
+
+
+    } catch (error) {
+
+        /*
+           Analytics should never prevent
+           the website from loading.
+        */
+
+        console.warn(
+            "Analytics tracker could not be loaded.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================
    INITIALIZE
 ================================= */
 
@@ -637,6 +834,13 @@ async function initializeComponents() {
     ============================== */
 
     createGlobalComponentMounts();
+
+
+    /* ==============================
+       GLOBAL ANALYTICS
+    ============================== */
+
+    await loadGlobalAnalytics();
 
 
     /* ==============================

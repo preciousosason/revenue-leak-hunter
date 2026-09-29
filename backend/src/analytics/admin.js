@@ -20,7 +20,7 @@ export async function handleAdminAnalyticsOverview(request, env) {
     const since = new Date(Date.now() - days * 86400000).toISOString();
 
     try {
-        const [summary, topPages, eventTypes, daily] = await Promise.all([
+        const [summary, topPages, eventTypes, daily, recentEvents, dropoffs] = await Promise.all([
             env.DB.prepare(`
                 SELECT
                     COUNT(DISTINCT visitor_id) AS visitors,
@@ -56,6 +56,24 @@ export async function handleAdminAnalyticsOverview(request, env) {
                 WHERE created_at >= ?
                 GROUP BY substr(created_at, 1, 10)
                 ORDER BY date ASC
+            `).bind(since).all(),
+
+            env.DB.prepare(`
+                SELECT event_id, event_type, page, created_at
+                FROM analytics_events
+                WHERE created_at >= ?
+                ORDER BY created_at DESC
+                LIMIT 20
+            `).bind(since).all(),
+
+            env.DB.prepare(`
+                SELECT COALESCE(last_page, landing_page) AS page,
+                       COUNT(*) AS sessions
+                FROM analytics_sessions
+                WHERE started_at >= ?
+                GROUP BY COALESCE(last_page, landing_page)
+                ORDER BY sessions DESC
+                LIMIT 10
             `).bind(since).all()
         ]);
 
@@ -65,7 +83,9 @@ export async function handleAdminAnalyticsOverview(request, env) {
             summary: summary || {},
             topPages: topPages.results || [],
             eventTypes: eventTypes.results || [],
-            daily: daily.results || []
+            daily: daily.results || [],
+            recentEvents: recentEvents.results || [],
+            dropoffs: dropoffs.results || []
         });
     } catch (error) {
         console.error("Admin analytics overview error:", error);

@@ -6,12 +6,15 @@ let loadReviewsHandler = null;
 
 let loadNotificationsHandler = null;
 
+let loadAnalyticsHandler = null;
+
 
 export function configureNavigation({
     stopConversationPolling,
     loadClients,
     loadReviews,
-    loadNotifications
+    loadNotifications,
+    loadAnalytics
 } = {}) {
 
     stopConversationPollingHandler =
@@ -25,6 +28,9 @@ export function configureNavigation({
 
     loadNotificationsHandler =
         loadNotifications || null;
+
+    loadAnalyticsHandler =
+        loadAnalytics || null;
 
 }
 
@@ -211,6 +217,16 @@ export function switchView(view) {
     ) {
 
         loadNotificationsHandler?.();
+
+    }
+
+
+    if (
+        view ===
+        "analytics"
+    ) {
+
+        loadAnalyticsHandler?.();
 
     }
 
