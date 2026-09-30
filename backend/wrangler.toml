@@ -13,8 +13,7 @@ bucket_name = "revenue-leak-hunter-files"
 # Raw session retention; lead records remain with attribution detached.
 [vars]
 ANALYTICS_RETENTION_DAYS = "180"
-# Set to your public website origins, comma-separated (no trailing slash).
-# ANALYTICS_ALLOWED_ORIGINS = "https://your-domain.com,https://www.your-domain.com"
+ANALYTICS_ALLOWED_ORIGINS = "https://revenue-leak-hunter.pages.dev,https://leakendia.com,https://www.leakendia.com"
 
 [triggers]
 crons = ["17 3 * * *"]

@@ -47,10 +47,8 @@ function buildRoute(routeName) {
         return "#";
     }
 
-
     const route =
         SITE_CONFIG.routes[routeName];
-
 
     if (!route) {
 
@@ -60,7 +58,6 @@ function buildRoute(routeName) {
 
         return "#";
     }
-
 
     return resolveSitePath(route);
 
@@ -78,16 +75,13 @@ function resolveRoutes(container = document) {
             "[data-route]"
         );
 
-
     links.forEach(link => {
 
         const routeName =
             link.dataset.route;
 
-
         const url =
             buildRoute(routeName);
-
 
         if (url !== "#") {
 
@@ -110,32 +104,26 @@ function loadStylesheet(path) {
         return;
     }
 
-
     const url =
         resolveSitePath(path);
-
 
     const existing =
         document.querySelector(
             `link[data-component-css="${url}"]`
         );
 
-
     if (existing) {
         return;
     }
 
-
     const stylesheet =
         document.createElement("link");
-
 
     stylesheet.rel = "stylesheet";
 
     stylesheet.href = url;
 
     stylesheet.dataset.componentCss = url;
-
 
     document.head.appendChild(stylesheet);
 
@@ -152,44 +140,36 @@ function loadScript(path) {
         return Promise.resolve();
     }
 
-
     return new Promise(
         (resolve, reject) => {
 
             const url =
                 resolveSitePath(path);
 
-
             const existing =
                 document.querySelector(
                     `script[data-component-js="${url}"]`
                 );
-
 
             if (existing) {
 
                 resolve();
 
                 return;
-
             }
-
 
             const script =
                 document.createElement("script");
 
-
             script.src = url;
 
             script.dataset.componentJs = url;
-
 
             script.onload = () => {
 
                 resolve();
 
             };
-
 
             script.onerror = () => {
 
@@ -200,7 +180,6 @@ function loadScript(path) {
                 );
 
             };
-
 
             document.body.appendChild(script);
 
@@ -220,19 +199,16 @@ function loadModuleScript(path) {
         return Promise.resolve();
     }
 
-
     return new Promise(
         (resolve, reject) => {
 
             const url =
                 resolveSitePath(path);
 
-
             const existing =
                 document.querySelector(
                     `script[data-global-module="${url}"]`
                 );
-
 
             if (existing) {
 
@@ -244,9 +220,7 @@ function loadModuleScript(path) {
                     resolve();
 
                     return;
-
                 }
-
 
                 existing.addEventListener(
                     "load",
@@ -256,7 +230,6 @@ function loadModuleScript(path) {
                     }
                 );
 
-
                 existing.addEventListener(
                     "error",
                     reject,
@@ -265,22 +238,17 @@ function loadModuleScript(path) {
                     }
                 );
 
-
                 return;
-
             }
-
 
             const script =
                 document.createElement("script");
-
 
             script.type = "module";
 
             script.src = url;
 
             script.dataset.globalModule = url;
-
 
             script.onload = () => {
 
@@ -291,7 +259,6 @@ function loadModuleScript(path) {
 
             };
 
-
             script.onerror = () => {
 
                 reject(
@@ -301,7 +268,6 @@ function loadModuleScript(path) {
                 );
 
             };
-
 
             document.head.appendChild(
                 script
@@ -327,7 +293,6 @@ async function loadComponent({
     const element =
         document.getElementById(id);
 
-
     /*
        If the page doesn't contain
        this component, simply skip it.
@@ -336,7 +301,6 @@ async function loadComponent({
     if (!element) {
         return;
     }
-
 
     try {
 
@@ -347,10 +311,8 @@ async function loadComponent({
         const htmlUrl =
             resolveSitePath(html);
 
-
         const response =
             await fetch(htmlUrl);
-
 
         if (!response.ok) {
 
@@ -360,13 +322,10 @@ async function loadComponent({
 
         }
 
-
         const markup =
             await response.text();
 
-
         element.innerHTML = markup;
-
 
         /* ============================
            LOAD CSS
@@ -378,13 +337,11 @@ async function loadComponent({
 
         }
 
-
         /* ============================
            RESOLVE ROUTES
         ============================ */
 
         resolveRoutes(element);
-
 
         /* ============================
            LOAD JAVASCRIPT
@@ -395,7 +352,6 @@ async function loadComponent({
             await loadScript(js);
 
         }
-
 
     } catch (error) {
 
@@ -428,7 +384,6 @@ const GLOBAL_COMPONENTS = [
             "components/navbar/navbar.js"
     },
 
-
     {
         id: "footer",
 
@@ -441,7 +396,6 @@ const GLOBAL_COMPONENTS = [
         js:
             "components/footer/footer.js"
     },
-
 
     {
         id: "investigation-room",
@@ -475,7 +429,6 @@ const HOMEPAGE_COMPONENTS = [
             "components/hero/hero.js"
     },
 
-
     {
         id: "problem",
 
@@ -485,7 +438,6 @@ const HOMEPAGE_COMPONENTS = [
         css:
             "components/problem/problem.css"
     },
-
 
     {
         id: "leaks",
@@ -497,7 +449,6 @@ const HOMEPAGE_COMPONENTS = [
             "components/leaks/leaks.css"
     },
 
-
     {
         id: "process",
 
@@ -508,7 +459,6 @@ const HOMEPAGE_COMPONENTS = [
             "components/process/process.css"
     },
 
-
     {
         id: "services",
 
@@ -518,7 +468,6 @@ const HOMEPAGE_COMPONENTS = [
         css:
             "components/services/services.css"
     },
-
 
     {
         id: "testimonials",
@@ -533,7 +482,6 @@ const HOMEPAGE_COMPONENTS = [
             "components/testimonials/testimonials.js"
     },
 
-
     {
         id: "faq",
 
@@ -546,7 +494,6 @@ const HOMEPAGE_COMPONENTS = [
         js:
             "components/faq/faq.js"
     },
-
 
     {
         id: "cta",
@@ -580,7 +527,6 @@ const SERVICES_COMPONENTS = [
             "components/services-page/hero.js"
     },
 
-
     {
         id: "servicesIntro",
 
@@ -590,7 +536,6 @@ const SERVICES_COMPONENTS = [
         css:
             "components/services-page/intro.css"
     },
-
 
     {
         id: "servicesList",
@@ -602,7 +547,6 @@ const SERVICES_COMPONENTS = [
             "components/services-page/services.css"
     },
 
-
     {
         id: "serviceProcess",
 
@@ -613,7 +557,6 @@ const SERVICES_COMPONENTS = [
             "components/services-page/process.css"
     },
 
-
     {
         id: "serviceFit",
 
@@ -623,7 +566,6 @@ const SERVICES_COMPONENTS = [
         css:
             "components/services-page/fit.css"
     },
-
 
     {
         id: "servicesCTA",
@@ -657,7 +599,6 @@ const SERVICE_DETAIL_COMPONENTS = [
             "components/service-detail/hero.js"
     },
 
-
     {
         id: "serviceContent",
 
@@ -668,7 +609,6 @@ const SERVICE_DETAIL_COMPONENTS = [
             "components/service-detail/content.css"
     },
 
-
     {
         id: "serviceProcess",
 
@@ -678,7 +618,6 @@ const SERVICE_DETAIL_COMPONENTS = [
         css:
             "components/service-detail/process.css"
     },
-
 
     {
         id: "serviceCTA",
@@ -726,7 +665,6 @@ async function loadComponentGroup(
         return;
     }
 
-
     await Promise.all(
 
         components.map(
@@ -760,10 +698,8 @@ function createGlobalComponentMounts() {
         const investigationRoom =
             document.createElement("div");
 
-
         investigationRoom.id =
             "investigation-room";
-
 
         document.body.appendChild(
             investigationRoom
@@ -780,27 +716,189 @@ function createGlobalComponentMounts() {
 
 async function loadGlobalAnalytics() {
 
+    const pathname =
+        window.location.pathname.toLowerCase();
+
+    /*
+       Do not track private areas.
+
+       The public analytics system should
+       never count admin or client portal
+       activity as customer behaviour.
+    */
+
+    const PRIVATE_PATHS = [
+
+        "/admin",
+
+        "/pages/admin",
+
+        "/portal",
+
+        "/pages/portal"
+
+    ];
+
+    const isPrivateArea =
+        PRIVATE_PATHS.some(path =>
+
+            pathname === path ||
+
+            pathname.startsWith(
+                `${path}/`
+            )
+
+        );
+
+    if (isPrivateArea) {
+
+        return;
+
+    }
+
+
+    /*
+       Prevent duplicate initialization.
+
+       The tracker also protects itself,
+       but this avoids unnecessary loads.
+    */
+
+    if (
+        window.LeakAnalytics ||
+
+        document.querySelector(
+            'script[data-leak-analytics="v2"]'
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Analytics v2 configuration.
+
+       This must exist before
+       the tracker loads.
+    */
+
+    window.LEAK_ANALYTICS_CONFIG = {
+
+        apiUrl:
+            "https://revenue-leak-hunter-api.preciousosason.workers.dev",
+
+        enabled: true,
+
+        internal: false,
+
+        autoLinkContact: true
+
+    };
+
+
     try {
 
-        await loadModuleScript(
-            "assets/js/analytics.js"
+        const url =
+            resolveSitePath(
+                "assets/js/leak-analytics.js"
+            );
+
+        await new Promise(
+            (resolve, reject) => {
+
+                const existing =
+                    document.querySelector(
+                        'script[data-leak-analytics="v2"]'
+                    );
+
+                if (existing) {
+
+                    if (
+                        existing.dataset.loaded ===
+                        "true"
+                    ) {
+
+                        resolve();
+
+                        return;
+                    }
+
+                    existing.addEventListener(
+                        "load",
+                        resolve,
+                        {
+                            once: true
+                        }
+                    );
+
+                    existing.addEventListener(
+                        "error",
+                        reject,
+                        {
+                            once: true
+                        }
+                    );
+
+                    return;
+                }
+
+
+                const script =
+                    document.createElement(
+                        "script"
+                    );
+
+                script.src = url;
+
+                script.defer = true;
+
+                script.dataset.leakAnalytics =
+                    "v2";
+
+                script.onload = () => {
+
+                    script.dataset.loaded =
+                        "true";
+
+                    resolve();
+
+                };
+
+                script.onerror = () => {
+
+                    reject(
+                        new Error(
+                            `Failed to load ${url}`
+                        )
+                    );
+
+                };
+
+                document.head.appendChild(
+                    script
+                );
+
+            }
         );
 
 
         console.log(
-            "Analytics tracker initialized."
+            "Leak Analytics v2 initialized."
         );
 
 
     } catch (error) {
 
         /*
-           Analytics should never prevent
-           the website from loading.
+           Analytics must never prevent
+           the rest of the website
+           from loading.
         */
 
         console.warn(
-            "Analytics tracker could not be loaded.",
+            "Leak Analytics v2 could not be loaded.",
             error
         );
 
