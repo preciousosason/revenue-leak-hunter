@@ -6,7 +6,8 @@
   "scripts": {
     "new-article": "node scripts/new-article.js",
     "build-blog": "node scripts/build-blog.js",
-    "deploy": "wrangler deploy",
+    "inject-meta": "node scripts/inject-meta.mjs",
+    "deploy": "npm run inject-meta && wrangler deploy",
     "preview": "wrangler dev"
   },
   "repository": {

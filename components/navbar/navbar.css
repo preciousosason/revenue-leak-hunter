@@ -36,49 +36,78 @@
 
 
 /* =================================
-   LOGO
+   BRAND / LOGO
 ================================= */
 
 .navbar-logo {
     display: inline-flex;
     align-items: center;
 
-    gap: 0.65rem;
+    gap: 0.7rem;
 
     flex-shrink: 0;
+
+    text-decoration: none;
 }
 
 
-.navbar-logo-mark {
-    width: 34px;
-    height: 34px;
+/* =================================
+   LOGO IMAGE
+================================= */
 
-    display: grid;
-    place-items: center;
+.navbar-logo-image {
+    width: 36px;
+    height: 36px;
 
-    border: 1px solid var(--color-primary);
+    display: block;
+
+    flex-shrink: 0;
+
+    object-fit: contain;
 
     border-radius:
         var(--border-radius-sm);
 
-    color: var(--color-primary);
-
-    font-size: 0.95rem;
-
-    font-weight:
-        var(--weight-black);
+    transition:
+        transform var(--transition-normal),
+        opacity var(--transition-normal);
 }
 
 
-.navbar-logo-text {
-    color: var(--color-text);
+.navbar-logo:hover
+.navbar-logo-image {
+    transform: scale(1.05);
+}
 
-    font-size: 0.85rem;
+
+/* =================================
+   BRAND NAME
+================================= */
+
+.navbar-logo-text {
+    color:
+        var(--color-text);
+
+    font-size: 0.9rem;
 
     font-weight:
-        var(--weight-bold);
+        var(--weight-black);
 
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    transition:
+        color var(--transition-normal);
+}
+
+
+.navbar-logo:hover
+.navbar-logo-text {
+    color:
+        var(--color-primary);
 }
 
 
@@ -101,12 +130,16 @@
 
     padding-block: 0.5rem;
 
-    color: var(--color-text-secondary);
+    color:
+        var(--color-text-secondary);
 
-    font-size: var(--text-sm);
+    font-size:
+        var(--text-sm);
 
     font-weight:
         var(--weight-medium);
+
+    text-decoration: none;
 
     transition:
         color var(--transition-normal);
@@ -115,7 +148,8 @@
 
 .navbar-link:hover,
 .navbar-link.active {
-    color: var(--color-text);
+    color:
+        var(--color-text);
 }
 
 
@@ -180,7 +214,8 @@
 
     gap: 5px;
 
-    background: transparent;
+    background:
+        transparent;
 
     border:
         1px solid var(--color-border);
@@ -189,6 +224,19 @@
         var(--border-radius-md);
 
     cursor: pointer;
+
+    transition:
+        border-color var(--transition-normal),
+        background var(--transition-normal);
+}
+
+
+.navbar-menu-toggle:hover {
+    border-color:
+        var(--color-primary);
+
+    background:
+        rgba(255, 255, 255, 0.03);
 }
 
 
@@ -226,6 +274,10 @@
 
     background:
         rgba(8, 8, 8, 0.97);
+
+    box-shadow:
+        0 18px 40px
+        rgba(0, 0, 0, 0.35);
 }
 
 
@@ -241,17 +293,23 @@
     font-weight:
         var(--weight-medium);
 
+    text-decoration: none;
+
     border-bottom:
         1px solid var(--color-border-light);
 
     transition:
-        color var(--transition-normal);
+        color var(--transition-normal),
+        padding-left var(--transition-normal);
 }
 
 
 .mobile-nav-link:hover {
     color:
         var(--color-text);
+
+    padding-left:
+        0.25rem;
 }
 
 
@@ -305,8 +363,15 @@ span:nth-child(3) {
         gap: 1rem;
     }
 
+
     .navbar-link {
         font-size: 0.8rem;
+    }
+
+
+    .navbar-logo-text {
+        font-size: 0.82rem;
+        letter-spacing: 0.11em;
     }
 
 }
@@ -319,8 +384,36 @@ span:nth-child(3) {
         display: none;
     }
 
+
     .navbar-menu-toggle {
         display: flex;
+    }
+
+
+    .navbar-container {
+        min-height: 70px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .navbar-logo-image {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    .navbar-logo-text {
+        font-size: 0.78rem;
+
+        letter-spacing: 0.1em;
+    }
+
+
+    .navbar-container {
+        gap: 1rem;
     }
 
 }
@@ -334,8 +427,11 @@ span:nth-child(3) {
 
     .navbar-link,
     .navbar-link::after,
+    .navbar-menu-toggle,
     .navbar-menu-toggle span,
-    .mobile-nav-link {
+    .mobile-nav-link,
+    .navbar-logo-image,
+    .navbar-logo-text {
         transition: none;
     }
 

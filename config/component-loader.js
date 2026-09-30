@@ -7,11 +7,54 @@
    SITE ROOT
 ================================= */
 
-const LOADER_SCRIPT = document.currentScript;
+const LOADER_SCRIPT =
+    document.currentScript;
 
-const SITE_ROOT = LOADER_SCRIPT
-    ? new URL("../", LOADER_SCRIPT.src)
-    : new URL("./", window.location.href);
+const SITE_ROOT =
+    LOADER_SCRIPT
+        ? new URL(
+              "../",
+              LOADER_SCRIPT.src
+          )
+        : new URL(
+              "./",
+              window.location.href
+          );
+
+
+/* =================================
+   SESSION ASSET VERSION
+================================= */
+
+/*
+   One version per browser session.
+
+   This avoids stale component files
+   without generating a brand-new
+   cache key for every single request.
+*/
+
+const ASSET_VERSION_KEY =
+    "leakendiaAssetVersion";
+
+let ASSET_VERSION =
+    sessionStorage.getItem(
+        ASSET_VERSION_KEY
+    );
+
+if (!ASSET_VERSION) {
+
+    ASSET_VERSION =
+        String(
+            Date.now()
+        );
+
+    sessionStorage.setItem(
+        ASSET_VERSION_KEY,
+        ASSET_VERSION
+    );
+
+}
 
 
 /* =================================
@@ -24,7 +67,36 @@ function resolveSitePath(path) {
         return "";
     }
 
-    return new URL(path, SITE_ROOT).href;
+    return new URL(
+        path,
+        SITE_ROOT
+    ).href;
+
+}
+
+
+/* =================================
+   VERSIONED URL
+================================= */
+
+function versionedUrl(path) {
+
+    const resolved =
+        resolveSitePath(path);
+
+    if (!resolved) {
+        return "";
+    }
+
+    const url =
+        new URL(resolved);
+
+    url.searchParams.set(
+        "v",
+        ASSET_VERSION
+    );
+
+    return url.href;
 
 }
 
@@ -36,7 +108,8 @@ function resolveSitePath(path) {
 function buildRoute(routeName) {
 
     if (
-        typeof SITE_CONFIG === "undefined" ||
+        typeof SITE_CONFIG ===
+            "undefined" ||
         !SITE_CONFIG.routes
     ) {
 
@@ -47,8 +120,12 @@ function buildRoute(routeName) {
         return "#";
     }
 
+
     const route =
-        SITE_CONFIG.routes[routeName];
+        SITE_CONFIG.routes[
+            routeName
+        ];
+
 
     if (!route) {
 
@@ -59,7 +136,10 @@ function buildRoute(routeName) {
         return "#";
     }
 
-    return resolveSitePath(route);
+
+    return resolveSitePath(
+        route
+    );
 
 }
 
@@ -68,28 +148,39 @@ function buildRoute(routeName) {
    RESOLVE ROUTES
 ================================= */
 
-function resolveRoutes(container = document) {
+function resolveRoutes(
+    container = document
+) {
 
     const links =
         container.querySelectorAll(
             "[data-route]"
         );
 
-    links.forEach(link => {
 
-        const routeName =
-            link.dataset.route;
+    links.forEach(
+        link => {
 
-        const url =
-            buildRoute(routeName);
+            const routeName =
+                link.dataset.route;
 
-        if (url !== "#") {
+            const url =
+                buildRoute(
+                    routeName
+                );
 
-            link.href = url;
+
+            if (
+                url !== "#"
+            ) {
+
+                link.href =
+                    url;
+
+            }
 
         }
-
-    });
+    );
 
 }
 
@@ -101,31 +192,141 @@ function resolveRoutes(container = document) {
 function loadStylesheet(path) {
 
     if (!path) {
-        return;
+        return Promise.resolve();
     }
+
 
     const url =
-        resolveSitePath(path);
+        versionedUrl(path);
+
+
+    /*
+       Reuse an already-loaded component
+       stylesheet if one exists.
+    */
 
     const existing =
-        document.querySelector(
-            `link[data-component-css="${url}"]`
+        Array.from(
+            document.querySelectorAll(
+                "link[rel='stylesheet']"
+            )
+        ).find(
+            link => {
+
+                try {
+
+                    const current =
+                        new URL(
+                            link.href
+                        );
+
+                    const target =
+                        new URL(
+                            url
+                        );
+
+                    return (
+                        current.pathname ===
+                        target.pathname
+                    );
+
+                } catch {
+
+                    return false;
+
+                }
+
+            }
         );
 
+
     if (existing) {
-        return;
+
+        if (
+            existing.dataset.loaded ===
+            "true" ||
+            existing.sheet
+        ) {
+
+            return Promise.resolve();
+
+        }
+
+
+        return new Promise(
+            resolve => {
+
+                existing.addEventListener(
+                    "load",
+                    resolve,
+                    {
+                        once: true
+                    }
+                );
+
+
+                existing.addEventListener(
+                    "error",
+                    resolve,
+                    {
+                        once: true
+                    }
+                );
+
+            }
+        );
+
     }
 
-    const stylesheet =
-        document.createElement("link");
 
-    stylesheet.rel = "stylesheet";
+    return new Promise(
+        resolve => {
 
-    stylesheet.href = url;
+            const stylesheet =
+                document.createElement(
+                    "link"
+                );
 
-    stylesheet.dataset.componentCss = url;
 
-    document.head.appendChild(stylesheet);
+            stylesheet.rel =
+                "stylesheet";
+
+            stylesheet.href =
+                url;
+
+            stylesheet.dataset.componentCss =
+                url;
+
+
+            stylesheet.onload =
+                () => {
+
+                    stylesheet.dataset.loaded =
+                        "true";
+
+                    resolve();
+
+                };
+
+
+            stylesheet.onerror =
+                () => {
+
+                    console.warn(
+                        `Failed to load stylesheet: ${url}`
+                    );
+
+                    resolve();
+
+                };
+
+
+            document.head.appendChild(
+                stylesheet
+            );
+
+        }
+    );
 
 }
 
@@ -140,48 +341,127 @@ function loadScript(path) {
         return Promise.resolve();
     }
 
+
+    const url =
+        versionedUrl(path);
+
+
     return new Promise(
         (resolve, reject) => {
 
-            const url =
-                resolveSitePath(path);
-
             const existing =
-                document.querySelector(
-                    `script[data-component-js="${url}"]`
+                Array.from(
+                    document.querySelectorAll(
+                        "script[src]"
+                    )
+                ).find(
+                    script => {
+
+                        try {
+
+                            const current =
+                                new URL(
+                                    script.src
+                                );
+
+                            const target =
+                                new URL(
+                                    url
+                                );
+
+                            return (
+                                current.pathname ===
+                                target.pathname
+                            );
+
+                        } catch {
+
+                            return false;
+
+                        }
+
+                    }
                 );
+
 
             if (existing) {
 
-                resolve();
+                if (
+                    existing.dataset.loaded ===
+                        "true"
+                ) {
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                existing.addEventListener(
+                    "load",
+                    resolve,
+                    {
+                        once: true
+                    }
+                );
+
+
+                existing.addEventListener(
+                    "error",
+                    reject,
+                    {
+                        once: true
+                    }
+                );
+
 
                 return;
             }
 
+
             const script =
-                document.createElement("script");
-
-            script.src = url;
-
-            script.dataset.componentJs = url;
-
-            script.onload = () => {
-
-                resolve();
-
-            };
-
-            script.onerror = () => {
-
-                reject(
-                    new Error(
-                        `Failed to load ${url}`
-                    )
+                document.createElement(
+                    "script"
                 );
 
-            };
 
-            document.body.appendChild(script);
+            script.src =
+                url;
+
+            script.defer =
+                true;
+
+            script.dataset.componentJs =
+                url;
+
+
+            script.onload =
+                () => {
+
+                    script.dataset.loaded =
+                        "true";
+
+                    resolve();
+
+                };
+
+
+            script.onerror =
+                () => {
+
+                    reject(
+                        new Error(
+                            `Failed to load ${url}`
+                        )
+                    );
+
+                };
+
+
+            document.body.appendChild(
+                script
+            );
 
         }
     );
@@ -199,28 +479,62 @@ function loadModuleScript(path) {
         return Promise.resolve();
     }
 
+
+    const url =
+        versionedUrl(path);
+
+
     return new Promise(
         (resolve, reject) => {
 
-            const url =
-                resolveSitePath(path);
-
             const existing =
-                document.querySelector(
-                    `script[data-global-module="${url}"]`
+                Array.from(
+                    document.querySelectorAll(
+                        "script[type='module'][src]"
+                    )
+                ).find(
+                    script => {
+
+                        try {
+
+                            const current =
+                                new URL(
+                                    script.src
+                                );
+
+                            const target =
+                                new URL(
+                                    url
+                                );
+
+                            return (
+                                current.pathname ===
+                                target.pathname
+                            );
+
+                        } catch {
+
+                            return false;
+
+                        }
+
+                    }
                 );
+
 
             if (existing) {
 
                 if (
                     existing.dataset.loaded ===
-                    "true"
+                        "true"
                 ) {
 
                     resolve();
 
                     return;
+
                 }
+
 
                 existing.addEventListener(
                     "load",
@@ -230,6 +544,7 @@ function loadModuleScript(path) {
                     }
                 );
 
+
                 existing.addEventListener(
                     "error",
                     reject,
@@ -238,42 +553,166 @@ function loadModuleScript(path) {
                     }
                 );
 
+
                 return;
             }
 
+
             const script =
-                document.createElement("script");
-
-            script.type = "module";
-
-            script.src = url;
-
-            script.dataset.globalModule = url;
-
-            script.onload = () => {
-
-                script.dataset.loaded =
-                    "true";
-
-                resolve();
-
-            };
-
-            script.onerror = () => {
-
-                reject(
-                    new Error(
-                        `Failed to load module ${url}`
-                    )
+                document.createElement(
+                    "script"
                 );
 
-            };
+
+            script.type =
+                "module";
+
+            script.src =
+                url;
+
+            script.dataset.globalModule =
+                url;
+
+
+            script.onload =
+                () => {
+
+                    script.dataset.loaded =
+                        "true";
+
+                    resolve();
+
+                };
+
+
+            script.onerror =
+                () => {
+
+                    reject(
+                        new Error(
+                            `Failed to load module ${url}`
+                        )
+                    );
+
+                };
+
 
             document.head.appendChild(
                 script
             );
 
         }
+    );
+
+}
+
+
+/* =================================
+   PREFETCH RESOURCE
+================================= */
+
+function prefetchResource(
+    path
+) {
+
+    if (!path) {
+        return;
+    }
+
+
+    const url =
+        versionedUrl(path);
+
+
+    const existing =
+        Array.from(
+            document.querySelectorAll(
+                "link[rel='prefetch']"
+            )
+        ).some(
+            link =>
+                link.href ===
+                url
+        );
+
+
+    if (existing) {
+        return;
+    }
+
+
+    const link =
+        document.createElement(
+            "link"
+        );
+
+
+    link.rel =
+        "prefetch";
+
+    link.href =
+        url;
+
+
+    document.head.appendChild(
+        link
+    );
+
+}
+
+
+/* =================================
+   PRELOAD STYLESHEET
+================================= */
+
+function preloadStylesheet(
+    path
+) {
+
+    if (!path) {
+        return;
+    }
+
+
+    const url =
+        versionedUrl(path);
+
+
+    const existing =
+        Array.from(
+            document.querySelectorAll(
+                "link[rel='preload']"
+            )
+        ).some(
+            link =>
+                link.href ===
+                url
+        );
+
+
+    if (existing) {
+        return;
+    }
+
+
+    const link =
+        document.createElement(
+            "link"
+        );
+
+
+    link.rel =
+        "preload";
+
+    link.as =
+        "style";
+
+    link.href =
+        url;
+
+
+    document.head.appendChild(
+        link
     );
 
 }
@@ -291,30 +730,67 @@ async function loadComponent({
 }) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
+
 
     /*
-       If the page doesn't contain
-       this component, simply skip it.
+       If this page does not contain
+       the mount, skip the component.
     */
 
     if (!element) {
         return;
     }
 
+
     try {
 
-        /* ============================
-           LOAD HTML
-        ============================ */
-
         const htmlUrl =
-            resolveSitePath(html);
+            versionedUrl(
+                html
+            );
 
-        const response =
-            await fetch(htmlUrl);
 
-        if (!response.ok) {
+        /*
+           Start HTML and CSS requests
+           at the same time.
+
+           CSS must finish before the
+           markup is injected.
+        */
+
+        const cssPromise =
+            css
+                ? loadStylesheet(
+                      css
+                  )
+                : Promise.resolve();
+
+
+        const htmlPromise =
+            fetch(
+                htmlUrl,
+                {
+                    cache:
+                        "default"
+                }
+            );
+
+
+        const [
+            response
+        ] =
+            await Promise.all([
+                htmlPromise,
+                cssPromise
+            ]);
+
+
+        if (
+            !response.ok
+        ) {
 
             throw new Error(
                 `Failed to load ${htmlUrl}`
@@ -322,36 +798,55 @@ async function loadComponent({
 
         }
 
+
         const markup =
             await response.text();
 
-        element.innerHTML = markup;
 
-        /* ============================
-           LOAD CSS
-        ============================ */
+        /*
+           CSS is ready now, so the browser
+           should not show a naked component.
+        */
 
-        if (css) {
+        element.innerHTML =
+            markup;
 
-            loadStylesheet(css);
-
-        }
 
         /* ============================
            RESOLVE ROUTES
         ============================ */
 
-        resolveRoutes(element);
+        resolveRoutes(
+            element
+        );
+
 
         /* ============================
            LOAD JAVASCRIPT
         ============================ */
 
+        /*
+           Component JS should not delay
+           visual rendering.
+        */
+
         if (js) {
 
-            await loadScript(js);
+            void loadScript(
+                js
+            ).catch(
+                error => {
+
+                    console.error(
+                        `Component script failed: ${js}`,
+                        error
+                    );
+
+                }
+            );
 
         }
+
 
     } catch (error) {
 
@@ -398,7 +893,8 @@ const GLOBAL_COMPONENTS = [
     },
 
     {
-        id: "investigation-room",
+        id:
+            "investigation-room",
 
         html:
             "components/investigation-room/investigation-room.html",
@@ -470,7 +966,8 @@ const HOMEPAGE_COMPONENTS = [
     },
 
     {
-        id: "testimonials",
+        id:
+            "testimonials",
 
         html:
             "components/testimonials/testimonials.html",
@@ -515,7 +1012,8 @@ const HOMEPAGE_COMPONENTS = [
 const SERVICES_COMPONENTS = [
 
     {
-        id: "servicesHero",
+        id:
+            "servicesHero",
 
         html:
             "components/services-page/hero.html",
@@ -528,7 +1026,8 @@ const SERVICES_COMPONENTS = [
     },
 
     {
-        id: "servicesIntro",
+        id:
+            "servicesIntro",
 
         html:
             "components/services-page/intro.html",
@@ -538,7 +1037,8 @@ const SERVICES_COMPONENTS = [
     },
 
     {
-        id: "servicesList",
+        id:
+            "servicesList",
 
         html:
             "components/services-page/services.html",
@@ -548,7 +1048,8 @@ const SERVICES_COMPONENTS = [
     },
 
     {
-        id: "serviceProcess",
+        id:
+            "serviceProcess",
 
         html:
             "components/services-page/process.html",
@@ -558,7 +1059,8 @@ const SERVICES_COMPONENTS = [
     },
 
     {
-        id: "serviceFit",
+        id:
+            "serviceFit",
 
         html:
             "components/services-page/fit.html",
@@ -568,7 +1070,8 @@ const SERVICES_COMPONENTS = [
     },
 
     {
-        id: "servicesCTA",
+        id:
+            "servicesCTA",
 
         html:
             "components/services-page/cta.html",
@@ -587,7 +1090,8 @@ const SERVICES_COMPONENTS = [
 const SERVICE_DETAIL_COMPONENTS = [
 
     {
-        id: "serviceHero",
+        id:
+            "serviceHero",
 
         html:
             "components/service-detail/hero.html",
@@ -600,7 +1104,8 @@ const SERVICE_DETAIL_COMPONENTS = [
     },
 
     {
-        id: "serviceContent",
+        id:
+            "serviceContent",
 
         html:
             "components/service-detail/content.html",
@@ -610,7 +1115,8 @@ const SERVICE_DETAIL_COMPONENTS = [
     },
 
     {
-        id: "serviceProcess",
+        id:
+            "serviceProcess",
 
         html:
             "components/service-detail/process.html",
@@ -620,7 +1126,8 @@ const SERVICE_DETAIL_COMPONENTS = [
     },
 
     {
-        id: "serviceCTA",
+        id:
+            "serviceCTA",
 
         html:
             "components/service-detail/cta.html",
@@ -665,14 +1172,124 @@ async function loadComponentGroup(
         return;
     }
 
+
     await Promise.all(
 
         components.map(
             component =>
-                loadComponent(component)
+                loadComponent(
+                    component
+                )
         )
 
     );
+
+}
+
+
+/* =================================
+   PRELOAD CRITICAL COMPONENT CSS
+================================= */
+
+function preloadCriticalComponentStyles(
+    pageType
+) {
+
+    /*
+       Navbar CSS should start as early
+       as possible on every public page.
+    */
+
+    preloadStylesheet(
+        "components/navbar/navbar.css"
+    );
+
+
+    /*
+       Homepage hero CSS is also critical
+       because it appears immediately.
+    */
+
+    if (
+        pageType ===
+        "home"
+    ) {
+
+        preloadStylesheet(
+            "components/hero/hero.css"
+        );
+
+    }
+
+
+    /*
+       Services hero.
+    */
+
+    if (
+        pageType ===
+        "services"
+    ) {
+
+        preloadStylesheet(
+            "components/services-page/hero.css"
+        );
+
+    }
+
+
+    /*
+       Service detail hero.
+    */
+
+    if (
+        pageType ===
+        "service-detail"
+    ) {
+
+        preloadStylesheet(
+            "components/service-detail/hero.css"
+        );
+
+    }
+
+}
+
+
+/* =================================
+   PREFETCH COMPONENT HTML
+================================= */
+
+function prefetchLikelyComponents(
+    pageType
+) {
+
+    /*
+       These are useful but not critical.
+
+       Prefetch lets the browser grab them
+       when network capacity is available.
+    */
+
+    prefetchResource(
+        "components/footer/footer.html"
+    );
+
+
+    if (
+        pageType ===
+        "home"
+    ) {
+
+        prefetchResource(
+            "components/services/services.html"
+        );
+
+        prefetchResource(
+            "components/testimonials/testimonials.html"
+        );
+
+    }
 
 }
 
@@ -684,9 +1301,8 @@ async function loadComponentGroup(
 function createGlobalComponentMounts() {
 
     /*
-       Investigation Room is a global
-       component, so create its mount
-       automatically on every page.
+       Investigation Room is global,
+       so create its mount automatically.
     */
 
     if (
@@ -696,10 +1312,14 @@ function createGlobalComponentMounts() {
     ) {
 
         const investigationRoom =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         investigationRoom.id =
             "investigation-room";
+
 
         document.body.appendChild(
             investigationRoom
@@ -717,14 +1337,12 @@ function createGlobalComponentMounts() {
 async function loadGlobalAnalytics() {
 
     const pathname =
-        window.location.pathname.toLowerCase();
+        window.location.pathname
+            .toLowerCase();
+
 
     /*
        Do not track private areas.
-
-       The public analytics system should
-       never count admin or client portal
-       activity as customer behaviour.
     */
 
     const PRIVATE_PATHS = [
@@ -739,29 +1357,27 @@ async function loadGlobalAnalytics() {
 
     ];
 
+
     const isPrivateArea =
-        PRIVATE_PATHS.some(path =>
+        PRIVATE_PATHS.some(
+            path =>
 
-            pathname === path ||
+                pathname === path ||
 
-            pathname.startsWith(
-                `${path}/`
-            )
+                pathname.startsWith(
+                    `${path}/`
+                )
 
         );
 
+
     if (isPrivateArea) {
-
         return;
-
     }
 
 
     /*
        Prevent duplicate initialization.
-
-       The tracker also protects itself,
-       but this avoids unnecessary loads.
     */
 
     if (
@@ -779,9 +1395,6 @@ async function loadGlobalAnalytics() {
 
     /*
        Analytics v2 configuration.
-
-       This must exist before
-       the tracker loads.
     */
 
     window.LEAK_ANALYTICS_CONFIG = {
@@ -789,11 +1402,14 @@ async function loadGlobalAnalytics() {
         apiUrl:
             "https://revenue-leak-hunter-api.preciousosason.workers.dev",
 
-        enabled: true,
+        enabled:
+            true,
 
-        internal: false,
+        internal:
+            false,
 
-        autoLinkContact: true
+        autoLinkContact:
+            true
 
     };
 
@@ -801,9 +1417,10 @@ async function loadGlobalAnalytics() {
     try {
 
         const url =
-            resolveSitePath(
+            versionedUrl(
                 "assets/js/leak-analytics.js"
             );
+
 
         await new Promise(
             (resolve, reject) => {
@@ -813,17 +1430,20 @@ async function loadGlobalAnalytics() {
                         'script[data-leak-analytics="v2"]'
                     );
 
+
                 if (existing) {
 
                     if (
                         existing.dataset.loaded ===
-                        "true"
+                            "true"
                     ) {
 
                         resolve();
 
                         return;
+
                     }
+
 
                     existing.addEventListener(
                         "load",
@@ -833,6 +1453,7 @@ async function loadGlobalAnalytics() {
                         }
                     );
 
+
                     existing.addEventListener(
                         "error",
                         reject,
@@ -841,7 +1462,9 @@ async function loadGlobalAnalytics() {
                         }
                     );
 
+
                     return;
+
                 }
 
 
@@ -850,31 +1473,39 @@ async function loadGlobalAnalytics() {
                         "script"
                     );
 
-                script.src = url;
 
-                script.defer = true;
+                script.src =
+                    url;
+
+                script.defer =
+                    true;
 
                 script.dataset.leakAnalytics =
                     "v2";
 
-                script.onload = () => {
 
-                    script.dataset.loaded =
-                        "true";
+                script.onload =
+                    () => {
 
-                    resolve();
+                        script.dataset.loaded =
+                            "true";
 
-                };
+                        resolve();
 
-                script.onerror = () => {
+                    };
 
-                    reject(
-                        new Error(
-                            `Failed to load ${url}`
-                        )
-                    );
 
-                };
+                script.onerror =
+                    () => {
+
+                        reject(
+                            new Error(
+                                `Failed to load ${url}`
+                            )
+                        );
+
+                    };
+
 
                 document.head.appendChild(
                     script
@@ -893,8 +1524,7 @@ async function loadGlobalAnalytics() {
 
         /*
            Analytics must never prevent
-           the rest of the website
-           from loading.
+           the website from rendering.
         */
 
         console.warn(
@@ -913,10 +1543,6 @@ async function loadGlobalAnalytics() {
 
 async function initializeComponents() {
 
-    /*
-       Determine the page type.
-    */
-
     const pageType =
         document.body.dataset.page ||
         "home";
@@ -928,56 +1554,93 @@ async function initializeComponents() {
 
 
     /* ==============================
-       CREATE GLOBAL COMPONENT MOUNTS
+       CREATE GLOBAL MOUNTS
     ============================== */
 
     createGlobalComponentMounts();
 
 
     /* ==============================
-       GLOBAL ANALYTICS
+       CRITICAL CSS PRELOAD
     ============================== */
 
-    await loadGlobalAnalytics();
-
-
-    /* ==============================
-       GLOBAL COMPONENTS
-    ============================== */
-
-    await loadComponentGroup(
-        GLOBAL_COMPONENTS
+    preloadCriticalComponentStyles(
+        pageType
     );
 
 
     /* ==============================
-       PAGE COMPONENTS
+       BACKGROUND PREFETCH
+    ============================== */
+
+    prefetchLikelyComponents(
+        pageType
+    );
+
+
+    /* ==============================
+       ANALYTICS
+    ============================== */
+
+    /*
+       Do NOT await this.
+
+       Tracking should never sit in front
+       of visible website rendering.
+    */
+
+    void loadGlobalAnalytics();
+
+
+    /* ==============================
+       COMPONENTS
     ============================== */
 
     const pageComponents =
-        PAGE_COMPONENTS[pageType];
+        PAGE_COMPONENTS[
+            pageType
+        ] ||
+        [];
 
 
-    if (!pageComponents) {
+    if (
+        !PAGE_COMPONENTS[
+            pageType
+        ]
+    ) {
 
         console.warn(
             `No component configuration found for page: "${pageType}"`
         );
 
-    } else {
-
-        await loadComponentGroup(
-            pageComponents
-        );
-
     }
+
+
+    /*
+       Global and page components
+       now load concurrently.
+    */
+
+    await Promise.all([
+
+        loadComponentGroup(
+            GLOBAL_COMPONENTS
+        ),
+
+        loadComponentGroup(
+            pageComponents
+        )
+
+    ]);
 
 
     /* ==============================
        FINAL ROUTE RESOLUTION
     ============================== */
 
-    resolveRoutes(document);
+    resolveRoutes(
+        document
+    );
 
 
     console.log(
@@ -992,12 +1655,16 @@ async function initializeComponents() {
 ================================= */
 
 if (
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
 ) {
 
     document.addEventListener(
         "DOMContentLoaded",
-        initializeComponents
+        initializeComponents,
+        {
+            once: true
+        }
     );
 
 } else {

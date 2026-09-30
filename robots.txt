@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /pages/admin/
+Disallow: /pages/portal/
+
+Sitemap: https://leakendia.com/sitemap.xml

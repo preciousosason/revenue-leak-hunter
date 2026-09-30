@@ -1,8 +1,8 @@
 const SITE_CONFIG = {
 
-    name: "Precious",
+ name: "Leakendia",
 
-    title: "Conversion Leak Hunter",
+title: "Conversion Leak Intelligence",
 
     tagline:
         "Find the leaks. Fix the journey. Improve the conversion.",
