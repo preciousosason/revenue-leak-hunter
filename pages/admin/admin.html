@@ -271,12 +271,19 @@
 
                     </button>
 <button
-    class="nav-item"
+    class="nav-item sidebar-link"
     data-view="reviews"
     type="button"
 >
-    <span class="nav-item-icon">★</span>
-    <span class="nav-item-label">Reviews</span>
+    <span class="nav-icon">
+        ★
+    </span>
+
+    <span class="nav-label">
+        Reviews
+    </span>
+
+    <span class="nav-indicator"></span>
 </button>
 
 <button
@@ -870,447 +877,43 @@
      ANALYTICS
      ================================================= -->
 
-<section
-    id="view-analytics"
-    class="admin-view analytics-page"
-    hidden
->
-
-    <header class="analytics-header">
-
-        <div class="analytics-header-main">
-
-            <div class="analytics-kicker">
-                INTELLIGENCE // VISITOR TRACE
-            </div>
-
-            <h2 class="analytics-title">
-                Analytics
-            </h2>
-
-            <p class="analytics-description">
-                Trace visitor activity, journeys, actions
-                and points where people stop moving forward.
-            </p>
-
-        </div>
-
-
-        <div class="analytics-readout">
-
-            <div class="analytics-readout-item">
-
-                <span class="analytics-readout-label">
-                    SYSTEM
-                </span>
-
-                <strong class="analytics-readout-value">
-                    AWAITING DATA
-                </strong>
-
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <!-- METRICS -->
-
-    <div class="analytics-metrics">
-
-        <article class="analytics-metric">
-
-            <div class="analytics-metric-header">
-
-                <span class="analytics-metric-label">
-                    VISITORS
-                </span>
-
-                <span class="analytics-metric-index">
-                    01
-                </span>
-
-            </div>
-
-            <strong
-                id="analytics-stat-visitors"
-                class="analytics-metric-value"
-            >
-                0
-            </strong>
-
-            <div class="analytics-metric-footer">
-
-                <span>
-                    Unique visitors
-                </span>
-
-                <span>
-                    TRACKED
-                </span>
-
-            </div>
-
-        </article>
-
-
-        <article class="analytics-metric">
-
-            <div class="analytics-metric-header">
-
-                <span class="analytics-metric-label">
-                    SESSIONS
-                </span>
-
-                <span class="analytics-metric-index">
-                    02
-                </span>
-
-            </div>
-
-            <strong
-                id="analytics-stat-sessions"
-                class="analytics-metric-value"
-            >
-                0
-            </strong>
-
-            <div class="analytics-metric-footer">
-
-                <span>
-                    Recorded sessions
-                </span>
-
-                <span>
-                    LIVE
-                </span>
-
-            </div>
-
-        </article>
-
-
-        <article class="analytics-metric">
-
-            <div class="analytics-metric-header">
-
-                <span class="analytics-metric-label">
-                    ENGAGED
-                </span>
-
-                <span class="analytics-metric-index">
-                    03
-                </span>
-
-            </div>
-
-            <strong
-                id="analytics-stat-engaged"
-                class="analytics-metric-value"
-            >
-                0
-            </strong>
-
-            <div class="analytics-metric-footer">
-
-                <span>
-                    Meaningful activity
-                </span>
-
-                <span>
-                    SIGNAL
-                </span>
-
-            </div>
-
-        </article>
-
-
-        <article class="analytics-metric">
-
-            <div class="analytics-metric-header">
-
-                <span class="analytics-metric-label">
-                    ACTIONS
-                </span>
-
-                <span class="analytics-metric-index">
-                    04
-                </span>
-
-            </div>
-
-            <strong
-                id="analytics-stat-actions"
-                class="analytics-metric-value"
-            >
-                0
-            </strong>
-
-            <div class="analytics-metric-footer">
-
-                <span>
-                    Recorded conversions
-                </span>
-
-                <span>
-                    TRACKED
-                </span>
-
-            </div>
-
-        </article>
-
-    </div>
-
-
-    <!-- PRIMARY INTELLIGENCE -->
-
-    <div class="analytics-main-grid">
-
-
-        <!-- VISITOR ACTIVITY -->
-
-        <section class="system-panel">
-
-            <header class="system-panel-header">
-
-                <div class="system-panel-heading">
-
-                    <span class="system-panel-index">
-                        01
-                    </span>
-
-                    <div>
-
-                        <span class="analytics-kicker">
-                            ACTIVITY
-                        </span>
-
-                        <h3 class="system-panel-title">
-                            Visitor Activity
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            <div
-                id="analytics-activity"
-                class="system-panel-body"
-            >
-
-                <div class="system-state empty">
-
-                    <div class="system-state-mark"></div>
-
-                    <div class="system-state-content">
-
-                        <h3 class="system-state-title">
-                            No visitor data
-                        </h3>
-
-                        <p class="system-state-description">
-                            Analytics events will appear here
-                            once visitor tracking is connected.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- JOURNEY TRACE -->
-
-        <section class="system-panel">
-
-            <header class="system-panel-header">
-
-                <div class="system-panel-heading">
-
-                    <span class="system-panel-index">
-                        02
-                    </span>
-
-                    <div>
-
-                        <span class="analytics-kicker">
-                            JOURNEY
-                        </span>
-
-                        <h3 class="system-panel-title">
-                            Visitor Trace
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            <div
-                id="analytics-journeys"
-                class="system-panel-body"
-            >
-
-                <div class="system-state empty">
-
-                    <div class="system-state-mark"></div>
-
-                    <div class="system-state-content">
-
-                        <h3 class="system-state-title">
-                            Awaiting journeys
-                        </h3>
-
-                        <p class="system-state-description">
-                            Visitor paths will appear here
-                            once sessions are recorded.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <!-- SECONDARY INTELLIGENCE -->
-
-    <div class="analytics-secondary-grid">
-
-
-        <!-- DROP-OFF -->
-
-        <section class="system-panel">
-
-            <header class="system-panel-header">
-
-                <div class="system-panel-heading">
-
-                    <span class="system-panel-index">
-                        03
-                    </span>
-
-                    <div>
-
-                        <span class="analytics-kicker">
-                            SIGNALS
-                        </span>
-
-                        <h3 class="system-panel-title">
-                            Drop-Off Signals
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            <div
-                id="analytics-dropoffs"
-                class="system-panel-body"
-            >
-
-                <div class="system-state empty">
-
-                    <div class="system-state-mark"></div>
-
-                    <div class="system-state-content">
-
-                        <h3 class="system-state-title">
-                            No signals detected
-                        </h3>
-
-                        <p class="system-state-description">
-                            Drop-off patterns will be calculated
-                            from recorded visitor journeys.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- RECENT EVENTS -->
-
-        <section class="system-panel">
-
-            <header class="system-panel-header">
-
-                <div class="system-panel-heading">
-
-                    <span class="system-panel-index">
-                        04
-                    </span>
-
-                    <div>
-
-                        <span class="analytics-kicker">
-                            EVENT STREAM
-                        </span>
-
-                        <h3 class="system-panel-title">
-                            Recent Activity
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            <div
-                id="analytics-events"
-                class="system-panel-body"
-            >
-
-                <div class="system-state empty">
-
-                    <div class="system-state-mark"></div>
-
-                    <div class="system-state-content">
-
-                        <h3 class="system-state-title">
-                            Event stream empty
-                        </h3>
-
-                        <p class="system-state-description">
-                            Page views, clicks and other
-                            tracked events will appear here.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
+<section id="view-analytics" class="admin-view analytics-page" hidden>
+ <header class="analytics-header">
+  <div><div class="analytics-kicker">CONVERSION INTELLIGENCE / V2</div><h2 class="analytics-title">See what moves people.</h2><p class="analytics-description">Follow the journey from first visit to verified enquiry. Find friction, compare outcomes, and choose your next improvement.</p></div>
+  <div class="analytics-health"><span id="analytics-health-dot" class="analytics-health-dot"></span><div><strong id="analytics-health">Checking tracking</strong><small id="analytics-updated">No report loaded</small></div></div>
+ </header>
+ <form id="analytics-filters" class="analytics-toolbar">
+  <label>Period<select id="analytics-period"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option><option value="custom">Custom dates</option></select></label>
+  <label>From<input type="date" id="analytics-start" required></label><label>Through<input type="date" id="analytics-end" required></label>
+  <label>Timezone<select id="analytics-timezone"><option value="Africa/Lagos">Lagos · UTC+1</option><option value="UTC">UTC</option></select></label>
+  <label>Source<select id="analytics-source"><option value="">All sources</option></select></label>
+  <label>Device<select id="analytics-device"><option value="">All devices</option><option>mobile</option><option>desktop</option><option>tablet</option><option>unknown</option></select></label>
+  <label class="analytics-landing-filter">Landing page<input id="analytics-landing" placeholder="Exact path, e.g. /services"></label>
+  <label class="analytics-check"><input id="analytics-internal" type="checkbox"> Include test traffic</label>
+  <button class="analytics-btn primary" type="submit" id="analytics-refresh">Apply filters</button><button class="analytics-btn" type="button" id="analytics-export" disabled>Export CSV</button>
+ </form>
+ <p id="analytics-range-note" class="analytics-note"></p><div id="analytics-notice" role="status" aria-live="polite"></div>
+ <div id="analytics-metrics" class="analytics-metrics" aria-live="polite"></div>
+ <div class="analytics-wide-grid">
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">01 / PERFORMANCE</span><h3>Traffic & enquiries</h3></div><span class="analytics-tag">DAILY</span></div><div id="analytics-trend"></div></article>
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">02 / INVESTIGATE</span><h3>What needs attention</h3></div></div><div id="analytics-insights"></div></article>
+ </div>
+ <div class="analytics-two-grid">
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">03 / PROGRESSION</span><h3>Enquiry funnel</h3></div></div><p class="analytics-note">Sessions → form started → later verified enquiry. Direct enquiries without a tracked form start are excluded from the last step.</p><div id="analytics-funnel"></div></article>
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">04 / ACQUISITION</span><h3>Which sources convert?</h3></div></div><div id="analytics-sources"></div></article>
+ </div>
+ <div class="analytics-two-grid">
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">05 / ENTRY POINTS</span><h3>Landing-page performance</h3></div></div><div id="analytics-landings"></div></article>
+  <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">06 / EXPERIENCE</span><h3>Conversion by device</h3></div></div><div id="analytics-devices"></div><h4 class="analytics-subheading">Last pages · inactive, unconverted sessions</h4><p class="analytics-note">No activity for 30 minutes. These are observed exits, not proof of a problem.</p><div id="analytics-exits"></div></article>
+ </div>
+ <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">07 / FORM HEALTH</span><h3>Find the friction</h3></div></div><div class="analytics-two-grid"><div id="analytics-forms"></div><div id="analytics-errors"></div></div></article>
+ <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">08 / JOURNEYS</span><h3>Inspect the evidence</h3></div><form id="analytics-journey-filter" class="analytics-inline"><label class="sr-only" for="analytics-search">Search session or landing page</label><input id="analytics-search" placeholder="Search session or landing page"><select id="analytics-outcome" aria-label="Journey outcome"><option value="">All outcomes</option><option value="converted">Converted</option><option value="unconverted">No enquiry</option></select><button class="analytics-btn">Search</button></form></div><div id="analytics-journeys"></div><div id="analytics-journey-pages" class="analytics-pagination"></div></article>
+ <article class="analytics-panel"><div class="analytics-panel-heading"><div><span class="analytics-kicker">09 / LEAD QUALITY</span><h3>Verified enquiries</h3></div><span class="analytics-tag">SERVER CONFIRMED</span></div><p class="analytics-note">Enquiries created during the selected dates; update their current stage here. This creation-date list can differ from the session-cohort metrics above.</p><div id="analytics-leads"></div><div id="analytics-lead-pages" class="analytics-pagination"></div></article>
+ <details class="analytics-definitions"><summary>Metric definitions & data coverage</summary><p>Reports use sessions that started in the selected range, with activity and verified enquiries up to the range end. Conversion rate = sessions with a verified enquiry ÷ sessions. Engagement = at least 10 seconds of tracked foreground activity, two page views, or a verified enquiry. Visitors are browser identifiers, not identified people. Comparisons use the immediately preceding interval of equal elapsed length; today's data is partial.</p><p>Form completion uses matching form-attempt IDs and event order. Lead stages show current status, not historical stage snapshots. Existing v1 data is preserved in its original tables and is excluded because its conversion and engagement definitions were unreliable. Tracking can be absent because of consent choices, blockers, offline activity, or installation gaps. Attribution is browser supplied; the enquiry itself is server confirmed.</p><p id="analytics-coverage"></p></details>
+ <dialog id="analytics-session-dialog" aria-labelledby="analytics-dialog-title"><div class="analytics-dialog-top"><h3 id="analytics-dialog-title">Session journey</h3><button class="analytics-btn" id="analytics-dialog-close" type="button" aria-label="Close session">Close ✕</button></div><div id="analytics-session-content"></div></dialog>
 </section>
+
+
                     <!-- =================================================
                          CLIENTS
                          ================================================= -->

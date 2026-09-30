@@ -84,30 +84,25 @@ export async function api(
         data =
             await response.json();
 
-  } catch {
+    } catch {
 
-    if (
-        response.status === 401
-    ) {
+        if (!response.ok) {
 
-        expiredSessionHandler?.();
+            if (
+                response.status === 401
+            ) {
 
-        throw new Error(
-            "Your admin session has expired."
-        );
+                expiredSessionHandler?.();
 
-    }
+            }
 
+            throw new Error(
+                "The server returned an invalid response."
+            );
 
-    if (!response.ok) {
-
-        throw new Error(
-            `The server returned an invalid response (${response.status}).`
-        );
+        }
 
     }
-
-}
 
     if (
         response.status === 401
