@@ -2,28 +2,31 @@ import { handleAnalyticsEvent } from "./events.js";
 import {
     handleAdminAnalyticsOverview,
     handleAdminAnalyticsJourneys,
-    handleAdminAnalyticsSession
+    handleAdminAnalyticsSession,
+    handleAdminAnalyticsLeads,
 } from "./admin.js";
-
 export async function handleAnalyticsRoutes(request, env) {
-    const url = new URL(request.url);
-
-    if (url.pathname === "/api/analytics/events" && request.method === "POST") {
+    const p = new URL(request.url).pathname,
+        m = request.method;
+    if (p === "/api/analytics/events" && m === "POST")
         return handleAnalyticsEvent(request, env);
-    }
-
-    if (url.pathname === "/api/admin/analytics/overview" && request.method === "GET") {
+    if (p === "/api/admin/analytics/overview" && m === "GET")
         return handleAdminAnalyticsOverview(request, env);
-    }
-
-    if (url.pathname === "/api/admin/analytics/journeys" && request.method === "GET") {
+    if (p === "/api/admin/analytics/journeys" && m === "GET")
         return handleAdminAnalyticsJourneys(request, env);
-    }
-
-    if (url.pathname.startsWith("/api/admin/analytics/sessions/") && request.method === "GET") {
-        const sessionId = decodeURIComponent(url.pathname.split("/").pop() || "");
-        return handleAdminAnalyticsSession(request, env, sessionId);
-    }
-
+    if (p === "/api/admin/analytics/leads" && m === "GET")
+        return handleAdminAnalyticsLeads(request, env);
+    if (p.startsWith("/api/admin/analytics/leads/") && m === "PATCH")
+        return handleAdminAnalyticsLeads(
+            request,
+            env,
+            decodeURIComponent(p.split("/").pop()),
+        );
+    if (p.startsWith("/api/admin/analytics/sessions/") && m === "GET")
+        return handleAdminAnalyticsSession(
+            request,
+            env,
+            decodeURIComponent(p.split("/").pop()),
+        );
     return null;
 }

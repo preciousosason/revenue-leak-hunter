@@ -1,35 +1,34 @@
-import {
-    json
-} from "../utils/response.js";
+import { leadStatements } from "../analytics/common.js";
+import { json } from "../utils/response.js";
 
-import {
-    createId,
-    generatePortalToken
-} from "../utils/ids.js";
+import { createId, generatePortalToken } from "../utils/ids.js";
 
 import { hashToken } from "../utils/security.js";
 
 function validateContact(data) {
     const errors = {};
+    if (!data || typeof data !== "object" || Array.isArray(data))
+        return { form: "Invalid contact data." };
+    if (
+        data.business &&
+        (typeof data.business !== "string" || data.business.length > 300)
+    )
+        errors.business = "Invalid business name.";
 
     if (
         !data.name ||
         typeof data.name !== "string" ||
         data.name.trim().length < 2
     ) {
-        errors.name =
-            "Please provide your name.";
+        errors.name = "Please provide your name.";
     }
 
     if (
         !data.email ||
         typeof data.email !== "string" ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-            data.email.trim()
-        )
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())
     ) {
-        errors.email =
-            "Please provide a valid email address.";
+        errors.email = "Please provide a valid email address.";
     }
 
     if (
@@ -37,113 +36,74 @@ function validateContact(data) {
         typeof data.offer !== "string" ||
         data.offer.trim().length < 3
     ) {
-        errors.offer =
-            "Please describe what you sell.";
+        errors.offer = "Please describe what you sell.";
     }
 
-    if (
-        !data.problem ||
-        typeof data.problem !== "string"
-    ) {
-        errors.problem =
-            "Please select where you think the leak is.";
+    if (!data.problem || typeof data.problem !== "string") {
+        errors.problem = "Please select where you think the leak is.";
     }
 
     if (
         data.website &&
-        (
-            typeof data.website !== "string" ||
-            data.website.length > 500
-        )
+        (typeof data.website !== "string" || data.website.length > 500)
     ) {
-        errors.website =
-            "Please provide a valid website.";
+        errors.website = "Please provide a valid website.";
     }
 
     if (
         data.message &&
-        (
-            typeof data.message !== "string" ||
-            data.message.length > 5000
-        )
+        (typeof data.message !== "string" || data.message.length > 5000)
     ) {
-        errors.message =
-            "Your message is too long.";
+        errors.message = "Your message is too long.";
     }
 
     return errors;
 }
 
-async function createContact(
-    data,
-    env
-) {
-    const name =
-        data.name.trim();
+async function createContact(data, env) {
+    const name = data.name.trim();
 
-    const email =
-        data.email
-            .trim()
-            .toLowerCase();
+    const email = data.email.trim().toLowerCase();
 
-    const business =
-        data.business
-            ? data.business.trim()
-            : null;
+    const business = data.business ? data.business.trim() : null;
 
-    const website =
-        data.website
-            ? data.website.trim()
-            : null;
+    const website = data.website ? data.website.trim() : null;
 
-    const offer =
-        data.offer.trim();
+    const offer = data.offer.trim();
 
-    const problem =
-        data.problem.trim();
+    const problem = data.problem.trim();
 
-    const message =
-        data.message
-            ? data.message.trim()
-            : "";
+    const message = data.message ? data.message.trim() : "";
 
-    const portalToken =
-        generatePortalToken();
+    const portalToken = generatePortalToken();
 
-    const tokenHash =
-        await hashToken(
-            portalToken
-        );
+    const tokenHash = await hashToken(portalToken);
 
-    const clientId =
-        createId();
+    const clientId = createId();
 
-    const conversationId =
-        createId();
+    const conversationId = createId();
 
-    const messageId =
-        createId();
+    const messageId = createId();
 
-    const existingClient =
-        await env.DB
-            .prepare(
-                `SELECT id
+    const existingClient = await env.DB.prepare(
+        `SELECT id
                  FROM clients
-                 WHERE email = ?`
-            )
-            .bind(email)
-            .first();
+                 WHERE email = ?`,
+    )
+        .bind(email)
+        .first();
 
     if (existingClient) {
         return {
-            error:
-                "An account already exists for this email address.",
-            status: 409
+            error: "An account already exists for this email address.",
+            status: 409,
         };
     }
 
-    await env.DB
-        .prepare(
+    const statements = [];
+
+    statements.push(
+        env.DB.prepare(
             `INSERT INTO clients
             (
                 id,
@@ -153,20 +113,12 @@ async function createContact(
                 website,
                 token_hash
             )
-            VALUES (?, ?, ?, ?, ?, ?)`
-        )
-        .bind(
-            clientId,
-            name,
-            email,
-            business,
-            website,
-            tokenHash
-        )
-        .run();
+            VALUES (?, ?, ?, ?, ?, ?)`,
+        ).bind(clientId, name, email, business, website, tokenHash),
+    );
 
-    await env.DB
-        .prepare(
+    statements.push(
+        env.DB.prepare(
             `INSERT INTO conversations
             (
                 id,
@@ -174,15 +126,9 @@ async function createContact(
                 subject,
                 status
             )
-            VALUES (?, ?, ?, ?)`
-        )
-        .bind(
-            conversationId,
-            clientId,
-            "Leak Hunt Investigation",
-            "open"
-        )
-        .run();
+            VALUES (?, ?, ?, ?)`,
+        ).bind(conversationId, clientId, "Leak Hunt Investigation", "open"),
+    );
 
     const firstMessage = [
         `Business: ${business || "Not provided"}`,
@@ -191,12 +137,11 @@ async function createContact(
         `Suspected leak: ${problem}`,
         "",
         "Client message:",
-        message ||
-            "No additional message provided."
+        message || "No additional message provided.",
     ].join("\n");
 
-    await env.DB
-        .prepare(
+    statements.push(
+        env.DB.prepare(
             `INSERT INTO messages
             (
                 id,
@@ -204,18 +149,12 @@ async function createContact(
                 sender_type,
                 message
             )
-            VALUES (?, ?, ?, ?)`
-        )
-        .bind(
-            messageId,
-            conversationId,
-            "client",
-            firstMessage
-        )
-        .run();
+            VALUES (?, ?, ?, ?)`,
+        ).bind(messageId, conversationId, "client", firstMessage),
+    );
 
-    await env.DB
-        .prepare(
+    statements.push(
+        env.DB.prepare(
             `INSERT INTO notifications
             (
                 id,
@@ -224,16 +163,18 @@ async function createContact(
                 title,
                 message
             )
-            VALUES (?, ?, ?, ?, ?)`
-        )
-        .bind(
+            VALUES (?, ?, ?, ?, ?)`,
+        ).bind(
             createId(),
             clientId,
             "new_client",
             "New Leak Hunt Request",
-            `${name} submitted a new Leak Hunt request.`
-        )
-        .run();
+            `${name} submitted a new Leak Hunt request.`,
+        ),
+    );
+
+    statements.push(...leadStatements(env.DB, clientId, data.analytics));
+    await env.DB.batch(statements);
 
     return {
         success: true,
@@ -242,83 +183,67 @@ async function createContact(
             success: true,
             clientId,
             conversationId,
-            portalToken
-        }
+            portalToken,
+        },
     };
 }
 
-export async function handleContact(
-    request,
-    env
-) {
+export async function handleContact(request, env) {
     let data;
 
     try {
-        data =
-            await request.json();
+        data = await request.json();
     } catch {
         return json(
             {
                 success: false,
-                error:
-                    "Invalid JSON request."
+                error: "Invalid JSON request.",
             },
-            400
+            400,
         );
     }
 
-    const errors =
-        validateContact(data);
+    const errors = validateContact(data);
 
-    if (
-        Object.keys(errors).length > 0
-    ) {
+    if (Object.keys(errors).length > 0) {
         return json(
             {
                 success: false,
-                errors
+                errors,
             },
-            422
+            422,
         );
     }
 
     try {
-        const result =
-            await createContact(
-                data,
-                env
-            );
+        const result = await createContact(data, env);
 
         if (result.error) {
             return json(
                 {
                     success: false,
-                    error: result.error
+                    error: result.error,
                 },
-                result.status
+                result.status,
             );
         }
 
         return json(
             {
                 success: true,
-                ...result.data
+                ...result.data,
             },
-            result.status
+            result.status,
         );
     } catch (error) {
-        console.error(
-            "Contact submission error:",
-            error
-        );
+        console.error("Contact submission error:", error);
 
         return json(
             {
                 success: false,
-                error:
-                    "Something went wrong while creating your portal."
+                error: "Something went wrong while creating your portal.",
             },
-            500
+            500,
         );
     }
 }

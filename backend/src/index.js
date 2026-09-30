@@ -1,3 +1,4 @@
+import { cleanupAnalytics } from "./analytics/events.js";
 import {
     CORS_HEADERS
 } from "./config/cors.js";
@@ -28,6 +29,7 @@ import {
 
 
 export default {
+    async scheduled(event, env, ctx) { ctx.waitUntil(cleanupAnalytics(env)); },
     async fetch(request, env) {
         const url = new URL(request.url);
         const pathname = url.pathname;

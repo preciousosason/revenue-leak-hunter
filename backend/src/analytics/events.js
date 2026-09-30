@@ -1,114 +1,124 @@
-import { json } from "../utils/response.js";
-
-const ALLOWED_EVENT_TYPES = new Set([
-    "page_view",
-    "cta_click",
-    "form_start",
-    "form_field_interaction",
-    "form_submit",
-    "form_error",
-    "portal_created",
-    "portal_login",
-    "article_view",
-    "external_link_click"
-]);
-
-function cleanId(value, max = 128) {
-    const text = String(value || "").trim();
-    return /^[A-Za-z0-9_-]+$/.test(text) && text.length <= max
-        ? text
-        : "";
-}
-
-function cleanText(value, max = 1000) {
-    if (value === null || value === undefined) return null;
-    return String(value).trim().slice(0, max) || null;
-}
-
-function cleanMetadata(value) {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-        return null;
-    }
-
-    const blocked = new Set([
-        "name", "email", "password", "token", "sessiontoken",
-        "portal_token", "message", "phone", "telephone"
-    ]);
-
-    const safe = {};
-    for (const [key, raw] of Object.entries(value).slice(0, 30)) {
-        if (blocked.has(String(key).toLowerCase())) continue;
-        if (["string", "number", "boolean"].includes(typeof raw)) {
-            safe[String(key).slice(0, 80)] =
-                typeof raw === "string" ? raw.slice(0, 500) : raw;
-        }
-    }
-
-    const encoded = JSON.stringify(safe);
-    return encoded.length <= 5000 ? encoded : null;
-}
-
+import {
+    EVENT_TYPES,
+    id,
+    path,
+    metadata,
+    iso,
+    readBody,
+    reply,
+    originAllowed,
+    rateLimit,
+    sessionInsert,
+} from "./common.js";
 export async function handleAnalyticsEvent(request, env) {
+    if (!originAllowed(request, env))
+        return reply({ success: false, error: "Origin is not allowed." }, 403);
+    if (
+        /bot|crawler|spider|headless/i.test(
+            request.headers.get("user-agent") || "",
+        )
+    )
+        return reply({ success: true, ignored: true });
     let body;
     try {
-        body = await request.json();
-    } catch {
-        return json({ success: false, error: "Invalid JSON request." }, 400);
-    }
-
-    const eventId = cleanId(body.eventId || body.event_id);
-    const visitorId = cleanId(body.visitorId || body.visitor_id);
-    const sessionId = cleanId(body.sessionId || body.session_id);
-    const eventType = String(body.eventType || body.event_type || "").trim();
-
-    if (!eventId || !visitorId || !sessionId || !ALLOWED_EVENT_TYPES.has(eventType)) {
-        return json({ success: false, error: "Invalid analytics event." }, 400);
-    }
-
-    const page = cleanText(body.page, 1500);
-    const referrer = cleanText(body.referrer, 1500);
-    const metadata = cleanMetadata(body.metadata);
-    const now = new Date().toISOString();
-
-    try {
-        await env.DB.batch([
-            env.DB.prepare(`
-                INSERT INTO analytics_visitors
-                    (visitor_id, first_seen_at, last_seen_at, first_referrer,
-                     first_landing_page, last_page, session_count, event_count)
-                VALUES (?, ?, ?, ?, ?, ?, 1, 1)
-                ON CONFLICT(visitor_id) DO UPDATE SET
-                    last_seen_at = excluded.last_seen_at,
-                    last_page = excluded.last_page,
-                    event_count = analytics_visitors.event_count + 1,
-                    session_count = analytics_visitors.session_count +
-                        CASE WHEN NOT EXISTS (
-                            SELECT 1 FROM analytics_sessions WHERE session_id = ?
-                        ) THEN 1 ELSE 0 END
-            `).bind(visitorId, now, now, referrer, page, page, sessionId),
-
-            env.DB.prepare(`
-                INSERT INTO analytics_sessions
-                    (session_id, visitor_id, started_at, last_seen_at,
-                     landing_page, referrer, last_page, event_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-                ON CONFLICT(session_id) DO UPDATE SET
-                    last_seen_at = excluded.last_seen_at,
-                    last_page = excluded.last_page,
-                    event_count = analytics_sessions.event_count + 1
-            `).bind(sessionId, visitorId, now, now, page, referrer, page),
-
-            env.DB.prepare(`
-                INSERT OR IGNORE INTO analytics_events
-                    (event_id, visitor_id, session_id, event_type,
-                     page, referrer, metadata, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `).bind(eventId, visitorId, sessionId, eventType, page, referrer, metadata, now)
-        ]);
-
-        return json({ success: true }, 201);
+        body = await readBody(request);
     } catch (error) {
-        console.error("Analytics event error:", error);
-        return json({ success: false, error: "Unable to record analytics event." }, 500);
+        return reply({ success: false, error: error.message }, 400);
     }
+    const eventId = id(body.eventId || body.event_id),
+        visitorId = id(body.visitorId || body.visitor_id),
+        sessionId = id(body.sessionId || body.session_id);
+    const eventType = body.eventType || body.event_type;
+    if (!eventId || !visitorId || !sessionId || !EVENT_TYPES.has(eventType))
+        return reply(
+            {
+                success: false,
+                error: "Invalid event. Outcomes are recorded by the server.",
+            },
+            400,
+        );
+    try {
+        if (!(await rateLimit(request, env)))
+            return reply(
+                { success: false, error: "Event rate limit exceeded." },
+                429,
+            );
+        const existing = await env.DB.prepare(
+            "SELECT visitor_id, session_id FROM analytics_v2_events WHERE event_id=?",
+        )
+            .bind(eventId)
+            .first();
+        if (existing)
+            return existing.visitor_id === visitorId &&
+                existing.session_id === sessionId
+                ? reply({ success: true, duplicate: true })
+                : reply({ success: false, error: "Event ID conflict." }, 409);
+        const owner = await env.DB.prepare(
+            "SELECT visitor_id FROM analytics_v2_sessions WHERE session_id=?",
+        )
+            .bind(sessionId)
+            .first();
+        if (owner && owner.visitor_id !== visitorId)
+            return reply(
+                { success: false, error: "Session ownership mismatch." },
+                409,
+            );
+        const received = Date.now();
+        const submitted = Date.parse(body.occurredAt);
+        const occurred =
+            Number.isFinite(submitted) &&
+            submitted >= received - 86400000 &&
+            submitted <= received + 300000
+                ? submitted
+                : received;
+        const results = await env.DB.batch([
+            sessionInsert(
+                env.DB,
+                { ...body, visitorId, sessionId },
+                iso(occurred),
+            ),
+            env.DB.prepare(
+                `INSERT INTO analytics_v2_events(event_id,session_id,visitor_id,event_type,page,occurred_at,received_at,metadata)
+    VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(event_id) DO NOTHING`,
+            ).bind(
+                eventId,
+                sessionId,
+                visitorId,
+                eventType,
+                path(body.page),
+                iso(occurred),
+                iso(received),
+                JSON.stringify(metadata(body.metadata)),
+            ),
+        ]);
+        return reply(
+            { success: true, duplicate: results[1].meta.changes === 0 },
+            201,
+        );
+    } catch (error) {
+        if (/FOREIGN KEY|constraint/i.test(error.message))
+            return reply(
+                { success: false, error: "Event/session conflict." },
+                409,
+            );
+        console.error("Analytics ingestion failed", error.message);
+        return reply(
+            { success: false, error: "Unable to record analytics event." },
+            500,
+        );
+    }
+}
+export async function cleanupAnalytics(env) {
+    const days = Math.max(
+        30,
+        Math.min(730, Number(env.ANALYTICS_RETENTION_DAYS) || 180),
+    );
+    await env.DB.batch([
+        env.DB.prepare(
+            "DELETE FROM analytics_v2_sessions WHERE last_seen_at < ?",
+        ).bind(iso(Date.now() - days * 86400000)),
+        env.DB.prepare(
+            "DELETE FROM analytics_v2_rate_limits WHERE expires_at < ?",
+        ).bind(Math.floor(Date.now() / 1000)),
+    ]);
 }

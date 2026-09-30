@@ -9,3 +9,12 @@ database_id = "1e30dfac-7a33-43ac-add8-a187ee3560b6"
 [[r2_buckets]]
 binding = "FILES"
 bucket_name = "revenue-leak-hunter-files"
+
+# Raw session retention; lead records remain with attribution detached.
+[vars]
+ANALYTICS_RETENTION_DAYS = "180"
+# Set to your public website origins, comma-separated (no trailing slash).
+# ANALYTICS_ALLOWED_ORIGINS = "https://your-domain.com,https://www.your-domain.com"
+
+[triggers]
+crons = ["17 3 * * *"]
