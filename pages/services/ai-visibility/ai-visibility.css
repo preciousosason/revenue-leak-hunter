@@ -1,0 +1,307 @@
+/* =========================================================
+   AI VISIBILITY SERVICE PAGE
+   Extends Leakendia's global design system.
+   Keep shared colors, spacing, radii, containers and buttons
+   in /global. This file owns only page-specific presentation.
+========================================================= */
+
+.ai-hero {
+    padding: clamp(8rem, 14vw, 12rem) 0 var(--space-4xl);
+    background:
+        radial-gradient(circle at 78% 20%, rgba(255, 59, 48, 0.08), transparent 28%),
+        var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ai-hero-grid,
+.ai-two-col {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    gap: clamp(var(--space-2xl), 7vw, 7rem);
+    align-items: center;
+}
+
+.ai-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.14em;
+}
+
+.ai-eyebrow i {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--border-radius-full);
+    background: var(--color-primary);
+    box-shadow: 0 0 16px rgba(255, 59, 48, 0.6);
+}
+
+.ai-hero h1,
+.ai-section h2,
+.ai-cta h2 {
+    margin: 1.3rem 0 1.4rem;
+    color: var(--color-text);
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+}
+
+.ai-hero h1 {
+    font-size: clamp(3.2rem, 7vw, 6.8rem);
+}
+
+.ai-section h2,
+.ai-cta h2 {
+    font-size: clamp(2.2rem, 4.5vw, 4.4rem);
+}
+
+.ai-hero h1 span,
+.ai-section h2 span,
+.ai-cta h2 span,
+.ai-query span,
+.ai-flow span {
+    color: var(--color-primary);
+}
+
+.ai-lead,
+.ai-heading > p,
+.ai-copy p,
+.ai-reality p,
+.ai-cta p {
+    color: var(--color-text-secondary);
+    line-height: 1.85;
+    font-size: var(--text-md);
+}
+
+.ai-lead {
+    max-width: 760px;
+}
+
+.ai-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+}
+
+/* Extends the global .btn component without recreating it. */
+.ai-button {
+    border-radius: var(--border-radius-sm);
+    font-weight: var(--weight-bold);
+}
+
+.ai-signal-card {
+    padding: var(--space-lg);
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-bg-secondary);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.ai-card-label {
+    color: var(--color-text-muted);
+    font-size: 0.66rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.14em;
+}
+
+.ai-query {
+    margin: 1.2rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text);
+    font-size: var(--text-lg);
+    line-height: 1.55;
+}
+
+.ai-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--color-text-secondary);
+    font-size: 0.62rem;
+}
+
+.ai-signal-card p {
+    margin: 1.2rem 0 0;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    font-size: var(--text-sm);
+}
+
+.ai-section {
+    padding: 7rem 0;
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-bg);
+}
+
+.ai-problem,
+.ai-method {
+    background: var(--color-bg-secondary);
+}
+
+.ai-copy strong {
+    display: block;
+    margin-top: var(--space-lg);
+    color: var(--color-text);
+    font-size: var(--text-lg);
+}
+
+.ai-heading {
+    max-width: 850px;
+    margin-bottom: var(--space-2xl);
+}
+
+.ai-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.ai-grid article {
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-bg-secondary);
+}
+
+.ai-grid article > span,
+.ai-deliverables span,
+.ai-steps b {
+    color: var(--color-primary);
+    font-size: 0.68rem;
+    font-weight: var(--weight-bold);
+}
+
+.ai-grid h3,
+.ai-steps h3 {
+    margin: 0.9rem 0 0.7rem;
+    color: var(--color-text);
+}
+
+.ai-grid p,
+.ai-steps p {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    font-size: 0.9rem;
+}
+
+.ai-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--color-border-light);
+    background: var(--color-border-light);
+}
+
+.ai-steps > div {
+    padding: var(--space-lg);
+    background: var(--color-bg-secondary);
+}
+
+.ai-deliverables {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.ai-deliverables div {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 0.7rem;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-sm);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+}
+
+.ai-reality {
+    background:
+        radial-gradient(circle at 50% 0, rgba(255, 59, 48, 0.06), transparent 38%),
+        var(--color-bg);
+}
+
+.ai-reality .container {
+    max-width: 900px;
+}
+
+.ai-reality strong {
+    color: var(--color-text);
+}
+
+.ai-cta {
+    padding: 7rem 0;
+    background: var(--color-bg);
+}
+
+.ai-cta-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-2xl);
+    padding: clamp(var(--space-xl), 5vw, var(--space-3xl));
+    border: 1px solid rgba(255, 59, 48, 0.22);
+    border-radius: var(--border-radius-lg);
+    background:
+        radial-gradient(circle at 85% 0, rgba(255, 59, 48, 0.09), transparent 35%),
+        var(--color-bg-secondary);
+}
+
+.ai-cta-box > div {
+    max-width: 760px;
+}
+
+@media (max-width: 900px) {
+    .ai-hero-grid,
+    .ai-two-col {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-grid,
+    .ai-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-cta-box {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 620px) {
+    .ai-hero {
+        padding-top: 7rem;
+    }
+
+    .ai-section,
+    .ai-cta {
+        padding: 5rem 0;
+    }
+
+    .ai-grid,
+    .ai-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-actions {
+        flex-direction: column;
+    }
+
+    .ai-actions .btn,
+    .ai-cta-box .btn {
+        width: 100%;
+    }
+
+    .ai-cta-box {
+        padding: var(--space-lg);
+    }
+
+    .ai-hero h1 {
+        font-size: clamp(2.7rem, 14vw, 4.2rem);
+    }
+}

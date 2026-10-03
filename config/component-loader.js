@@ -183,7 +183,41 @@ function resolveRoutes(
     );
 
 }
+/* =================================
+   RESOLVE COMPONENT ASSETS
+================================= */
 
+function resolveComponentAssets(
+    container = document
+) {
+
+    const assets =
+        container.querySelectorAll(
+            "[data-site-src]"
+        );
+
+
+    assets.forEach(
+        asset => {
+
+            const path =
+                asset.dataset.siteSrc;
+
+
+            if (!path) {
+                return;
+            }
+
+
+            asset.src =
+                resolveSitePath(
+                    path
+                );
+
+        }
+    );
+
+}
 
 /* =================================
    LOAD STYLESHEET
@@ -716,7 +750,131 @@ function preloadStylesheet(
     );
 
 }
+/* =================================
+   RESOLVE COMPONENT URLS
+================================= */
 
+function resolveComponentUrls(
+    container = document
+) {
+
+    /*
+       Resolve normal links.
+       Skip anchors, protocols, data-route
+       and other special URLs.
+    */
+
+    container
+        .querySelectorAll("[href]")
+        .forEach(element => {
+
+            if (element.hasAttribute("data-route")) {
+                return;
+            }
+
+            const href =
+                element.getAttribute("href");
+
+            if (
+                !href ||
+                href.startsWith("#") ||
+                href.startsWith("http://") ||
+                href.startsWith("https://") ||
+                href.startsWith("mailto:") ||
+                href.startsWith("tel:") ||
+                href.startsWith("javascript:") ||
+                href.startsWith("data:")
+            ) {
+                return;
+            }
+
+            element.href =
+                resolveSitePath(href);
+
+        });
+
+
+    /*
+       Resolve images, videos, scripts,
+       sources and similar assets.
+    */
+
+    container
+        .querySelectorAll("[src]")
+        .forEach(element => {
+
+            const src =
+                element.getAttribute("src");
+
+            if (
+                !src ||
+                src.startsWith("http://") ||
+                src.startsWith("https://") ||
+                src.startsWith("data:") ||
+                src.startsWith("blob:")
+            ) {
+                return;
+            }
+
+            element.src =
+                resolveSitePath(src);
+
+        });
+
+
+    /*
+       Resolve srcset as well.
+    */
+
+    container
+        .querySelectorAll("[srcset]")
+        .forEach(element => {
+
+            const srcset =
+                element.getAttribute(
+                    "srcset"
+                );
+
+            if (!srcset) {
+                return;
+            }
+
+            const resolved =
+                srcset
+                    .split(",")
+                    .map(item => {
+
+                        const parts =
+                            item
+                                .trim()
+                                .split(/\s+/);
+
+                        const path =
+                            parts.shift();
+
+                        const descriptor =
+                            parts.join(" ");
+
+                        const url =
+                            resolveSitePath(
+                                path
+                            );
+
+                        return descriptor
+                            ? `${url} ${descriptor}`
+                            : url;
+
+                    })
+                    .join(", ");
+
+            element.setAttribute(
+                "srcset",
+                resolved
+            );
+
+        });
+
+}
 
 /* =================================
    LOAD COMPONENT
@@ -811,7 +969,22 @@ async function loadComponent({
         element.innerHTML =
             markup;
 
+/* ============================
+   RESOLVE COMPONENT URLS
+============================ */
 
+resolveComponentUrls(
+    element
+);
+
+
+/* ============================
+   RESOLVE ROUTES
+============================ */
+
+resolveRoutes(
+    element
+);
         /* ============================
            RESOLVE ROUTES
         ============================ */
@@ -819,7 +992,9 @@ async function loadComponent({
         resolveRoutes(
             element
         );
-
+resolveComponentAssets(
+    element
+);
 
         /* ============================
            LOAD JAVASCRIPT

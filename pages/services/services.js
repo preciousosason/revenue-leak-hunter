@@ -422,507 +422,92 @@ function getSection(
 
 function renderService(service) {
 
-    const currentPath =
-        Array.isArray(service.currentPath)
-            ? service.currentPath
-            : [];
-
-
-    const proposedPath =
-        Array.isArray(service.proposedPath)
-            ? service.proposedPath
-            : [];
-
-
     const areas =
         Array.isArray(service.areas)
-            ? service.areas
+            ? service.areas.slice(0, 4)
             : [];
 
+    const pageUrl =
+        service.pageUrl || "";
 
-    const deliverables =
-        Array.isArray(service.deliverables)
-            ? service.deliverables
-            : [];
-
-
-    const process =
-        Array.isArray(service.process)
-            ? service.process
-            : [];
-
-
-    /* -----------------------------------------------------
-       SECTION COPY
-    ----------------------------------------------------- */
-
-    const problemSection =
-        getSection(
-            service,
-            "problem",
-            "01 / START HERE",
-            "Start with what is actually happening."
-        );
-
-
-    const primaryLeakSection =
-        getSection(
-            service,
-            "primaryLeak",
-            "02 / THE REAL GAP",
-            "Find the part that is getting in the way."
-        );
-
-
-    const investigationSection =
-        getSection(
-            service,
-            "investigation",
-            "03 / FOLLOW THE CLUES",
-            "Look closer at what is really happening."
-        );
-
-
-    const approachSection =
-        getSection(
-            service,
-            "approach",
-            "04 / HOW I WORK",
-            "Follow the problem before trying to fix it."
-        );
-
-
-    const journeySection =
-        getSection(
-            service,
-            "journey",
-            "05 / THE SHIFT",
-            "Move from guessing to seeing what is actually happening."
-        );
-
-
-    const deliverablesSection =
-        getSection(
-            service,
-            "deliverables",
-            "06 / WHAT I WORK ON",
-            "The work follows what we find."
-        );
-
-
-    const impactSection =
-        getSection(
-            service,
-            "impact",
-            "07 / WHAT CHANGES",
-            "Turn what we find into something useful."
-        );
-
-
-    const processHTML =
-        renderProcess(process);
-
-
-    const deliverablesHTML =
-        renderDeliverables(
-            deliverables
-        );
-
+    const preview =
+        service.preview ||
+        service.primaryProblem ||
+        service.focus ||
+        service.summary;
 
     return `
-
-        <!-- =============================================
-             HEADER
-        ============================================== -->
-
         <header class="case-modal-header">
-
             <span class="eyebrow">
-                ${escapeHTML(service.number)}
+                ${escapeHTML(service.number)} / ${escapeHTML(service.category)}
             </span>
-
 
             <h2 id="service-modal-title">
                 ${escapeHTML(service.title)}
             </h2>
 
-
             <p>
-                ${escapeHTML(
-                    service.summary
-                )}
+                ${escapeHTML(service.summary)}
             </p>
-
         </header>
 
+        <section class="modal-section service-preview-problem">
+            <span class="eyebrow">THE LEAK</span>
 
-        <!-- =============================================
-             META
-        ============================================== -->
+            <h3>
+                ${escapeHTML(service.primaryProblem || "Find what is getting in the way.")}
+            </h3>
 
-        <div class="modal-file-meta">
-
-            <div class="modal-highlight">
-
-                <span>
-                    Type
-                </span>
-
-                <strong>
-                    ${escapeHTML(
-                        service.type
-                    )}
-                </strong>
-
-            </div>
-
-
-            <div class="modal-highlight">
-
-                <span>
-                    Category
-                </span>
-
-                <strong>
-                    ${escapeHTML(
-                        service.category
-                    )}
-                </strong>
-
-            </div>
-
-
-            <div class="modal-highlight">
-
-                <span>
-                    Investigation Focus
-                </span>
-
-                <strong>
-                    ${escapeHTML(
-                        service.focus
-                    )}
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- =============================================
-             01 / PROBLEM
-        ============================================== -->
-
-        ${
-            service.situation
-                ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                problemSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                problemSection.title
-                            )}
-                        </h3>
-
-
-                        ${formatParagraphs(
-                            service.situation
-                        )}
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             02 / PRIMARY PROBLEM
-        ============================================== -->
-
-        ${
-            service.primaryProblem
-                ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                primaryLeakSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                primaryLeakSection.title
-                            )}
-                        </h3>
-
-
-                        <div class="modal-quote">
-                            ${escapeHTML(
-                                service.primaryProblem
-                            )}
-                        </div>
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             03 / INVESTIGATION
-        ============================================== -->
+            <p>
+                ${escapeHTML(preview)}
+            </p>
+        </section>
 
         ${
             areas.length
                 ? `
                     <section class="modal-section">
+                        <span class="eyebrow">WHAT I LOOK AT</span>
 
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                investigationSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                investigationSection.title
-                            )}
-                        </h3>
-
-
-                        <div class="leak-list">
-
-                            ${areas
-                                .map(
-                                    renderServiceArea
-                                )
-                                .join("")}
-
+                        <div class="service-preview-grid">
+                            ${areas.map(area => `
+                                <article class="service-preview-item">
+                                    <span>${escapeHTML(area.number)}</span>
+                                    <div>
+                                        <strong>${escapeHTML(area.title)}</strong>
+                                        <p>${escapeHTML(area.what || area.fix || area.why || "")}</p>
+                                    </div>
+                                </article>
+                            `).join("")}
                         </div>
-
                     </section>
                 `
                 : ""
         }
 
-
-        <!-- =============================================
-             04 / APPROACH
-        ============================================== -->
-
         ${
-            processHTML
+            pageUrl
                 ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                approachSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                approachSection.title
-                            )}
-                        </h3>
-
-
-                        ${processHTML}
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             05 / JOURNEY
-        ============================================== -->
-
-        ${
-            currentPath.length ||
-            proposedPath.length
-                ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                journeySection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                journeySection.title
-                            )}
-                        </h3>
-
-
-                        <div class="modal-grid">
-
-                            ${
-                                currentPath.length
-                                    ? `
-                                        <div class="modal-highlight">
-
-                                            <span>
-                                                Current Path
-                                            </span>
-
-                                            ${renderJourney(
-                                                currentPath
-                                            )}
-
-                                        </div>
-                                    `
-                                    : ""
-                            }
-
-
-                            ${
-                                proposedPath.length
-                                    ? `
-                                        <div class="modal-highlight">
-
-                                            <span>
-                                                Better Path
-                                            </span>
-
-                                            ${renderJourney(
-                                                proposedPath
-                                            )}
-
-                                        </div>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             06 / DELIVERABLES
-        ============================================== -->
-
-        ${
-            deliverablesHTML
-                ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                deliverablesSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                deliverablesSection.title
-                            )}
-                        </h3>
-
-
-                        ${deliverablesHTML}
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             07 / IMPACT
-        ============================================== -->
-
-        ${
-            service.impact
-                ? `
-                    <section class="modal-section">
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                impactSection.eyebrow
-                            )}
-                        </span>
-
-
-                        <h3>
-                            ${escapeHTML(
-                                impactSection.title
-                            )}
-                        </h3>
-
-
-                        <p>
-                            ${escapeHTML(
-                                service.impact
-                            )}
-                        </p>
-
-                    </section>
-                `
-                : ""
-        }
-
-
-        <!-- =============================================
-             CONCLUSION
-        ============================================== -->
-
-        ${
-            service.conclusion
-                ? `
-                    <section class="modal-section">
-
-                        <div class="modal-conclusion">
-
-                            <span class="eyebrow">
-                                THE HUNT
-                            </span>
-
-
-                            <h3>
-                                ${escapeHTML(
-                                    service.conclusion
-                                )}
-                            </h3>
-
-
+                    <section class="modal-section service-preview-cta">
+                        <div>
+                            <span class="eyebrow">GO DEEPER</span>
+                            <h3>See the full investigation.</h3>
                             <p>
-                                This describes the service approach,
-                                not a claimed client result.
+                                Explore the problem, what I investigate, how the work is approached,
+                                and what a stronger setup looks like.
                             </p>
-
                         </div>
 
+                        <a class="service-modal-page-link" href="${escapeHTML(pageUrl)}">
+                            ${escapeHTML(service.modalCTA || "Explore full service")}
+                            <span aria-hidden="true">→</span>
+                        </a>
                     </section>
                 `
                 : ""
         }
-
     `;
-
 }
-
 
 /* =========================================================
    RENDER SERVICE CARDS
@@ -964,20 +549,46 @@ function renderServices(serviceData) {
 
 
                 const bullets =
-                    Array.isArray(
-                        service.bullets
-                    )
-                        ? service.bullets
-                            .map(
-                                bullet => `
-                                    <li>
-                                        ${escapeHTML(
-                                            bullet
-                                        )}
-                                    </li>
-                                `
-                            )
-                            .join("")
+                    Array.isArray(service.bullets)
+                        ? service.bullets.filter(Boolean)
+                        : [];
+
+
+                /*
+                 * Only render the investigation/list
+                 * section when actual bullets exist.
+                 *
+                 * New generated services may not have
+                 * bullet data because their dedicated
+                 * page carries the deeper information.
+                 */
+
+                const bulletSection =
+                    bullets.length
+                        ? `
+                            <div class="service-divider"></div>
+
+                            <h4>
+                                ${escapeHTML(
+                                    service.listLabel ||
+                                    "I investigate"
+                                )}
+                            </h4>
+
+                            <ul>
+                                ${bullets
+                                    .map(
+                                        bullet => `
+                                            <li>
+                                                ${escapeHTML(
+                                                    bullet
+                                                )}
+                                            </li>
+                                        `
+                                    )
+                                    .join("")}
+                            </ul>
+                        `
                         : "";
 
 
@@ -1037,20 +648,7 @@ function renderServices(serviceData) {
                         </p>
 
 
-                        <div class="service-divider"></div>
-
-
-                        <h4>
-                            ${escapeHTML(
-                                service.listLabel ||
-                                "I investigate"
-                            )}
-                        </h4>
-
-
-                        <ul>
-                            ${bullets}
-                        </ul>
+                        ${bulletSection}
 
 
                         <span class="service-link">
@@ -1082,7 +680,10 @@ function renderServices(serviceData) {
    TYPEWRITER REVEAL
 ========================================================= */
 
-function revealModalText(modalBody) {
+function revealModalText(
+    modalBody,
+    typewriterTimers
+) {
 
     const walker =
         document.createTreeWalker(
@@ -1400,11 +1001,12 @@ function initServiceModal(serviceData) {
                  * Then type it out.
                  */
 
-                revealModalText(
-                    modalBody
-                );
+               revealModalText(
+    modalBody,
+    typewriterTimers
+);
 
-            }, 3000);
+            }, 750);
 
     }
 
