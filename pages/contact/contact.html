@@ -452,9 +452,41 @@
               </div>
 
               <label class="service-uncertain">
-                <input type="checkbox" id="service-unknown" name="serviceUnknown" value="true">
-                <span>I'm not sure yet — that's what I need help diagnosing.</span>
-              </label>
+
+    <input
+        type="checkbox"
+        id="service-unknown"
+        name="serviceUnknown"
+        value="true"
+    >
+
+    <span
+        class="service-uncertain-marker"
+        aria-hidden="true"
+    >
+        ?
+    </span>
+
+    <span class="service-uncertain-copy">
+
+        <strong>
+            I'm not sure yet
+        </strong>
+
+        <small>
+            That's what I need help diagnosing.
+        </small>
+
+    </span>
+
+    <span
+        class="service-uncertain-check"
+        aria-hidden="true"
+    >
+        ✓
+    </span>
+
+</label>
 
               <p class="field-error" id="services-error" hidden></p>
 
@@ -480,7 +512,7 @@
                   selected
                   disabled
                 >
-                  Select one
+                   Choose the closest match...
                 </option>
 
                 <option value="traffic">
@@ -762,7 +794,7 @@
      SCRIPTS
 ========================================================= -->
 
-<script src="contact.js"></script>
+<script type="module" src="contact.js"></script>
 
 <script src="../../config/page-loader.js"></script>
 
