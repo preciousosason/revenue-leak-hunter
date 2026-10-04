@@ -36,6 +36,18 @@
     --color-danger: #FF4D3D;
     --color-danger-soft: rgba(255, 77, 61, 0.12);
 
+    /* Legacy aliases used by older admin modules.
+       Keeping them here prevents silent invalid CSS declarations. */
+    --primary: var(--color-primary);
+    --panel: var(--color-panel);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --danger: var(--color-danger);
+    --critical: var(--color-danger);
+    --accent-cyan: var(--color-primary);
+    --accent-blue: var(--color-secondary);
+    --border-color: var(--color-border);
+
     /* =====================================================
        TEXT
        ===================================================== */
@@ -89,7 +101,7 @@
        LAYOUT
        ===================================================== */
 
-    --sidebar-width: 250px;
+    --sidebar-width: 270px;
     --header-height: 64px;
 
     --content-max-width: 1800px;

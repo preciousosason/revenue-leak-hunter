@@ -37,6 +37,9 @@
 @import url("./pages/reviews.css");
 @import url("./pages/analytics.css");
 
+/* Final visual polish shared across views */
+@import url("./polish.css");
+
 /* ---------------------------------------------------------
    GLOBAL RESPONSIVE OVERRIDES
    Must remain last
