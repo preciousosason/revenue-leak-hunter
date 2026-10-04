@@ -10,8 +10,6 @@ const DEFAULT_REPLY_TO =
     "admin@leakendia.com";
 const DEFAULT_PORTAL_URL =
     "https://leakendia.com/pages/portal/portal.html";
-const DEFAULT_LOGO_URL =
-    "https://leakendia.com/assets/brand/leakendia-email-mark.jpg";
 
 function cleanEmail(value) {
     return typeof value === "string"
@@ -38,24 +36,17 @@ export async function sendClientReplyNotification(
 
     const resend = new Resend(env.RESEND_API_KEY);
     const portalUrl = String(env.CLIENT_PORTAL_URL || DEFAULT_PORTAL_URL).trim();
-    const logoUrl = String(env.EMAIL_LOGO_URL || DEFAULT_LOGO_URL).trim();
     const from = String(env.EMAIL_FROM || DEFAULT_FROM).trim();
     const replyTo = String(env.EMAIL_REPLY_TO || DEFAULT_REPLY_TO).trim();
-
-    const template = clientReplyEmailTemplate({
-        name,
-        portalUrl,
-        logoUrl
-    });
+    const template = clientReplyEmailTemplate({ name, portalUrl });
 
     const payload = {
         from,
         to: recipient,
-        subject: "Your investigation just moved forward.",
+        subject: "You have a new reply from Leakendia",
         html: template.html,
         text: template.text
     };
-
     if (replyTo) payload.replyTo = replyTo;
 
     const idempotencyKey = messageId
@@ -72,6 +63,5 @@ export async function sendClientReplyNotification(
     if (error) {
         throw new Error(error.message || "Resend rejected the email.");
     }
-
     return data;
 }
