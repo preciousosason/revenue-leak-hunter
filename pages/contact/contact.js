@@ -1,9 +1,24 @@
 import { services as serviceRegistry } from "../../data/services/services.js";
 
-const API_URL = "https://revenue-leak-hunter-api.preciousosason.workers.dev";
+const API_URL =
+    "https://revenue-leak-hunter-api.preciousosason.workers.dev";
 
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    /* =================================
+       FORM SESSION
+    ================================== */
+
+    /*
+     * Record when this contact-page session started.
+     *
+     * This value is kept directly in JavaScript instead
+     * of relying on a hidden form field being read back
+     * through FormData during submission.
+     */
+    const FORM_STARTED_AT = Date.now();
+
 
     /* =================================
        CONTACT FORM
@@ -25,111 +40,387 @@ document.addEventListener("DOMContentLoaded", () => {
     const servicesError =
         document.getElementById("services-error");
 
-    const formStartedAt =
+
+    /*
+     * Keep the existing hidden field synchronized.
+     *
+     * The API submission no longer depends on this field,
+     * but keeping it populated preserves compatibility
+     * with the existing HTML.
+     */
+    const formStartedAtInput =
         document.getElementById("form-started-at");
 
-    if (formStartedAt) {
-        formStartedAt.value = String(Date.now());
+    if (formStartedAtInput) {
+
+        formStartedAtInput.value =
+            String(FORM_STARTED_AT);
+
     }
+
+
+    /* =================================
+       SERVICES
+    ================================== */
 
     let availableServices = [];
 
+
     function escapeHTML(value) {
+
         return String(value ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+
     }
+
 
     async function loadServiceChoices() {
-        if (!serviceOptions) return;
+
+        if (!serviceOptions) {
+            return;
+        }
+
 
         try {
-            const modules = await Promise.all(
-                serviceRegistry.map(async service => {
-                    const module = await import(
-                        `../../data/services/${service.slug}/service.js`
+
+            const modules =
+                await Promise.all(
+
+                    serviceRegistry.map(
+                        async service => {
+
+                            const module =
+                                await import(
+                                    `../../data/services/${service.slug}/service.js`
+                                );
+
+                            return module.default;
+
+                        }
+                    )
+
+                );
+
+
+            availableServices =
+                modules
+                    .filter(
+                        service =>
+                            service &&
+                            service.id &&
+                            service.slug &&
+                            service.title
+                    )
+                    .sort(
+                        (a, b) => {
+
+                            const aNumber =
+                                Number.parseInt(
+                                    a.number,
+                                    10
+                                );
+
+                            const bNumber =
+                                Number.parseInt(
+                                    b.number,
+                                    10
+                                );
+
+
+                            const safeA =
+                                Number.isFinite(aNumber)
+                                    ? aNumber
+                                    : Number.MAX_SAFE_INTEGER;
+
+
+                            const safeB =
+                                Number.isFinite(bNumber)
+                                    ? bNumber
+                                    : Number.MAX_SAFE_INTEGER;
+
+
+                            return safeA - safeB;
+
+                        }
                     );
-                    return module.default;
-                })
+
+
+            serviceOptions.innerHTML =
+                availableServices
+                    .map(
+                        service => `
+                            <label class="service-choice">
+
+                                <input
+                                    type="checkbox"
+                                    name="services"
+                                    value="${escapeHTML(service.id)}"
+                                    data-service-id="${escapeHTML(service.id)}"
+                                >
+
+                                <span class="service-choice-number">
+                                    ${escapeHTML(service.number || "--")}
+                                </span>
+
+                                <span class="service-choice-copy">
+
+                                    <strong>
+                                        ${escapeHTML(service.title)}
+                                    </strong>
+
+                                    <small>
+                                        ${escapeHTML(
+                                            service.category ||
+                                            service.type ||
+                                            "Service"
+                                        )}
+                                    </small>
+
+                                </span>
+
+                                <span
+                                    class="service-choice-check"
+                                    aria-hidden="true"
+                                >
+                                    ✓
+                                </span>
+
+                            </label>
+                        `
+                    )
+                    .join("");
+
+
+            serviceOptions
+                .querySelectorAll(
+                    ".service-choice input"
+                )
+                .forEach(
+                    input => {
+
+                        input.addEventListener(
+                            "change",
+                            () => {
+
+                                /*
+                                 * Update selected card.
+                                 */
+
+                                input
+                                    .closest(".service-choice")
+                                    ?.classList.toggle(
+                                        "is-selected",
+                                        input.checked
+                                    );
+
+
+                                /*
+                                 * Selecting an actual service
+                                 * automatically deselects
+                                 * "I'm not sure yet".
+                                 */
+
+                                if (
+                                    input.checked &&
+                                    serviceUnknown
+                                ) {
+
+                                    serviceUnknown.checked =
+                                        false;
+
+
+                                    serviceUnknown
+                                        .closest(".service-uncertain")
+                                        ?.classList.remove(
+                                            "is-selected"
+                                        );
+
+                                }
+
+
+                                if (servicesError) {
+
+                                    servicesError.hidden =
+                                        true;
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load services:",
+                error
             );
 
-            availableServices = modules
-                .filter(service => service && service.id && service.slug && service.title)
-                .sort((a, b) => {
-                    const aNumber = Number.parseInt(a.number, 10);
-                    const bNumber = Number.parseInt(b.number, 10);
-                    return (Number.isFinite(aNumber) ? aNumber : Number.MAX_SAFE_INTEGER) -
-                        (Number.isFinite(bNumber) ? bNumber : Number.MAX_SAFE_INTEGER);
-                });
 
-            serviceOptions.innerHTML = availableServices.map(service => `
-                <label class="service-choice">
-                    <input
-                        type="checkbox"
-                        name="services"
-                        value="${escapeHTML(service.id)}"
-                        data-service-id="${escapeHTML(service.id)}"
-                    >
-                    <span class="service-choice-number">${escapeHTML(service.number || "--")}</span>
-                    <span class="service-choice-copy">
-                        <strong>${escapeHTML(service.title)}</strong>
-                        <small>${escapeHTML(service.category || service.type || "Service")}</small>
-                    </span>
-                    <span class="service-choice-check" aria-hidden="true">✓</span>
-                </label>
-            `).join("");
-
-            serviceOptions.querySelectorAll(".service-choice input").forEach(input => {
-                input.addEventListener("change", () => {
-                    input.closest(".service-choice")?.classList.toggle("is-selected", input.checked);
-                    if (input.checked && serviceUnknown) serviceUnknown.checked = false;
-                    if (servicesError) servicesError.hidden = true;
-                });
-            });
-        } catch (error) {
-            console.error("Unable to load services:", error);
             serviceOptions.innerHTML = `
                 <p class="service-options-loading">
-                    Services could not be loaded. You can still choose “I'm not sure yet” and continue.
+                    Services could not be loaded.
+                    You can still choose
+                    “I'm not sure yet” and continue.
                 </p>
             `;
+
         }
+
     }
+
 
     loadServiceChoices();
 
+
+    /* =================================
+       UNKNOWN SERVICE OPTION
+    ================================== */
+
     if (serviceUnknown) {
-        serviceUnknown.addEventListener("change", () => {
-            if (!serviceUnknown.checked || !serviceOptions) return;
-            serviceOptions.querySelectorAll(".service-choice input").forEach(input => {
-                input.checked = false;
-                input.closest(".service-choice")?.classList.remove("is-selected");
-            });
-            if (servicesError) servicesError.hidden = true;
-        });
-    }
 
-    function getSelectedServices() {
-        if (!serviceOptions) return [];
+        const unknownChoice =
+            serviceUnknown.closest(
+                ".service-uncertain"
+            );
 
-        const selectedIds = new Set(
-            [...serviceOptions.querySelectorAll(".service-choice input:checked")]
-                .map(input => input.dataset.serviceId)
+
+        serviceUnknown.addEventListener(
+            "change",
+            () => {
+
+                /*
+                 * Keep visual state synchronized.
+                 */
+
+                unknownChoice
+                    ?.classList.toggle(
+                        "is-selected",
+                        serviceUnknown.checked
+                    );
+
+
+                if (
+                    !serviceUnknown.checked ||
+                    !serviceOptions
+                ) {
+                    return;
+                }
+
+
+                /*
+                 * "I'm not sure yet" and explicit
+                 * services are mutually exclusive.
+                 */
+
+                serviceOptions
+                    .querySelectorAll(
+                        ".service-choice input"
+                    )
+                    .forEach(
+                        input => {
+
+                            input.checked =
+                                false;
+
+
+                            input
+                                .closest(".service-choice")
+                                ?.classList.remove(
+                                    "is-selected"
+                                );
+
+                        }
+                    );
+
+
+                if (servicesError) {
+
+                    servicesError.hidden =
+                        true;
+
+                }
+
+            }
         );
 
+    }
+
+
+    /* =================================
+       SELECTED SERVICES
+    ================================== */
+
+    function getSelectedServices() {
+
+        if (!serviceOptions) {
+            return [];
+        }
+
+
+        const selectedIds =
+            new Set(
+
+                [
+                    ...serviceOptions
+                        .querySelectorAll(
+                            ".service-choice input:checked"
+                        )
+                ]
+                    .map(
+                        input =>
+                            input.dataset.serviceId
+                    )
+
+            );
+
+
         return availableServices
-            .filter(service => selectedIds.has(service.id))
-            .map(service => ({
-                id: service.id,
-                slug: service.slug,
-                title: service.title,
-                number: String(service.number || ""),
-                category: String(service.category || ""),
-                type: String(service.type || "")
-            }));
+
+            .filter(
+                service =>
+                    selectedIds.has(
+                        service.id
+                    )
+            )
+
+            .map(
+                service => ({
+
+                    id:
+                        service.id,
+
+                    slug:
+                        service.slug,
+
+                    title:
+                        service.title,
+
+                    number:
+                        String(
+                            service.number || ""
+                        ),
+
+                    category:
+                        String(
+                            service.category || ""
+                        ),
+
+                    type:
+                        String(
+                            service.type || ""
+                        )
+
+                })
+            );
+
     }
 
 
@@ -138,13 +429,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ================================== */
 
     const generatedToken =
-        document.getElementById("generated-portal-token");
+        document.getElementById(
+            "generated-portal-token"
+        );
 
     const copyTokenButton =
-        document.getElementById("copy-portal-token");
+        document.getElementById(
+            "copy-portal-token"
+        );
 
     const enterCreatedPortal =
-        document.getElementById("enter-created-portal");
+        document.getElementById(
+            "enter-created-portal"
+        );
 
 
     /* =================================
@@ -152,25 +449,39 @@ document.addEventListener("DOMContentLoaded", () => {
     ================================== */
 
     const openPortalButton =
-        document.getElementById("open-portal-login");
+        document.getElementById(
+            "open-portal-login"
+        );
 
     const closePortalButton =
-        document.getElementById("close-portal-login");
+        document.getElementById(
+            "close-portal-login"
+        );
 
     const portalModal =
-        document.getElementById("portal-login-modal");
+        document.getElementById(
+            "portal-login-modal"
+        );
 
     const portalBackdrop =
-        document.getElementById("portal-modal-backdrop");
+        document.getElementById(
+            "portal-modal-backdrop"
+        );
 
     const portalLoginForm =
-        document.getElementById("portal-login-form");
+        document.getElementById(
+            "portal-login-form"
+        );
 
     const portalTokenInput =
-        document.getElementById("portal-token");
+        document.getElementById(
+            "portal-token"
+        );
 
     const portalLoginMessage =
-        document.getElementById("portal-login-message");
+        document.getElementById(
+            "portal-login-message"
+        );
 
 
     /* =================================
@@ -180,7 +491,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function showFormError(message) {
 
         let errorElement =
-            document.getElementById("contact-form-error");
+            document.getElementById(
+                "contact-form-error"
+            );
 
 
         if (!errorElement) {
@@ -188,16 +501,24 @@ document.addEventListener("DOMContentLoaded", () => {
             errorElement =
                 document.createElement("p");
 
+
             errorElement.id =
                 "contact-form-error";
+
 
             errorElement.className =
                 "contact-form-error";
 
+
             form.insertBefore(
+
                 errorElement,
-                form.querySelector("button[type='submit']") ||
+
+                form.querySelector(
+                    "button[type='submit']"
+                ) ||
                 form.lastElementChild
+
             );
 
         }
@@ -205,6 +526,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         errorElement.textContent =
             message;
+
 
         errorElement.hidden =
             false;
@@ -215,13 +537,16 @@ document.addEventListener("DOMContentLoaded", () => {
     function clearFormError() {
 
         const errorElement =
-            document.getElementById("contact-form-error");
+            document.getElementById(
+                "contact-form-error"
+            );
 
 
         if (errorElement) {
 
             errorElement.hidden =
                 true;
+
 
             errorElement.textContent =
                 "";
@@ -246,25 +571,30 @@ document.addEventListener("DOMContentLoaded", () => {
             "is-visible"
         );
 
+
         portalModal.setAttribute(
             "aria-hidden",
             "false"
         );
+
 
         document.body.classList.add(
             "portal-modal-open"
         );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            if (portalTokenInput) {
+                if (portalTokenInput) {
 
-                portalTokenInput.focus();
+                    portalTokenInput.focus();
 
-            }
+                }
 
-        }, 150);
+            },
+            150
+        );
 
     }
 
@@ -284,10 +614,12 @@ document.addEventListener("DOMContentLoaded", () => {
             "is-visible"
         );
 
+
         portalModal.setAttribute(
             "aria-hidden",
             "true"
         );
+
 
         document.body.classList.remove(
             "portal-modal-open"
@@ -298,6 +630,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             portalLoginMessage.hidden =
                 true;
+
 
             portalLoginMessage.textContent =
                 "";
@@ -382,7 +715,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 let value =
                     portalTokenInput.value
                         .toUpperCase()
-                        .replace(/[^A-Z0-9]/g, "");
+                        .replace(
+                            /[^A-Z0-9]/g,
+                            ""
+                        );
 
 
                 /*
@@ -390,7 +726,9 @@ document.addEventListener("DOMContentLoaded", () => {
                  * types it manually.
                  */
 
-                if (value.startsWith("LH")) {
+                if (
+                    value.startsWith("LH")
+                ) {
 
                     value =
                         value.substring(2);
@@ -404,15 +742,21 @@ document.addEventListener("DOMContentLoaded", () => {
                  */
 
                 value =
-                    value.substring(0, 16);
+                    value.substring(
+                        0,
+                        16
+                    );
 
 
                 const groups =
-                    value.match(/.{1,4}/g) || [];
+                    value.match(
+                        /.{1,4}/g
+                    ) || [];
 
 
                 portalTokenInput.value =
-                    "LH-" + groups.join("-");
+                    "LH-" +
+                    groups.join("-");
 
             }
         );
@@ -420,188 +764,194 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-   /* =================================
-   PORTAL LOGIN
-================================== */
+    /* =================================
+       PORTAL LOGIN
+    ================================== */
 
-if (portalLoginForm) {
+    if (portalLoginForm) {
 
-    portalLoginForm.addEventListener(
-        "submit",
-        async event => {
+        portalLoginForm.addEventListener(
+            "submit",
+            async event => {
 
-            event.preventDefault();
-
-
-            if (!portalTokenInput) {
-                return;
-            }
+                event.preventDefault();
 
 
-            const token =
-                portalTokenInput.value
-                    .trim()
-                    .toUpperCase();
-
-
-            if (
-                !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/
-                    .test(token)
-            ) {
-
-                if (portalLoginMessage) {
-
-                    portalLoginMessage.textContent =
-                        "Enter a valid private access token.";
-
-                    portalLoginMessage.hidden =
-                        false;
-
-                }
-
-                return;
-
-            }
-
-
-            const submitButton =
-                portalLoginForm.querySelector(
-                    "button[type='submit']"
-                );
-
-
-            const originalButtonText =
-                submitButton
-                    ? submitButton.textContent
-                    : "";
-
-
-            try {
-
-                if (submitButton) {
-
-                    submitButton.disabled =
-                        true;
-
-                    submitButton.textContent =
-                        "Authenticating...";
-
+                if (!portalTokenInput) {
+                    return;
                 }
 
 
-                if (portalLoginMessage) {
-
-                    portalLoginMessage.hidden =
-                        true;
-
-                }
-
-
-                const response =
-                    await fetch(
-                        `${API_URL}/api/portal/login`,
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body:
-                                JSON.stringify({
-                                    token
-                                })
-                        }
-                    );
-
-
-                const result =
-                    await response.json();
+                const token =
+                    portalTokenInput.value
+                        .trim()
+                        .toUpperCase();
 
 
                 if (
-                    !response.ok ||
-                    !result.success
+                    !/^LH-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/
+                        .test(token)
                 ) {
 
-                    throw new Error(
-                        result.error ||
-                        "Unable to authenticate your portal."
+                    if (portalLoginMessage) {
+
+                        portalLoginMessage.textContent =
+                            "Enter a valid private access token.";
+
+
+                        portalLoginMessage.hidden =
+                            false;
+
+                    }
+
+
+                    return;
+
+                }
+
+
+                const submitButton =
+                    portalLoginForm.querySelector(
+                        "button[type='submit']"
                     );
 
-                }
+
+                const originalButtonText =
+                    submitButton
+                        ? submitButton.textContent
+                        : "";
 
 
-                /*
-                 * Store the temporary session.
-                 */
+                try {
 
-                sessionStorage.setItem(
-                    "portalSessionToken",
-                    result.sessionToken
-                );
+                    if (submitButton) {
+
+                        submitButton.disabled =
+                            true;
 
 
-                sessionStorage.setItem(
-                    "portalClient",
-                    JSON.stringify(
-                        result.client
-                    )
-                );
+                        submitButton.textContent =
+                            "Authenticating...";
+
+                    }
 
 
-                /*
-                 * Send the client
-                 * into the private portal.
-                 */
+                    if (portalLoginMessage) {
 
-                window.location.href =
-                    "/pages/portal/portal.html";
+                        portalLoginMessage.hidden =
+                            true;
 
-
-            } catch (error) {
-
-                console.error(
-                    "Portal login failed:",
-                    error
-                );
+                    }
 
 
-                if (portalLoginMessage) {
+                    const response =
+                        await fetch(
+                            `${API_URL}/api/portal/login`,
+                            {
+                                method:
+                                    "POST",
 
-                    portalLoginMessage.textContent =
-                        error.message ||
-                        "Unable to sign you in right now.";
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
 
-                    portalLoginMessage.hidden =
-                        false;
+                                body:
+                                    JSON.stringify({
+                                        token
+                                    })
+                            }
+                        );
 
-                }
 
-            } finally {
+                    const result =
+                        await response.json();
 
-                if (submitButton) {
 
-                    submitButton.disabled =
-                        false;
+                    if (
+                        !response.ok ||
+                        !result.success
+                    ) {
 
-                    submitButton.textContent =
-                        originalButtonText;
+                        throw new Error(
+                            result.error ||
+                            "Unable to authenticate your portal."
+                        );
+
+                    }
+
+
+                    /*
+                     * Store temporary session.
+                     */
+
+                    sessionStorage.setItem(
+                        "portalSessionToken",
+                        result.sessionToken
+                    );
+
+
+                    sessionStorage.setItem(
+                        "portalClient",
+                        JSON.stringify(
+                            result.client
+                        )
+                    );
+
+
+                    /*
+                     * Enter private portal.
+                     */
+
+                    window.location.href =
+                        "/pages/portal/portal.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Portal login failed:",
+                        error
+                    );
+
+
+                    if (portalLoginMessage) {
+
+                        portalLoginMessage.textContent =
+                            error.message ||
+                            "Unable to sign you in right now.";
+
+
+                        portalLoginMessage.hidden =
+                            false;
+
+                    }
+
+
+                } finally {
+
+                    if (submitButton) {
+
+                        submitButton.disabled =
+                            false;
+
+
+                        submitButton.textContent =
+                            originalButtonText;
+
+                    }
 
                 }
 
             }
+        );
 
-        }
-    );
-
-}
+    }
 
 
     /* =================================
        CONTACT FORM
-       
+
        CONNECTED TO CLOUDFLARE WORKER
     ================================== */
 
@@ -612,6 +962,7 @@ if (portalLoginForm) {
             async event => {
 
                 event.preventDefault();
+
 
                 clearFormError();
 
@@ -636,65 +987,86 @@ if (portalLoginForm) {
                     new FormData(form);
 
 
+                /*
+                 * Build API payload.
+                 *
+                 * Important:
+                 * formStartedAt comes directly from
+                 * FORM_STARTED_AT instead of FormData.
+                 */
+
                 const data = {
 
                     name:
                         String(
-                            formData.get("name") || ""
+                            formData.get("name") ||
+                            ""
                         ).trim(),
 
                     email:
                         String(
-                            formData.get("email") || ""
+                            formData.get("email") ||
+                            ""
                         ).trim(),
 
                     business:
                         String(
-                            formData.get("business") || ""
+                            formData.get("business") ||
+                            ""
                         ).trim(),
 
                     website:
                         String(
-                            formData.get("website") || ""
+                            formData.get("website") ||
+                            ""
                         ).trim(),
 
                     offer:
                         String(
-                            formData.get("offer") || ""
+                            formData.get("offer") ||
+                            ""
                         ).trim(),
 
                     problem:
                         String(
-                            formData.get("problem") || ""
+                            formData.get("problem") ||
+                            ""
                         ).trim(),
 
                     message:
                         String(
-                            formData.get("message") || ""
+                            formData.get("message") ||
+                            ""
                         ).trim(),
 
                     services:
                         getSelectedServices(),
 
                     serviceUnknown:
-                        Boolean(serviceUnknown?.checked),
+                        Boolean(
+                            serviceUnknown?.checked
+                        ),
 
                     companyWebsiteConfirm:
                         String(
-                            formData.get("companyWebsiteConfirm") || ""
+                            formData.get(
+                                "companyWebsiteConfirm"
+                            ) ||
+                            ""
                         ).trim(),
 
+                    /*
+                     * Direct JavaScript timestamp.
+                     */
                     formStartedAt:
-                        Number(
-                            formData.get("formStartedAt") || 0
-                        )
+                        FORM_STARTED_AT
 
                 };
 
 
-                /*
-                 * Basic frontend validation.
-                 */
+                /* =================================
+                   FRONTEND VALIDATION
+                ================================== */
 
                 if (!data.name) {
 
@@ -733,14 +1105,32 @@ if (portalLoginForm) {
                     data.services.length === 0 &&
                     !data.serviceUnknown
                 ) {
+
                     if (servicesError) {
+
                         servicesError.textContent =
                             "Choose at least one service, or select that you're not sure yet.";
-                        servicesError.hidden = false;
+
+
+                        servicesError.hidden =
+                            false;
+
                     }
-                    serviceOptions?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+
+                    serviceOptions?.scrollIntoView({
+                        behavior:
+                            "smooth",
+
+                        block:
+                            "center"
+                    });
+
+
                     return;
+
                 }
+
 
                 if (!data.problem) {
 
@@ -753,10 +1143,9 @@ if (portalLoginForm) {
                 }
 
 
-                /*
-                 * Make sure the Worker URL
-                 * has been configured.
-                 */
+                /* =================================
+                   API CONFIGURATION
+                ================================== */
 
                 if (
                     !API_URL ||
@@ -769,23 +1158,26 @@ if (portalLoginForm) {
                         "The contact system is not configured yet."
                     );
 
+
                     console.error(
                         "API_URL has not been configured."
                     );
+
 
                     return;
 
                 }
 
 
-                /*
-                 * Loading state.
-                 */
+                /* =================================
+                   LOADING STATE
+                ================================== */
 
                 if (submitButton) {
 
                     submitButton.disabled =
                         true;
+
 
                     submitButton.innerHTML =
                         "<span>Creating Private Portal...</span>";
@@ -793,13 +1185,18 @@ if (portalLoginForm) {
                 }
 
 
+                /* =================================
+                   SUBMIT
+                ================================== */
+
                 try {
 
                     const response =
                         await fetch(
                             `${API_URL}/api/contact`,
                             {
-                                method: "POST",
+                                method:
+                                    "POST",
 
                                 headers: {
                                     "Content-Type":
@@ -807,17 +1204,21 @@ if (portalLoginForm) {
                                 },
 
                                 body:
-                                    JSON.stringify(data)
+                                    JSON.stringify(
+                                        data
+                                    )
                             }
                         );
 
 
                     let result;
 
+
                     try {
 
                         result =
                             await response.json();
+
 
                     } catch {
 
@@ -828,9 +1229,9 @@ if (portalLoginForm) {
                     }
 
 
-                    /*
-                     * Backend validation error.
-                     */
+                    /* =================================
+                       BACKEND VALIDATION ERROR
+                    ================================== */
 
                     if (
                         response.status === 422 &&
@@ -848,30 +1249,34 @@ if (portalLoginForm) {
                             "Please check your information and try again."
                         );
 
+
                         return;
 
                     }
 
 
-                    /*
-                     * Existing email.
-                     */
+                    /* =================================
+                       EXISTING EMAIL
+                    ================================== */
 
-                    if (response.status === 409) {
+                    if (
+                        response.status === 409
+                    ) {
 
                         showFormError(
                             result.error ||
                             "A portal already exists for this email address."
                         );
 
+
                         return;
 
                     }
 
 
-                    /*
-                     * Other backend errors.
-                     */
+                    /* =================================
+                       OTHER BACKEND ERRORS
+                    ================================== */
 
                     if (
                         !response.ok ||
@@ -886,10 +1291,9 @@ if (portalLoginForm) {
                     }
 
 
-                    /*
-                     * The backend generated the
-                     * real secure token.
-                     */
+                    /* =================================
+                       PORTAL TOKEN
+                    ================================== */
 
                     const token =
                         result.portalToken;
@@ -913,20 +1317,38 @@ if (portalLoginForm) {
 
 
                     /*
-                     * Hide form and display
-                     * success state.
+                     * Pre-fill the portal token.
+                     *
+                     * This makes the "Enter Private Portal"
+                     * action smoother after account creation.
                      */
+
+                    if (portalTokenInput) {
+
+                        portalTokenInput.value =
+                            token;
+
+                    }
+
+
+                    /* =================================
+                       SUCCESS STATE
+                    ================================== */
 
                     form.hidden =
                         true;
+
 
                     success.hidden =
                         false;
 
 
                     success.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
+                        behavior:
+                            "smooth",
+
+                        block:
+                            "center"
                     });
 
 
@@ -954,6 +1376,7 @@ if (portalLoginForm) {
 
                         submitButton.disabled =
                             false;
+
 
                         submitButton.innerHTML =
                             originalButtonHTML;
@@ -1007,12 +1430,16 @@ if (portalLoginForm) {
                         "Copied ✓";
 
 
-                    setTimeout(() => {
+                    setTimeout(
+                        () => {
 
-                        copyTokenButton.textContent =
-                            originalText;
+                            copyTokenButton.textContent =
+                                originalText;
 
-                    }, 1800);
+                        },
+                        1800
+                    );
+
 
                 } catch (error) {
 
@@ -1050,12 +1477,15 @@ if (portalLoginForm) {
                         "Copied ✓";
 
 
-                    setTimeout(() => {
+                    setTimeout(
+                        () => {
 
-                        copyTokenButton.textContent =
-                            "Copy Token";
+                            copyTokenButton.textContent =
+                                "Copy Token";
 
-                    }, 1800);
+                        },
+                        1800
+                    );
 
                 }
 
