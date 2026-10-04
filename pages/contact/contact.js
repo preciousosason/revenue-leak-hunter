@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
      * of relying on a hidden form field being read back
      * through FormData during submission.
      */
-    const FORM_STARTED_AT = Date.now();
 
 
     /* =================================
@@ -48,15 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * but keeping it populated preserves compatibility
      * with the existing HTML.
      */
-    const formStartedAtInput =
-        document.getElementById("form-started-at");
 
-    if (formStartedAtInput) {
-
-        formStartedAtInput.value =
-            String(FORM_STARTED_AT);
-
-    }
 
 
     /* =================================
@@ -1058,8 +1049,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     /*
                      * Direct JavaScript timestamp.
                      */
-                    formStartedAt:
-                        FORM_STARTED_AT
+                
 
                 };
 

@@ -18,7 +18,6 @@ const MAX_SERVICES = 12;
  * boundary. Three seconds catches absurdly fast automated
  * submissions without annoying normal visitors.
  */
-const MIN_FORM_TIME_MS = 3000;
 
 
 /* =========================================================
@@ -121,51 +120,6 @@ function validateContact(data) {
     }
 
 
-    /* =====================================================
-       FORM TIMING / BOT CHECK
-    ===================================================== */
-
-    const startedAt =
-        Number(data.formStartedAt || 0);
-
-    const now =
-        Date.now();
-
-
-    /*
-     * First validate the timestamp itself.
-     *
-     * A missing, invalid, zero, or future timestamp means
-     * something went wrong with the form session.
-     */
-
-    if (
-        !Number.isFinite(startedAt) ||
-        startedAt <= 0 ||
-        startedAt > now
-    ) {
-
-        errors.form =
-            "Unable to verify the form session. Please refresh the page and try again.";
-
-    } else {
-
-        const elapsedTime =
-            now - startedAt;
-
-
-        /*
-         * Reject unrealistically fast submissions.
-         */
-
-        if (elapsedTime < MIN_FORM_TIME_MS) {
-
-            errors.form =
-                "Please wait a few seconds before submitting.";
-
-        }
-
-    }
 
 
     /* =====================================================
