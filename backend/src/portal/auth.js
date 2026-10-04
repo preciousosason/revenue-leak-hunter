@@ -15,6 +15,27 @@ import {
 } from "../utils/auth.js";
 
 
+async function getClientServices(clientId, env) {
+    const { results } = await env.DB
+        .prepare(
+            `SELECT
+                service_id AS id,
+                service_slug AS slug,
+                service_title AS title,
+                service_number AS number,
+                service_category AS category,
+                service_type AS type
+             FROM client_service_interests
+             WHERE client_id = ?
+             ORDER BY CAST(service_number AS INTEGER), service_title`
+        )
+        .bind(clientId)
+        .all();
+
+    return results || [];
+}
+
+
 
 async function createSession(
     clientId,
@@ -145,6 +166,12 @@ export async function handlePortalLogin(
                 env
             );
 
+        const services =
+            await getClientServices(
+                client.id,
+                env
+            );
+
         return json({
             success: true,
             sessionToken:
@@ -156,7 +183,8 @@ export async function handlePortalLogin(
                 name: client.name,
                 email: client.email,
                 business: client.business,
-                website: client.website
+                website: client.website,
+                services
             }
         });
     } catch (error) {
@@ -225,6 +253,12 @@ export async function handlePortalMe(
                 404
             );
         }
+
+        client.services =
+            await getClientServices(
+                client.id,
+                env
+            );
 
         return json({
             success: true,

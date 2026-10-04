@@ -12,7 +12,7 @@
 <meta name="author" content="Precious">
 <meta name="theme-color" content="#0a0a0a">
 
-<title>Begin Investigation | Precious</title>
+<title>Start an Investigation | Leakendia</title>
 
 <link rel="icon" type="image/x-icon" href="../../favicon.ico">
 
@@ -28,7 +28,7 @@
 
     <link
         rel="canonical"
-        href="https://leakendia.com/pages/contact/contact"
+        href="https://leakendia.com/pages/contact/contact.html"
     >
 
     <meta
@@ -43,7 +43,7 @@
 
     <meta
         property="og:title"
-        content="Begin Investigation | Precious"
+        content="Start an Investigation | Leakendia"
     >
 
     <meta
@@ -53,7 +53,7 @@
 
     <meta
         property="og:url"
-        content="https://leakendia.com/pages/contact/contact"
+        content="https://leakendia.com/pages/contact/contact.html"
     >
 
     <meta
@@ -83,7 +83,7 @@
 
     <meta
         name="twitter:title"
-        content="Begin Investigation | Precious"
+        content="Start an Investigation | Leakendia"
     >
 
     <meta
@@ -97,6 +97,26 @@
     >
 
     <!-- LEAKENDIA META END -->
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Start an Investigation | Leakendia",
+  "url": "https://leakendia.com/pages/contact/contact.html",
+  "description": "Start a private investigation into conversion leaks, customer journey friction, messaging problems, website issues, and discoverability gaps.",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Leakendia",
+    "url": "https://leakendia.com/",
+    "founder": {
+      "@type": "Person",
+      "name": "Precious"
+    }
+  }
+}
+</script>
 
 </head>
 
@@ -150,17 +170,21 @@
         </h1>
 
         <p class="contact-lead">
-          If your business is getting attention but not enough of
-          that attention is turning into action, there may be a
-          problem worth investigating.
+          Tell me what isn't working, what you've noticed, and where
+          you think customers may be slipping away. I'll start with
+          where the journey may be breaking.
         </p>
 
         <p class="contact-secondary">
-          Give me enough context to see where the journey starts
-          breaking down. I don't need the whole story yet. I need
-          to understand what you're offering, what people are doing,
-          and where they start getting stuck.
+          Your request comes directly to me, Precious. I don't need
+          the whole story yet. Give me enough context to understand
+          what you offer, what people are doing, and what feels wrong.
         </p>
+
+        <div class="contact-trust-strip" aria-label="Leakendia investigation areas">
+          <span>Websites</span><span>Funnels</span><span>Messaging</span>
+          <span>Customer Journeys</span><span>AI Visibility</span>
+        </div>
 
 
         <!-- Contact details -->
@@ -287,11 +311,11 @@
           <div class="contact-form-header">
 
             <span>
-              LEAK HUNT REQUEST
+              START AN INVESTIGATION
             </span>
 
             <small>
-              Takes about 2 minutes
+              Comes directly to Precious
             </small>
 
           </div>
@@ -302,6 +326,11 @@
             class="contact-form"
           >
 
+            <div class="contact-honeypot" aria-hidden="true">
+              <label for="company-website-confirm">Leave this field empty</label>
+              <input type="text" id="company-website-confirm" name="companyWebsiteConfirm" tabindex="-1" autocomplete="off">
+            </div>
+            <input type="hidden" id="form-started-at" name="formStartedAt" value="">
 
             <!-- Name -->
 
@@ -401,6 +430,37 @@
             </div>
 
 
+            <!-- Services -->
+
+            <fieldset class="form-group service-interest-group">
+
+              <legend>
+                What would you like help with?
+                <span>Choose one or more</span>
+              </legend>
+
+              <p class="field-help">
+                These are loaded directly from Leakendia's live service data.
+              </p>
+
+              <div
+                id="service-options"
+                class="service-options"
+                aria-live="polite"
+              >
+                <p class="service-options-loading">Loading services...</p>
+              </div>
+
+              <label class="service-uncertain">
+                <input type="checkbox" id="service-unknown" name="serviceUnknown" value="true">
+                <span>I'm not sure yet — that's what I need help diagnosing.</span>
+              </label>
+
+              <p class="field-error" id="services-error" hidden></p>
+
+            </fieldset>
+
+
             <!-- Problem -->
 
             <div class="form-group">
@@ -452,7 +512,7 @@
                 </option>
 
                 <option value="unknown">
-                  I don't know where the leak is
+                  I'm not sure yet — that's what I need help diagnosing
                 </option>
 
               </select>
@@ -487,7 +547,7 @@
             >
 
               <span>
-                Submit Leak Hunt Request
+                Start Investigation
               </span>
 
               <span>
@@ -498,10 +558,9 @@
 
 
             <p class="form-note">
-              Your request will create a private conversation portal
-              where we can continue the investigation. Your email
-              may be used to notify you when there is activity in
-              your portal.
+              No obligation. Your request comes directly to Precious and creates
+              a private conversation where we can continue securely. Your email
+              may be used to notify you when there is activity in your portal.
             </p>
 
           </form>
@@ -522,18 +581,17 @@
             </div>
 
             <span class="success-label">
-              PRIVATE PORTAL CREATED
+              INVESTIGATION OPENED
             </span>
 
             <h2>
-              Your Investigation Request Is In.
+              Your Investigation Is Open.
             </h2>
 
             <p>
-              Your private conversation portal has been created.
-              Your access token is shown below. Keep it somewhere
-              secure. You'll use it to return to the conversation
-              and follow the investigation.
+              I've received your context and your private Leakendia workspace is ready.
+              Keep the access token below somewhere secure. You'll use it to return
+              to the conversation, share more context, and follow the investigation.
             </p>
 
 

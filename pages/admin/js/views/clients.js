@@ -17,6 +17,31 @@ let openConversationHandler = null;
 let updateStatsHandler = null;
 
 
+function normalizeServices(client) {
+    return Array.isArray(client?.services)
+        ? client.services.filter(Boolean)
+        : [];
+}
+
+function renderServiceChips(services) {
+    if (!services.length) {
+        return `<span class="client-service-empty">NOT SPECIFIED</span>`;
+    }
+
+    const visible = services.slice(0, 2);
+    const remaining = services.length - visible.length;
+
+    return `${visible.map(service => `
+        <span class="client-service-chip" title="${escapeHTML(service.title || service.slug || "Service")}">
+            ${service.number ? `<b>${escapeHTML(service.number)}</b>` : ""}
+            ${escapeHTML(service.title || service.slug || "Service")}
+        </span>
+    `).join("")}${remaining > 0 ? `
+        <span class="client-service-chip client-service-more">+${remaining}</span>
+    ` : ""}`;
+}
+
+
 export function configureClients({
     openConversation,
     updateStats
@@ -364,6 +389,42 @@ export function renderRecentClients() {
 }
 
 
+function renderServiceSummary(services) {
+
+    if (!Array.isArray(services) || !services.length) {
+        return "";
+    }
+
+    const sorted = services
+        .filter(service => service && (service.title || service.slug))
+        .slice()
+        .sort((a, b) => {
+            const aNumber = Number.parseInt(a.number, 10);
+            const bNumber = Number.parseInt(b.number, 10);
+            return (Number.isFinite(aNumber) ? aNumber : 9999) -
+                   (Number.isFinite(bNumber) ? bNumber : 9999);
+        });
+
+    const visible = sorted.slice(0, 2);
+    const remaining = sorted.length - visible.length;
+
+    return `
+        <span class="client-service-summary" aria-label="Interested services">
+            ${visible.map(service => `
+                <span class="client-service-mini">
+                    ${escapeHTML(service.number || "--")}
+                    ${escapeHTML(service.title || service.slug || "Service")}
+                </span>
+            `).join("")}
+            ${remaining > 0
+                ? `<span class="client-service-more">+${remaining}</span>`
+                : ""}
+        </span>
+    `;
+
+}
+
+
 export function renderClients() {
 
     const clientsList =
@@ -453,17 +514,24 @@ export function renderClients() {
                                         "No email"
                                     )}
                                 </span>
+
+                                ${renderServiceSummary(
+                                    client.services
+                                )}
                             </div>
 
                         </div>
 
-                        <div class="client-data">
-                            <span>
+                        <div class="client-data client-business-cell">
+                            <span class="client-business-name">
                                 ${escapeHTML(
                                     client.business ||
                                     "Not provided"
                                 )}
                             </span>
+                            <div class="client-service-chips">
+                                ${renderServiceChips(normalizeServices(client))}
+                            </div>
                         </div>
 
                         <div class="client-status ${statusClass}">

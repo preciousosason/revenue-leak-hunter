@@ -1,3 +1,5 @@
+import { services as serviceRegistry } from "../../data/services/services.js";
+
 const API_URL = "https://revenue-leak-hunter-api.preciousosason.workers.dev";
 
 
@@ -12,6 +14,123 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const success =
         document.getElementById("form-success");
+
+
+    const serviceOptions =
+        document.getElementById("service-options");
+
+    const serviceUnknown =
+        document.getElementById("service-unknown");
+
+    const servicesError =
+        document.getElementById("services-error");
+
+    const formStartedAt =
+        document.getElementById("form-started-at");
+
+    if (formStartedAt) {
+        formStartedAt.value = String(Date.now());
+    }
+
+    let availableServices = [];
+
+    function escapeHTML(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    async function loadServiceChoices() {
+        if (!serviceOptions) return;
+
+        try {
+            const modules = await Promise.all(
+                serviceRegistry.map(async service => {
+                    const module = await import(
+                        `../../data/services/${service.slug}/service.js`
+                    );
+                    return module.default;
+                })
+            );
+
+            availableServices = modules
+                .filter(service => service && service.id && service.slug && service.title)
+                .sort((a, b) => {
+                    const aNumber = Number.parseInt(a.number, 10);
+                    const bNumber = Number.parseInt(b.number, 10);
+                    return (Number.isFinite(aNumber) ? aNumber : Number.MAX_SAFE_INTEGER) -
+                        (Number.isFinite(bNumber) ? bNumber : Number.MAX_SAFE_INTEGER);
+                });
+
+            serviceOptions.innerHTML = availableServices.map(service => `
+                <label class="service-choice">
+                    <input
+                        type="checkbox"
+                        name="services"
+                        value="${escapeHTML(service.id)}"
+                        data-service-id="${escapeHTML(service.id)}"
+                    >
+                    <span class="service-choice-number">${escapeHTML(service.number || "--")}</span>
+                    <span class="service-choice-copy">
+                        <strong>${escapeHTML(service.title)}</strong>
+                        <small>${escapeHTML(service.category || service.type || "Service")}</small>
+                    </span>
+                    <span class="service-choice-check" aria-hidden="true">✓</span>
+                </label>
+            `).join("");
+
+            serviceOptions.querySelectorAll(".service-choice input").forEach(input => {
+                input.addEventListener("change", () => {
+                    input.closest(".service-choice")?.classList.toggle("is-selected", input.checked);
+                    if (input.checked && serviceUnknown) serviceUnknown.checked = false;
+                    if (servicesError) servicesError.hidden = true;
+                });
+            });
+        } catch (error) {
+            console.error("Unable to load services:", error);
+            serviceOptions.innerHTML = `
+                <p class="service-options-loading">
+                    Services could not be loaded. You can still choose “I'm not sure yet” and continue.
+                </p>
+            `;
+        }
+    }
+
+    loadServiceChoices();
+
+    if (serviceUnknown) {
+        serviceUnknown.addEventListener("change", () => {
+            if (!serviceUnknown.checked || !serviceOptions) return;
+            serviceOptions.querySelectorAll(".service-choice input").forEach(input => {
+                input.checked = false;
+                input.closest(".service-choice")?.classList.remove("is-selected");
+            });
+            if (servicesError) servicesError.hidden = true;
+        });
+    }
+
+    function getSelectedServices() {
+        if (!serviceOptions) return [];
+
+        const selectedIds = new Set(
+            [...serviceOptions.querySelectorAll(".service-choice input:checked")]
+                .map(input => input.dataset.serviceId)
+        );
+
+        return availableServices
+            .filter(service => selectedIds.has(service.id))
+            .map(service => ({
+                id: service.id,
+                slug: service.slug,
+                title: service.title,
+                number: String(service.number || ""),
+                category: String(service.category || ""),
+                type: String(service.type || "")
+            }));
+    }
 
 
     /* =================================
@@ -552,7 +671,23 @@ if (portalLoginForm) {
                     message:
                         String(
                             formData.get("message") || ""
-                        ).trim()
+                        ).trim(),
+
+                    services:
+                        getSelectedServices(),
+
+                    serviceUnknown:
+                        Boolean(serviceUnknown?.checked),
+
+                    companyWebsiteConfirm:
+                        String(
+                            formData.get("companyWebsiteConfirm") || ""
+                        ).trim(),
+
+                    formStartedAt:
+                        Number(
+                            formData.get("formStartedAt") || 0
+                        )
 
                 };
 
@@ -593,6 +728,19 @@ if (portalLoginForm) {
 
                 }
 
+
+                if (
+                    data.services.length === 0 &&
+                    !data.serviceUnknown
+                ) {
+                    if (servicesError) {
+                        servicesError.textContent =
+                            "Choose at least one service, or select that you're not sure yet.";
+                        servicesError.hidden = false;
+                    }
+                    serviceOptions?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    return;
+                }
 
                 if (!data.problem) {
 

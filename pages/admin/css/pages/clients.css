@@ -1107,3 +1107,9 @@
         transition: none;
     }
 }
+
+/* CLIENT SERVICE INTERESTS */
+.client-service-summary { display:flex; flex-wrap:wrap; gap:.28rem; margin-top:.35rem; }
+.client-service-mini, .client-service-more { display:inline-flex; align-items:center; min-height:20px; padding:.18rem .38rem; border:1px solid rgba(255,59,48,.14); border-radius:4px; background:rgba(255,59,48,.045); font-family:var(--font-mono); font-size:.46rem; font-weight:700; line-height:1.2; }
+.client-service-mini { color:var(--text-secondary); }
+.client-service-more { color:var(--color-primary); }

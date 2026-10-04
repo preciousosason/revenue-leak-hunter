@@ -6,7 +6,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "node tests/analytics.test.mjs",
-    "analytics:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=analytics-v2.sql"
+    "analytics:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=analytics-v2.sql",
+    "services:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=client-service-interests.sql"
   },
   "devDependencies": {
     "wrangler": "4.136.1"

@@ -59,10 +59,42 @@ export async function handleAdminClients(
                 )
                 .all();
 
+        const clientRows = clients.results || [];
+
+        const interests = await env.DB
+            .prepare(
+                `SELECT
+                    client_id,
+                    service_id AS id,
+                    service_slug AS slug,
+                    service_title AS title,
+                    service_number AS number,
+                    service_category AS category,
+                    service_type AS type
+                 FROM client_service_interests
+                 ORDER BY CAST(service_number AS INTEGER), service_title`
+            )
+            .all();
+
+        const servicesByClient = new Map();
+
+        for (const service of interests.results || []) {
+            if (!servicesByClient.has(service.client_id)) {
+                servicesByClient.set(service.client_id, []);
+            }
+
+            const { client_id, ...publicService } = service;
+            servicesByClient.get(client_id).push(publicService);
+        }
+
+        const clientsWithServices = clientRows.map(client => ({
+            ...client,
+            services: servicesByClient.get(client.id) || []
+        }));
+
         return json({
             success: true,
-            clients:
-                clients.results || []
+            clients: clientsWithServices
         });
     } catch (error) {
         console.error(

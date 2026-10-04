@@ -469,6 +469,49 @@ function updateConversationStatus(
 }
 
 
+function renderConversationServices(services) {
+
+    const container =
+        document.getElementById(
+            "client-info-services"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    if (!Array.isArray(services) || !services.length) {
+        container.innerHTML =
+            `<span class="context-service-empty">Not specified</span>`;
+        return;
+    }
+
+    const sorted = services
+        .filter(service => service && (service.title || service.slug))
+        .slice()
+        .sort((a, b) => {
+            const aNumber = Number.parseInt(a.number, 10);
+            const bNumber = Number.parseInt(b.number, 10);
+            return (Number.isFinite(aNumber) ? aNumber : 9999) -
+                   (Number.isFinite(bNumber) ? bNumber : 9999);
+        });
+
+    container.innerHTML = sorted.length
+        ? sorted.map(service => `
+            <span class="context-service-chip">
+                <span class="context-service-number">
+                    ${escapeHTML(service.number || "--")}
+                </span>
+                <span class="context-service-name">
+                    ${escapeHTML(service.title || service.slug || "Service")}
+                </span>
+            </span>
+        `).join("")
+        : `<span class="context-service-empty">Not specified</span>`;
+
+}
+
+
 function renderConversation(
     conversation,
     messages
@@ -528,6 +571,33 @@ function renderConversation(
         "client-info-website",
         conversation?.website ||
         "Not provided"
+    );
+
+    const servicesElement =
+        document.getElementById(
+            "client-info-services"
+        );
+
+    if (servicesElement) {
+        const services =
+            Array.isArray(conversation?.services)
+                ? conversation.services
+                : [];
+
+        servicesElement.innerHTML =
+            services.length
+                ? services.map(service => `
+                    <span class="client-service-chip">
+                        ${service.number ? `<b>${escapeHTML(service.number)}</b>` : ""}
+                        ${escapeHTML(service.title || service.slug || "Service")}
+                    </span>
+                `).join("")
+                : `<span class="context-service-empty">Not specified</span>`;
+    }
+
+
+    renderConversationServices(
+        conversation?.services
     );
 
     updateConversationStatus(

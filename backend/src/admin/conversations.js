@@ -57,6 +57,24 @@ export async function handleAdminConversation(
             );
         }
 
+        const { results: services } = await env.DB
+            .prepare(
+                `SELECT
+                    service_id AS id,
+                    service_slug AS slug,
+                    service_title AS title,
+                    service_number AS number,
+                    service_category AS category,
+                    service_type AS type
+                 FROM client_service_interests
+                 WHERE client_id = ?
+                 ORDER BY CAST(service_number AS INTEGER), service_title`
+            )
+            .bind(conversation.client_id)
+            .all();
+
+        conversation.services = services || [];
+
         // Get all messages in chronological order
         const { results: messages } = await env.DB
             .prepare(
