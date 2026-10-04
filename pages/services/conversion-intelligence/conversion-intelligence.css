@@ -1,0 +1,1247 @@
+/* =========================================================
+   CONVERSION INTELLIGENCE
+   Page-specific styles only.
+   ========================================================= */
+
+/* Add only styles unique to this service page. */
+/* =========================================================
+   CONVERSION INTELLIGENCE
+   Page-specific styles only.
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.intelligence-page {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg, #080808);
+    color: var(--text, #f5f5f5);
+}
+
+
+/* =========================================================
+   SHARED
+========================================================= */
+
+.intelligence-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+
+    margin-bottom: 1.25rem;
+
+    color: var(--primary, #ff3b30);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+
+.intelligence-eyebrow::before {
+    content: "";
+
+    width: 22px;
+    height: 1px;
+
+    background: currentColor;
+}
+
+
+.intelligence-section {
+    position: relative;
+
+    padding: clamp(5rem, 9vw, 8rem) 0;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+.intelligence-section-dark {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.018),
+            transparent
+        ),
+        #101010;
+}
+
+
+.intelligence-heading {
+    max-width: 760px;
+    margin-bottom: clamp(2.75rem, 6vw, 4.5rem);
+}
+
+
+.intelligence-heading h2,
+.intelligence-split h2,
+.intelligence-deliverables-grid h2,
+.intelligence-reality h2,
+.intelligence-final h2 {
+    margin: 0;
+
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+}
+
+
+.intelligence-heading > p,
+.intelligence-section-lead {
+    max-width: 680px;
+
+    margin-top: 1.35rem;
+
+    color: #a5a5a5;
+
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.intelligence-hero {
+    position: relative;
+
+    min-height: 92vh;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        clamp(8rem, 14vw, 11rem)
+        0
+        clamp(5rem, 9vw, 7rem);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        radial-gradient(
+            circle at 78% 42%,
+            rgba(255, 59, 48, 0.10),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 20% 15%,
+            rgba(255, 255, 255, 0.035),
+            transparent 24%
+        ),
+        #080808;
+}
+
+
+.intelligence-hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.32;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 64px 64px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 88%
+        );
+}
+
+
+.intelligence-hero-grid {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.05fr)
+        minmax(340px, 0.75fr);
+
+    gap: clamp(3rem, 7vw, 7rem);
+
+    align-items: center;
+}
+
+
+.intelligence-hero-copy {
+    max-width: 790px;
+}
+
+
+.intelligence-hero-copy h1 {
+    max-width: 850px;
+
+    margin: 0;
+
+    font-size: clamp(3rem, 6.5vw, 6.2rem);
+    line-height: 0.94;
+    letter-spacing: -0.06em;
+}
+
+
+.intelligence-hero-copy h1 span {
+    color: #6f6f6f;
+}
+
+
+.intelligence-hero-lead {
+    max-width: 680px;
+
+    margin:
+        clamp(1.75rem, 4vw, 2.5rem)
+        0
+        0;
+
+    color: #a5a5a5;
+
+    font-size: clamp(1.05rem, 1.7vw, 1.22rem);
+    line-height: 1.75;
+}
+
+
+.intelligence-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+
+    margin-top: 2.25rem;
+}
+
+
+/* =========================================================
+   SIGNAL PANEL
+========================================================= */
+
+.intelligence-signal {
+    position: relative;
+
+    padding: clamp(1.4rem, 3vw, 2rem);
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.012)
+        ),
+        #101010;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+
+.intelligence-signal::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 59, 48, 0.8),
+            transparent
+        );
+}
+
+
+.signal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+
+    padding-bottom: 1.4rem;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.signal-header > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+
+.signal-label {
+    color: #6f6f6f;
+
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+
+.signal-header strong {
+    font-size: 0.95rem;
+}
+
+
+.signal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    padding: 0.45rem 0.65rem;
+
+    border:
+        1px solid rgba(50, 215, 75, 0.18);
+
+    border-radius: 999px;
+
+    background:
+        rgba(50, 215, 75, 0.06);
+
+    color: #32d74b;
+
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+
+.signal-status::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    box-shadow:
+        0 0 12px currentColor;
+}
+
+
+.signal-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 1.55rem;
+
+    padding: 1.8rem 0 1rem;
+}
+
+
+.signal-stage {
+    position: relative;
+}
+
+
+.signal-stage-copy {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    margin-bottom: 0.65rem;
+}
+
+
+.signal-stage-copy span {
+    color: #6f6f6f;
+
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+
+.signal-stage-copy strong {
+    font-size: 0.88rem;
+}
+
+
+.signal-value {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    color: #a5a5a5;
+
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+}
+
+
+.signal-bar {
+    width: 100%;
+    height: 5px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+}
+
+
+.signal-bar span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff3b30,
+            #ff5148
+        );
+
+    box-shadow:
+        0 0 16px rgba(255, 59, 48, 0.25);
+}
+
+
+.signal-stage-alert {
+    padding:
+        0.85rem
+        0.9rem;
+
+    margin:
+        -0.85rem
+        -0.9rem;
+
+    border:
+        1px solid rgba(255, 59, 48, 0.12);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 59, 48, 0.035);
+}
+
+
+.signal-stage-alert small {
+    display: block;
+
+    margin-top: 0.55rem;
+
+    color: #ff5148;
+
+    font-size: 0.66rem;
+}
+
+
+.signal-note {
+    margin: 1.15rem 0 0;
+
+    padding-top: 1rem;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.07);
+
+    color: #6f6f6f;
+
+    font-size: 0.72rem;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PROBLEM SPLIT
+========================================================= */
+
+.intelligence-split {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(0, 0.8fr);
+
+    gap: clamp(3rem, 8vw, 8rem);
+
+    align-items: start;
+}
+
+
+.intelligence-prose {
+    max-width: 650px;
+}
+
+
+.intelligence-prose p {
+    margin: 0 0 1.2rem;
+
+    color: #a5a5a5;
+
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    line-height: 1.8;
+}
+
+
+.intelligence-prose p:nth-last-child(2),
+.intelligence-prose p:last-child {
+    color: #f5f5f5;
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+.intelligence-metrics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-left:
+        1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.intelligence-metric {
+    position: relative;
+
+    min-height: 310px;
+
+    padding: clamp(1.5rem, 3vw, 2.2rem);
+
+    border-right:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        rgba(255, 255, 255, 0.012);
+
+    transition:
+        transform 220ms ease,
+        background 220ms ease;
+}
+
+
+.intelligence-metric:hover {
+    transform: translateY(-5px);
+
+    background:
+        rgba(255, 255, 255, 0.028);
+}
+
+
+.metric-number {
+    color: #6f6f6f;
+
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+
+.metric-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    margin: 3.5rem 0 1.5rem;
+
+    border:
+        1px solid rgba(255, 59, 48, 0.18);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 59, 48, 0.06);
+
+    color: #ff5148;
+
+    font-size: 1rem;
+}
+
+
+.intelligence-metric h3 {
+    margin: 0 0 0.8rem;
+
+    font-size: 1.15rem;
+}
+
+
+.intelligence-metric p {
+    margin: 0;
+
+    color: #a5a5a5;
+
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   INVESTIGATION
+========================================================= */
+
+.intelligence-investigation {
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.investigation-row {
+    display: grid;
+
+    grid-template-columns:
+        70px
+        minmax(0, 1fr)
+        auto;
+
+    gap: clamp(1rem, 3vw, 2.5rem);
+
+    align-items: center;
+
+    padding:
+        clamp(1.5rem, 3vw, 2.25rem)
+        0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    transition:
+        padding-left 220ms ease,
+        background 220ms ease;
+}
+
+
+.investigation-row:hover {
+    padding-left: 1rem;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 59, 48, 0.04),
+            transparent 60%
+        );
+}
+
+
+.investigation-number {
+    color: #6f6f6f;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+
+.investigation-row h3 {
+    margin: 0 0 0.45rem;
+
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+
+.investigation-row p {
+    max-width: 700px;
+
+    margin: 0;
+
+    color: #a5a5a5;
+
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+
+.investigation-tag {
+    padding:
+        0.45rem
+        0.65rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+
+    color: #6f6f6f;
+
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+
+/* =========================================================
+   METHOD
+========================================================= */
+
+.intelligence-method {
+    display: grid;
+
+    grid-template-columns:
+        1fr auto
+        1fr auto
+        1fr auto
+        1fr;
+
+    gap: 1rem;
+
+    align-items: stretch;
+}
+
+
+.intelligence-method article {
+    min-height: 250px;
+
+    padding: clamp(1.4rem, 3vw, 2rem);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.025),
+            transparent
+        );
+}
+
+
+.intelligence-method article > span {
+    color: #ff3b30;
+
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+
+.intelligence-method article h3 {
+    margin: 4rem 0 0.75rem;
+
+    font-size: 1.25rem;
+}
+
+
+.intelligence-method article p {
+    margin: 0;
+
+    color: #a5a5a5;
+
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+
+.method-connector {
+    display: flex;
+    align-items: center;
+
+    color: #6f6f6f;
+
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   PATH COMPARISON
+========================================================= */
+
+.intelligence-path-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1.25rem;
+}
+
+
+.intelligence-path {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    background: #101010;
+}
+
+
+.intelligence-path-better {
+    border-color:
+        rgba(255, 59, 48, 0.22);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 59, 48, 0.055),
+            transparent 55%
+        ),
+        #101010;
+}
+
+
+.path-label {
+    display: block;
+
+    margin-bottom: 2rem;
+
+    color: #6f6f6f;
+
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+}
+
+
+.intelligence-path-better .path-label {
+    color: #ff5148;
+}
+
+
+.path-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+.path-step span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 50%;
+
+    color: #6f6f6f;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+
+.intelligence-path-better .path-step span {
+    border-color:
+        rgba(255, 59, 48, 0.24);
+
+    color: #ff5148;
+}
+
+
+.path-step strong {
+    font-size: 0.95rem;
+}
+
+
+.path-line {
+    width: 1px;
+    height: 28px;
+
+    margin:
+        0.35rem
+        0
+        0.35rem
+        16px;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.intelligence-path-better .path-line {
+    background:
+        rgba(255, 59, 48, 0.20);
+}
+
+
+/* =========================================================
+   DELIVERABLES
+========================================================= */
+
+.intelligence-deliverables-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.8fr)
+        minmax(0, 1fr);
+
+    gap: clamp(3rem, 8vw, 8rem);
+
+    align-items: start;
+}
+
+
+.intelligence-deliverables {
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.intelligence-deliverables article {
+    display: grid;
+
+    grid-template-columns:
+        50px
+        minmax(0, 1fr);
+
+    gap: 1rem;
+
+    padding: 1.5rem 0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.intelligence-deliverables article > span {
+    padding-top: 0.2rem;
+
+    color: #ff3b30;
+
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+
+.intelligence-deliverables h3 {
+    margin: 0 0 0.45rem;
+
+    font-size: 1rem;
+}
+
+
+.intelligence-deliverables p {
+    margin: 0;
+
+    color: #a5a5a5;
+
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   REALITY CHECK
+========================================================= */
+
+.intelligence-reality {
+    max-width: 900px;
+}
+
+
+.intelligence-reality h2 {
+    max-width: 850px;
+}
+
+
+.intelligence-reality > p {
+    max-width: 720px;
+
+    margin: 1.4rem 0 0;
+
+    color: #a5a5a5;
+
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1.8;
+}
+
+
+.intelligence-reality > strong {
+    display: block;
+
+    max-width: 760px;
+
+    margin-top: 2rem;
+
+    padding-left: 1.25rem;
+
+    border-left:
+        2px solid #ff3b30;
+
+    color: #f5f5f5;
+
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FINAL CTA
+========================================================= */
+
+.intelligence-final {
+    position: relative;
+
+    padding:
+        clamp(6rem, 11vw, 10rem)
+        0;
+
+    overflow: hidden;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(255, 59, 48, 0.12),
+            transparent 42%
+        ),
+        #080808;
+}
+
+
+.intelligence-final-inner {
+    max-width: 900px;
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+.intelligence-final-inner .intelligence-eyebrow {
+    justify-content: center;
+}
+
+
+.intelligence-final h2 {
+    font-size: clamp(2.5rem, 6vw, 5.4rem);
+}
+
+
+.intelligence-final p {
+    max-width: 650px;
+
+    margin:
+        1.5rem
+        auto
+        2rem;
+
+    color: #a5a5a5;
+
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .intelligence-hero {
+        min-height: auto;
+    }
+
+
+    .intelligence-hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .intelligence-signal {
+        max-width: 680px;
+    }
+
+
+    .intelligence-metrics-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .intelligence-method {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .method-connector {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .intelligence-split,
+    .intelligence-deliverables-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .intelligence-path-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .investigation-row {
+        grid-template-columns:
+            45px
+            minmax(0, 1fr);
+    }
+
+
+    .investigation-tag {
+        grid-column: 2;
+
+        justify-self: start;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .intelligence-hero {
+        padding-top: 7.5rem;
+    }
+
+
+    .intelligence-hero-copy h1 {
+        font-size: clamp(2.7rem, 13vw, 4rem);
+    }
+
+
+    .intelligence-hero-actions {
+        flex-direction: column;
+    }
+
+
+    .intelligence-hero-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+
+    .intelligence-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .intelligence-metric {
+        min-height: auto;
+    }
+
+
+    .metric-icon {
+        margin-top: 2.5rem;
+    }
+
+
+    .intelligence-method {
+        grid-template-columns: 1fr;
+    }
+
+
+    .intelligence-method article {
+        min-height: auto;
+    }
+
+
+    .intelligence-method article h3 {
+        margin-top: 2.75rem;
+    }
+
+
+    .investigation-row {
+        grid-template-columns: 1fr;
+
+        gap: 0.75rem;
+    }
+
+
+    .investigation-tag {
+        grid-column: 1;
+    }
+
+
+    .investigation-row:hover {
+        padding-left: 0;
+    }
+
+
+    .intelligence-deliverables article {
+        grid-template-columns:
+            36px
+            minmax(0, 1fr);
+    }
+
+
+    .intelligence-final-inner {
+        text-align: left;
+    }
+
+
+    .intelligence-final-inner .intelligence-eyebrow {
+        justify-content: flex-start;
+    }
+
+
+    .intelligence-final p {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .intelligence-metric,
+    .investigation-row {
+        transition: none;
+    }
+
+}

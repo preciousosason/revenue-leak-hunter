@@ -1,777 +1,1549 @@
 /* =========================================================
+
    SERVICES PAGE
+
    Responsive structure:
+
    1200px+  Large desktop
+
    1100px   Desktop / tablet transition
+
    800px    Tablet
+
    600px    Mobile
+
    420px    Small mobile
+
 ========================================================= */
+
+
+
 
 
 /* =========================================================
+
    01. SERVICES HERO
+
 ========================================================= */
 
+
+
 .services-hero {
+
     position: relative;
+
     padding: 8rem 0 7rem;
+
     overflow: hidden;
 
+
+
     background:
+
         radial-gradient(
+
             circle at 80% 30%,
+
             rgba(255, 50, 50, 0.08),
+
             transparent 35%
+
         );
+
 }
 
+
+
 .services-hero::before {
+
     content: "";
+
     position: absolute;
+
     inset: 0;
+
+
 
     pointer-events: none;
 
+
+
     background-image:
+
         linear-gradient(
+
             rgba(255, 255, 255, 0.025) 1px,
+
             transparent 1px
+
         ),
+
         linear-gradient(
+
             90deg,
+
             rgba(255, 255, 255, 0.025) 1px,
+
             transparent 1px
+
         );
+
+
 
     background-size: 70px 70px;
 
+
+
     mask-image:
+
         linear-gradient(
+
             to bottom,
+
             black,
+
             transparent
+
         );
+
 }
 
+
+
 .services-hero-grid {
+
     position: relative;
+
     z-index: 1;
+
+
 
     display: grid;
 
+
+
     grid-template-columns:
+
         minmax(0, 1.05fr)
+
         minmax(360px, 0.95fr);
+
+
 
     gap: 5rem;
 
+
+
     align-items: center;
+
 }
+
+
 
 .services-hero-content {
+
     max-width: 720px;
+
 }
 
+
+
 .services-hero h1 {
+
     max-width: 780px;
+
+
 
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             3rem,
+
             6vw,
+
             5.4rem
+
         );
 
+
+
     line-height: 0.98;
+
     letter-spacing: -0.055em;
+
 }
+
+
 
 .services-hero h1 span {
+
     color: var(--color-primary);
+
 }
+
+
 
 .services-hero-description {
+
     max-width: 650px;
 
+
+
     margin:
+
         2rem 0 2.25rem;
 
+
+
     font-size: 1.08rem;
+
     line-height: 1.8;
 
+
+
     color: var(--color-text-muted);
+
 }
+
+
+
 
 
 /* =========================================================
+
    02. SHARED EYEBROW
+
 ========================================================= */
 
+
+
 .eyebrow {
+
     display: inline-flex;
+
     align-items: center;
+
+
 
     gap: 0.65rem;
 
+
+
     margin-bottom: 1.5rem;
 
+
+
     font-size: 0.72rem;
+
     font-weight: 700;
 
+
+
     letter-spacing: 0.14em;
+
     text-transform: uppercase;
 
+
+
     color: var(--color-text-muted);
+
 }
 
+
+
 .eyebrow-dot {
+
     width: 8px;
+
     height: 8px;
+
+
 
     flex-shrink: 0;
 
+
+
     border-radius: 50%;
+
+
 
     background: var(--color-primary);
 
+
+
     box-shadow:
+
         0 0 14px
+
         rgba(255, 50, 50, 0.7);
+
 }
 
 
+
+
+
 /* =========================================================
+
    03. BUTTONS
+
 ========================================================= */
 
+
+
 .btn {
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
+
 
     gap: 0.8rem;
 
+
+
     min-height: 52px;
 
+
+
     padding:
+
         0.85rem 1.35rem;
 
+
+
     border-radius:
+
         var(--border-radius-md);
+
+
 
     font-weight: 700;
 
+
+
     text-decoration: none;
 
+
+
     transition:
+
         transform var(--transition-normal),
+
         border-color var(--transition-normal),
+
         background var(--transition-normal);
+
 }
+
+
 
 .btn:hover {
+
     transform: translateY(-2px);
+
 }
+
+
 
 .btn-primary {
+
     color: #fff;
 
+
+
     background:
+
         var(--color-primary);
+
 }
+
+
 
 .btn-primary:hover {
+
     background:
+
         var(--color-primary-hover);
+
 }
+
+
 
 .btn-secondary {
+
     color:
+
         var(--color-text);
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     background:
+
         rgba(255, 255, 255, 0.02);
+
 }
+
+
 
 .btn-secondary:hover {
+
     border-color:
+
         var(--color-primary);
+
 }
+
+
 
 .services-hero-actions {
+
     display: flex;
+
     flex-wrap: wrap;
 
+
+
     gap: 1rem;
+
 }
+
+
+
 
 
 /* =========================================================
+
    04. HERO SCANNER
+
 ========================================================= */
 
+
+
 .services-hero-visual {
+
     display: flex;
+
     justify-content: center;
+
 }
 
+
+
 .hunt-card {
+
     width: 100%;
+
     max-width: 520px;
+
+
 
     padding: 1.25rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.09);
+
+
 
     border-radius: 20px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.025);
 
+
+
     box-shadow:
+
         0 30px 80px
+
         rgba(0, 0, 0, 0.3);
 
+
+
     backdrop-filter: blur(14px);
+
 }
 
+
+
 .hunt-card-header,
+
 .hunt-card-footer {
+
     display: flex;
 
+
+
     align-items: center;
+
     justify-content: space-between;
+
+
 
     gap: 1rem;
 
+
+
     font-size: 0.65rem;
+
     font-weight: 700;
+
+
 
     letter-spacing: 0.12em;
 
+
+
     color: var(--color-text-muted);
+
 }
+
+
 
 .scanner-status {
+
     color: #72e0a2;
+
 }
+
+
 
 .scanner-line {
+
     height: 1px;
 
+
+
     margin:
+
         1.1rem 0 1.25rem;
 
+
+
     background:
+
         linear-gradient(
+
             90deg,
+
             transparent,
+
             rgba(255, 50, 50, 0.5),
+
             transparent
+
         );
+
 }
+
+
 
 .funnel-map {
+
     display: flex;
+
     flex-direction: column;
+
 }
 
+
+
 .funnel-stage {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         42px 1fr 30px;
+
+
 
     gap: 1rem;
 
+
+
     align-items: center;
+
+
 
     min-height: 75px;
 
+
+
     padding:
+
         0.8rem 1rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.06);
+
+
 
     border-radius: 12px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.025);
 
+
+
     transition:
+
         border-color var(--transition-normal),
+
         background var(--transition-normal),
+
         transform var(--transition-normal),
+
         box-shadow var(--transition-normal);
+
 }
+
+
 
 .funnel-stage:hover {
+
     transform:
+
         translateX(4px);
 
+
+
     border-color:
+
         rgba(255, 50, 50, 0.22);
+
 }
+
+
 
 .funnel-stage.scanner-active {
+
     border-color:
+
         rgba(255, 50, 50, 0.4);
 
+
+
     background:
+
         rgba(255, 50, 50, 0.045);
 
+
+
     box-shadow:
+
         inset 3px 0 0
+
         var(--color-primary);
+
 }
+
+
 
 .funnel-stage strong {
+
     display: block;
+
+
 
     font-size: 0.78rem;
+
     letter-spacing: 0.08em;
+
 }
 
+
+
 .funnel-stage small {
+
     display: block;
+
+
 
     margin-top: 0.25rem;
 
+
+
     font-size: 0.7rem;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
 
 .stage-number {
+
     font-size: 0.7rem;
+
     font-weight: 700;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .stage-status {
+
     display: grid;
 
+
+
     width: 26px;
+
     height: 26px;
+
+
 
     place-items: center;
 
+
+
     border-radius: 50%;
 
+
+
     font-size: 0.7rem;
+
     font-weight: 800;
 
+
+
     background:
+
         rgba(114, 224, 162, 0.08);
 
+
+
     color: #72e0a2;
+
 }
+
+
 
 .stage-status.warning {
+
     color: #f0c36b;
 
+
+
     background:
+
         rgba(240, 195, 107, 0.08);
+
 }
+
+
 
 .stage-status.danger {
+
     color:
+
         var(--color-primary);
+
+
 
     background:
+
         rgba(255, 50, 50, 0.1);
+
 }
+
+
 
 .leak-stage {
+
     border-color:
+
         rgba(255, 50, 50, 0.35);
 
+
+
     box-shadow:
+
         inset 3px 0 0
+
         var(--color-primary);
+
 }
 
+
+
 .funnel-connector {
+
     width: 1px;
+
     height: 18px;
+
+
 
     margin-left: 28px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.1);
+
 }
 
+
+
 .hunt-card-footer {
+
     margin-top: 1.25rem;
+
+
 
     padding-top: 1rem;
 
+
+
     border-top:
+
         1px solid
+
         rgba(255, 255, 255, 0.06);
+
 }
+
+
 
 .hunt-card-footer span:first-child {
+
     color:
+
         var(--color-primary);
+
 }
 
 
+
+
+
 /* =========================================================
+
    05. SHARED SECTION HEADINGS
+
 ========================================================= */
+
+
 
 .section-heading {
+
     max-width: 720px;
 
+
+
     margin-bottom: 3rem;
+
 }
+
+
 
 .section-heading.centered {
+
     margin-inline: auto;
 
+
+
     text-align: center;
+
 }
+
+
 
 .section-heading h2 {
+
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             2.3rem,
+
             4vw,
+
             4rem
+
         );
 
+
+
     line-height: 1.05;
+
     letter-spacing: -0.04em;
+
 }
+
+
 
 .section-heading h2 span {
+
     color:
+
         var(--color-primary);
+
 }
+
+
 
 .section-heading p {
+
     margin-top: 1.25rem;
 
+
+
     font-size: 1rem;
+
     line-height: 1.8;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
 
+
+
+
 /* =========================================================
+
    06. INTRO
+
 ========================================================= */
+
+
 
 .services-intro {
+
     padding: 7rem 0;
 
+
+
     border-top:
+
         1px solid
+
         var(--color-border);
+
 }
 
 
+
+
+
 /* =========================================================
+
    07. JOURNEY STRIP
+
 ========================================================= */
 
+
+
 .journey-strip {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         1fr auto
+
         1fr auto
+
         1fr auto
+
         1fr;
+
+
 
     align-items: center;
 
+
+
     gap: 1rem;
+
+
 
     padding: 1.5rem;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     border-radius:
+
         var(--border-radius-lg);
 
+
+
     background:
+
         rgba(255, 255, 255, 0.02);
+
 }
 
+
+
 .journey-item span {
+
     display: block;
+
+
 
     margin-bottom: 0.6rem;
 
+
+
     font-size: 0.65rem;
 
+
+
     color:
+
         var(--color-primary);
+
 }
 
+
+
 .journey-item strong {
+
     display: block;
+
+
 
     font-size: 0.9rem;
 
+
+
     letter-spacing: 0.08em;
+
 }
 
+
+
 .journey-item small {
+
     display: block;
+
+
 
     margin-top: 0.35rem;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .journey-arrow {
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
+
 
 
 /* =========================================================
+
    08. SERVICES LIST
+
 ========================================================= */
 
+
+
 .services-list {
+
     position: relative;
+
+
 
     padding: 7rem 0;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.015);
+
 }
 
+
+
 .services-list::before {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: 0;
+
     left: 50%;
 
+
+
     width:
+
         min(900px, 80%);
+
+
 
     height: 1px;
 
+
+
     transform:
+
         translateX(-50%);
 
+
+
     background:
+
         linear-gradient(
+
             90deg,
+
             transparent,
+
             rgba(255, 50, 50, 0.35),
+
             transparent
+
         );
+
 }
 
 
+
+
+
 /* =========================================================
+
    09. SERVICE GRID
+
 ========================================================= */
 
+
+
 .service-grid {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         repeat(3, minmax(0, 1fr));
+
+
 
     gap: 1.25rem;
 
+
+
     align-items: stretch;
+
 }
 
 
+
+
+
 /* =========================================================
+
    10. SERVICE CARD
+
 ========================================================= */
 
+
+
 .service-card {
+
     position: relative;
 
+
+
     display: flex;
+
     flex-direction: column;
 
+
+
     min-width: 0;
-    min-height: 500px;
+
+    min-height: 480px;
+
+
 
     padding: 1.75rem;
 
+
+
     overflow: hidden;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     border-radius:
+
         var(--border-radius-lg);
 
+
+
     background:
+
         linear-gradient(
+
             145deg,
+
             rgba(255, 255, 255, 0.035),
+
             rgba(255, 255, 255, 0.012)
+
         );
 
+
+
     color:
+
         var(--color-text);
+
+
 
     text-decoration: none;
 
+
+
     cursor: pointer;
+
+
 
     isolation: isolate;
 
+
+
     opacity: 0;
 
+
+
     transform:
+
         translateY(24px);
 
+
+
     transition:
+
         opacity 600ms ease,
+
         transform 600ms ease,
+
         border-color 300ms ease,
+
         box-shadow 300ms ease,
+
         background 300ms ease;
+
 }
+
+
 
 .service-card.is-visible {
+
     opacity: 1;
 
+
+
     transform:
+
         translateY(0);
+
 }
 
+
+
 .service-card::before {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: 0;
+
     left: 0;
 
+
+
     width: 100%;
+
     height: 2px;
 
+
+
     background:
+
         linear-gradient(
+
             90deg,
+
             transparent,
+
             var(--color-primary),
+
             transparent
+
         );
+
+
 
     opacity: 0;
 
+
+
     transition:
+
         opacity 300ms ease;
+
 }
 
+
+
 .service-card::after {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: -120px;
+
     right: -120px;
 
+
+
     width: 240px;
+
     height: 240px;
+
+
 
     border-radius: 50%;
 
+
+
     background:
+
         radial-gradient(
+
             circle,
+
             rgba(255, 50, 50, 0.10),
+
             transparent 70%
+
         );
+
+
 
     opacity: 0;
 
+
+
     pointer-events: none;
 
+
+
     transition:
+
         opacity 300ms ease;
+
 }
+
+
 
 .service-card:hover {
+
     border-color:
+
         rgba(255, 50, 50, 0.38);
 
+
+
     background:
+
         linear-gradient(
+
             145deg,
+
             rgba(255, 255, 255, 0.05),
+
             rgba(255, 255, 255, 0.015)
+
         );
 
+
+
     box-shadow:
+
         0 25px 65px
+
         rgba(0, 0, 0, 0.25);
+
 }
+
+
 
 .service-card:hover::before,
+
 .service-card:hover::after {
+
     opacity: 1;
+
 }
+
+
 
 .service-card.is-focused {
+
     border-color:
+
         rgba(255, 50, 50, 0.4);
+
 }
 
+
+
 .service-card.is-pressed {
+
     transform:
+
         scale(0.985);
+
 }
+
+
+
 
 
 /* =========================================================
+
    11. FEATURED SERVICE
+
 ========================================================= */
 
+
+
 .featured-service {
+
     border-color:
+
         rgba(255, 50, 50, 0.28);
+
 }
+
+
 
 .featured-service::before {
+
     opacity: 0.45;
+
 }
 
+
+
 .service-card-badge {
+
     position: absolute;
 
-    top: 1.2rem;
-    right: 1.2rem;
+    top: 1.75rem;
+    right: 5.25rem;
+
+    z-index: 2;
 
     padding:
         0.35rem 0.6rem;
@@ -790,41 +1562,74 @@
 
     font-size: 0.56rem;
     font-weight: 800;
+    line-height: 1;
 
     letter-spacing: 0.1em;
+    text-transform: uppercase;
+
 }
+
 
 
 /* =========================================================
+
    12. SERVICE CARD CONTENT
+
 ========================================================= */
 
+
+
 .service-card-top {
-    display: flex;
 
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
 
-    margin-bottom: 2.2rem;
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) auto;
+
+    grid-template-areas:
+        "number icon"
+        "category icon";
+
+    column-gap: 1rem;
+    row-gap: 0.55rem;
+
+    align-items: start;
+
+    margin-bottom: 2rem;
+
 }
 
-.service-number {
-    font-size: 0.68rem;
-    font-weight: 800;
 
-    letter-spacing: 0.1em;
+
+.service-number {
+
+    grid-area: number;
+
+    display: block;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+
+    letter-spacing: 0.12em;
 
     color:
         var(--color-text-muted);
+
 }
 
+
+
 .service-icon {
+
+    grid-area: icon;
+
     display: grid;
 
     width: 42px;
     height: 42px;
-
-    flex-shrink: 0;
 
     place-items: center;
 
@@ -840,15 +1645,21 @@
     color:
         var(--color-primary);
 
-    font-size: 1rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1;
 
     transition:
         transform 300ms ease,
         border-color 300ms ease,
         background 300ms ease;
+
 }
 
+
+
 .service-card:hover .service-icon {
+
     transform:
         rotate(-4deg);
 
@@ -857,2845 +1668,5684 @@
 
     background:
         rgba(255, 50, 50, 0.06);
+
 }
 
+
+
 .service-category {
+
+    grid-area: category;
+
     display: block;
 
-    margin-bottom: 0.7rem;
+    margin: 0;
 
     font-size: 0.6rem;
     font-weight: 800;
+    line-height: 1.2;
 
     letter-spacing: 0.16em;
-
     text-transform: uppercase;
 
     color:
         var(--color-primary);
+
 }
 
+
+
 .service-card h3 {
+
     max-width: 340px;
+
+
 
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             1.35rem,
+
             2vw,
+
             1.55rem
+
         );
+
+
 
     line-height: 1.15;
 
+
+
     letter-spacing: -0.025em;
+
 }
 
+
+
 .service-card > p {
+
     margin:
+
         1rem 0 1.5rem;
 
+
+
     color:
+
         var(--color-text-muted);
+
+
 
     line-height: 1.7;
 
+
+
     font-size: 0.9rem;
+
 }
 
+
+
 .service-divider {
+
     width: 100%;
+
     height: 1px;
 
-    margin-bottom: 1.4rem;
+
+
+    margin:
+        0.15rem 0 1.4rem;
 
     background:
         var(--color-border);
+
 }
 
+
+
 .service-card h4 {
+
     margin:
+
         0 0 0.9rem;
+
+
 
     font-size: 0.68rem;
 
+
+
     text-transform: uppercase;
+
+
 
     letter-spacing: 0.1em;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .service-card ul {
+
     display: flex;
+
     flex-direction: column;
+
+
 
     gap: 0.65rem;
 
+
+
     margin: 0;
+
     padding: 0;
 
+
+
     list-style: none;
+
 }
 
+
+
 .service-card li {
+
     position: relative;
+
+
 
     padding-left: 1.2rem;
 
+
+
     font-size: 0.8rem;
+
+
 
     line-height: 1.45;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .service-card li::before {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: 0.48em;
+
     left: 0;
 
+
+
     width: 5px;
+
     height: 5px;
+
+
 
     border-radius: 50%;
 
+
+
     background:
+
         var(--color-primary);
 
+
+
     box-shadow:
+
         0 0 8px
+
         rgba(255, 50, 50, 0.45);
+
 }
 
+
+
 .service-link {
+
     display: inline-flex;
 
+
+
     align-items: center;
+
+
 
     gap: 0.6rem;
 
+
+
     margin-top: auto;
+
+
 
     padding-top: 1.75rem;
 
+
+
     color:
+
         var(--color-text);
 
+
+
     font-size: 0.8rem;
+
     font-weight: 700;
 
+
+
     text-decoration: none;
+
 }
+
+
 
 .service-link span {
+
     display: inline-block;
 
+
+
     color:
+
         var(--color-primary);
+
+
 
     transition:
+
         transform 250ms ease;
+
 }
+
+
 
 .service-card:hover .service-link span {
+
     transform:
+
         translateX(5px);
+
 }
+
+
 
 .service-card:focus-visible {
+
     outline:
+
         2px solid
+
         var(--color-primary);
 
+
+
     outline-offset: 4px;
+
 }
+
+
+
 
 
 /* =========================================================
+
    13. LEAK AUDIT
+
 ========================================================= */
 
+
+
 .leak-audit-section {
+
     position: relative;
+
+
 
     padding: 7rem 0;
 
+
+
     overflow: hidden;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.015);
+
 }
 
+
+
 .leak-audit-section::before {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: 0;
+
     left: 50%;
 
+
+
     width:
+
         min(900px, 80%);
+
+
 
     height: 1px;
 
+
+
     transform:
+
         translateX(-50%);
 
+
+
     background:
+
         linear-gradient(
+
             90deg,
+
             transparent,
+
             rgba(255, 50, 50, 0.35),
+
             transparent
+
         );
+
 }
 
+
+
 .leak-audit-section::after {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: 10%;
+
     left: 50%;
 
+
+
     width: 700px;
+
     height: 500px;
 
+
+
     transform:
+
         translateX(-50%);
+
+
 
     pointer-events: none;
 
+
+
     background:
+
         radial-gradient(
+
             circle,
+
             rgba(255, 50, 50, 0.045),
+
             transparent 65%
+
         );
+
 }
+
+
 
 .leak-audit-container {
+
     position: relative;
+
     z-index: 1;
 
+
+
     width:
+
         min(
+
             calc(
+
                 100% -
+
                 (var(--container-padding) * 2)
+
             ),
+
             var(--container-width)
+
         );
 
+
+
     margin-inline: auto;
+
 }
+
+
+
 
 
 /* =========================================================
+
    14. AUDIT HEADER
+
 ========================================================= */
 
+
+
 .leak-audit-header {
+
     max-width: 700px;
 
+
+
     margin-bottom: 3rem;
+
 }
 
+
+
 .leak-audit-header .section-eyebrow {
+
     display: inline-block;
+
+
 
     margin-bottom: 1rem;
 
+
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.7rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.14em;
 
+
+
     text-transform: uppercase;
+
 }
 
+
+
 .leak-audit-header h2 {
+
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             2.3rem,
+
             4vw,
+
             4rem
+
         );
+
+
 
     line-height: 1.05;
 
+
+
     letter-spacing: -0.04em;
+
 }
 
+
+
 .leak-audit-header p {
+
     max-width: 650px;
+
+
 
     margin-top: 1.25rem;
 
+
+
     font-size: 1rem;
+
+
 
     line-height: 1.8;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
 
+
+
+
 /* =========================================================
+
    15. AUDIT CONTENT
+
 ========================================================= */
 
+
+
 .leak-audit-content {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         minmax(0, 1.15fr)
+
         minmax(360px, 0.85fr);
+
+
 
     gap: 4rem;
 
+
+
     align-items: stretch;
+
 }
 
 
+
+
+
 /* =========================================================
+
    16. AUDIT VISUAL
+
 ========================================================= */
 
+
+
 .leak-audit-visual {
+
     position: relative;
+
+
 
     min-height: 380px;
 
+
+
     display: flex;
+
     flex-direction: column;
 
+
+
     justify-content: center;
+
+
 
     padding: 2rem;
 
+
+
     overflow: hidden;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     border-radius:
+
         var(--border-radius-lg);
 
+
+
     background:
+
         linear-gradient(
+
             145deg,
+
             rgba(255, 255, 255, 0.035),
+
             rgba(255, 255, 255, 0.012)
+
         );
+
 }
 
+
+
 .leak-audit-visual::before {
+
     content: "";
 
+
+
     position: absolute;
+
     inset: 0;
+
+
 
     pointer-events: none;
 
+
+
     background-image:
+
         linear-gradient(
+
             rgba(255, 255, 255, 0.025) 1px,
+
             transparent 1px
+
         ),
+
         linear-gradient(
+
             90deg,
+
             rgba(255, 255, 255, 0.025) 1px,
+
             transparent 1px
+
         );
+
+
 
     background-size: 60px 60px;
 
+
+
     mask-image:
+
         linear-gradient(
+
             to bottom,
+
             black,
+
             transparent
+
         );
+
 }
 
+
+
 .leak-audit-visual::after {
+
     content: "";
+
+
 
     position: absolute;
 
+
+
     top: -160px;
+
     right: -120px;
 
+
+
     width: 320px;
+
     height: 320px;
 
+
+
     border-radius: 50%;
+
+
 
     pointer-events: none;
 
+
+
     background:
+
         radial-gradient(
+
             circle,
+
             rgba(255, 50, 50, 0.09),
+
             transparent 70%
+
         );
+
 }
 
+
+
 .audit-visual-label {
+
     position: absolute;
 
+
+
     top: 1.5rem;
+
     left: 1.75rem;
+
+
 
     z-index: 2;
 
+
+
     font-size: 0.62rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.14em;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
+
 
 
 /* =========================================================
+
    17. AUDIT JOURNEY
+
 ========================================================= */
 
+
+
 .audit-journey {
+
     position: relative;
+
     z-index: 2;
 
+
+
     display: flex;
+
     align-items: center;
 
+
+
     width: 100%;
+
 }
 
+
+
 .audit-stage {
+
     position: relative;
 
+
+
     width: 82px;
+
     height: 82px;
+
+
 
     flex-shrink: 0;
 
+
+
     display: flex;
+
+
 
     flex-direction: column;
 
+
+
     align-items: center;
+
     justify-content: center;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.10);
+
+
 
     border-radius: 50%;
 
+
+
     background:
+
         rgba(8, 8, 8, 0.85);
 
+
+
     transition:
+
         transform 300ms ease,
+
         border-color 300ms ease;
+
 }
+
+
 
 .audit-stage:hover {
+
     transform:
+
         translateY(-4px);
 
+
+
     border-color:
+
         rgba(255, 255, 255, 0.22);
+
 }
+
+
 
 .audit-stage-number {
+
     margin-bottom: 0.25rem;
 
+
+
     font-size: 0.62rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.08em;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
 
 .audit-stage-name {
+
     font-size: 0.58rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.08em;
 
+
+
     color:
+
         var(--color-text);
+
 }
 
+
+
 .audit-connector {
+
     position: relative;
 
+
+
     flex: 1;
+
+
 
     height: 1px;
 
+
+
     margin:
+
         0 0.5rem;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.10);
+
 }
+
+
 
 .audit-connector.audit-leak {
+
     background:
+
         repeating-linear-gradient(
+
             90deg,
+
             rgba(255, 50, 50, 0.45) 0,
+
             rgba(255, 50, 50, 0.45) 5px,
+
             transparent 5px,
+
             transparent 10px
+
         );
+
 }
+
+
 
 .audit-stage-leak {
+
     border:
+
         1px dashed
+
         rgba(255, 50, 50, 0.55);
 
+
+
     box-shadow:
+
         inset 0 0 20px
+
         rgba(255, 50, 50, 0.035);
 
+
+
     animation:
+
         auditLeakPulse 3s ease-in-out infinite;
+
 }
+
+
 
 .audit-stage-leak .audit-stage-number,
+
 .audit-stage-leak .audit-stage-name {
+
     color:
+
         var(--color-primary);
+
 }
 
+
+
 .audit-leak-label {
+
     position: absolute;
 
+
+
     top: -1.6rem;
+
     left: 50%;
 
+
+
     transform:
+
         translateX(-50%);
 
+
+
     font-size: 0.55rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.14em;
 
+
+
     color:
+
         var(--color-primary);
+
 }
+
+
 
 @keyframes auditLeakPulse {
 
+
+
     0%,
+
     100% {
+
         transform: scale(1);
 
+
+
         box-shadow:
+
             inset 0 0 20px
+
             rgba(255, 50, 50, 0.035);
+
     }
+
+
 
     50% {
+
         transform: scale(1.045);
 
+
+
         box-shadow:
+
             inset 0 0 25px
+
             rgba(255, 50, 50, 0.08),
+
             0 0 30px
+
             rgba(255, 50, 50, 0.06);
+
     }
+
 }
 
 
+
+
+
 /* =========================================================
+
    18. AUDIT VISUAL FOOTER
+
 ========================================================= */
 
+
+
 .audit-visual-footer {
+
     position: relative;
+
     z-index: 2;
+
+
 
     display: flex;
 
+
+
     justify-content: space-between;
+
+
 
     margin-top: 3rem;
 
+
+
     padding-top: 1rem;
 
+
+
     border-top:
+
         1px solid
+
         rgba(255, 255, 255, 0.06);
 
+
+
     font-size: 0.55rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.12em;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .audit-loss {
+
     color:
+
         var(--color-primary);
+
 }
+
+
+
 
 
 /* =========================================================
+
    19. AUDIT INFORMATION
+
 ========================================================= */
 
+
+
 .leak-audit-info {
+
     display: flex;
+
+
 
     flex-direction: column;
 
+
+
     justify-content: center;
+
 }
 
+
+
 .leak-audit-info-label {
+
     display: inline-block;
+
+
 
     margin-bottom: 1rem;
 
+
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.65rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.14em;
 
+
+
     text-transform: uppercase;
+
 }
 
+
+
 .leak-audit-info h3 {
+
     max-width: 500px;
+
+
 
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             1.8rem,
+
             3vw,
+
             2.8rem
+
         );
+
+
 
     line-height: 1.08;
 
+
+
     letter-spacing: -0.035em;
+
 }
 
+
+
 .leak-audit-info > p {
+
     max-width: 500px;
 
+
+
     margin:
+
         1.25rem 0 1.75rem;
+
+
 
     font-size: 0.92rem;
 
+
+
     line-height: 1.8;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .leak-audit-points {
+
     display: flex;
+
     flex-direction: column;
+
+
 
     gap: 0;
 
+
+
     margin:
+
         0 0 1.75rem;
 
+
+
     padding: 0;
+
+
 
     list-style: none;
 
+
+
     border-top:
+
         1px solid
+
         var(--color-border);
+
 }
 
+
+
 .leak-audit-points li {
+
     display: flex;
 
+
+
     align-items: center;
+
+
 
     gap: 0.9rem;
 
+
+
     padding:
+
         0.85rem 0;
 
+
+
     border-bottom:
+
         1px solid
+
         var(--color-border);
+
+
 
     font-size: 0.78rem;
 
+
+
     color:
+
         var(--color-text);
+
 }
 
+
+
 .leak-audit-points li span {
+
     width: 26px;
+
+
 
     flex-shrink: 0;
 
+
+
     font-size: 0.6rem;
+
     font-weight: 800;
 
+
+
     color:
+
         var(--color-primary);
+
 }
 
+
+
 .leak-audit-button {
+
     display: inline-flex;
 
+
+
     align-items: center;
+
     justify-content: center;
+
+
 
     gap: 0.7rem;
 
+
+
     width: fit-content;
+
+
 
     min-height: 48px;
 
+
+
     padding:
+
         0.75rem 1.25rem;
 
+
+
     border:
+
         1px solid
+
         var(--color-primary);
+
+
 
     border-radius:
+
         var(--border-radius-md);
 
+
+
     background:
+
         var(--color-primary);
+
+
 
     color: #ffffff;
 
+
+
     font-size: 0.8rem;
+
     font-weight: 700;
+
+
 
     text-decoration: none;
 
+
+
     transition:
+
         transform 300ms ease,
+
         background 300ms ease,
+
         border-color 300ms ease;
+
 }
+
+
 
 .leak-audit-button:hover {
+
     transform:
+
         translateY(-2px);
 
+
+
     background:
+
         var(--color-primary-hover);
+
+
 
     border-color:
+
         var(--color-primary-hover);
+
 }
+
+
 
 .leak-audit-button span {
+
     transition:
+
         transform 250ms ease;
+
 }
 
+
+
 .leak-audit-button:hover span {
+
     transform:
+
         translateX(5px);
+
 }
+
+
+
 
 
 /* =========================================================
+
    20. METHOD
+
 ========================================================= */
 
+
+
 .service-process {
+
     padding: 7rem 0;
+
 }
 
+
+
 .method-grid {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         repeat(4, 1fr);
+
+
 
     overflow: hidden;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     border-radius:
+
         var(--border-radius-lg);
+
 }
 
+
+
 .method-card {
+
     min-height: 310px;
+
+
 
     padding: 1.75rem;
 
+
+
     border-right:
+
         1px solid
+
         var(--color-border);
+
+
 
     opacity: 0;
 
+
+
     transform:
+
         translateY(20px);
 
+
+
     transition:
+
         opacity 600ms ease,
+
         transform 600ms ease;
+
 }
+
+
 
 .method-card.is-visible {
+
     opacity: 1;
 
+
+
     transform:
+
         translateY(0);
+
 }
+
+
 
 .method-card:last-child {
+
     border-right: none;
+
 }
 
+
+
 .method-number {
+
     display: block;
+
+
 
     margin-bottom: 2rem;
 
+
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.7rem;
+
     font-weight: 800;
 
+
+
     letter-spacing: 0.1em;
+
 }
 
+
+
 .method-line {
+
     width: 32px;
+
     height: 2px;
+
+
 
     margin-bottom: 1.5rem;
 
+
+
     background:
+
         var(--color-primary);
+
 }
+
+
 
 .method-card h3 {
+
     margin: 0;
 
+
+
     font-size: 1.3rem;
+
 }
 
+
+
 .method-card p {
+
     margin-top: 0.9rem;
+
+
 
     font-size: 0.86rem;
 
+
+
     line-height: 1.75;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
+
 
 
 /* =========================================================
+
    21. FIT
+
 ========================================================= */
 
+
+
 .service-fit {
+
     padding: 7rem 0;
 
+
+
     border-top:
+
         1px solid
+
         var(--color-border);
+
 }
 
+
+
 .fit-grid {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         1fr 1fr;
+
+
 
     gap: 6rem;
 
+
+
     align-items: center;
+
 }
 
+
+
 .fit-content h2 {
+
     max-width: 620px;
+
+
 
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             2.2rem,
+
             4vw,
+
             3.8rem
+
         );
+
+
 
     line-height: 1.05;
 
+
+
     letter-spacing: -0.04em;
+
 }
+
+
 
 .fit-content h2 span {
+
     color:
+
         var(--color-primary);
+
 }
 
+
+
 .fit-content p {
+
     max-width: 620px;
+
+
 
     margin-top: 1.25rem;
 
+
+
     color:
+
         var(--color-text-muted);
 
+
+
     line-height: 1.8;
+
 }
 
+
+
 .fit-list {
+
     display: flex;
+
+
 
     flex-direction: column;
 
+
+
     gap: 0.8rem;
+
 }
 
+
+
 .fit-item {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         38px 1fr;
+
+
 
     gap: 1rem;
 
+
+
     padding: 1.25rem;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 12px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.015);
+
+
 
     opacity: 0;
 
+
+
     transform:
+
         translateY(18px);
 
+
+
     transition:
+
         opacity 600ms ease,
+
         transform 250ms ease,
+
         border-color 250ms ease;
+
 }
+
+
 
 .fit-item.is-visible {
+
     opacity: 1;
 
+
+
     transform:
+
         translateY(0);
+
 }
+
+
 
 .fit-item:hover {
+
     transform:
+
         translateX(4px);
 
+
+
     border-color:
+
         rgba(255, 50, 50, 0.25);
+
 }
 
+
+
 .fit-item > span {
+
     display: grid;
 
+
+
     width: 30px;
+
     height: 30px;
+
+
 
     place-items: center;
 
+
+
     border-radius: 50%;
 
+
+
     background:
+
         rgba(255, 50, 50, 0.08);
 
+
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.75rem;
+
     font-weight: 800;
+
 }
+
+
 
 .fit-item strong {
+
     display: block;
 
+
+
     font-size: 0.88rem;
+
 }
 
+
+
 .fit-item p {
+
     margin:
+
         0.35rem 0 0;
 
+
+
     font-size: 0.78rem;
+
+
 
     line-height: 1.6;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
+
+
+
 
 
 /* =========================================================
+
    22. FINAL CTA
+
 ========================================================= */
 
+
+
 .services-cta {
+
     padding:
+
         3rem 0 7rem;
+
 }
 
+
+
 .services-cta-inner {
+
     position: relative;
+
+
 
     display: flex;
 
+
+
     align-items: center;
+
     justify-content: center;
+
+
 
     min-height: 420px;
 
+
+
     padding: 4rem;
+
+
 
     overflow: hidden;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 50, 50, 0.25);
+
+
 
     border-radius: 24px;
 
+
+
     background:
+
         radial-gradient(
+
             circle at center,
+
             rgba(255, 50, 50, 0.09),
+
             transparent 55%
+
         ),
+
         rgba(255, 255, 255, 0.02);
+
 }
 
+
+
 .services-cta-inner::before {
+
     content: "";
 
+
+
     position: absolute;
+
     inset: 0;
+
+
 
     pointer-events: none;
 
+
+
     background-image:
+
         linear-gradient(
+
             rgba(255, 255, 255, 0.02) 1px,
+
             transparent 1px
+
         ),
+
         linear-gradient(
+
             90deg,
+
             rgba(255, 255, 255, 0.02) 1px,
+
             transparent 1px
+
         );
 
+
+
     background-size: 60px 60px;
+
 }
 
+
+
 .services-cta-content {
+
     position: relative;
+
+
 
     z-index: 2;
 
+
+
     text-align: center;
+
 }
 
+
+
 .services-cta-content h2 {
+
     max-width: 750px;
 
+
+
     margin:
+
         0 auto;
 
+
+
     font-size:
+
         clamp(
+
             2.4rem,
+
             5vw,
+
             4.5rem
+
         );
+
+
 
     line-height: 1;
 
+
+
     letter-spacing: -0.045em;
+
 }
+
+
 
 .services-cta-content p {
+
     margin:
+
         1.25rem 0 2rem;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .services-cta-content .btn {
+
     margin:
+
         0 auto;
+
 }
+
+
+
 
 
 /* =========================================================
+
    23. CTA SCANNER
+
 ========================================================= */
 
+
+
 .cta-scanner {
+
     position: absolute;
+
+
 
     inset: 0;
 
+
+
     pointer-events: none;
 
+
+
     opacity: 0.5;
+
 }
 
+
+
 .cta-scanner span {
+
     position: absolute;
+
+
 
     display: block;
 
+
+
     width: 8px;
+
     height: 8px;
+
+
 
     border-radius: 50%;
 
+
+
     background:
+
         var(--color-primary);
 
+
+
     box-shadow:
+
         0 0 20px
+
         rgba(255, 50, 50, 0.8);
+
 }
+
+
 
 .cta-scanner span:nth-child(1) {
+
     top: 25%;
+
     left: 12%;
+
 }
+
+
 
 .cta-scanner span:nth-child(2) {
+
     top: 65%;
+
     right: 14%;
+
 }
 
+
+
 .cta-scanner span:nth-child(3) {
+
     bottom: 15%;
+
     left: 35%;
+
 }
+
+
+
 
 
 /* =========================================================
+
    24. AUDIT NOTIFICATION
+
 ========================================================= */
 
+
+
 .audit-notification {
+
     position: fixed;
 
+
+
     right: 24px;
+
     bottom: 24px;
 
+
+
     width:
+
         min(
+
             430px,
+
             calc(100vw - 32px)
+
         );
+
+
 
     z-index: 9999;
 
+
+
     opacity: 0;
+
     visibility: hidden;
 
+
+
     transform:
+
         translateY(25px);
+
+
 
     pointer-events: none;
 
+
+
     transition:
+
         opacity 350ms ease,
+
         transform 350ms cubic-bezier(.22, 1, .36, 1),
+
         visibility 350ms ease;
+
 }
+
+
 
 .audit-notification.is-visible {
+
     opacity: 1;
+
     visibility: visible;
 
+
+
     transform:
+
         translateY(0);
 
+
+
     pointer-events: auto;
+
 }
 
+
+
 .audit-notification-content {
+
     position: relative;
+
+
 
     display: flex;
 
+
+
     align-items: center;
+
+
 
     gap: 14px;
 
+
+
     padding:
+
         17px 45px 17px 17px;
 
+
+
     background:
+
         var(--color-surface);
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 12px;
 
+
+
     box-shadow:
+
         0 20px 60px
+
         rgba(0, 0, 0, 0.22);
 
+
+
     backdrop-filter: blur(14px);
+
     -webkit-backdrop-filter: blur(14px);
+
 }
 
+
+
 .audit-notification-icon {
+
     flex: 0 0 36px;
 
+
+
     width: 36px;
+
     height: 36px;
+
+
 
     display: flex;
 
+
+
     align-items: center;
+
     justify-content: center;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 50%;
 
+
+
     font-size: 13px;
+
     font-weight: 700;
 
+
+
     color:
+
         var(--color-text);
+
 }
+
+
 
 .audit-notification-text {
+
     flex: 1;
 
+
+
     min-width: 0;
+
 }
 
+
+
 .audit-notification-label {
+
     display: block;
+
+
 
     margin-bottom: 5px;
 
+
+
     font-size: 9px;
+
     font-weight: 700;
+
+
 
     letter-spacing: 0.14em;
 
+
+
     color:
+
         var(--color-muted);
+
 }
 
+
+
 .audit-notification-text p {
+
     margin: 0;
+
+
 
     font-size: 13px;
 
+
+
     line-height: 1.45;
 
+
+
     color:
+
         var(--color-text);
+
 }
 
+
+
 .audit-notification-action {
+
     flex-shrink: 0;
+
+
 
     display: inline-flex;
 
+
+
     align-items: center;
+
+
 
     gap: 7px;
 
+
+
     padding:
+
         9px 12px;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 6px;
 
+
+
     background: transparent;
 
+
+
     color:
+
         var(--color-text);
+
+
 
     font: inherit;
 
+
+
     font-size: 11px;
+
     font-weight: 700;
+
+
 
     cursor: pointer;
 
+
+
     transition:
+
         background 250ms ease,
+
         border-color 250ms ease,
+
         transform 250ms ease;
+
 }
+
+
 
 .audit-notification-action span {
+
     transition:
+
         transform 250ms ease;
+
 }
+
+
 
 .audit-notification-action:hover {
+
     background:
+
         var(--color-text);
+
+
 
     border-color:
+
         var(--color-text);
 
+
+
     color:
+
         var(--color-bg);
 
+
+
     transform:
+
         translateY(-1px);
+
 }
+
+
 
 .audit-notification-action:hover span {
+
     transform:
+
         translateX(3px);
+
 }
 
+
+
 .audit-notification-close {
+
     position: absolute;
 
+
+
     top: 7px;
+
     right: 8px;
 
+
+
     width: 24px;
+
     height: 24px;
+
+
 
     display: flex;
 
+
+
     align-items: center;
+
     justify-content: center;
 
+
+
     padding: 0;
+
+
 
     border: 0;
 
+
+
     background: transparent;
 
+
+
     color:
+
         var(--color-muted);
 
+
+
     font-size: 17px;
+
     line-height: 1;
+
+
 
     cursor: pointer;
 
+
+
     transition:
+
         color 200ms ease,
+
         transform 200ms ease;
+
 }
+
+
 
 .audit-notification-close:hover {
+
     color:
+
         var(--color-text);
 
+
+
     transform:
+
         rotate(90deg);
+
 }
+
+
+
 
 
 /* =========================================================
+
    25. SERVICE MODAL
+
 ========================================================= */
 
+
+
 .service-modal {
+
     position: fixed;
+
+
 
     inset: 0;
 
+
+
     z-index: 10000;
+
+
 
     display: flex;
 
+
+
     align-items: center;
+
     justify-content: center;
+
+
 
     padding: 2rem;
 
+
+
     background:
+
         rgba(0, 0, 0, 0.82);
 
+
+
     backdrop-filter: blur(12px);
+
     -webkit-backdrop-filter: blur(12px);
 
+
+
     overflow-y: auto;
+
 }
+
+
 
 .service-modal[hidden] {
+
     display: none;
+
 }
 
+
+
 .service-modal-content {
+
     position: relative;
 
+
+
     width:
+
         min(980px, 100%);
 
+
+
     max-height:
+
         calc(100vh - 4rem);
 
+
+
     overflow-y: auto;
+
+
 
     padding: 3rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.10);
+
+
 
     border-radius: 20px;
 
+
+
     background:
+
         linear-gradient(
+
             145deg,
+
             rgba(18, 18, 18, 0.98),
+
             rgba(8, 8, 8, 0.98)
+
         );
 
+
+
     box-shadow:
+
         0 40px 120px
+
         rgba(0, 0, 0, 0.6);
+
+
 
     scrollbar-width: thin;
 
+
+
     scrollbar-color:
+
         rgba(255, 50, 50, 0.35)
+
         transparent;
+
 }
+
+
 
 .service-modal-content::-webkit-scrollbar {
+
     width: 7px;
+
 }
+
+
 
 .service-modal-content::-webkit-scrollbar-track {
+
     background: transparent;
+
 }
+
+
 
 .service-modal-content::-webkit-scrollbar-thumb {
+
     border-radius: 10px;
 
+
+
     background:
+
         rgba(255, 50, 50, 0.35);
+
 }
+
+
+
 
 
 /* =========================================================
+
    26. MODAL CLOSE
+
 ========================================================= */
 
+
+
 .service-modal-close {
+
     position: sticky;
+
+
 
     top: 0;
 
+
+
     z-index: 10;
+
+
 
     float: right;
 
+
+
     width: 42px;
+
     height: 42px;
 
+
+
     display: grid;
+
+
 
     place-items: center;
 
+
+
     margin:
+
         -0.75rem
+
         -0.75rem
+
         1rem
+
         1rem;
+
+
 
     padding: 0;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.10);
+
+
 
     border-radius: 50%;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.035);
 
+
+
     color:
+
         var(--color-text);
+
+
 
     font-size: 1.6rem;
 
+
+
     line-height: 1;
+
+
 
     cursor: pointer;
 
+
+
     transition:
+
         background 200ms ease,
+
         border-color 200ms ease,
+
         color 200ms ease,
+
         transform 200ms ease;
+
 }
+
+
 
 .service-modal-close:hover {
+
     border-color:
+
         rgba(255, 50, 50, 0.4);
 
+
+
     background:
+
         rgba(255, 50, 50, 0.08);
 
+
+
     color:
+
         var(--color-primary);
+
+
 
     transform:
+
         rotate(90deg);
+
 }
+
+
 
 .service-modal-close:focus-visible {
+
     outline:
+
         2px solid
+
         var(--color-primary);
 
+
+
     outline-offset: 3px;
+
 }
+
+
+
 
 
 /* =========================================================
+
    27. MODAL HEADER
+
 ========================================================= */
 
+
+
 .service-modal .case-modal-header {
+
     max-width: 760px;
 
+
+
     margin-bottom: 2.5rem;
+
 }
 
+
+
 .service-modal .case-modal-header h2 {
+
     margin: 0;
 
+
+
     font-size:
+
         clamp(
+
             2.3rem,
+
             5vw,
+
             4.2rem
+
         );
+
+
 
     line-height: 1;
 
+
+
     letter-spacing: -0.045em;
+
 }
 
+
+
 .service-modal .case-modal-header > p {
+
     max-width: 700px;
+
+
 
     margin-top: 1.25rem;
 
+
+
     font-size: 1rem;
+
+
 
     line-height: 1.8;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
 
+
+
+
 /* =========================================================
+
    28. MODAL META
+
 ========================================================= */
 
+
+
 .service-modal .modal-file-meta {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         repeat(3, 1fr);
+
+
 
     gap: 1px;
 
+
+
     margin-bottom: 4rem;
+
+
 
     overflow: hidden;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 14px;
 
+
+
     background:
+
         var(--color-border);
+
 }
+
+
 
 .service-modal .modal-highlight {
+
     padding: 1.25rem;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.025);
+
 }
 
+
+
 .service-modal .modal-highlight > span {
+
     display: block;
+
+
 
     margin-bottom: 0.65rem;
 
+
+
     font-size: 0.58rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.13em;
 
+
+
     text-transform: uppercase;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .service-modal .modal-highlight strong {
+
     display: block;
 
+
+
     font-size: 0.82rem;
+
+
 
     line-height: 1.45;
 
+
+
     color:
+
         var(--color-text);
+
 }
 
 
+
+
+
 /* =========================================================
+
    29. MODAL SECTIONS
+
 ========================================================= */
 
+
+
 .service-modal .modal-section {
+
     padding:
+
         0 0 3.5rem;
+
+
 
     margin-bottom: 3.5rem;
 
+
+
     border-bottom:
+
         1px solid
+
         var(--color-border);
+
 }
+
+
 
 .service-modal .modal-section:last-child {
+
     margin-bottom: 0;
 
+
+
     border-bottom: none;
+
 }
 
+
+
 .service-modal .modal-section h3 {
+
     max-width: 720px;
 
+
+
     margin:
+
         0 0 1.25rem;
 
+
+
     font-size:
+
         clamp(
+
             1.7rem,
+
             3vw,
+
             2.6rem
+
         );
+
+
 
     line-height: 1.08;
 
+
+
     letter-spacing: -0.035em;
+
 }
 
+
+
 .service-modal .modal-section > p {
+
     max-width: 760px;
+
+
 
     margin-top: 1rem;
 
+
+
     font-size: 0.92rem;
+
+
 
     line-height: 1.85;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .service-modal .modal-section > .eyebrow {
+
     margin-bottom: 1rem;
+
 }
+
+
+
 
 
 /* =========================================================
+
    30. MODAL QUOTE
+
 ========================================================= */
 
+
+
 .service-modal .modal-quote {
+
     max-width: 780px;
 
+
+
     padding:
+
         1.5rem 1.75rem;
 
+
+
     border-left:
+
         3px solid
+
         var(--color-primary);
 
+
+
     background:
+
         rgba(255, 50, 50, 0.045);
 
+
+
     color:
+
         var(--color-text);
 
+
+
     font-size:
+
         clamp(
+
             1.15rem,
+
             2.2vw,
+
             1.55rem
+
         );
+
+
 
     line-height: 1.5;
 
+
+
     letter-spacing: -0.015em;
+
 }
+
+
+
 
 
 /* =========================================================
+
    31. MODAL GRID + JOURNEY
+
 ========================================================= */
 
+
+
 .service-modal .modal-grid {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         repeat(2, minmax(0, 1fr));
+
+
 
     gap: 1rem;
 
+
+
     margin-top: 1.5rem;
+
 }
+
+
 
 .service-modal .modal-grid .modal-highlight {
+
     border:
+
         1px solid
+
         var(--color-border);
 
+
+
     border-radius: 12px;
+
 }
 
+
+
 .service-modal .journey {
+
     display: flex;
+
+
 
     flex-wrap: wrap;
 
+
+
     align-items: center;
+
+
 
     gap: 0.55rem;
 
+
+
     margin-top: 0.75rem;
+
 }
 
+
+
 .service-modal .journey-step {
+
     padding:
+
         0.45rem 0.65rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 255, 255, 0.09);
+
+
 
     border-radius: 6px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.025);
 
+
+
     font-size: 0.65rem;
+
     font-weight: 700;
+
+
 
     letter-spacing: 0.05em;
 
+
+
     color:
+
         var(--color-text);
+
 }
+
+
 
 .service-modal .journey-arrow {
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.8rem;
+
 }
+
+
+
 
 
 /* =========================================================
+
    32. MODAL SERVICE AREAS
+
 ========================================================= */
 
+
+
 .service-modal .leak-list {
+
     display: flex;
+
+
 
     flex-direction: column;
 
+
+
     gap: 1rem;
 
+
+
     margin-top: 1.5rem;
+
 }
 
+
+
 .service-modal .leak-item {
+
     padding: 1.4rem;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 12px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.018);
+
 }
 
+
+
 .service-modal .leak-item-header {
+
     display: flex;
 
+
+
     align-items: flex-start;
+
     justify-content: space-between;
+
+
 
     gap: 1rem;
 
+
+
     margin-bottom: 1.4rem;
+
 }
 
+
+
 .service-modal .leak-item-header > div {
+
     display: flex;
+
+
 
     align-items: center;
 
+
+
     gap: 0.75rem;
+
 }
+
+
 
 .service-modal .leak-number {
+
     font-size: 0.62rem;
+
     font-weight: 800;
 
+
+
     color:
+
         var(--color-primary);
+
 }
+
+
 
 .service-modal .leak-item h4 {
+
     margin: 0;
 
+
+
     font-size: 1rem;
+
 }
 
+
+
 .service-modal .leak-severity {
+
     flex-shrink: 0;
 
+
+
     padding:
+
         0.35rem 0.55rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 50, 50, 0.16);
+
+
 
     border-radius: 5px;
 
+
+
     color:
+
         var(--color-primary);
 
+
+
     font-size: 0.54rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.1em;
 
+
+
     text-transform: uppercase;
+
 }
+
+
 
 .service-modal .leak-detail {
+
     padding:
+
         0.85rem 0;
 
+
+
     border-top:
+
         1px solid
+
         rgba(255, 255, 255, 0.055);
+
 }
 
+
+
 .service-modal .leak-detail-label {
+
     display: block;
+
+
 
     margin-bottom: 0.4rem;
 
+
+
     font-size: 0.57rem;
+
     font-weight: 800;
+
+
 
     letter-spacing: 0.1em;
 
+
+
     text-transform: uppercase;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
+
+
 .service-modal .leak-detail p {
+
     margin: 0;
+
+
 
     font-size: 0.8rem;
 
+
+
     line-height: 1.7;
 
+
+
     color:
+
         var(--color-text);
+
 }
 
 
+
+
+
 /* =========================================================
+
    33. MODAL PROCESS
+
 ========================================================= */
 
+
+
 .service-modal-process {
+
     display: flex;
+
+
 
     flex-direction: column;
 
+
+
     margin-top: 1.5rem;
 
+
+
     border-top:
+
         1px solid
+
         var(--color-border);
+
 }
 
+
+
 .service-process-step {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         45px 1fr;
+
+
 
     gap: 1rem;
 
+
+
     padding:
+
         1.2rem 0;
 
+
+
     border-bottom:
+
         1px solid
+
         var(--color-border);
+
 }
+
+
 
 .service-process-step > span {
+
     font-size: 0.62rem;
+
     font-weight: 800;
 
+
+
     color:
+
         var(--color-primary);
+
 }
+
+
 
 .service-process-step strong {
+
     display: block;
 
+
+
     font-size: 0.9rem;
+
 }
 
+
+
 .service-process-step p {
+
     margin:
+
         0.4rem 0 0;
 
+
+
     font-size: 0.78rem;
+
+
 
     line-height: 1.7;
 
+
+
     color:
+
         var(--color-text-muted);
+
 }
 
 
+
+
+
 /* =========================================================
+
    34. MODAL DELIVERABLES
+
 ========================================================= */
 
+
+
 .service-modal-list {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         repeat(2, minmax(0, 1fr));
+
+
 
     gap: 0.75rem;
 
+
+
     margin-top: 1.5rem;
+
 }
 
+
+
 .service-modal-list-item {
+
     display: grid;
 
+
+
     grid-template-columns:
+
         34px 1fr;
+
+
 
     gap: 0.8rem;
 
+
+
     align-items: center;
+
+
 
     min-height: 64px;
 
+
+
     padding: 0.85rem;
 
+
+
     border:
+
         1px solid
+
         var(--color-border);
+
+
 
     border-radius: 10px;
 
+
+
     background:
+
         rgba(255, 255, 255, 0.018);
+
 }
+
+
 
 .service-modal-list-item > span {
+
     font-size: 0.6rem;
+
     font-weight: 800;
 
+
+
     color:
+
         var(--color-primary);
+
 }
+
+
 
 .service-modal-list-item strong {
+
     font-size: 0.78rem;
 
+
+
     line-height: 1.4;
+
 }
+
+
+
 
 
 /* =========================================================
+
    35. MODAL CONCLUSION
+
 ========================================================= */
 
+
+
 .service-modal .modal-conclusion {
+
     padding: 2rem;
 
+
+
     border:
+
         1px solid
+
         rgba(255, 50, 50, 0.22);
+
+
 
     border-radius: 14px;
 
+
+
     background:
+
         radial-gradient(
+
             circle at top right,
+
             rgba(255, 50, 50, 0.07),
+
             transparent 55%
+
         ),
+
         rgba(255, 255, 255, 0.018);
+
 }
 
+
+
 .service-modal .modal-conclusion h3 {
+
     margin-top: 0.5rem;
+
 }
+
+
+
 
 
 /* =========================================================
+
    36. DESKTOP / TABLET
+
 ========================================================= */
+
+
 
 @media (max-width: 1100px) {
 
+
+
     .services-hero-grid {
+
         grid-template-columns: 1fr;
 
+
+
         gap: 4rem;
+
     }
+
+
 
     .services-hero-content {
+
         max-width: 850px;
+
     }
+
+
 
     .services-hero-visual {
+
         justify-content: flex-start;
+
     }
+
+
 
     .service-grid {
+
         grid-template-columns:
+
             repeat(2, minmax(0, 1fr));
+
     }
+
+
 
     .method-grid {
+
         grid-template-columns:
+
             repeat(2, 1fr);
+
     }
+
+
 
     .method-card:nth-child(2) {
+
         border-right: none;
+
     }
+
+
 
     .method-card:nth-child(-n + 2) {
+
         border-bottom:
+
             1px solid
+
             var(--color-border);
+
     }
+
+
 
     .leak-audit-content {
+
         grid-template-columns: 1fr;
 
+
+
         gap: 3rem;
+
     }
+
+
 
     .leak-audit-info {
+
         max-width: 700px;
+
     }
 
+
+
     .fit-grid {
+
         gap: 4rem;
+
     }
+
+
 
 }
 
 
+
+
+
 /* =========================================================
+
    37. TABLET
+
 ========================================================= */
+
+
 
 @media (max-width: 800px) {
 
+
+
     .services-hero {
+
         padding:
+
             6rem 0 5rem;
+
     }
+
+
 
     .services-intro,
+
     .services-list,
+
     .service-process,
+
     .service-fit {
+
         padding:
+
             5rem 0;
+
     }
+
+
 
     .journey-strip {
+
         grid-template-columns:
+
             1fr 1fr;
+
     }
+
+
 
     .journey-arrow {
+
         display: none;
+
     }
+
+
 
     .fit-grid {
+
         grid-template-columns: 1fr;
 
+
+
         gap: 3rem;
+
     }
+
+
 
     .service-card {
-        min-height: 470px;
+
+        min-height: 460px;
+
     }
+
+
 
     .leak-audit-section {
+
         padding:
+
             5rem 0;
+
     }
 
+
+
     .leak-audit-visual {
+
         min-height: 340px;
+
     }
+
+
 
 }
 
 
+
+
+
 /* =========================================================
+
    38. MOBILE
+
 ========================================================= */
+
+
 
 @media (max-width: 600px) {
 
+
+
     .services-hero {
+
         padding:
+
             5rem 0 4rem;
+
     }
+
+
 
     .services-hero h1 {
+
         font-size:
+
             clamp(
+
                 2.7rem,
+
                 13vw,
+
                 4rem
+
             );
+
     }
+
+
 
     .services-hero-description {
+
         font-size: 0.95rem;
+
     }
+
+
 
     .services-hero-actions {
+
         flex-direction: column;
 
+
+
         align-items: stretch;
+
     }
+
+
 
     .btn {
+
         width: 100%;
+
     }
+
+
 
     .hunt-card {
+
         padding: 1rem;
+
     }
 
+
+
     .funnel-stage {
+
         grid-template-columns:
+
             30px 1fr 26px;
+
+
 
         gap: 0.7rem;
 
+
+
         min-height: 68px;
 
+
+
         padding:
+
             0.7rem;
+
     }
+
+
 
     .funnel-stage strong {
+
         font-size: 0.72rem;
+
     }
+
+
 
     .funnel-stage small {
+
         font-size: 0.64rem;
+
     }
+
+
 
     .service-grid {
+
         grid-template-columns: 1fr;
+
+
 
         gap: 1rem;
+
     }
+
+
 
     .service-card {
+
         min-height: auto;
+
+
 
         padding: 1.4rem;
+
     }
+
+
 
     .service-card-top {
+
         margin-bottom: 1.75rem;
+
     }
+
+
+
+    .service-card-badge {
+
+        top: 1.4rem;
+        right: 4.75rem;
+
+    }
+
+
 
     .service-card h3 {
+
         font-size: 1.35rem;
+
     }
+
+
 
     .service-card > p {
+
         font-size: 0.88rem;
+
     }
+
+
 
     .method-grid {
+
         grid-template-columns: 1fr;
+
     }
 
+
+
     .method-card {
+
         min-height: auto;
+
+
 
         border-right: none;
 
+
+
         border-bottom:
+
             1px solid
+
             var(--color-border);
+
     }
+
+
 
     .method-card:last-child {
+
         border-bottom: none;
+
     }
+
+
 
     .fit-item {
+
         grid-template-columns:
+
             30px 1fr;
+
     }
+
+
 
     .services-cta {
+
         padding:
+
             2rem 0 5rem;
+
     }
+
+
 
     .services-cta-inner {
+
         min-height: 360px;
 
+
+
         padding:
+
             2rem 1.25rem;
 
+
+
         border-radius: 18px;
+
     }
+
+
 
     .leak-audit-section {
+
         padding:
+
             5rem 0;
+
     }
+
+
 
     .leak-audit-container {
+
         width:
+
             calc(
+
                 100% -
+
                 (var(--container-padding) * 2)
+
             );
+
     }
+
+
 
     .leak-audit-header h2 {
+
         font-size: 2.3rem;
+
     }
+
+
 
     .leak-audit-header p {
+
         font-size: 0.92rem;
+
     }
 
+
+
     .leak-audit-visual {
+
         min-height: 300px;
+
+
 
         padding: 1.25rem;
 
+
+
         border-radius:
+
             var(--border-radius-md);
+
     }
+
+
 
     .audit-visual-label {
+
         top: 1.25rem;
+
         left: 1.25rem;
+
     }
+
+
 
     .audit-journey {
+
         transform:
+
             scale(0.72);
 
+
+
         transform-origin:
+
             center;
+
     }
+
+
 
     .audit-visual-footer {
+
         margin-top: 1.5rem;
 
+
+
         font-size: 0.48rem;
+
     }
+
+
 
     .leak-audit-info h3 {
+
         font-size: 1.8rem;
+
     }
+
+
 
     .leak-audit-button {
+
         width: 100%;
+
     }
+
+
 
     .audit-notification {
+
         right: 12px;
+
         bottom: 12px;
+
         left: 12px;
 
+
+
         width: auto;
+
     }
 
+
+
     .audit-notification-content {
+
         display: grid;
 
+
+
         grid-template-columns:
+
             34px 1fr;
+
+
 
         gap: 12px;
 
+
+
         padding: 17px;
+
+
 
         padding-right: 38px;
 
+
+
         border-radius: 12px;
+
     }
 
+
+
     .audit-notification-icon {
+
         width: 34px;
+
         height: 34px;
+
+
 
         flex: none;
 
+
+
         grid-column: 1;
+
         grid-row: 1;
+
+
 
         margin-top: 1px;
+
     }
+
+
 
     .audit-notification-text {
+
         grid-column: 2;
+
         grid-row: 1;
 
+
+
         min-width: 0;
+
     }
+
+
 
     .audit-notification-label {
+
         font-size: 8px;
 
+
+
         margin-bottom: 5px;
+
     }
+
+
 
     .audit-notification-text p {
+
         font-size: 12px;
 
+
+
         line-height: 1.5;
+
     }
 
+
+
     .audit-notification-action {
+
         grid-column: 1 / -1;
+
         grid-row: 2;
+
+
 
         width: 100%;
 
+
+
         justify-content: center;
 
+
+
         padding:
+
             11px 14px;
+
+
 
         margin-top: 3px;
 
+
+
         font-size: 11px;
+
     }
 
+
+
     .audit-notification-close {
+
         top: 7px;
+
         right: 8px;
+
     }
+
+
 
 }
 
 
+
+
+
 /* =========================================================
+
    39. SMALL MOBILE
+
 ========================================================= */
+
+
 
 @media (max-width: 420px) {
 
+
+
     .services-hero {
+
         padding:
+
             4.25rem 0 3.5rem;
+
     }
+
+
 
     .services-hero h1 {
+
         font-size:
+
             2.55rem;
 
+
+
         letter-spacing:
+
             -0.05em;
+
     }
+
+
 
     .services-hero-description {
+
         margin:
+
             1.5rem 0 1.75rem;
 
+
+
         font-size:
+
             0.9rem;
 
+
+
         line-height:
+
             1.7;
+
     }
+
+
 
     .hunt-card {
+
         padding:
+
             0.8rem;
+
     }
+
+
 
     .hunt-card-header,
+
     .hunt-card-footer {
+
         font-size:
+
             0.56rem;
+
     }
+
+
 
     .funnel-stage {
+
         grid-template-columns:
+
             24px 1fr 24px;
 
+
+
         gap:
+
             0.55rem;
 
+
+
         min-height:
+
             62px;
 
+
+
         padding:
+
             0.6rem;
+
     }
+
+
 
     .funnel-stage strong {
+
         font-size:
+
             0.68rem;
+
     }
+
+
 
     .funnel-stage small {
+
         font-size:
+
             0.58rem;
+
     }
+
+
 
     .stage-status {
+
         width:
+
             23px;
+
+
 
         height:
+
             23px;
 
+
+
         font-size:
+
             0.62rem;
+
     }
+
+
 
     .journey-strip {
+
         grid-template-columns:
+
             1fr;
 
+
+
         gap:
+
             1.25rem;
 
+
+
         padding:
+
             1.25rem;
+
     }
+
+
 
     .service-card {
+
         padding:
+
             1.2rem;
+
     }
+
+
 
     .service-card h3 {
+
         font-size:
+
             1.25rem;
+
     }
+
+
 
     .service-card > p {
+
         font-size:
+
             0.84rem;
+
     }
+
+
 
     .service-card li {
+
         font-size:
+
             0.76rem;
+
     }
+
+
 
     .services-cta-inner {
+
         min-height:
+
             330px;
 
+
+
         padding:
+
             1.5rem 1rem;
+
     }
+
+
 
     .services-cta-content h2 {
+
         font-size:
+
             2.25rem;
+
     }
+
+
 
     .leak-audit-visual {
+
         min-height:
+
             270px;
+
     }
+
+
 
     .audit-journey {
+
         transform:
+
             scale(0.62);
+
     }
 
+
+
     .audit-visual-footer {
+
         font-size:
+
             0.42rem;
+
     }
+
+
 
 }
 
 
+
+
+
 /* =========================================================
+
    40. MODAL RESPONSIVE
+
 ========================================================= */
+
+
 
 @media (max-width: 700px) {
 
+
+
     .service-modal {
+
         align-items: flex-start;
 
+
+
         padding:
+
             0.75rem;
+
     }
+
+
 
     .service-modal-content {
+
         max-height:
+
             calc(100vh - 1.5rem);
 
+
+
         padding:
+
             1.5rem;
 
+
+
         border-radius:
+
             16px;
+
     }
+
+
 
     .service-modal .modal-file-meta {
+
         grid-template-columns:
+
             1fr;
+
     }
+
+
 
     .service-modal .modal-grid,
+
     .service-modal-list {
+
         grid-template-columns:
+
             1fr;
+
     }
+
+
 
     .service-modal .case-modal-header h2 {
+
         font-size:
+
             2.2rem;
+
     }
+
+
 
     .service-modal .modal-section {
+
         padding-bottom:
+
             2.5rem;
+
+
 
         margin-bottom:
+
             2.5rem;
+
     }
+
+
 
     .service-modal .leak-item-header {
+
         flex-direction:
+
             column;
+
     }
+
+
 
     .service-modal .leak-item-header > div {
+
         align-items:
+
             flex-start;
+
     }
+
+
 
     .service-modal .journey {
+
         align-items:
+
             flex-start;
 
+
+
         flex-direction:
+
             column;
+
     }
+
+
 
     .service-modal .journey-arrow {
+
         transform:
+
             rotate(90deg);
+
     }
 
+
+
 }
+
+
+
 
 
 @media (max-width: 420px) {
 
+
+
     .service-modal {
+
         padding:
+
             0.5rem;
+
     }
+
+
 
     .service-modal-content {
+
         max-height:
+
             calc(100vh - 1rem);
 
+
+
         padding:
+
             1.15rem;
+
+
 
         border-radius:
+
             14px;
+
     }
+
+
 
     .service-modal-close {
+
         width:
+
             38px;
+
+
 
         height:
+
             38px;
 
+
+
         font-size:
+
             1.4rem;
+
     }
+
+
 
     .service-modal .case-modal-header {
+
         margin-bottom:
+
             2rem;
+
     }
+
+
 
     .service-modal .case-modal-header h2 {
+
         font-size:
+
             1.9rem;
+
     }
+
+
 
     .service-modal .case-modal-header > p {
+
         font-size:
+
             0.88rem;
 
+
+
         line-height:
+
             1.7;
+
     }
+
+
 
     .service-modal .modal-section h3 {
+
         font-size:
+
             1.55rem;
+
     }
+
+
 
     .service-modal .modal-quote {
+
         padding:
+
             1.15rem;
 
+
+
         font-size:
+
             1rem;
+
     }
+
+
 
     .service-modal .leak-item {
+
         padding:
+
             1.1rem;
+
     }
+
+
 
     .service-modal .leak-item h4 {
+
         font-size:
+
             0.9rem;
+
     }
+
+
 
     .service-modal .leak-detail p {
+
         font-size:
+
             0.76rem;
+
     }
 
+
+
     .service-modal .modal-conclusion {
+
         padding:
+
             1.25rem;
+
     }
+
+
 
 }
 
 
+
+
+
 /* =========================================================
+
    41. REDUCED MOTION
+
 ========================================================= */
+
+
 
 @media (prefers-reduced-motion: reduce) {
 
+
+
     .service-card,
+
     .method-card,
+
     .fit-item {
+
         opacity: 1;
+
+
 
         transform: none;
 
+
+
         transition:
+
             border-color 200ms ease,
+
             background 200ms ease;
+
     }
+
+
 
     .audit-stage-leak {
+
         animation: none;
+
     }
+
+
 
     .funnel-stage {
+
         transition: none;
+
     }
+
+
 
     .btn,
+
     .service-icon,
+
     .service-link span,
+
     .fit-item,
+
     .service-modal-close {
+
         transition: none;
+
     }
 
+
+
 }
+
+
 
 /* =========================================================
+
    SERVICE PREVIEW MODAL
+
 ========================================================= */
+
 .service-preview-problem h3 {
+
     max-width: 760px;
+
 }
+
+
 
 .service-preview-grid {
+
     display: grid;
+
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 0.8rem;
+
     margin-top: 1.4rem;
+
 }
+
+
 
 .service-preview-item {
+
     display: grid;
+
     grid-template-columns: 34px 1fr;
+
     gap: 0.85rem;
+
     padding: 1rem;
+
     border: 1px solid var(--color-border);
+
     border-radius: 12px;
+
     background: rgba(255, 255, 255, 0.018);
+
 }
+
+
 
 .service-preview-item > span {
+
     color: var(--color-primary);
+
     font-size: 0.65rem;
+
     font-weight: 800;
+
 }
+
+
 
 .service-preview-item strong {
+
     display: block;
+
     margin-bottom: 0.45rem;
+
     color: var(--color-text);
+
 }
+
+
 
 .service-preview-item p {
+
     margin: 0;
+
     color: var(--color-text-secondary);
+
     font-size: 0.82rem;
+
     line-height: 1.65;
+
 }
+
+
 
 .service-preview-cta {
+
     display: flex;
+
     align-items: flex-end;
+
     justify-content: space-between;
+
     gap: 2rem;
+
     padding: 2rem !important;
+
     border: 1px solid rgba(255, 59, 48, 0.22);
+
     border-radius: 14px;
+
     background: radial-gradient(circle at top right, rgba(255, 59, 48, 0.08), transparent 55%), rgba(255,255,255,.018);
+
 }
+
+
 
 .service-modal-page-link {
+
     display: inline-flex;
+
     align-items: center;
+
     gap: .75rem;
+
     flex: 0 0 auto;
+
     padding: .95rem 1.15rem;
+
     border-radius: 8px;
+
     background: var(--color-primary);
+
     color: #fff;
+
     font-weight: 800;
+
     text-decoration: none;
+
 }
+
+
 
 .service-modal-page-link:hover {
+
     background: var(--color-primary-hover);
+
 }
 
+
+
 @media (max-width: 720px) {
+
     .service-preview-grid { grid-template-columns: 1fr; }
+
     .service-preview-cta { align-items: stretch; flex-direction: column; }
+
     .service-modal-page-link { justify-content: space-between; width: 100%; }
+
 }

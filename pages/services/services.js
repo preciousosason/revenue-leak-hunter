@@ -29,6 +29,54 @@ async function loadServices() {
         );
 
 
+    /*
+     * Sort services by their service number.
+     *
+     * Examples:
+     * "01" → 1
+     * "02" → 2
+     * "10" → 10
+     *
+     * Invalid or missing numbers are pushed
+     * to the bottom instead of breaking
+     * the service grid.
+     */
+
+    modules.sort(
+        (a, b) => {
+
+            const numberA =
+                Number.parseInt(
+                    a?.number,
+                    10
+                );
+
+
+            const numberB =
+                Number.parseInt(
+                    b?.number,
+                    10
+                );
+
+
+            const safeA =
+                Number.isFinite(numberA)
+                    ? numberA
+                    : Number.MAX_SAFE_INTEGER;
+
+
+            const safeB =
+                Number.isFinite(numberB)
+                    ? numberB
+                    : Number.MAX_SAFE_INTEGER;
+
+
+            return safeA - safeB;
+
+        }
+    );
+
+
     return modules;
 
 }
@@ -798,7 +846,7 @@ function revealModalText(
                 currentCharacter
             )
                 ? 0
-                : 20;
+                : 5;
 
 
         const timer =
