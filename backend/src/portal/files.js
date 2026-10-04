@@ -128,11 +128,12 @@ export async function handlePortalFileUpload(
                 "application/octet-stream"
             ).toLowerCase();
 
-        if (
-            !ALLOWED_FILE_TYPES.has(
-                contentType
-            )
-        ) {
+       if (
+    !Object.prototype.hasOwnProperty.call(
+        ALLOWED_FILE_TYPES,
+        contentType
+    )
+) {
             return json(
                 {
                     success: false,
