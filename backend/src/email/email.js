@@ -7,7 +7,7 @@ import {
 } from "./templates.js";
 
 const DEFAULT_FROM = "Leakendia <notifications@leakendia.com>";
-const DEFAULT_REPLY_TO = "admin@leakendia.com";
+const DEFAULT_REPLY_TO = "precious@leakendia.com";
 const DEFAULT_PORTAL_URL = "https://leakendia.com/pages/portal/portal.html";
 const DEFAULT_LOGO_URL = "https://leakendia.com/assets/brand/leakendia-email-mark.jpg";
 

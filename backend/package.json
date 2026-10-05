@@ -8,7 +8,8 @@
     "test": "node tests/analytics.test.mjs",
     "analytics:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=analytics-v2.sql",
     "services:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=client-service-interests.sql",
-    "email:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=email-notifications.sql"
+    "email:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=email-notifications.sql",
+    "outreach:setup": "wrangler d1 execute revenue-leak-hunter --remote --file=outreach.sql --config ./wrangler.toml"
   },
   "devDependencies": {
     "wrangler": "4.136.1"

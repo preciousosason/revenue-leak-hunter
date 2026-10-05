@@ -67,6 +67,8 @@ import {
     loadAnalytics
 } from "./views/analytics.js";
 
+import { initOutreach, loadOutreach } from "./views/outreach.js";
+
 
 
 /* =========================================================
@@ -128,7 +130,9 @@ configureNavigation({
 
     loadNotifications,
 
-    loadAnalytics
+    loadAnalytics,
+
+    loadOutreach
 
 });
 
@@ -166,7 +170,9 @@ configureConversation({
 
     loadNotifications,
 
-    loadAnalytics
+    loadAnalytics,
+
+    loadOutreach
 
 });
 
@@ -209,6 +215,8 @@ initReviews();
 initNotifications();
 
 initAnalytics();
+
+initOutreach();
 
 initConversation();
 
