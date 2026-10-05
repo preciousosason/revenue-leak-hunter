@@ -1,6 +1,13 @@
 import { json } from "../utils/response.js";
 import { authenticateAdmin } from "../utils/auth.js";
 import { createId } from "../utils/ids.js";
+import {
+    handleGoogleStatus,
+    handleGoogleConnect,
+    handleGoogleCallback,
+    handleGoogleDisconnect,
+    sendGoogleOutreachEmail
+} from "./google-workspace.js";
 
 const DEFAULT_INTERVALS = [3, 4, 5, 7, 10];
 const STOP_STATUSES = new Set(["replied", "interested", "qualified", "converted", "not_interested", "do_not_contact"]);
@@ -126,15 +133,45 @@ async function patchProspect(request,env,id){const auth=await adminOr401(request
 
 async function dueToday(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const today=dateOnly();const rows=await env.DB.prepare(`SELECT p.*,c.name campaign_name FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date<=?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date<=?)) ORDER BY COALESCE(p.next_followup_date,p.initial_due_date),c.created_at,p.sequence_no`).bind(today,today).all();return json({success:true,date:today,prospects:rows.results||[]});}
 
-async function recordMessage(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const p=await env.DB.prepare(`SELECT p.*,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(clean(data.prospect_id,80)).first();if(!p)return json({success:false,error:"Prospect not found."},404);if(STOP_STATUSES.has(p.status)||p.sequence_complete)return json({success:false,error:"This outreach sequence is stopped or complete."},400);const step=p.last_sent_at===null?0:Number(p.followup_step)+1;if(step>5)return json({success:false,error:"Maximum of five follow-ups reached."},400);const subject=clean(data.subject,300),message=clean(data.message,20000);if(!subject||!message)return json({success:false,error:"Subject and message are required."},400);const now=isoNow();const intervals=parseIntervals(p.followup_intervals);const complete=step===5?1:0;const next=complete?null:addDays(now,intervals[step]);const type=step===0?"initial":`followup_${step}`;
-    await env.DB.prepare(`INSERT INTO outreach_messages (id,campaign_id,prospect_id,sequence_step,type,subject,body,status,created_at,sent_at) VALUES (?,?,?,?,?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,step,type,subject,message,"recorded",now,now).run();
-    await env.DB.prepare(`UPDATE outreach_prospects SET status=CASE WHEN status='scheduled' THEN 'contacted' ELSE status END,last_sent_at=?,followup_step=?,next_followup_date=?,sequence_complete=?,updated_at=? WHERE id=?`).bind(now,step,next,complete,now,p.id).run();
-    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,"message_recorded",type,now).run();return json({success:true,sequence_step:step,next_followup_date:next,sequence_complete:!!complete});}
+async function sendOutreachMessage(request,env){
+    const auth=await adminOr401(request,env);if(auth)return auth;
+    const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);
+    const p=await env.DB.prepare(`SELECT p.*,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(clean(data.prospect_id,80)).first();
+    if(!p)return json({success:false,error:"Prospect not found."},404);
+    if(STOP_STATUSES.has(p.status)||p.sequence_complete)return json({success:false,error:"This outreach sequence is stopped or complete."},400);
+    if(p.email_health!=="mail_ready")return json({success:false,error:"This prospect is not Mail Ready."},400);
+    if(!p.research_ready)return json({success:false,error:"Research must be marked complete before sending."},400);
+    const step=p.last_sent_at===null?0:Number(p.followup_step)+1;
+    if(step>5)return json({success:false,error:"Maximum of five follow-ups reached."},400);
+    const subject=clean(data.subject,300),message=clean(data.message,20000);
+    if(!subject||!message)return json({success:false,error:"Subject and message are required."},400);
+    const existing=await env.DB.prepare(`SELECT id,status FROM outreach_messages WHERE prospect_id=? AND sequence_step=? AND status IN ('sending','sent') ORDER BY created_at DESC LIMIT 1`).bind(p.id,step).first();
+    if(existing)return json({success:false,error:"This sequence step has already been sent or is currently sending."},409);
+    const now=isoNow(),messageId=createId(),type=step===0?"initial":`followup_${step}`;
+    await env.DB.prepare(`INSERT INTO outreach_messages (id,campaign_id,prospect_id,sequence_step,type,subject,body,status,created_at) VALUES (?,?,?,?,?,?,?,?,?)`).bind(messageId,p.campaign_id,p.id,step,type,subject,message,"sending",now).run();
+    try{
+        const sent=await sendGoogleOutreachEmail(env,{to:p.email,subject,text:message});
+        const sentAt=isoNow(),intervals=parseIntervals(p.followup_intervals),complete=step===5?1:0,next=complete?null:addDays(sentAt,intervals[step]);
+        await env.DB.prepare(`UPDATE outreach_messages SET status='sent',provider_message_id=?,sent_at=? WHERE id=?`).bind(sent.id,sentAt,messageId).run();
+        await env.DB.prepare(`UPDATE outreach_prospects SET status=CASE WHEN status='scheduled' THEN 'contacted' ELSE status END,last_sent_at=?,followup_step=?,next_followup_date=?,sequence_complete=?,updated_at=? WHERE id=?`).bind(sentAt,step,next,complete,sentAt,p.id).run();
+        await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,"email_sent",`${type} via Google Workspace`,sentAt).run();
+        return json({success:true,provider:"google_workspace",provider_message_id:sent.id,sequence_step:step,next_followup_date:next,sequence_complete:!!complete});
+    }catch(error){
+        const failedAt=isoNow();
+        await env.DB.prepare(`UPDATE outreach_messages SET status='failed' WHERE id=?`).bind(messageId).run();
+        await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,"email_failed",clean(error?.message||"Gmail send failed",1000),failedAt).run();
+        return json({success:false,error:error?.message||"Gmail send failed."},502);
+    }
+}
 
 async function listTemplates(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const rows=await env.DB.prepare(`SELECT * FROM outreach_templates ORDER BY sequence_step`).all();return json({success:true,templates:rows.results||[]});}
 async function saveTemplate(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const step=Math.max(0,Math.min(5,parseInt(data.sequence_step,10)||0));const existing=await env.DB.prepare(`SELECT id FROM outreach_templates WHERE sequence_step=? LIMIT 1`).bind(step).first();const id=existing?.id||createId(),now=isoNow();if(existing)await env.DB.prepare(`UPDATE outreach_templates SET name=?,subject=?,body=?,updated_at=? WHERE id=?`).bind(clean(data.name,120),clean(data.subject,300),clean(data.body,20000),now,id).run();else await env.DB.prepare(`INSERT INTO outreach_templates (id,sequence_step,name,subject,body,created_at,updated_at) VALUES (?,?,?,?,?,?,?)`).bind(id,step,clean(data.name,120)||`Step ${step}`,clean(data.subject,300),clean(data.body,20000),now,now).run();return json({success:true,id});}
 
 export async function handleAdminOutreachRoutes(request,env){const url=new URL(request.url),p=url.pathname,m=request.method;
+    if(p==="/api/admin/outreach/google/callback"&&m==="GET")return handleGoogleCallback(request,env);
+    if(p==="/api/admin/outreach/google/status"&&m==="GET")return handleGoogleStatus(request,env);
+    if(p==="/api/admin/outreach/google/connect"&&m==="POST")return handleGoogleConnect(request,env);
+    if(p==="/api/admin/outreach/google/disconnect"&&m==="POST")return handleGoogleDisconnect(request,env);
     if(p==="/api/admin/outreach/dashboard"&&m==="GET")return dashboard(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="GET")return listCampaigns(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="POST")return createCampaign(request,env);
@@ -143,7 +180,7 @@ export async function handleAdminOutreachRoutes(request,env){const url=new URL(r
     if(p==="/api/admin/outreach/prospects"&&m==="POST")return addProspect(request,env);
     if(p.startsWith("/api/admin/outreach/prospects/")&&(m==="GET"||m==="PATCH")){const id=p.split("/").pop();return m==="GET"?getProspect(request,env,id):patchProspect(request,env,id);}
     if(p==="/api/admin/outreach/due"&&m==="GET")return dueToday(request,env);
-    if(p==="/api/admin/outreach/messages"&&m==="POST")return recordMessage(request,env);
+    if(p==="/api/admin/outreach/messages"&&m==="POST")return sendOutreachMessage(request,env);
     if(p==="/api/admin/outreach/templates"&&m==="GET")return listTemplates(request,env);
     if(p==="/api/admin/outreach/templates"&&m==="POST")return saveTemplate(request,env);
     return null;
