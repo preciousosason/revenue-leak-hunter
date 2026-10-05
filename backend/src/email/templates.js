@@ -52,8 +52,7 @@ export function clientReplyEmailTemplate({ name = "", portalUrl, logoUrl }) {
 <tr><td class="email-pad" style="padding:24px 42px 10px;"><h1 class="hero-title" style="margin:0;color:#f5f5f5;font-size:46px;line-height:1.02;font-weight:800;letter-spacing:-2px;">Your investigation<br><span style="color:#ff5148;">just moved forward.</span></h1></td></tr>
 <tr><td class="email-pad" style="padding:22px 42px 8px;">
 <p style="margin:0 0 18px;color:#f5f5f5;font-size:18px;line-height:1.6;font-weight:700;">${greeting}</p>
-<p style="margin:0 0 15px;color:#a5a5a5;font-size:16px;line-height:1.75;">I’ve reviewed your investigation and left a new response for you.</p>
-<p style="margin:0;color:#a5a5a5;font-size:16px;line-height:1.75;">Rather than putting potentially sensitive business details inside an email, your full response is waiting securely inside your private Leakendia workspace.</p>
+<p style="margin:0 0 15px;color:#a5a5a5;font-size:16px;line-height:1.75;">I’ve left a new response for you.</p>
 </td></tr>
 <tr><td class="email-pad" style="padding:26px 42px 0;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#151515" style="width:100%;background:#151515;border:1px solid #2a2a2a;border-radius:16px;"><tr><td style="padding:20px 20px 18px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
 <td valign="top" style="color:#6f6f6f;font-size:10px;line-height:1.4;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;">INVESTIGATION<div style="margin-top:7px;color:#f5f5f5;font-size:15px;line-height:1.45;font-weight:700;letter-spacing:0;text-transform:none;">Leak Hunt Investigation</div><div style="margin-top:5px;color:#a5a5a5;font-size:12px;line-height:1.5;font-weight:400;letter-spacing:0;text-transform:none;">New response from Precious</div></td>
