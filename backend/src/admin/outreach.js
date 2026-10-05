@@ -1,130 +1,150 @@
 import { json } from "../utils/response.js";
-import { createId } from "../utils/ids.js";
 import { authenticateAdmin } from "../utils/auth.js";
+import { createId } from "../utils/ids.js";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ALLOWED_STATUS = new Set(["draft","scheduled","contacted","opened","engaged","replied","interested","qualified","converted","not_interested","no_response","do_not_contact"]);
+const DEFAULT_INTERVALS = [3, 4, 5, 7, 10];
+const STOP_STATUSES = new Set(["replied", "interested", "qualified", "converted", "not_interested", "do_not_contact"]);
+const CAMPAIGN_STATES = new Set(["draft", "active", "paused", "completed", "archived"]);
+const PROSPECT_STATES = new Set(["scheduled", "contacted", "replied", "interested", "qualified", "converted", "not_interested", "no_response", "do_not_contact"]);
 
-async function requireAdmin(request, env) {
-  const session = await authenticateAdmin(request, env);
-  return session || null;
+function clean(value, max = 5000) { return String(value ?? "").trim().slice(0, max); }
+function email(value) { return clean(value, 320).toLowerCase(); }
+function isEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
+function isoNow() { return new Date().toISOString(); }
+function dateOnly(value = new Date()) { return new Date(value).toISOString().slice(0, 10); }
+function addDays(date, days) { const d = new Date(`${dateOnly(date)}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + Number(days || 0)); return d.toISOString().slice(0, 10); }
+function parseIntervals(value) {
+    let input = value;
+    if (typeof value === "string") { try { input = JSON.parse(value); } catch { input = null; } }
+    if (!Array.isArray(input) || input.length !== 5) return [...DEFAULT_INTERVALS];
+    const out = input.map(v => Math.max(1, Math.min(30, Number.parseInt(v, 10) || 1)));
+    return out;
 }
-function bad(error, status=400){ return json({success:false,error},status); }
-function normalizeEmail(v){ return String(v||"").trim().toLowerCase(); }
-function normalizeUrl(v){ const s=String(v||"").trim(); if(!s) return ""; return /^https?:\/\//i.test(s)?s:`https://${s}`; }
-function isoDatePlus(date, days){ const d=new Date(date); d.setUTCDate(d.getUTCDate()+Number(days||0)); return d.toISOString(); }
-
-async function dnsJson(name, type){
-  const r=await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`,{headers:{accept:"application/dns-json"}});
-  if(!r.ok) throw new Error("DNS lookup failed");
-  return r.json();
+function rowCampaign(row) { return { ...row, followup_intervals: parseIntervals(row.followup_intervals) }; }
+async function adminOr401(request, env) {
+    const admin = await authenticateAdmin(request, env);
+    return admin ? null : json({ success: false, error: "Admin authentication required." }, 401);
 }
+async function body(request) { try { return await request.json(); } catch { return null; } }
 
-export async function handleEmailHealth(request, env){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  let body; try{body=await request.json();}catch{return bad("Invalid JSON request.");}
-  const email=normalizeEmail(body.email);
-  if(!EMAIL_RE.test(email)) return json({success:true,health:{email,status:"not_receivable",reason:"Invalid email format.",syntaxValid:false,mxFound:false}});
-  const domain=email.split("@")[1];
-  try{
-    const [mx,a,aaaa]=await Promise.all([dnsJson(domain,"MX"),dnsJson(domain,"A"),dnsJson(domain,"AAAA")]);
-    const mxAnswers=Array.isArray(mx.Answer)?mx.Answer.filter(x=>x.type===15):[];
-    const nullMx=mxAnswers.some(x=>String(x.data||"").trim().endsWith(" .") || String(x.data||"").trim()==="0 .");
-    const fallback=(Array.isArray(a.Answer)&&a.Answer.length)||(Array.isArray(aaaa.Answer)&&aaaa.Answer.length);
-    const mxFound=mxAnswers.length>0 && !nullMx;
-    const status=nullMx||(!mxFound&&!fallback)?"not_receivable":"unverified";
-    const reason=nullMx?"Domain explicitly does not accept email.":mxFound?"Mail server found. Exact mailbox existence cannot be safely confirmed.":fallback?"Domain exists but has no explicit MX record. Exact mailbox is unverified.":"No usable mail server found.";
-    return json({success:true,health:{email,domain,status,reason,syntaxValid:true,mxFound,checkedAt:new Date().toISOString()}});
-  }catch(error){
-    return json({success:true,health:{email,domain,status:"unverified",reason:"Email domain check could not be completed right now.",syntaxValid:true,mxFound:null,checkedAt:new Date().toISOString()}});
-  }
+async function mxLookup(domain) {
+    try {
+        const r = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`, { headers: { Accept: "application/dns-json" } });
+        if (!r.ok) return { ok: false, reason: "Mail-server lookup failed." };
+        const data = await r.json();
+        const answers = Array.isArray(data.Answer) ? data.Answer.filter(a => a.type === 15 && clean(a.data)) : [];
+        return answers.length ? { ok: true, mx: answers.map(a => a.data) } : { ok: false, reason: "No usable MX mail server was found for this domain." };
+    } catch { return { ok: false, reason: "Mail-server lookup could not be completed." }; }
 }
 
-export async function handleOutreachDashboard(request,env){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  const campaigns=await env.DB.prepare(`SELECT c.*, COUNT(p.id) prospect_count, SUM(CASE WHEN p.initial_sent_at IS NOT NULL THEN 1 ELSE 0 END) contacted_count, SUM(CASE WHEN p.opened_at IS NOT NULL THEN 1 ELSE 0 END) opened_count, SUM(CASE WHEN p.status='replied' OR p.replied_at IS NOT NULL THEN 1 ELSE 0 END) replied_count FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id GROUP BY c.id ORDER BY c.created_at DESC`).all();
-  const today=new Date().toISOString();
-  const due=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE status NOT IN ('replied','converted','not_interested','do_not_contact') AND ((initial_sent_at IS NULL AND scheduled_at<=?) OR (next_followup_at IS NOT NULL AND next_followup_at<=?))`).bind(today,today).first();
-  const total=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects`).first();
-  const replies=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE status='replied'`).first();
-  return json({success:true,campaigns:campaigns.results||[],summary:{dueToday:Number(due?.count||0),totalProspects:Number(total?.count||0),replies:Number(replies?.count||0),activeCampaigns:(campaigns.results||[]).filter(c=>c.status==='active').length}});
+export async function validateOutreachEmailAddress(env, rawEmail) {
+    const address = email(rawEmail);
+    if (!isEmail(address)) return { email: address, status: "invalid", label: "INVALID", reason: "Email format is invalid.", can_outreach: false };
+    const domain = address.split("@")[1];
+    const suppressed = await env.DB.prepare(`SELECT reason, created_at FROM outreach_suppressions WHERE email = ? LIMIT 1`).bind(address).first();
+    if (suppressed) return { email: address, status: "suppressed", label: "DO NOT CONTACT", reason: suppressed.reason || "This address is suppressed.", can_outreach: false };
+    const mx = await mxLookup(domain);
+    if (!mx.ok) return { email: address, status: "not_receivable", label: "NOT RECEIVABLE", reason: mx.reason, can_outreach: false };
+    return { email: address, status: "mail_ready", label: "MAIL READY", reason: "Valid format and working domain mail infrastructure found. Exact mailbox existence is confirmed only by real delivery.", can_outreach: true, mx_count: mx.mx.length };
 }
 
-export async function handleCampaigns(request,env){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  if(request.method==="GET"){
-    const rows=await env.DB.prepare(`SELECT c.*, COUNT(p.id) prospect_count, SUM(CASE WHEN p.initial_sent_at IS NOT NULL THEN 1 ELSE 0 END) contacted_count, SUM(CASE WHEN p.opened_at IS NOT NULL THEN 1 ELSE 0 END) opened_count, SUM(CASE WHEN p.replied_at IS NOT NULL THEN 1 ELSE 0 END) replied_count FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id GROUP BY c.id ORDER BY c.created_at DESC`).all();
-    return json({success:true,campaigns:rows.results||[]});
-  }
-  let b;try{b=await request.json();}catch{return bad("Invalid JSON request.");}
-  const name=String(b.name||"").trim(); if(!name)return bad("Campaign name is required.");
-  const id=createId(), now=new Date().toISOString();
-  const daily=Math.min(50,Math.max(1,Number(b.dailyLimit)||15));
-  const maxProspects=Math.min(500,Math.max(1,Number(b.maxProspects)||60));
-  const intervals=Array.isArray(b.followupIntervals)?b.followupIntervals.slice(0,5).map(x=>Math.max(1,Number(x)||1)):[3,4,5,7,10];
-  await env.DB.prepare(`INSERT INTO outreach_campaigns(id,name,status,daily_limit,max_prospects,followup_intervals,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)`).bind(id,name,"active",daily,maxProspects,JSON.stringify(intervals),now,now).run();
-  return json({success:true,campaign:{id,name,status:"active",daily_limit:daily,max_prospects:maxProspects,followup_intervals:intervals}},201);
+async function dashboard(request, env) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const today = dateOnly();
+    const [campaigns, prospects, due, activity] = await Promise.all([
+        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_campaigns GROUP BY status`).all(),
+        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_prospects GROUP BY status`).all(),
+        env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date <= ?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date <= ?))`).bind(today, today).first(),
+        env.DB.prepare(`SELECT e.*, p.name prospect_name, p.email prospect_email, c.name campaign_name FROM outreach_events e LEFT JOIN outreach_prospects p ON p.id=e.prospect_id LEFT JOIN outreach_campaigns c ON c.id=e.campaign_id ORDER BY e.created_at DESC LIMIT 20`).all()
+    ]);
+    const map = rows => Object.fromEntries((rows.results || []).map(r => [r.status, Number(r.count)]));
+    return json({ success: true, summary: { campaigns: map(campaigns), prospects: map(prospects), due_today: Number(due?.count || 0) }, activity: activity.results || [] });
 }
 
-export async function handleCampaignDetail(request,env,campaignId){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  const campaign=await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(campaignId).first();
-  if(!campaign)return bad("Campaign not found.",404);
-  const prospects=await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE campaign_id=? ORDER BY queue_position ASC, created_at ASC`).bind(campaignId).all();
-  return json({success:true,campaign:{...campaign,followup_intervals:JSON.parse(campaign.followup_intervals||"[]")},prospects:prospects.results||[]});
+async function listCampaigns(request, env) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const rows = await env.DB.prepare(`SELECT c.*, COUNT(p.id) prospect_count, SUM(CASE WHEN p.last_sent_at IS NOT NULL THEN 1 ELSE 0 END) contacted_count, SUM(CASE WHEN p.status IN ('replied','interested','qualified','converted') THEN 1 ELSE 0 END) reply_count, SUM(CASE WHEN p.status='converted' THEN 1 ELSE 0 END) converted_count FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id GROUP BY c.id ORDER BY c.created_at DESC`).all();
+    return json({ success: true, campaigns: (rows.results || []).map(rowCampaign) });
 }
 
-export async function handleAddProspect(request,env,campaignId){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  let b;try{b=await request.json();}catch{return bad("Invalid JSON request.");}
-  const campaign=await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(campaignId).first(); if(!campaign)return bad("Campaign not found.",404);
-  const count=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE campaign_id=?`).bind(campaignId).first();
-  if(Number(count?.count||0)>=campaign.max_prospects)return bad(`This campaign has reached its ${campaign.max_prospects} prospect limit.`);
-  const email=normalizeEmail(b.email), name=String(b.name||"").trim(); if(!name||!EMAIL_RE.test(email))return bad("A valid name and email are required.");
-  const suppressed=await env.DB.prepare(`SELECT email FROM outreach_suppressions WHERE email=?`).bind(email).first(); if(suppressed)return bad("This email is on the Do Not Contact list.",409);
-  const duplicate=await env.DB.prepare(`SELECT id,campaign_id FROM outreach_prospects WHERE email=?`).bind(email).first(); if(duplicate)return bad("This prospect email already exists in Outreach.",409);
-  const pos=Number(count?.count||0)+1; const dayOffset=Math.floor((pos-1)/campaign.daily_limit); const scheduled=isoDatePlus(new Date(),dayOffset);
-  const id=createId(),now=new Date().toISOString();
-  await env.DB.prepare(`INSERT INTO outreach_prospects(id,campaign_id,name,email,website,company,role,notes,observation,email_health,email_health_reason,email_checked_at,research_ready,status,queue_position,scheduled_at,followup_step,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,campaignId,name,email,normalizeUrl(b.website),String(b.company||"").trim(),String(b.role||"").trim(),String(b.notes||"").trim(),String(b.observation||"").trim(),String(b.emailHealth||"unverified"),String(b.emailHealthReason||""),b.emailCheckedAt||now,b.researchReady?1:0,"scheduled",pos,scheduled,0,now,now).run();
-  return json({success:true,prospect:{id,campaign_id:campaignId,name,email,queue_position:pos,scheduled_at:scheduled}},201);
+async function createCampaign(request, env) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const data = await body(request); if (!data) return json({ success:false,error:"Invalid JSON request."},400);
+    const name = clean(data.name, 160); if (!name) return json({success:false,error:"Campaign name is required."},400);
+    const daily = Math.max(1, Math.min(50, Number.parseInt(data.daily_limit,10)||15));
+    const max = Math.max(1, Math.min(500, Number.parseInt(data.max_prospects,10)||60));
+    const start = /^\d{4}-\d{2}-\d{2}$/.test(clean(data.start_date,10)) ? clean(data.start_date,10) : dateOnly();
+    const intervals = parseIntervals(data.followup_intervals);
+    const id = createId(), now = isoNow();
+    await env.DB.prepare(`INSERT INTO outreach_campaigns (id,name,description,status,start_date,daily_limit,max_prospects,followup_intervals,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)`).bind(id,name,clean(data.description,1000),data.status==="draft"?"draft":"active",start,daily,max,JSON.stringify(intervals),now,now).run();
+    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,type,detail,created_at) VALUES (?,?,?,?,?)`).bind(createId(),id,"campaign_created",name,now).run();
+    return json({success:true,campaign_id:id},201);
 }
 
-export async function handleProspectDetail(request,env,prospectId){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  const p=await env.DB.prepare(`SELECT p.*,c.name campaign_name,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(prospectId).first(); if(!p)return bad("Prospect not found.",404);
-  const messages=await env.DB.prepare(`SELECT * FROM outreach_messages WHERE prospect_id=? ORDER BY created_at ASC`).bind(prospectId).all();
-  const events=await env.DB.prepare(`SELECT * FROM outreach_events WHERE prospect_id=? ORDER BY created_at DESC`).bind(prospectId).all();
-  return json({success:true,prospect:p,messages:messages.results||[],events:events.results||[]});
+async function getCampaign(request, env, id) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const campaign = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(id).first();
+    if (!campaign) return json({success:false,error:"Campaign not found."},404);
+    const prospects = await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE campaign_id=? ORDER BY sequence_no`).bind(id).all();
+    return json({success:true,campaign:rowCampaign(campaign),prospects:prospects.results||[]});
 }
 
-export async function handleUpdateProspect(request,env,prospectId){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  let b;try{b=await request.json();}catch{return bad("Invalid JSON request.");}
-  const p=await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE id=?`).bind(prospectId).first(); if(!p)return bad("Prospect not found.",404);
-  const status=ALLOWED_STATUS.has(b.status)?b.status:p.status; const now=new Date().toISOString();
-  await env.DB.prepare(`UPDATE outreach_prospects SET company=?,role=?,website=?,notes=?,observation=?,research_ready=?,status=?,updated_at=? WHERE id=?`).bind(String(b.company??p.company??""),String(b.role??p.role??""),normalizeUrl(b.website??p.website??""),String(b.notes??p.notes??""),String(b.observation??p.observation??""),b.researchReady===undefined?p.research_ready:(b.researchReady?1:0),status,now,prospectId).run();
-  if(status==="do_not_contact") await env.DB.prepare(`INSERT OR IGNORE INTO outreach_suppressions(id,email,reason,created_at) VALUES(?,?,?,?)`).bind(createId(),p.email,"Marked Do Not Contact in Outreach",now).run();
-  return json({success:true});
+async function patchCampaign(request, env, id) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const data = await body(request); if (!data) return json({success:false,error:"Invalid JSON request."},400);
+    const current = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(id).first(); if (!current) return json({success:false,error:"Campaign not found."},404);
+    const status = CAMPAIGN_STATES.has(data.status) ? data.status : current.status;
+    const name = data.name !== undefined ? clean(data.name,160) : current.name;
+    const daily = data.daily_limit !== undefined ? Math.max(1,Math.min(50,parseInt(data.daily_limit,10)||15)) : current.daily_limit;
+    const max = data.max_prospects !== undefined ? Math.max(1,Math.min(500,parseInt(data.max_prospects,10)||60)) : current.max_prospects;
+    const intervals = data.followup_intervals !== undefined ? parseIntervals(data.followup_intervals) : parseIntervals(current.followup_intervals);
+    await env.DB.prepare(`UPDATE outreach_campaigns SET name=?,description=?,status=?,daily_limit=?,max_prospects=?,followup_intervals=?,updated_at=? WHERE id=?`).bind(name,data.description!==undefined?clean(data.description,1000):current.description,status,daily,max,JSON.stringify(intervals),isoNow(),id).run();
+    return json({success:true});
 }
 
-export async function handleRecordOutreachMessage(request,env,prospectId){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  let b;try{b=await request.json();}catch{return bad("Invalid JSON request.");}
-  const p=await env.DB.prepare(`SELECT p.*,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(prospectId).first(); if(!p)return bad("Prospect not found.",404);
-  if(["replied","converted","not_interested","do_not_contact"].includes(p.status))return bad("Follow-up sequence is stopped for this prospect.",409);
-  const subject=String(b.subject||"").trim(), body=String(b.body||"").trim(); if(!subject||!body)return bad("Subject and message are required.");
-  const kind=p.initial_sent_at?"followup":"initial"; const step=kind==="initial"?0:Math.min(5,Number(p.followup_step||0)+1); if(step>5)return bad("Maximum of five follow-ups reached.");
-  const now=new Date().toISOString(), id=createId();
-  await env.DB.prepare(`INSERT INTO outreach_messages(id,prospect_id,campaign_id,kind,followup_number,subject,body,status,created_at,sent_at) VALUES(?,?,?,?,?,?,?,?,?,?)`).bind(id,prospectId,p.campaign_id,kind,step,subject,body,"recorded",now,now).run();
-  let next=null; const intervals=JSON.parse(p.followup_intervals||"[3,4,5,7,10]"); if(step<5){ const interval=Number(intervals[step]??intervals[Math.min(step,intervals.length-1)]??3); next=isoDatePlus(now,interval); }
-  await env.DB.prepare(`UPDATE outreach_prospects SET initial_sent_at=COALESCE(initial_sent_at,?),last_contacted_at=?,followup_step=?,next_followup_at=?,status='contacted',updated_at=? WHERE id=?`).bind(now,now,step,next,now,prospectId).run();
-  await env.DB.prepare(`INSERT INTO outreach_events(id,prospect_id,campaign_id,event_type,detail,created_at) VALUES(?,?,?,?,?,?)`).bind(createId(),prospectId,p.campaign_id,kind==="initial"?"contacted":`followup_${step}`,subject,now).run();
-  return json({success:true,message:{id,kind,followupNumber:step,nextFollowupAt:next}});
+async function validateEmail(request, env) { const auth=await adminOr401(request,env); if(auth)return auth; const data=await body(request); if(!data)return json({success:false,error:"Invalid JSON request."},400); return json({success:true,validation:await validateOutreachEmailAddress(env,data.email)}); }
+
+async function addProspect(request, env) {
+    const auth=await adminOr401(request,env); if(auth)return auth; const data=await body(request); if(!data)return json({success:false,error:"Invalid JSON request."},400);
+    const campaign=await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(clean(data.campaign_id,80)).first(); if(!campaign)return json({success:false,error:"Campaign not found."},404);
+    const count=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE campaign_id=?`).bind(campaign.id).first(); const sequence=Number(count?.count||0)+1;
+    if(sequence>Number(campaign.max_prospects))return json({success:false,error:`This campaign is limited to ${campaign.max_prospects} prospects.`},400);
+    const address=email(data.email); const validation=await validateOutreachEmailAddress(env,address); if(!validation.can_outreach)return json({success:false,error:validation.reason,validation},400);
+    const duplicate=await env.DB.prepare(`SELECT id,campaign_id FROM outreach_prospects WHERE email=? LIMIT 1`).bind(address).first(); if(duplicate)return json({success:false,error:"This email already exists in Outreach.",duplicate},409);
+    const dayOffset=Math.floor((sequence-1)/Number(campaign.daily_limit)); const due=addDays(campaign.start_date,dayOffset); const now=isoNow(), id=createId();
+    await env.DB.prepare(`INSERT INTO outreach_prospects (id,campaign_id,sequence_no,name,email,website,company,role,observation,notes,email_health,email_health_reason,email_checked_at,research_ready,status,initial_due_date,followup_step,sequence_complete,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,campaign.id,sequence,clean(data.name,160),address,clean(data.website,500),clean(data.company,160),clean(data.role,160),clean(data.observation,3000),clean(data.notes,5000),validation.status,validation.reason,now,data.research_ready?1:0,"scheduled",due,0,0,now,now).run();
+    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),campaign.id,id,"prospect_added",address,now).run();
+    return json({success:true,prospect_id:id,validation,initial_due_date:due},201);
 }
 
-export async function handleDueQueue(request,env){
-  if(!await requireAdmin(request,env)) return bad("Admin authentication required.",401);
-  const now=new Date().toISOString();
-  const rows=await env.DB.prepare(`SELECT p.*,c.name campaign_name FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health!='not_receivable' AND p.status NOT IN ('replied','converted','not_interested','do_not_contact') AND ((p.initial_sent_at IS NULL AND p.scheduled_at<=?) OR (p.initial_sent_at IS NOT NULL AND p.next_followup_at IS NOT NULL AND p.next_followup_at<=? AND p.followup_step<5)) ORDER BY COALESCE(p.next_followup_at,p.scheduled_at) ASC LIMIT 100`).bind(now,now).all();
-  return json({success:true,queue:rows.results||[]});
+async function getProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const p=await env.DB.prepare(`SELECT p.*,c.name campaign_name,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);const [messages,events]=await Promise.all([env.DB.prepare(`SELECT * FROM outreach_messages WHERE prospect_id=? ORDER BY created_at`).bind(id).all(),env.DB.prepare(`SELECT * FROM outreach_events WHERE prospect_id=? ORDER BY created_at DESC`).bind(id).all()]);return json({success:true,prospect:p,messages:messages.results||[],events:events.results||[]});}
+
+async function patchProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const p=await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE id=?`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);let status=PROSPECT_STATES.has(data.status)?data.status:p.status;const now=isoNow();let complete=STOP_STATUSES.has(status)?1:p.sequence_complete;let next=STOP_STATUSES.has(status)?null:p.next_followup_date;
+    if(status==="do_not_contact"){await env.DB.prepare(`INSERT OR REPLACE INTO outreach_suppressions (email,reason,source,created_at) VALUES (?,?,?,?)`).bind(p.email,clean(data.suppression_reason,500)||"Marked Do Not Contact","admin",now).run();}
+    await env.DB.prepare(`UPDATE outreach_prospects SET name=?,website=?,company=?,role=?,observation=?,notes=?,research_ready=?,status=?,sequence_complete=?,next_followup_date=?,updated_at=? WHERE id=?`).bind(data.name!==undefined?clean(data.name,160):p.name,data.website!==undefined?clean(data.website,500):p.website,data.company!==undefined?clean(data.company,160):p.company,data.role!==undefined?clean(data.role,160):p.role,data.observation!==undefined?clean(data.observation,3000):p.observation,data.notes!==undefined?clean(data.notes,5000):p.notes,data.research_ready!==undefined?(data.research_ready?1:0):p.research_ready,status,complete,next,now,id).run();
+    if(status!==p.status)await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,id,"status_changed",`${p.status} → ${status}`,now).run(); return json({success:true});}
+
+async function dueToday(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const today=dateOnly();const rows=await env.DB.prepare(`SELECT p.*,c.name campaign_name FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date<=?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date<=?)) ORDER BY COALESCE(p.next_followup_date,p.initial_due_date),c.created_at,p.sequence_no`).bind(today,today).all();return json({success:true,date:today,prospects:rows.results||[]});}
+
+async function recordMessage(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const p=await env.DB.prepare(`SELECT p.*,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(clean(data.prospect_id,80)).first();if(!p)return json({success:false,error:"Prospect not found."},404);if(STOP_STATUSES.has(p.status)||p.sequence_complete)return json({success:false,error:"This outreach sequence is stopped or complete."},400);const step=p.last_sent_at===null?0:Number(p.followup_step)+1;if(step>5)return json({success:false,error:"Maximum of five follow-ups reached."},400);const subject=clean(data.subject,300),message=clean(data.message,20000);if(!subject||!message)return json({success:false,error:"Subject and message are required."},400);const now=isoNow();const intervals=parseIntervals(p.followup_intervals);const complete=step===5?1:0;const next=complete?null:addDays(now,intervals[step]);const type=step===0?"initial":`followup_${step}`;
+    await env.DB.prepare(`INSERT INTO outreach_messages (id,campaign_id,prospect_id,sequence_step,type,subject,body,status,created_at,sent_at) VALUES (?,?,?,?,?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,step,type,subject,message,"recorded",now,now).run();
+    await env.DB.prepare(`UPDATE outreach_prospects SET status=CASE WHEN status='scheduled' THEN 'contacted' ELSE status END,last_sent_at=?,followup_step=?,next_followup_date=?,sequence_complete=?,updated_at=? WHERE id=?`).bind(now,step,next,complete,now,p.id).run();
+    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,p.id,"message_recorded",type,now).run();return json({success:true,sequence_step:step,next_followup_date:next,sequence_complete:!!complete});}
+
+async function listTemplates(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const rows=await env.DB.prepare(`SELECT * FROM outreach_templates ORDER BY sequence_step`).all();return json({success:true,templates:rows.results||[]});}
+async function saveTemplate(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const step=Math.max(0,Math.min(5,parseInt(data.sequence_step,10)||0));const existing=await env.DB.prepare(`SELECT id FROM outreach_templates WHERE sequence_step=? LIMIT 1`).bind(step).first();const id=existing?.id||createId(),now=isoNow();if(existing)await env.DB.prepare(`UPDATE outreach_templates SET name=?,subject=?,body=?,updated_at=? WHERE id=?`).bind(clean(data.name,120),clean(data.subject,300),clean(data.body,20000),now,id).run();else await env.DB.prepare(`INSERT INTO outreach_templates (id,sequence_step,name,subject,body,created_at,updated_at) VALUES (?,?,?,?,?,?,?)`).bind(id,step,clean(data.name,120)||`Step ${step}`,clean(data.subject,300),clean(data.body,20000),now,now).run();return json({success:true,id});}
+
+export async function handleAdminOutreachRoutes(request,env){const url=new URL(request.url),p=url.pathname,m=request.method;
+    if(p==="/api/admin/outreach/dashboard"&&m==="GET")return dashboard(request,env);
+    if(p==="/api/admin/outreach/campaigns"&&m==="GET")return listCampaigns(request,env);
+    if(p==="/api/admin/outreach/campaigns"&&m==="POST")return createCampaign(request,env);
+    if(p.startsWith("/api/admin/outreach/campaigns/")&&(m==="GET"||m==="PATCH")){const id=p.split("/").pop();return m==="GET"?getCampaign(request,env,id):patchCampaign(request,env,id);}
+    if(p==="/api/admin/outreach/validate-email"&&m==="POST")return validateEmail(request,env);
+    if(p==="/api/admin/outreach/prospects"&&m==="POST")return addProspect(request,env);
+    if(p.startsWith("/api/admin/outreach/prospects/")&&(m==="GET"||m==="PATCH")){const id=p.split("/").pop();return m==="GET"?getProspect(request,env,id):patchProspect(request,env,id);}
+    if(p==="/api/admin/outreach/due"&&m==="GET")return dueToday(request,env);
+    if(p==="/api/admin/outreach/messages"&&m==="POST")return recordMessage(request,env);
+    if(p==="/api/admin/outreach/templates"&&m==="GET")return listTemplates(request,env);
+    if(p==="/api/admin/outreach/templates"&&m==="POST")return saveTemplate(request,env);
+    return null;
 }

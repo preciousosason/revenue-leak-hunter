@@ -40,10 +40,7 @@ import {
     handleAdminEmailNotificationHistory
 } from "./email-notifications.js";
 
-import {
-    handleEmailHealth, handleOutreachDashboard, handleCampaigns, handleCampaignDetail,
-    handleAddProspect, handleProspectDetail, handleUpdateProspect, handleRecordOutreachMessage, handleDueQueue
-} from "./outreach.js";
+import { handleAdminOutreachRoutes } from "./outreach.js";
 
 export async function handleAdminRoutes(
     request,
@@ -51,6 +48,9 @@ export async function handleAdminRoutes(
 ) {
     const url =
         new URL(request.url);
+
+    const outreachResponse = await handleAdminOutreachRoutes(request, env);
+    if (outreachResponse) return outreachResponse;
 
     if (
         url.pathname ===
@@ -139,22 +139,6 @@ export async function handleAdminRoutes(
         const conversationId = url.pathname.split("/").pop();
         return handleAdminEmailNotificationHistory(request, env, conversationId);
     }
-
-    // OUTREACH
-    if (url.pathname === "/api/admin/outreach/email-health" && request.method === "POST") return handleEmailHealth(request, env);
-    if (url.pathname === "/api/admin/outreach/dashboard" && request.method === "GET") return handleOutreachDashboard(request, env);
-    if (url.pathname === "/api/admin/outreach/queue" && request.method === "GET") return handleDueQueue(request, env);
-    if (url.pathname === "/api/admin/outreach/campaigns") return handleCampaigns(request, env);
-
-    let outreachMatch = url.pathname.match(/^\/api\/admin\/outreach\/campaigns\/([^/]+)$/);
-    if (outreachMatch && request.method === "GET") return handleCampaignDetail(request, env, outreachMatch[1]);
-    outreachMatch = url.pathname.match(/^\/api\/admin\/outreach\/campaigns\/([^/]+)\/prospects$/);
-    if (outreachMatch && request.method === "POST") return handleAddProspect(request, env, outreachMatch[1]);
-    outreachMatch = url.pathname.match(/^\/api\/admin\/outreach\/prospects\/([^/]+)$/);
-    if (outreachMatch && request.method === "GET") return handleProspectDetail(request, env, outreachMatch[1]);
-    if (outreachMatch && request.method === "PATCH") return handleUpdateProspect(request, env, outreachMatch[1]);
-    outreachMatch = url.pathname.match(/^\/api\/admin\/outreach\/prospects\/([^/]+)\/messages$/);
-    if (outreachMatch && request.method === "POST") return handleRecordOutreachMessage(request, env, outreachMatch[1]);
 
     if (
         url.pathname ===

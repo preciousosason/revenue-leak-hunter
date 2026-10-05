@@ -286,6 +286,13 @@
     <span class="nav-indicator"></span>
 </button>
 
+
+                    <button class="nav-item sidebar-link" data-view="outreach" type="button">
+                        <span class="nav-icon">↗</span>
+                        <span class="nav-label">Outreach</span>
+                        <span class="nav-indicator"></span>
+                    </button>
+
 <button
     class="nav-item sidebar-link"
     data-view="analytics"
@@ -301,10 +308,6 @@
 
     <span class="nav-indicator"></span>
 </button>
-
-                    <button class="nav-item sidebar-link" data-view="outreach" type="button">
-                        <span class="nav-icon">↗</span><span class="nav-label">Outreach</span><span class="nav-indicator"></span>
-                    </button>
 
                     <button
                         class="nav-item sidebar-link"
@@ -880,6 +883,12 @@
 <!-- =================================================
      ANALYTICS
      ================================================= -->
+
+
+                    <!-- OUTREACH -->
+                    <section id="view-outreach" class="admin-view outreach-page" hidden>
+                        <div id="outreach-root"></div>
+                    </section>
 
 <section id="view-analytics" class="admin-view analytics-page" hidden>
  <header class="analytics-header">
@@ -1771,22 +1780,6 @@
                         </div>
 
                     </section>
-
-
-<section id="view-outreach" class="admin-view outreach-page" hidden>
-  <header class="outreach-header"><div><div class="outreach-kicker">GROWTH // OUTREACH</div><h2>Outreach Control</h2><p>Research prospects, schedule personal outreach and manage follow-ups without turning Leakendia into a spam cannon.</p></div><div class="outreach-header-actions"><button id="outreach-refresh" class="secondary-button" type="button">↻ Refresh</button><button id="outreach-create-toggle" class="primary-button" type="button">+ Create Campaign</button></div></header>
-  <p id="outreach-status" class="outreach-status" hidden></p>
-  <div id="outreach-create-panel" class="outreach-create-panel" hidden><form id="outreach-create-form"><label><span>Campaign name</span><input name="name" required placeholder="SaaS Conversion Audit — October"></label><label><span>Initials / day</span><input id="campaign-daily-limit" name="dailyLimit" type="number" min="1" max="50" value="15" required></label><label><span>Prospect target</span><input id="campaign-max-prospects" name="maxProspects" type="number" min="1" max="500" value="60" required></label><div class="outreach-form-note">Follow-ups: +3, +4, +5, +7, +10 days. Maximum five. Replies, conversions, not-interested and Do-Not-Contact stop the sequence.</div><button class="primary-button" type="submit">Create Campaign</button></form></div>
-  <div id="outreach-dashboard-body">
-    <div class="outreach-stat-grid"><article><span>ACTIVE CAMPAIGNS</span><strong id="outreach-active-count">0</strong></article><article><span>DUE TODAY</span><strong id="outreach-due-count">0</strong></article><article><span>REPLIES</span><strong id="outreach-replies-count">0</strong></article><article><span>PROSPECTS</span><strong id="outreach-prospects-count">0</strong></article></div>
-    <div class="outreach-grid"><section class="outreach-panel"><header><div><span class="outreach-kicker">CAMPAIGNS</span><h3>View Campaigns</h3></div></header><div id="outreach-campaign-list" class="outreach-campaign-list"></div></section><section class="outreach-panel"><header><div><span class="outreach-kicker">WORK QUEUE</span><h3>Due Today</h3></div></header><div id="outreach-due-list" class="outreach-due-list"></div></section></div>
-  </div>
-  <div id="outreach-campaign-detail" hidden><button id="outreach-back" class="outreach-back" type="button">← All campaigns</button><header class="outreach-detail-header"><div><span class="outreach-kicker">ACTIVE CAMPAIGN</span><h2 id="outreach-campaign-name">Campaign</h2><p id="outreach-campaign-meta"></p></div></header>
-    <div class="outreach-detail-grid"><section class="outreach-panel prospect-add-panel"><header><h3>Add Prospect</h3></header><form id="prospect-form"><div class="outreach-form-grid"><label><span>Name</span><input name="name" required></label><label><span>Email</span><input id="prospect-email" name="email" type="email" required></label><label><span>Website</span><input name="website" placeholder="company.com"></label><label><span>Company</span><input name="company"></label><label><span>Role</span><input name="role"></label></div><div id="email-health-result" class="email-health"></div><label><span>Research observation</span><textarea name="observation" placeholder="What did you actually notice about their website, funnel or customer journey?"></textarea></label><label class="research-ready"><input type="checkbox" name="researchReady"><span>Research complete. Ready to enter the outreach queue.</span></label><button class="primary-button" type="submit">Add & Schedule Prospect</button></form></section>
-    <section class="outreach-panel"><header><h3>Campaign Prospects</h3></header><div id="outreach-prospect-list" class="outreach-prospect-list"></div></section></div>
-  </div>
-</section>
-<div id="outreach-prospect-modal" class="outreach-modal" hidden><div class="outreach-modal-card"><header><div><span class="outreach-kicker">PROSPECT RECORD</span><h2 id="prospect-modal-name">Prospect</h2><p id="prospect-modal-meta"></p></div><button id="outreach-close-prospect" type="button">×</button></header><div class="outreach-modal-body"><section><h3>Research</h3><p id="prospect-modal-observation"></p></section><section><h3>Communication History</h3><div id="prospect-message-history"></div></section><form id="outreach-message-form"><h3>Record Personal Outreach</h3><p class="outreach-form-note">This records what you sent and schedules the next follow-up. It does not send through Resend.</p><label><span>Subject</span><input id="outreach-message-subject" name="subject" required></label><label><span>Plain email</span><textarea id="outreach-message-body" name="body" required></textarea></label><button class="primary-button" type="submit">Mark as Sent & Schedule Next</button></form></div></div></div>
 
 
                     <!-- =================================================

@@ -172,14 +172,14 @@ export function switchView(view) {
         analytics:
             "Analytics",
 
+        outreach:
+            "Outreach",
+
         conversation:
             "Conversation",
 
         notifications:
-            "Notifications",
-
-        outreach:
-            "Outreach"
+            "Notifications"
 
     };
 
