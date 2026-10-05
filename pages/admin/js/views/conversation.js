@@ -926,15 +926,21 @@ function openComposeNotification() {
     if (recipient) recipient.textContent = state.currentConversation?.email || "No client email";
     if (subject) subject.value = "";
     if (message) message.value = "";
-    modal?.classList.add("is-open");
-    modal?.setAttribute("aria-hidden", "false");
+    if (modal) {
+        modal.hidden = false;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+    }
     subject?.focus();
 }
 
 function closeComposeNotification() {
     const modal = document.getElementById("compose-notification-modal");
-    modal?.classList.remove("is-open");
-    modal?.setAttribute("aria-hidden", "true");
+    if (modal) {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        modal.hidden = true;
+    }
 }
 
 export function initConversation() {
