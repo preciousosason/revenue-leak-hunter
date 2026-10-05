@@ -80,3 +80,74 @@ export function clientReplyEmailTemplate({ name = "", portalUrl, logoUrl }) {
 
     return { html, text };
 }
+
+
+function paragraphs(value) {
+    return String(value ?? "")
+        .trim()
+        .split(/\n{2,}/)
+        .map(part => `<p style="margin:0 0 15px;color:#a5a5a5;font-size:16px;line-height:1.75;">${escapeHtml(part).replace(/\n/g, "<br>")}</p>`)
+        .join("");
+}
+
+function brandedShell({ logoUrl, preheader, badge, title, accentTitle = "", greeting, bodyHtml, cardHtml = "", ctaLabel, portalUrl, privacyText, signoff = true }) {
+    const safeLogoUrl = escapeHtml(logoUrl);
+    const safePortalUrl = escapeHtml(portalUrl);
+    return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>Leakendia</title>
+<style>@media only screen and (max-width:620px){.email-shell{width:100%!important}.email-pad{padding-left:22px!important;padding-right:22px!important}.hero-title{font-size:36px!important;line-height:1.04!important}.logo-image{width:82px!important;height:82px!important}.brand-name{font-size:19px!important;letter-spacing:6px!important}.cta-link{display:block!important;text-align:center!important}}</style></head>
+<body style="margin:0;padding:0;background:#080808;color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;">
+<div style="display:none;font-size:1px;color:#080808;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">${escapeHtml(preheader)}</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#080808" style="width:100%;background:#080808;"><tr><td align="center" style="padding:36px 14px;">
+<table class="email-shell" role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#101010" style="width:600px;max-width:600px;background:#101010;border:1px solid #292929;border-radius:24px;overflow:hidden;">
+<tr><td height="3" bgcolor="#ff3b30" style="height:3px;background:#ff3b30;font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td class="email-pad" align="center" style="padding:38px 42px 24px;"><img class="logo-image" src="${safeLogoUrl}" width="96" height="96" alt="Leakendia" style="display:block;width:96px;height:96px;border:0;border-radius:20px;"><div class="brand-name" style="margin-top:18px;color:#f5f5f5;font-size:21px;font-weight:700;letter-spacing:8px;">LEAKENDIA</div><div style="margin-top:8px;color:#6f6f6f;font-size:10px;font-weight:700;letter-spacing:2.1px;text-transform:uppercase;">Find the leak. Fix what’s costing you.</div></td></tr>
+<tr><td class="email-pad" style="padding:6px 42px 0;"><span style="display:inline-block;border:1px solid #ff3b30;border-radius:999px;padding:8px 13px;color:#ff5148;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">${escapeHtml(badge)}</span></td></tr>
+<tr><td class="email-pad" style="padding:24px 42px 10px;"><h1 class="hero-title" style="margin:0;color:#f5f5f5;font-size:46px;line-height:1.02;font-weight:800;letter-spacing:-2px;">${escapeHtml(title)}${accentTitle ? `<br><span style="color:#ff5148;">${escapeHtml(accentTitle)}</span>` : ""}</h1></td></tr>
+<tr><td class="email-pad" style="padding:22px 42px 8px;"><p style="margin:0 0 18px;color:#f5f5f5;font-size:18px;line-height:1.6;font-weight:700;">${greeting}</p>${bodyHtml}</td></tr>
+${cardHtml}
+<tr><td class="email-pad" style="padding:24px 42px 0;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td bgcolor="#ff3b30" align="center" style="background:#ff3b30;border-radius:12px;"><a class="cta-link" href="${safePortalUrl}" target="_blank" style="display:block;padding:17px 22px;color:#fff;text-decoration:none;font-size:14px;font-weight:800;letter-spacing:.5px;">${escapeHtml(ctaLabel)}&nbsp;&nbsp;→</a></td></tr></table></td></tr>
+<tr><td class="email-pad" style="padding:28px 42px 0;"><div style="border-top:1px solid #252525;padding-top:22px;"><div style="color:#f5f5f5;font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;">PRIVATE BY DESIGN</div><p style="margin:8px 0 0;color:#6f6f6f;font-size:12px;line-height:1.7;">${escapeHtml(privacyText)}</p></div></td></tr>
+${signoff ? `<tr><td class="email-pad" style="padding:28px 42px 34px;"><p style="margin:0;color:#a5a5a5;font-size:13px;line-height:1.7;">Until the next leak,<br><strong style="color:#f5f5f5;">Precious</strong><br><span style="color:#6f6f6f;">Leakendia</span></p></td></tr>` : ""}
+<tr><td class="email-pad" bgcolor="#0c0c0c" style="padding:24px 42px;background:#0c0c0c;border-top:1px solid #202020;"><div style="color:#6f6f6f;font-size:10px;line-height:1.7;"><strong style="color:#a5a5a5;letter-spacing:1.5px;">LEAKENDIA</strong><br>Find where growth is leaking. Fix what deserves fixing.</div><div style="padding-top:12px;color:#555;font-size:9px;line-height:1.6;">You received this transactional notification because a Leakendia investigation was opened using this email address.</div></td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+export function clientWelcomeEmailTemplate({ name = "", portalUrl, logoUrl }) {
+    const clientFirstName = getFirstName(name);
+    const greeting = clientFirstName ? `Hi ${escapeHtml(clientFirstName)},` : "Hello,";
+    const html = brandedShell({
+        logoUrl,
+        preheader: "Your private Leakendia workspace is ready.",
+        badge: "INVESTIGATION OPEN",
+        title: "Welcome to Leakendia.",
+        accentTitle: "Your investigation starts here.",
+        greeting,
+        bodyHtml: `<p style="margin:0 0 15px;color:#a5a5a5;font-size:16px;line-height:1.75;">Your private Leakendia workspace is now active.</p><p style="margin:0;color:#a5a5a5;font-size:16px;line-height:1.75;">This is where we’ll investigate what is getting between attention and action, keep our communication organised, and document what we uncover as the investigation develops.</p>`,
+        cardHtml: `<tr><td class="email-pad" style="padding:26px 42px 0;"><div style="padding:20px;background:#151515;border:1px solid #2a2a2a;border-radius:16px;"><div style="color:#6f6f6f;font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;">YOUR PRIVATE WORKSPACE</div><div style="margin-top:9px;color:#f5f5f5;font-size:15px;font-weight:700;">One place for the investigation, messages and findings.</div></div></td></tr>`,
+        ctaLabel: "OPEN YOUR WORKSPACE",
+        portalUrl,
+        privacyText: "Your investigation details and client communication stay inside your private workspace."
+    });
+    const text = ["LEAKENDIA", "INVESTIGATION OPEN", "", "Welcome to Leakendia. Your investigation starts here.", "", clientFirstName ? `Hi ${clientFirstName},` : "Hello,", "", "Your private Leakendia workspace is now active.", "", "This is where we'll investigate what is getting between attention and action, keep our communication organised, and document what we uncover.", "", `Open your workspace: ${portalUrl}`, "", "PRIVATE BY DESIGN", "Your investigation details and client communication stay inside your private workspace.", "", "Until the next leak,", "Precious", "Leakendia"].join("\n");
+    return { html, text };
+}
+
+export function clientCustomEmailTemplate({ name = "", message = "", portalUrl, logoUrl }) {
+    const clientFirstName = getFirstName(name);
+    const greeting = clientFirstName ? `Hi ${escapeHtml(clientFirstName)},` : "Hello,";
+    const html = brandedShell({
+        logoUrl,
+        preheader: "A private update from Precious at Leakendia.",
+        badge: "PRIVATE NOTE",
+        title: "A note from",
+        accentTitle: "Precious.",
+        greeting,
+        bodyHtml: paragraphs(message),
+        ctaLabel: "OPEN YOUR WORKSPACE",
+        portalUrl,
+        privacyText: "This email is a notification from your Leakendia workspace. Sensitive investigation material remains inside the portal."
+    });
+    const text = ["LEAKENDIA", "PRIVATE NOTE", "", clientFirstName ? `Hi ${clientFirstName},` : "Hello,", "", String(message).trim(), "", `Open your workspace: ${portalUrl}`, "", "Precious", "Leakendia"].join("\n");
+    return { html, text };
+}

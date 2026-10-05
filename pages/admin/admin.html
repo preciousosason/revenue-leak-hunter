@@ -1562,6 +1562,28 @@
                                 </div>
 
 
+                                <!-- EMAIL NOTIFICATION CONTROLS -->
+
+                                <section class="email-notification-panel" aria-label="Client email notifications">
+                                    <div class="email-notification-copy">
+                                        <span class="conversation-kicker">EMAIL CONTROL</span>
+                                        <strong>Notify only when you decide.</strong>
+                                        <span>Portal replies never trigger email automatically.</span>
+                                    </div>
+
+                                    <div class="email-notification-actions">
+                                        <button id="send-reply-notification" data-email-notification class="email-action primary" type="button">Send Notification</button>
+                                        <button id="send-welcome-notification" data-email-notification class="email-action" type="button">Send Welcome Notification</button>
+                                        <button id="compose-notification" data-email-notification class="email-action" type="button">Compose Notification</button>
+                                    </div>
+
+                                    <p id="email-notification-status" class="email-notification-status" hidden></p>
+                                    <div id="email-notification-history" class="email-notification-history">
+                                        <div class="email-history-empty">No email notifications sent yet.</div>
+                                    </div>
+                                </section>
+
+
                                 <!-- COMPOSER -->
 
                                 <form
@@ -1959,6 +1981,40 @@
 
     </div>
 
+
+
+    <div id="compose-notification-modal" class="email-modal" aria-hidden="true">
+        <div class="email-modal-card" role="dialog" aria-modal="true" aria-labelledby="compose-notification-title">
+            <header class="email-modal-header">
+                <div>
+                    <span class="conversation-kicker">LEAKENDIA MAIL</span>
+                    <h2 id="compose-notification-title">Compose Notification</h2>
+                </div>
+                <button id="close-compose-notification" class="email-modal-close" type="button" aria-label="Close">×</button>
+            </header>
+
+            <form id="compose-notification-form" class="email-modal-form">
+                <div class="email-recipient-row">
+                    <span>TO</span>
+                    <strong id="compose-notification-recipient">Client</strong>
+                </div>
+                <label>
+                    <span>SUBJECT</span>
+                    <input id="compose-notification-subject" maxlength="180" autocomplete="off" required placeholder="What should they know?">
+                </label>
+                <label>
+                    <span>MESSAGE</span>
+                    <textarea id="compose-notification-message" maxlength="10000" required placeholder="Write your notification..."></textarea>
+                </label>
+                <p class="email-compose-note">Leakendia automatically wraps this message in the branded private-notification design.</p>
+                <p id="compose-notification-error" class="form-error" hidden></p>
+                <div class="email-modal-actions">
+                    <button id="cancel-compose-notification" class="email-action" type="button">Cancel</button>
+                    <button id="send-custom-notification" class="email-action primary" type="submit">Send Notification →</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- =====================================================
          SYSTEM TOASTS

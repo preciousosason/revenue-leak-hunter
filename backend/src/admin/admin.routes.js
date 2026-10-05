@@ -34,6 +34,12 @@ import {
     handleAdminDeleteReview
 } from "./reviews.js";
 
+
+import {
+    handleAdminSendEmailNotification,
+    handleAdminEmailNotificationHistory
+} from "./email-notifications.js";
+
 export async function handleAdminRoutes(
     request,
     env
@@ -112,6 +118,21 @@ export async function handleAdminRoutes(
             request,
             env
         );
+    }
+
+    if (
+        url.pathname === "/api/admin/email-notifications" &&
+        request.method === "POST"
+    ) {
+        return handleAdminSendEmailNotification(request, env);
+    }
+
+    if (
+        url.pathname.startsWith("/api/admin/email-notifications/") &&
+        request.method === "GET"
+    ) {
+        const conversationId = url.pathname.split("/").pop();
+        return handleAdminEmailNotificationHistory(request, env, conversationId);
     }
 
     if (

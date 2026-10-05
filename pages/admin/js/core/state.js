@@ -16,6 +16,8 @@ const state = {
 
     currentConversationId: null,
 
+    currentConversation: null,
+
     conversationPollingInterval: null,
 
     lastConversationSignature: "",

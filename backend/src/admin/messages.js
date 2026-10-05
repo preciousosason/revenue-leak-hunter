@@ -14,10 +14,6 @@ import {
     attachFilesToMessages
 } from "../utils/files.js";
 
-import {
-    sendClientReplyNotification
-} from "../email/email.js";
-
 
 export async function handleAdminSendMessage(
     request,
@@ -192,24 +188,6 @@ export async function handleAdminSendMessage(
                 "You have received a new message regarding your Leak Hunt."
             )
             .run();
-
-        // Email delivery is intentionally non-critical.
-        // The reply and portal notification are already saved.
-        if (client?.email) {
-            try {
-                await sendClientReplyNotification(env, {
-                    email: client.email,
-                    name: client.name || "",
-                    conversationId,
-                    messageId
-                });
-            } catch (emailError) {
-                console.error(
-                    "Client reply email notification failed:",
-                    emailError
-                );
-            }
-        }
 
         const createdMessage =
             await env.DB

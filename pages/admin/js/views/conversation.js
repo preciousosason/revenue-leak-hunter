@@ -137,6 +137,8 @@ export async function openConversation(
             }
         );
 
+        await loadEmailNotificationHistory();
+        setNotificationStatus();
         startConversationPolling();
 
     } catch (error) {
@@ -191,6 +193,16 @@ export async function loadConversation(
             return;
         }
 
+        const conversation = {
+            ...(data.conversation || {}),
+            name: data.conversation?.name || data.conversation?.client_name || "",
+            email: data.conversation?.email || data.conversation?.client_email || "",
+            business: data.conversation?.business || data.conversation?.client_business || "",
+            website: data.conversation?.website || data.conversation?.client_website || ""
+        };
+
+        state.currentConversation = conversation;
+
         const messages =
             Array.isArray(
                 data.messages
@@ -213,7 +225,7 @@ export async function loadConversation(
         ) {
 
             renderConversation(
-                data.conversation || {},
+                conversation,
                 messages
             );
 
@@ -830,6 +842,101 @@ export function closeConversationContextPanel() {
 }
 
 
+
+function setNotificationStatus(message = "", type = "") {
+    const element = document.getElementById("email-notification-status");
+    if (!element) return;
+    element.textContent = message;
+    element.className = `email-notification-status ${type}`.trim();
+    element.hidden = !message;
+}
+
+function setNotificationButtonsDisabled(disabled) {
+    document.querySelectorAll("[data-email-notification]").forEach(button => {
+        button.disabled = disabled;
+    });
+}
+
+async function sendNotification(type, custom = {}) {
+    if (!state.currentConversationId) {
+        setNotificationStatus("No conversation selected.", "error");
+        return;
+    }
+
+    setNotificationButtonsDisabled(true);
+    setNotificationStatus("Sending notification...", "working");
+
+    try {
+        const result = await api("/api/admin/email-notifications", {
+            method: "POST",
+            body: JSON.stringify({
+                conversationId: state.currentConversationId,
+                type,
+                ...custom
+            })
+        });
+
+        setNotificationStatus(
+            type === "welcome"
+                ? "Welcome notification sent."
+                : type === "custom"
+                    ? "Custom notification sent."
+                    : "Reply notification sent.",
+            "success"
+        );
+
+        await loadEmailNotificationHistory();
+        return result;
+    } catch (error) {
+        setNotificationStatus(error.message || "Unable to send notification.", "error");
+        throw error;
+    } finally {
+        setNotificationButtonsDisabled(false);
+    }
+}
+
+async function loadEmailNotificationHistory() {
+    const container = document.getElementById("email-notification-history");
+    if (!container || !state.currentConversationId) return;
+
+    try {
+        const data = await api(`/api/admin/email-notifications/${encodeURIComponent(state.currentConversationId)}`);
+        const items = Array.isArray(data.notifications) ? data.notifications : [];
+        container.innerHTML = items.length
+            ? items.slice(0, 8).map(item => `
+                <div class="email-history-item">
+                    <div>
+                        <strong>${escapeHTML(String(item.type || "notification").toUpperCase())}</strong>
+                        <span>${escapeHTML(item.subject || "Notification")}</span>
+                    </div>
+                    <span class="email-history-status ${escapeHTML(item.status || "")}">${escapeHTML(item.status || "unknown")}</span>
+                </div>
+            `).join("")
+            : `<div class="email-history-empty">No email notifications sent yet.</div>`;
+    } catch (error) {
+        container.innerHTML = `<div class="email-history-empty">Notification history unavailable.</div>`;
+    }
+}
+
+function openComposeNotification() {
+    const modal = document.getElementById("compose-notification-modal");
+    const recipient = document.getElementById("compose-notification-recipient");
+    const subject = document.getElementById("compose-notification-subject");
+    const message = document.getElementById("compose-notification-message");
+    if (recipient) recipient.textContent = state.currentConversation?.email || "No client email";
+    if (subject) subject.value = "";
+    if (message) message.value = "";
+    modal?.classList.add("is-open");
+    modal?.setAttribute("aria-hidden", "false");
+    subject?.focus();
+}
+
+function closeComposeNotification() {
+    const modal = document.getElementById("compose-notification-modal");
+    modal?.classList.remove("is-open");
+    modal?.setAttribute("aria-hidden", "true");
+}
+
 export function initConversation() {
 
     const form =
@@ -846,6 +953,44 @@ export function initConversation() {
         document.getElementById(
             "admin-messages"
         );
+
+    document.getElementById("send-reply-notification")?.addEventListener("click", async () => {
+        try { await sendNotification("reply"); } catch {}
+    });
+
+    document.getElementById("send-welcome-notification")?.addEventListener("click", async () => {
+        try { await sendNotification("welcome"); } catch {}
+    });
+
+    document.getElementById("compose-notification")?.addEventListener("click", openComposeNotification);
+    document.getElementById("close-compose-notification")?.addEventListener("click", closeComposeNotification);
+    document.getElementById("cancel-compose-notification")?.addEventListener("click", closeComposeNotification);
+
+    document.getElementById("compose-notification-modal")?.addEventListener("click", event => {
+        if (event.target.id === "compose-notification-modal") closeComposeNotification();
+    });
+
+    document.getElementById("compose-notification-form")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        const subject = document.getElementById("compose-notification-subject")?.value.trim() || "";
+        const message = document.getElementById("compose-notification-message")?.value.trim() || "";
+        const error = document.getElementById("compose-notification-error");
+        if (error) { error.hidden = true; error.textContent = ""; }
+        if (!subject || !message) {
+            if (error) { error.textContent = "Subject and message are required."; error.hidden = false; }
+            return;
+        }
+        const button = document.getElementById("send-custom-notification");
+        if (button) { button.disabled = true; button.textContent = "Sending..."; }
+        try {
+            await sendNotification("custom", { subject, message });
+            closeComposeNotification();
+        } catch (sendError) {
+            if (error) { error.textContent = sendError.message; error.hidden = false; }
+        } finally {
+            if (button) { button.disabled = false; button.textContent = "Send Notification →"; }
+        }
+    });
 
 
     if (form) {
