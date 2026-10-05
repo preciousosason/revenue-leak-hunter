@@ -71,8 +71,8 @@ export function clientReplyEmailTemplate({ name = "", portalUrl, logoUrl }) {
     const text = [
         "LEAKENDIA", "PRIVATE UPDATE", "", "Your investigation just moved forward.", "",
         clientFirstName ? `Hi ${clientFirstName},` : "Hello,", "",
-        "I've reviewed your investigation and left a new response for you.", "",
-        "Rather than putting potentially sensitive business details inside an email, your full response is waiting securely inside your private Leakendia workspace.", "",
+        "I've left a new response for you.", "",
+     "",
         "INVESTIGATION", "Leak Hunt Investigation", "New response from Precious", "",
         `Open your investigation: ${portalUrl}`, "", "PRIVATE BY DESIGN",
         "Your investigation details, private response and portal credentials are never exposed in this notification email.", "",

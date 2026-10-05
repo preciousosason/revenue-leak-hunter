@@ -7,7 +7,7 @@ import {
 const DEFAULT_FROM =
     "Leakendia <notifications@leakendia.com>";
 const DEFAULT_REPLY_TO =
-    "admin@leakendia.com";
+    "precious@leakendia.com";
 const DEFAULT_PORTAL_URL =
     "https://leakendia.com/pages/portal/portal.html";
 
