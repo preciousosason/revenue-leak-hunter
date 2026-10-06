@@ -1,0 +1,1226 @@
+/* =========================================================
+   PRECIOUS ELIJAH
+   HEALTH & WELLNESS WRITING PORTFOLIO
+   ---------------------------------------------------------
+   Standalone editorial design.
+   No dependency on Leakendia global styles.
+========================================================= */
+
+
+/* =========================================================
+   01. DESIGN TOKENS
+========================================================= */
+
+:root {
+  /* Backgrounds */
+  --bg: #f5f3ec;
+  --bg-soft: #eeece3;
+  --bg-card: #faf9f5;
+  --bg-dark: #17352d;
+
+  /* Text */
+  --text: #202521;
+  --text-soft: #565e58;
+  --text-muted: #7b817d;
+  --text-on-dark: #f5f3ec;
+
+  /* Accent */
+  --accent: #2f6654;
+  --accent-dark: #214b3e;
+  --accent-soft: #dce8df;
+
+  /* Lines */
+  --border: rgba(32, 37, 33, 0.14);
+  --border-strong: rgba(32, 37, 33, 0.28);
+
+  /* Fonts */
+  --font-display:
+    Georgia,
+    "Times New Roman",
+    Times,
+    serif;
+
+  --font-body:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  /* Layout */
+  --container: 1180px;
+  --reading-width: 720px;
+
+  /* Spacing */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4rem;
+  --space-8: 6rem;
+  --space-9: 8rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition: 260ms var(--ease);
+}
+
+
+/* =========================================================
+   02. RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+
+  background:
+    radial-gradient(
+      circle at 8% 5%,
+      rgba(47, 102, 84, 0.055),
+      transparent 26rem
+    ),
+    var(--bg);
+
+  color: var(--text);
+
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   03. ACCESSIBILITY
+========================================================= */
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 999;
+
+  padding: 0.7rem 1rem;
+
+  background: var(--text);
+  color: #ffffff;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  border-radius: var(--radius-sm);
+
+  transform: translateY(-180%);
+  transition: transform var(--transition);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+a:focus-visible {
+  outline: 3px solid rgba(47, 102, 84, 0.35);
+  outline-offset: 5px;
+}
+
+
+/* =========================================================
+   04. LAYOUT
+========================================================= */
+
+.site-shell {
+  width: 100%;
+  overflow: hidden;
+}
+
+.portfolio-container {
+  width: min(
+    calc(100% - 3rem),
+    var(--container)
+  );
+
+  margin-inline: auto;
+}
+
+
+/* =========================================================
+   05. SHARED TYPOGRAPHY
+========================================================= */
+
+.section-kicker {
+  margin-bottom: 0.6rem;
+
+  color: var(--accent);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+
+  text-transform: uppercase;
+}
+
+.section-number {
+  flex: 0 0 auto;
+
+  padding-top: 0.25rem;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+}
+
+h2 {
+  margin-bottom: 0;
+
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.2vw, 3.35rem);
+  font-weight: 400;
+
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+
+/* =========================================================
+   06. HEADER
+========================================================= */
+
+.portfolio-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.portfolio-header__inner {
+  min-height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 2rem;
+}
+
+.writer-mark {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.85rem;
+}
+
+.writer-mark__initials {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+
+  color: var(--accent-dark);
+
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.writer-mark:hover .writer-mark__initials {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.writer-mark__name {
+  font-size: 0.86rem;
+  font-weight: 750;
+
+  letter-spacing: 0.02em;
+}
+
+.portfolio-header__label {
+  color: var(--text-muted);
+
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   07. HERO
+========================================================= */
+
+.portfolio-hero {
+  padding:
+    clamp(5.5rem, 11vw, 9.5rem)
+    0
+    clamp(5rem, 9vw, 8rem);
+}
+
+.portfolio-hero__inner {
+  max-width: 1060px;
+}
+
+.portfolio-hero__eyebrow {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  margin-bottom: 2rem;
+
+  color: var(--accent);
+
+  font-size: 0.76rem;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow-line {
+  width: 42px;
+  height: 1px;
+
+  background: var(--accent);
+}
+
+.portfolio-hero__title {
+  max-width: 1040px;
+
+  margin-bottom: 2rem;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(
+    3.4rem,
+    7.8vw,
+    7.4rem
+  );
+
+  font-weight: 400;
+
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+}
+
+.portfolio-hero__title-accent {
+  display: block;
+
+  color: var(--accent);
+}
+
+.portfolio-hero__intro {
+  max-width: 680px;
+
+  margin-bottom: 2.8rem;
+
+  color: var(--text-soft);
+
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.portfolio-hero__details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 0.85rem;
+
+  color: var(--text-muted);
+
+  font-size: 0.73rem;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detail-divider {
+  width: 3px;
+  height: 3px;
+
+  background: var(--accent);
+
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   08. PORTFOLIO NOTICE
+========================================================= */
+
+.portfolio-notice {
+  padding: var(--space-8) 0;
+
+  background: var(--bg-soft);
+
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.portfolio-notice__layout {
+  display: grid;
+  grid-template-columns:
+    minmax(260px, 0.8fr)
+    minmax(0, 1.35fr);
+
+  gap: clamp(4rem, 8vw, 8rem);
+}
+
+.portfolio-notice__heading {
+  display: flex;
+
+  gap: 1.3rem;
+}
+
+.portfolio-notice__content {
+  max-width: 690px;
+}
+
+.portfolio-notice__content p {
+  margin-bottom: 1.4rem;
+
+  color: var(--text-soft);
+
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.portfolio-notice__content strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.portfolio-notice__content .portfolio-notice__lead {
+  margin-bottom: 1.8rem;
+
+  color: var(--text);
+
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+.portfolio-notice__principles {
+  margin-top: 2.8rem;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border);
+}
+
+.principle {
+  min-height: 105px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.2rem 1rem 1.15rem 0;
+}
+
+.principle:not(:last-child) {
+  margin-right: 1rem;
+
+  border-right: 1px solid var(--border);
+}
+
+.principle__number {
+  color: var(--text-muted);
+
+  font-size: 0.65rem;
+  font-weight: 750;
+
+  letter-spacing: 0.1em;
+}
+
+.principle__text {
+  color: var(--accent-dark);
+
+  font-family: var(--font-display);
+  font-size: 1.03rem;
+}
+
+
+/* =========================================================
+   09. SELECTED WRITING
+========================================================= */
+
+.selected-writing {
+  padding:
+    clamp(6rem, 10vw, 9rem)
+    0;
+}
+
+.section-heading {
+  margin-bottom: 4rem;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.2fr)
+    minmax(260px, 0.65fr);
+
+  align-items: end;
+
+  gap: 4rem;
+}
+
+.section-heading__left {
+  display: flex;
+
+  gap: 1.3rem;
+}
+
+.section-heading__description {
+  max-width: 430px;
+
+  margin-bottom: 0.15rem;
+
+  color: var(--text-soft);
+
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   10. ARTICLE CARDS
+========================================================= */
+
+.article-card {
+  border-top: 1px solid var(--border-strong);
+}
+
+.article-card:last-of-type {
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.article-card__link {
+  position: relative;
+
+  display: grid;
+  grid-template-columns:
+    minmax(70px, 0.14fr)
+    minmax(0, 1fr);
+
+  gap: clamp(2rem, 5vw, 5rem);
+
+  padding:
+    clamp(2.7rem, 5vw, 4.5rem)
+    0;
+
+  transition:
+    padding-left var(--transition),
+    padding-right var(--transition);
+}
+
+.article-card__link::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+
+  background: var(--bg-card);
+
+  opacity: 0;
+
+  transform: scaleX(0.985);
+
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+.article-card__link:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.article-card__link:hover {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.article-card__number {
+  color: var(--text-muted);
+
+  font-family: var(--font-display);
+  font-size: 1rem;
+
+  letter-spacing: 0.02em;
+}
+
+.article-card__meta {
+  margin-bottom: 1.35rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  color: var(--text-muted);
+
+  font-size: 0.7rem;
+  font-weight: 750;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.article-category {
+  color: var(--accent);
+}
+
+.article-meta-divider {
+  opacity: 0.55;
+}
+
+.article-card__title {
+  max-width: 870px;
+
+  margin-bottom: 1.5rem;
+
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4rem);
+
+  font-weight: 400;
+
+  letter-spacing: -0.045em;
+  line-height: 1.03;
+}
+
+.article-card__title span {
+  color: var(--accent);
+}
+
+.article-card__description {
+  max-width: 690px;
+
+  margin-bottom: 2.2rem;
+
+  color: var(--text-soft);
+
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.article-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 2rem;
+}
+
+.article-card__read {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  color: var(--accent-dark);
+
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.article-arrow {
+  display: inline-block;
+
+  font-size: 1rem;
+
+  transition: transform var(--transition);
+}
+
+.article-card__link:hover .article-arrow {
+  transform: translateX(6px);
+}
+
+.article-card__type {
+  color: var(--text-muted);
+
+  font-size: 0.68rem;
+  font-weight: 650;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   11. WRITER SECTION
+========================================================= */
+
+.writer-section {
+  padding: var(--space-8) 0;
+
+  background: var(--bg-dark);
+  color: var(--text-on-dark);
+}
+
+.writer-section__layout {
+  display: grid;
+  grid-template-columns:
+    minmax(260px, 0.8fr)
+    minmax(0, 1.35fr);
+
+  gap: clamp(4rem, 8vw, 8rem);
+}
+
+.writer-section__heading {
+  display: flex;
+
+  gap: 1.3rem;
+}
+
+.writer-section .section-number {
+  color: rgba(245, 243, 236, 0.42);
+}
+
+.writer-section .section-kicker {
+  color: #a9c7ba;
+}
+
+.writer-section h2 {
+  color: var(--text-on-dark);
+}
+
+.writer-section__content {
+  max-width: 690px;
+}
+
+.writer-section__content p {
+  margin-bottom: 1.35rem;
+
+  color: rgba(245, 243, 236, 0.72);
+
+  line-height: 1.8;
+}
+
+.writer-section__content .writer-section__lead {
+  margin-bottom: 2rem;
+
+  color: var(--text-on-dark);
+
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+}
+
+.writer-capabilities {
+  margin-top: 2.7rem;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.65rem;
+}
+
+.writer-capabilities span {
+  padding: 0.55rem 0.85rem;
+
+  border: 1px solid rgba(245, 243, 236, 0.2);
+  border-radius: 999px;
+
+  color: rgba(245, 243, 236, 0.78);
+
+  font-size: 0.68rem;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   12. CLOSING
+========================================================= */
+
+.portfolio-closing {
+  padding:
+    clamp(6rem, 10vw, 9rem)
+    0;
+}
+
+.portfolio-closing__inner {
+  max-width: 900px;
+}
+
+.portfolio-closing__statement {
+  margin-bottom: 0;
+
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+
+  font-weight: 400;
+
+  letter-spacing: -0.045em;
+  line-height: 1.06;
+}
+
+.portfolio-closing__statement strong {
+  color: var(--accent);
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   13. FOOTER
+========================================================= */
+
+.portfolio-footer {
+  border-top: 1px solid var(--border);
+}
+
+.portfolio-footer__inner {
+  min-height: 110px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(200px, 1fr)
+    auto
+    auto;
+
+  align-items: center;
+
+  gap: 2rem;
+}
+
+.portfolio-footer__identity {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.15rem;
+}
+
+.portfolio-footer__identity strong {
+  font-size: 0.82rem;
+}
+
+.portfolio-footer__identity span,
+.portfolio-footer__hosting,
+.portfolio-footer__year {
+  color: var(--text-muted);
+
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+}
+
+.portfolio-footer__hosting {
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+}
+
+
+/* =========================================================
+   14. RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .portfolio-notice__layout,
+  .writer-section__layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .section-heading__description {
+    margin-left: 2.1rem;
+  }
+
+  .portfolio-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .portfolio-footer__hosting {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    padding-bottom: 1.5rem;
+  }
+
+  .portfolio-footer__year {
+    text-align: right;
+  }
+}
+
+
+@media (max-width: 700px) {
+
+  :root {
+    --space-8: 4.5rem;
+  }
+
+  .portfolio-container {
+    width: min(
+      calc(100% - 2rem),
+      var(--container)
+    );
+  }
+
+
+  /* Header */
+
+  .portfolio-header__inner {
+    min-height: 72px;
+  }
+
+  .portfolio-header__meta {
+    display: none;
+  }
+
+
+  /* Hero */
+
+  .portfolio-hero {
+    padding: 4.5rem 0 4.2rem;
+  }
+
+  .portfolio-hero__eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .portfolio-hero__title {
+    font-size: clamp(3rem, 14vw, 5rem);
+    line-height: 0.97;
+  }
+
+  .portfolio-hero__intro {
+    margin-bottom: 2rem;
+
+    font-size: 1rem;
+  }
+
+
+  /* Notice */
+
+  .portfolio-notice__heading,
+  .section-heading__left,
+  .writer-section__heading {
+    gap: 0.9rem;
+  }
+
+  .portfolio-notice__principles {
+    grid-template-columns: 1fr;
+  }
+
+  .principle {
+    min-height: auto;
+
+    flex-direction: row;
+    align-items: center;
+
+    padding: 1rem 0;
+  }
+
+  .principle:not(:last-child) {
+    margin-right: 0;
+
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  /* Selected writing */
+
+  .selected-writing {
+    padding: 5rem 0;
+  }
+
+  .section-heading {
+    margin-bottom: 3rem;
+  }
+
+  .section-heading__description {
+    margin-left: 1.75rem;
+  }
+
+  .article-card__link {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+
+    padding: 2.8rem 0;
+  }
+
+  .article-card__link:hover {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .article-card__link::before {
+    display: none;
+  }
+
+  .article-card__number {
+    font-size: 0.8rem;
+  }
+
+  .article-card__title {
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+  }
+
+  .article-card__footer {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 1rem;
+  }
+
+
+  /* Writer */
+
+  .writer-section {
+    padding: 5rem 0;
+  }
+
+
+  /* Closing */
+
+  .portfolio-closing {
+    padding: 5rem 0;
+  }
+
+
+  /* Footer */
+
+  .portfolio-footer__inner {
+    min-height: auto;
+
+    grid-template-columns: 1fr;
+
+    padding: 2rem 0;
+
+    gap: 1rem;
+  }
+
+  .portfolio-footer__hosting {
+    grid-column: auto;
+    grid-row: auto;
+
+    display: block;
+
+    padding-bottom: 0;
+  }
+
+  .portfolio-footer__hosting span {
+    display: none;
+  }
+
+  .portfolio-footer__year {
+    text-align: left;
+  }
+}
+
+
+@media (max-width: 430px) {
+
+  .portfolio-hero__details {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 0.4rem;
+  }
+
+  .detail-divider {
+    display: none;
+  }
+
+  .portfolio-hero__title {
+    letter-spacing: -0.05em;
+  }
+
+  .writer-mark__name {
+    font-size: 0.8rem;
+  }
+}
+
+
+/* =========================================================
+   15. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+
+/* =========================================================
+   16. PRINT
+   Useful if an editor prints or saves the portfolio.
+========================================================= */
+
+@media print {
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .skip-link {
+    display: none;
+  }
+
+  .portfolio-header,
+  .portfolio-footer {
+    border-color: #cccccc;
+  }
+
+  .portfolio-notice,
+  .writer-section {
+    background: transparent;
+    color: #000000;
+  }
+
+  .writer-section h2,
+  .writer-section__content p,
+  .writer-section__content .writer-section__lead,
+  .writer-section .section-kicker {
+    color: #000000;
+  }
+
+  .writer-capabilities span {
+    color: #000000;
+    border-color: #999999;
+  }
+
+  .article-card__link::before {
+    display: none;
+  }
+
+  .article-card {
+    break-inside: avoid;
+  }
+}
+
+/* =========================================================
+   17. JS-ENHANCED REVEALS
+========================================================= */
+
+.article-card.reveal-ready {
+  opacity: 0;
+  transform: translateY(24px);
+
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+}
+
+.article-card.reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.article-card__link.is-opening {
+  opacity: 0.72;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-card.reveal-ready {
+    opacity: 1;
+    transform: none;
+  }
+}
