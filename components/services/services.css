@@ -1,0 +1,4 @@
+.home-services { background: var(--bg-secondary, #101010); }
+.home-services-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.75rem; }
+.home-services-actions a { text-decoration: none; }
+@media (max-width: 600px) { .home-services-actions { flex-direction: column; align-items: stretch; } .home-services-actions a { text-align: center; } }

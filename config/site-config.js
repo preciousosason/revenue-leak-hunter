@@ -21,7 +21,7 @@ title: "Conversion Leak Intelligence",
 
     routes: {
 
-        home: "index.html",
+        home: "/",
 
         about: "pages/about/about.html",
 

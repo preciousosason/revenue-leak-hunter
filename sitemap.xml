@@ -1,32 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-        <loc>https://leakendia.com/</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/services/services</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/portfolio/portfolio</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/reviews/reviews</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/about/about</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/blog/blog</loc>
-    </url>
-
-    <url>
-        <loc>https://leakendia.com/pages/contact/contact</loc>
-    </url>
-
+  <url><loc>https://leakendia.com/</loc></url>
+  <url><loc>https://leakendia.com/pages/services/services.html</loc></url>
+  <url><loc>https://leakendia.com/pages/portfolio/portfolio.html</loc></url>
+  <url><loc>https://leakendia.com/pages/reviews/reviews.html</loc></url>
+  <url><loc>https://leakendia.com/pages/about/about.html</loc></url>
+  <url><loc>https://leakendia.com/pages/blog/blog.html</loc></url>
+  <url><loc>https://leakendia.com/pages/contact/contact.html</loc></url>
 </urlset>
