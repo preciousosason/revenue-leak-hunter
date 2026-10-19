@@ -1093,3 +1093,38 @@
         transition: none;
     }
 }
+
+/* =========================================================
+   STORYTELLING EXTENSION (SCOPED)
+   ========================================================= */
+.problem-story{margin:clamp(3.5rem,7vw,6rem) auto;max-width:1100px}
+.problem-story-intro{max-width:700px;margin-bottom:1.8rem}
+.problem-story-intro h3{color:#f5f5f5;font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.16;letter-spacing:-.04em;margin:.9rem 0}
+.problem-story-intro p{color:#aaa;font-size:1rem;line-height:1.75;margin:0}
+.problem-story-card{padding:clamp(1.25rem,3vw,2.25rem);border:1px solid rgba(255,255,255,.1);border-radius:20px;background:radial-gradient(circle at 90% 10%,rgba(255,59,48,.07),transparent 48%),linear-gradient(145deg,#191919,#101010);box-shadow:0 24px 65px rgba(0,0,0,.2)}
+.problem-story-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:1.1rem;border-bottom:1px solid rgba(255,255,255,.09);font-size:.7rem;font-weight:750;letter-spacing:.1em;color:#ff5148}
+.problem-story-counter{color:#999;white-space:nowrap;font-variant-numeric:tabular-nums}
+.problem-story-panels{margin-top:1.7rem}
+.problem-story-panel{min-height:235px}
+.problem-story-label{color:#ff5148;font-size:.7rem;font-weight:750;letter-spacing:.11em}
+.problem-story-panel h4{font-size:clamp(1.7rem,3vw,2.7rem);letter-spacing:-.035em;line-height:1.2;color:#f5f5f5;max-width:760px;margin:1rem 0 1.1rem}
+.problem-story-panel h4 span{color:#ff5148}
+.problem-story-panel p{font-size:clamp(.95rem,1.25vw,1.08rem);line-height:1.75;color:#b5b5b5;max-width:780px;margin:.7rem 0}
+.problem-story-card.is-ready .problem-story-panel{display:none}
+.problem-story-card.is-ready .problem-story-panel.is-active{display:block;animation:problemStoryEnter .4s ease both}
+@keyframes problemStoryEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.problem-story-progress{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin-top:1.5rem}
+.problem-story-progress button{height:24px;position:relative;background:none;border:0;padding:0;cursor:pointer}
+.problem-story-progress button::before{content:"";position:absolute;inset:9px 0;border-radius:20px;background:#464646;transition:background .2s ease}
+.problem-story-progress button.is-active::before{background:#ff3b30}
+.problem-story-controls{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:.9rem;font-size:.8rem;color:#999}
+.problem-story-arrows{display:flex;gap:.55rem}
+.problem-story-arrows button{width:42px;height:42px;border-radius:9px;border:1px solid #414141;background:#242424;color:#fff;font-size:1.2rem;cursor:pointer}
+.problem-story-arrows button:hover{background:#363636}
+.problem-story button:focus-visible,.problem-story-conclusion a:focus-visible{outline:2px solid #ff5148;outline-offset:3px}
+.problem-story-conclusion{max-width:760px;text-align:center;margin:clamp(3rem,6vw,5rem) auto 0}
+.problem-story-conclusion h3{font-size:clamp(1.7rem,3vw,2.5rem);line-height:1.2;letter-spacing:-.035em;color:#f5f5f5}
+.problem-story-conclusion p{color:#aaa;line-height:1.8;font-size:1rem}
+.problem-story-conclusion a{display:inline-flex;gap:.55rem;margin-top:1rem;color:#ff5148;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:.25rem;font-weight:650}
+@media(max-width:600px){.problem-story{margin:3rem auto}.problem-story-card{padding:1.05rem;border-radius:15px}.problem-story-header{font-size:.55rem}.problem-story-panel{min-height:330px}.problem-story-panel h4{font-size:1.75rem}.problem-story-conclusion{text-align:left}}
+@media(prefers-reduced-motion:reduce){.problem-story-card.is-ready .problem-story-panel.is-active{animation:none}.problem-story-progress button::before{transition:none}}

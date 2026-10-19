@@ -1107,7 +1107,10 @@ const HOMEPAGE_COMPONENTS = [
             "components/problem/problem.html",
 
         css:
-            "components/problem/problem.css"
+            "components/problem/problem.css",
+
+        js:
+            "components/problem/problem.js"
     },
 
     {

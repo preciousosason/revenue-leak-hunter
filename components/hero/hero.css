@@ -2894,3 +2894,78 @@
     }
 
 }
+
+
+/* ==========================================
+   HERO — ROTATING HEADLINE
+========================================== */
+
+.hero-title-static,
+.hero-title-dynamic {
+  display: block;
+}
+
+.hero-title-dynamic {
+  position: relative;
+  margin-top: 0.12em;
+  min-height: 3.3em;
+}
+
+.hero-title-dynamic strong {
+  display: block;
+  color: #ff3b30;
+  font-weight: inherit;
+}
+
+/* Smooth entrance */
+
+.hero-title-dynamic strong.is-entering {
+  animation: headlineEnter 280ms ease both;
+}
+
+/* Smooth exit */
+
+.hero-title-dynamic strong.is-leaving {
+  animation: headlineLeave 180ms ease both;
+}
+
+@keyframes headlineEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes headlineLeave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(3px);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title-dynamic {
+    min-height: 4.5em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-dynamic strong.is-entering,
+  .hero-title-dynamic strong.is-leaving {
+    animation: none !important;
+  }
+}
