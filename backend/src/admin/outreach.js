@@ -205,6 +205,22 @@ async function listTrash(request,env){
     return json({success:true,campaigns:c.results||[],prospects:p.results||[]});
 }
 
+
+async function intelligence(request, env) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const [funnel, campaigns, timeline] = await Promise.all([
+        env.DB.prepare(`SELECT p.status, COUNT(*) AS total, SUM(CASE WHEN p.last_sent_at IS NOT NULL THEN 1 ELSE 0 END) AS contacted FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.deleted_at IS NULL AND c.deleted_at IS NULL GROUP BY p.status`).all(),
+        env.DB.prepare(`SELECT c.id,c.name,c.status,c.daily_limit,COUNT(p.id) AS prospects,SUM(CASE WHEN p.last_sent_at IS NOT NULL THEN 1 ELSE 0 END) AS contacted,SUM(CASE WHEN p.status IN ('replied','interested','qualified','converted') THEN 1 ELSE 0 END) AS positive,SUM(CASE WHEN p.status='converted' THEN 1 ELSE 0 END) AS converted FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id AND p.deleted_at IS NULL WHERE c.deleted_at IS NULL GROUP BY c.id ORDER BY c.created_at DESC LIMIT 100`).all(),
+        env.DB.prepare(`SELECT substr(sent_at,1,10) AS day,COUNT(*) AS sent FROM outreach_messages WHERE sent_at IS NOT NULL AND status IN ('sent','delivered','opened','clicked','replied') AND sent_at >= ? GROUP BY substr(sent_at,1,10) ORDER BY day DESC LIMIT 30`).bind(addDays(dateOnly(),-30)).all()
+    ]);
+    const rows = funnel.results || [];
+    const total = rows.reduce((n,r)=>n+Number(r.total||0),0);
+    const contacted = rows.reduce((n,r)=>n+Number(r.contacted||0),0);
+    const positive = rows.filter(r=>['replied','interested','qualified','converted'].includes(r.status)).reduce((n,r)=>n+Number(r.total||0),0);
+    const converted = rows.filter(r=>r.status==='converted').reduce((n,r)=>n+Number(r.total||0),0);
+    return json({success:true,summary:{total,contacted,positive,converted,positive_rate:contacted?Math.round(positive/contacted*1000)/10:0,conversion_rate:contacted?Math.round(converted/contacted*1000)/10:0},statuses:rows,campaigns:campaigns.results||[],daily_sends:(timeline.results||[]).reverse()});
+}
+
 export async function handleAdminOutreachRoutes(request,env){const url=new URL(request.url),p=url.pathname,m=request.method;
     if(p==="/api/admin/outreach/google/callback"&&m==="GET")return handleGoogleCallback(request,env);
     if(p==="/api/admin/outreach/google/status"&&m==="GET")return handleGoogleStatus(request,env);
@@ -216,6 +232,7 @@ export async function handleAdminOutreachRoutes(request,env){const url=new URL(r
         const kind=action[1]==="campaigns"?"campaign":"prospect";
         return m==="DELETE"?softDelete(request,env,kind,action[2]):restoreRecord(request,env,kind,action[2]);
     }
+    if(p==="/api/admin/outreach/intelligence"&&m==="GET")return intelligence(request,env);
     if(p==="/api/admin/outreach/dashboard"&&m==="GET")return dashboard(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="GET")return listCampaigns(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="POST")return createCampaign(request,env);

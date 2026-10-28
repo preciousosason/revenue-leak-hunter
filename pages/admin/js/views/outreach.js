@@ -11,7 +11,7 @@ const badge = value => `<span class="outreach-badge ${e(value)}">${e(String(valu
 function shell(content) {
     root.innerHTML = `<header class="outreach-head"><div><span class="outreach-kicker">OUTREACH // CONTROL</span><h2>Outreach Center</h2><p>Research, schedule and manage personalized prospecting without mixing it with client notifications.</p></div></header>
     <nav class="outreach-tabs">
-      ${[["dashboard","Dashboard"],["campaigns","Campaigns"],["create","Create Campaign"],["due","Due Today"],["templates","Templates"],["trash","Recycle Bin"]].map(([id,label])=>`<button class="outreach-tab ${currentTab===id?'active':''}" data-outreach-tab="${id}">${label}</button>`).join("")}
+      ${[["dashboard","Dashboard"],["intelligence","Intelligence"],["campaigns","Campaigns"],["create","Create Campaign"],["due","Due Today"],["templates","Templates"],["trash","Recycle Bin"]].map(([id,label])=>`<button class="outreach-tab ${currentTab===id?'active':''}" data-outreach-tab="${id}">${label}</button>`).join("")}
     </nav><div id="outreach-workspace">${content}</div>`;
     root.querySelectorAll("[data-outreach-tab]").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.outreachTab)));
 }
@@ -84,6 +84,25 @@ async function trash(){
     root.querySelectorAll('[data-restore-campaign]').forEach(b=>b.onclick=async()=>{try{await api(`/api/admin/outreach/campaigns/${b.dataset.restoreCampaign}/restore`,{method:'POST'});await trash();}catch(err){alert(err.message);}});
     root.querySelectorAll('[data-restore-prospect]').forEach(b=>b.onclick=async()=>{try{await api(`/api/admin/outreach/prospects/${b.dataset.restoreProspect}/restore`,{method:'POST'});await trash();}catch(err){alert(err.message);}});
 }
-async function openTab(tab){currentTab=tab;loading();try{if(tab==='dashboard')await dashboard();else if(tab==='campaigns')await campaignList();else if(tab==='create')await createCampaign();else if(tab==='due')await due();else if(tab==='templates')await templates();else if(tab==='trash')await trash();}catch(err){errorView(err);}}
+
+async function intelligence(){
+    const d=await api('/api/admin/outreach/intelligence'), m=d.summary||{};
+    const percent=(a,b)=>b?Math.min(100,Math.round(100*Number(a||0)/Number(b))):0;
+    const metrics=[['PROSPECTS',m.total],['CONTACTED',m.contacted],['POSITIVE RESPONSES',m.positive],['CONVERTED',m.converted],['POSITIVE RATE',`${m.positive_rate||0}%`],['CONVERSION RATE',`${m.conversion_rate||0}%`]];
+    const csvCell=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+    shell(`<div class="outreach-toolbar"><div><span class="outreach-kicker">INTELLIGENCE // PIPELINE</span><h3>Acquisition Intelligence</h3><p>Live figures from your outreach records. Positive means replied, interested, qualified or converted.</p></div><button id="intelligence-export" class="outreach-primary">Export Campaign CSV</button></div>
+    <div class="outreach-metrics">${metrics.map(([label,value])=>`<article><span>${e(label)}</span><strong>${e(value??0)}</strong></article>`).join('')}</div>
+    <section class="outreach-card"><h3>Conversion Journey</h3><div class="sequence-list">${[['Prospects',m.total,m.total],['Contacted',m.contacted,m.total],['Positive responses',m.positive,m.contacted],['Converted',m.converted,m.contacted]].map(([label,n,den])=>`<p><span>${e(label)} <small>(${percent(n,den)}%)</small></span><strong>${e(n||0)}</strong></p>`).join('')}</div><p class="muted-note">Stages represent current status and contact history, not unique email engagement or attributed revenue.</p></section>
+    <section class="outreach-card"><h3>Campaign Performance</h3><div class="outreach-list">${d.campaigns.length?d.campaigns.map(c=>`<div class="activity-row"><div><strong>${e(c.name)}</strong><span>${e(c.status)} · ${e(c.prospects||0)} prospects · ${e(c.contacted||0)} contacted · ${e(c.positive||0)} positive</span></div><div><strong>${e(c.converted||0)} won</strong><span>${percent(c.positive,c.contacted)}% positive</span></div></div>`).join(''):'<p class="outreach-empty">No campaign data yet.</p>'}</div></section>
+    <section class="outreach-card"><h3>Recent Sending Volume</h3><div class="outreach-list">${d.daily_sends.length?d.daily_sends.map(x=>`<div class="activity-row"><strong>${e(x.day)}</strong><span>${e(x.sent)} sent</span></div>`).join(''):'<p class="outreach-empty">No recorded sends in the last 30 days.</p>'}</div></section>`);
+    root.querySelector('#intelligence-export').onclick=()=>{
+        const columns=['name','status','prospects','contacted','positive','converted'];
+        const csv=[columns.map(csvCell).join(','),...d.campaigns.map(r=>columns.map(k=>csvCell(r[k])).join(','))].join('\r\n');
+        const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+        a.href=url;a.download='leakendia-campaign-intelligence.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    };
+}
+
+async function openTab(tab){currentTab=tab;loading();try{if(tab==='dashboard')await dashboard();else if(tab==='intelligence')await intelligence();else if(tab==='campaigns')await campaignList();else if(tab==='create')await createCampaign();else if(tab==='due')await due();else if(tab==='templates')await templates();else if(tab==='trash')await trash();}catch(err){errorView(err);}}
 export function initOutreach(){root=document.getElementById('outreach-root');}
 export async function loadOutreach(){if(!root)root=document.getElementById('outreach-root');if(root)await openTab(currentTab);}
