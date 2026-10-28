@@ -59,9 +59,9 @@ async function dashboard(request, env) {
     const auth = await adminOr401(request, env); if (auth) return auth;
     const today = dateOnly();
     const [campaigns, prospects, due, activity] = await Promise.all([
-        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_campaigns GROUP BY status`).all(),
-        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_prospects GROUP BY status`).all(),
-        env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date <= ?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date <= ?))`).bind(today, today).first(),
+        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_campaigns WHERE deleted_at IS NULL GROUP BY status`).all(),
+        env.DB.prepare(`SELECT status, COUNT(*) count FROM outreach_prospects WHERE deleted_at IS NULL GROUP BY status`).all(),
+        env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.deleted_at IS NULL AND p.deleted_at IS NULL AND c.status='active' AND c.deleted_at IS NULL AND p.deleted_at IS NULL AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date <= ?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date <= ?))`).bind(today, today).first(),
         env.DB.prepare(`SELECT e.*, p.name prospect_name, p.email prospect_email, c.name campaign_name FROM outreach_events e LEFT JOIN outreach_prospects p ON p.id=e.prospect_id LEFT JOIN outreach_campaigns c ON c.id=e.campaign_id ORDER BY e.created_at DESC LIMIT 20`).all()
     ]);
     const map = rows => Object.fromEntries((rows.results || []).map(r => [r.status, Number(r.count)]));
@@ -70,7 +70,7 @@ async function dashboard(request, env) {
 
 async function listCampaigns(request, env) {
     const auth = await adminOr401(request, env); if (auth) return auth;
-    const rows = await env.DB.prepare(`SELECT c.*, COUNT(p.id) prospect_count, SUM(CASE WHEN p.last_sent_at IS NOT NULL THEN 1 ELSE 0 END) contacted_count, SUM(CASE WHEN p.status IN ('replied','interested','qualified','converted') THEN 1 ELSE 0 END) reply_count, SUM(CASE WHEN p.status='converted' THEN 1 ELSE 0 END) converted_count FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id GROUP BY c.id ORDER BY c.created_at DESC`).all();
+    const rows = await env.DB.prepare(`SELECT c.*, COUNT(p.id) prospect_count, SUM(CASE WHEN p.last_sent_at IS NOT NULL THEN 1 ELSE 0 END) contacted_count, SUM(CASE WHEN p.status IN ('replied','interested','qualified','converted') THEN 1 ELSE 0 END) reply_count, SUM(CASE WHEN p.status='converted' THEN 1 ELSE 0 END) converted_count FROM outreach_campaigns c LEFT JOIN outreach_prospects p ON p.campaign_id=c.id AND p.deleted_at IS NULL WHERE c.deleted_at IS NULL GROUP BY c.id ORDER BY c.created_at DESC`).all();
     return json({ success: true, campaigns: (rows.results || []).map(rowCampaign) });
 }
 
@@ -90,16 +90,16 @@ async function createCampaign(request, env) {
 
 async function getCampaign(request, env, id) {
     const auth = await adminOr401(request, env); if (auth) return auth;
-    const campaign = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(id).first();
+    const campaign = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=? AND deleted_at IS NULL`).bind(id).first();
     if (!campaign) return json({success:false,error:"Campaign not found."},404);
-    const prospects = await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE campaign_id=? ORDER BY sequence_no`).bind(id).all();
+    const prospects = await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE campaign_id=? AND deleted_at IS NULL AND deleted_at IS NULL ORDER BY sequence_no`).bind(id).all();
     return json({success:true,campaign:rowCampaign(campaign),prospects:prospects.results||[]});
 }
 
 async function patchCampaign(request, env, id) {
     const auth = await adminOr401(request, env); if (auth) return auth;
     const data = await body(request); if (!data) return json({success:false,error:"Invalid JSON request."},400);
-    const current = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(id).first(); if (!current) return json({success:false,error:"Campaign not found."},404);
+    const current = await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=? AND deleted_at IS NULL`).bind(id).first(); if (!current) return json({success:false,error:"Campaign not found."},404);
     const status = CAMPAIGN_STATES.has(data.status) ? data.status : current.status;
     const name = data.name !== undefined ? clean(data.name,160) : current.name;
     const daily = data.daily_limit !== undefined ? Math.max(1,Math.min(50,parseInt(data.daily_limit,10)||15)) : current.daily_limit;
@@ -113,8 +113,8 @@ async function validateEmail(request, env) { const auth=await adminOr401(request
 
 async function addProspect(request, env) {
     const auth=await adminOr401(request,env); if(auth)return auth; const data=await body(request); if(!data)return json({success:false,error:"Invalid JSON request."},400);
-    const campaign=await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=?`).bind(clean(data.campaign_id,80)).first(); if(!campaign)return json({success:false,error:"Campaign not found."},404);
-    const count=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE campaign_id=?`).bind(campaign.id).first(); const sequence=Number(count?.count||0)+1;
+    const campaign=await env.DB.prepare(`SELECT * FROM outreach_campaigns WHERE id=? AND deleted_at IS NULL`).bind(clean(data.campaign_id,80)).first(); if(!campaign)return json({success:false,error:"Campaign not found."},404);
+    const count=await env.DB.prepare(`SELECT COUNT(*) count FROM outreach_prospects WHERE campaign_id=? AND deleted_at IS NULL`).bind(campaign.id).first(); const sequence=Number(count?.count||0)+1;
     if(sequence>Number(campaign.max_prospects))return json({success:false,error:`This campaign is limited to ${campaign.max_prospects} prospects.`},400);
     const address=email(data.email); const validation=await validateOutreachEmailAddress(env,address); if(!validation.can_outreach)return json({success:false,error:validation.reason,validation},400);
     const duplicate=await env.DB.prepare(`SELECT id,campaign_id FROM outreach_prospects WHERE email=? LIMIT 1`).bind(address).first(); if(duplicate)return json({success:false,error:"This email already exists in Outreach.",duplicate},409);
@@ -124,20 +124,21 @@ async function addProspect(request, env) {
     return json({success:true,prospect_id:id,validation,initial_due_date:due},201);
 }
 
-async function getProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const p=await env.DB.prepare(`SELECT p.*,c.name campaign_name,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);const [messages,events]=await Promise.all([env.DB.prepare(`SELECT * FROM outreach_messages WHERE prospect_id=? ORDER BY created_at`).bind(id).all(),env.DB.prepare(`SELECT * FROM outreach_events WHERE prospect_id=? ORDER BY created_at DESC`).bind(id).all()]);return json({success:true,prospect:p,messages:messages.results||[],events:events.results||[]});}
+async function getProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const p=await env.DB.prepare(`SELECT p.*,c.name campaign_name,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=? AND p.deleted_at IS NULL AND c.deleted_at IS NULL AND p.deleted_at IS NULL AND c.deleted_at IS NULL`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);const [messages,events]=await Promise.all([env.DB.prepare(`SELECT * FROM outreach_messages WHERE prospect_id=? ORDER BY created_at`).bind(id).all(),env.DB.prepare(`SELECT * FROM outreach_events WHERE prospect_id=? ORDER BY created_at DESC`).bind(id).all()]);return json({success:true,prospect:p,messages:messages.results||[],events:events.results||[]});}
 
-async function patchProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const p=await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE id=?`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);let status=PROSPECT_STATES.has(data.status)?data.status:p.status;const now=isoNow();let complete=STOP_STATUSES.has(status)?1:p.sequence_complete;let next=STOP_STATUSES.has(status)?null:p.next_followup_date;
+async function patchProspect(request,env,id){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const p=await env.DB.prepare(`SELECT * FROM outreach_prospects WHERE id=? AND deleted_at IS NULL`).bind(id).first();if(!p)return json({success:false,error:"Prospect not found."},404);let status=PROSPECT_STATES.has(data.status)?data.status:p.status;const now=isoNow();let complete=STOP_STATUSES.has(status)?1:p.sequence_complete;let next=STOP_STATUSES.has(status)?null:p.next_followup_date;
     if(status==="do_not_contact"){await env.DB.prepare(`INSERT OR REPLACE INTO outreach_suppressions (email,reason,source,created_at) VALUES (?,?,?,?)`).bind(p.email,clean(data.suppression_reason,500)||"Marked Do Not Contact","admin",now).run();}
     await env.DB.prepare(`UPDATE outreach_prospects SET name=?,website=?,company=?,role=?,observation=?,notes=?,research_ready=?,status=?,sequence_complete=?,next_followup_date=?,updated_at=? WHERE id=?`).bind(data.name!==undefined?clean(data.name,160):p.name,data.website!==undefined?clean(data.website,500):p.website,data.company!==undefined?clean(data.company,160):p.company,data.role!==undefined?clean(data.role,160):p.role,data.observation!==undefined?clean(data.observation,3000):p.observation,data.notes!==undefined?clean(data.notes,5000):p.notes,data.research_ready!==undefined?(data.research_ready?1:0):p.research_ready,status,complete,next,now,id).run();
     if(status!==p.status)await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),p.campaign_id,id,"status_changed",`${p.status} → ${status}`,now).run(); return json({success:true});}
 
-async function dueToday(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const today=dateOnly();const rows=await env.DB.prepare(`SELECT p.*,c.name campaign_name FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.status='active' AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date<=?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date<=?)) ORDER BY COALESCE(p.next_followup_date,p.initial_due_date),c.created_at,p.sequence_no`).bind(today,today).all();return json({success:true,date:today,prospects:rows.results||[]});}
+async function dueToday(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const today=dateOnly();const rows=await env.DB.prepare(`SELECT p.*,c.name campaign_name FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE c.deleted_at IS NULL AND p.deleted_at IS NULL AND c.status='active' AND c.deleted_at IS NULL AND p.deleted_at IS NULL AND p.research_ready=1 AND p.email_health='mail_ready' AND p.sequence_complete=0 AND p.status NOT IN ('replied','interested','qualified','converted','not_interested','do_not_contact') AND ((p.last_sent_at IS NULL AND p.initial_due_date<=?) OR (p.last_sent_at IS NOT NULL AND p.next_followup_date IS NOT NULL AND p.next_followup_date<=?)) ORDER BY COALESCE(p.next_followup_date,p.initial_due_date),c.created_at,p.sequence_no`).bind(today,today).all();return json({success:true,date:today,prospects:rows.results||[]});}
 
 async function sendOutreachMessage(request,env){
     const auth=await adminOr401(request,env);if(auth)return auth;
     const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);
-    const p=await env.DB.prepare(`SELECT p.*,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=?`).bind(clean(data.prospect_id,80)).first();
+    const p=await env.DB.prepare(`SELECT p.*,c.status campaign_status,c.followup_intervals FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.id=? AND p.deleted_at IS NULL AND c.deleted_at IS NULL AND p.deleted_at IS NULL AND c.deleted_at IS NULL`).bind(clean(data.prospect_id,80)).first();
     if(!p)return json({success:false,error:"Prospect not found."},404);
+    if(p.campaign_status!=="active")return json({success:false,error:"Campaign is not active."},409);
     if(STOP_STATUSES.has(p.status)||p.sequence_complete)return json({success:false,error:"This outreach sequence is stopped or complete."},400);
     if(p.email_health!=="mail_ready")return json({success:false,error:"This prospect is not Mail Ready."},400);
     if(!p.research_ready)return json({success:false,error:"Research must be marked complete before sending."},400);
@@ -167,11 +168,54 @@ async function sendOutreachMessage(request,env){
 async function listTemplates(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const rows=await env.DB.prepare(`SELECT * FROM outreach_templates ORDER BY sequence_step`).all();return json({success:true,templates:rows.results||[]});}
 async function saveTemplate(request,env){const auth=await adminOr401(request,env);if(auth)return auth;const data=await body(request);if(!data)return json({success:false,error:"Invalid JSON request."},400);const step=Math.max(0,Math.min(5,parseInt(data.sequence_step,10)||0));const existing=await env.DB.prepare(`SELECT id FROM outreach_templates WHERE sequence_step=? LIMIT 1`).bind(step).first();const id=existing?.id||createId(),now=isoNow();if(existing)await env.DB.prepare(`UPDATE outreach_templates SET name=?,subject=?,body=?,updated_at=? WHERE id=?`).bind(clean(data.name,120),clean(data.subject,300),clean(data.body,20000),now,id).run();else await env.DB.prepare(`INSERT INTO outreach_templates (id,sequence_step,name,subject,body,created_at,updated_at) VALUES (?,?,?,?,?,?,?)`).bind(id,step,clean(data.name,120)||`Step ${step}`,clean(data.subject,300),clean(data.body,20000),now,now).run();return json({success:true,id});}
 
+
+// Reversible deletion. Existing message history and suppressions are retained.
+async function softDelete(request, env, kind, id) {
+    const auth = await adminOr401(request, env); if (auth) return auth;
+    const table = kind === "campaign" ? "outreach_campaigns" : "outreach_prospects";
+    const row = await env.DB.prepare(`SELECT id, deleted_at FROM ${table} WHERE id=?`).bind(id).first();
+    if (!row) return json({success:false,error:"Record not found."},404);
+    if (row.deleted_at) return json({success:true,already_deleted:true});
+    const now=isoNow();
+    await env.DB.prepare(`UPDATE ${table} SET deleted_at=?,deleted_by='admin',deleted_reason='Manual deletion',updated_at=? WHERE id=? AND deleted_at IS NULL`).bind(now,now,id).run();
+    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),kind==='campaign'?id:null,kind==='prospect'?id:null,kind+'_trashed','Moved to trash',now).run();
+    return json({success:true,deleted_at:now});
+}
+async function restoreRecord(request, env, kind, id) {
+    const auth=await adminOr401(request,env);if(auth)return auth;
+    const table=kind==='campaign'?'outreach_campaigns':'outreach_prospects';
+    const row=await env.DB.prepare(`SELECT * FROM ${table} WHERE id=?`).bind(id).first();
+    if(!row)return json({success:false,error:'Record not found.'},404);
+    if(kind==='prospect'){
+        const parent=await env.DB.prepare(`SELECT deleted_at FROM outreach_campaigns WHERE id=?`).bind(row.campaign_id).first();
+        if(!parent||parent.deleted_at)return json({success:false,error:'Restore the parent campaign first.'},409);
+    }
+    const now=isoNow();
+    await env.DB.prepare(`UPDATE ${table} SET deleted_at=NULL,deleted_reason=NULL,deleted_by=NULL,updated_at=? WHERE id=?`).bind(now,id).run();
+    if(kind==='campaign')await env.DB.prepare(`UPDATE outreach_campaigns SET status='paused',updated_at=? WHERE id=?`).bind(now,id).run();
+    await env.DB.prepare(`INSERT INTO outreach_events (id,campaign_id,prospect_id,type,detail,created_at) VALUES (?,?,?,?,?,?)`).bind(createId(),kind==='campaign'?id:null,kind==='prospect'?id:null,kind+'_restored','Restored; review schedule before resuming',now).run();
+    return json({success:true,requires_review:true});
+}
+async function listTrash(request,env){
+    const auth=await adminOr401(request,env);if(auth)return auth;
+    const [c,p]=await Promise.all([
+        env.DB.prepare(`SELECT id,name,status,deleted_at FROM outreach_campaigns WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC`).all(),
+        env.DB.prepare(`SELECT p.id,p.name,p.email,p.company,p.campaign_id,p.deleted_at,c.name campaign_name,c.deleted_at campaign_deleted_at FROM outreach_prospects p JOIN outreach_campaigns c ON c.id=p.campaign_id WHERE p.deleted_at IS NOT NULL ORDER BY p.deleted_at DESC`).all()
+    ]);
+    return json({success:true,campaigns:c.results||[],prospects:p.results||[]});
+}
+
 export async function handleAdminOutreachRoutes(request,env){const url=new URL(request.url),p=url.pathname,m=request.method;
     if(p==="/api/admin/outreach/google/callback"&&m==="GET")return handleGoogleCallback(request,env);
     if(p==="/api/admin/outreach/google/status"&&m==="GET")return handleGoogleStatus(request,env);
     if(p==="/api/admin/outreach/google/connect"&&m==="POST")return handleGoogleConnect(request,env);
     if(p==="/api/admin/outreach/google/disconnect"&&m==="POST")return handleGoogleDisconnect(request,env);
+    if(p==="/api/admin/outreach/trash"&&m==="GET")return listTrash(request,env);
+    const action=p.match(/^\/api\/admin\/outreach\/(campaigns|prospects)\/([^/]+)(?:\/(restore))?$/);
+    if(action&&((m==="DELETE"&&!action[3])||(m==="POST"&&action[3]==="restore"))){
+        const kind=action[1]==="campaigns"?"campaign":"prospect";
+        return m==="DELETE"?softDelete(request,env,kind,action[2]):restoreRecord(request,env,kind,action[2]);
+    }
     if(p==="/api/admin/outreach/dashboard"&&m==="GET")return dashboard(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="GET")return listCampaigns(request,env);
     if(p==="/api/admin/outreach/campaigns"&&m==="POST")return createCampaign(request,env);
