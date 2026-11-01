@@ -1,0 +1,1279 @@
+/* =========================================================
+   ARTICLE PAGE
+   Shared styling for all individual blog articles
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   ARTICLE HEADER
+   --------------------------------------------------------- */
+
+.article-header {
+position: relative;
+
+padding-top: clamp(10rem, 17vw, 14rem);
+padding-bottom: clamp(5rem, 9vw, 8rem);
+
+}
+
+/* ---------------------------------------------------------
+HEADER CONTENT
+--------------------------------------------------------- */
+
+.article-header-content {
+position: relative;
+
+max-width: 960px;
+margin: 0 auto;
+
+}
+
+/* ---------------------------------------------------------
+CATEGORY
+--------------------------------------------------------- */
+
+.article-category {
+position: relative;
+
+display: inline-flex;
+align-items: center;
+gap: 0.65rem;
+
+color: var(--color-primary);
+
+font-size: 0.65rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.16em;
+line-height: 1.4;
+text-transform: uppercase;
+
+}
+
+/* Small diagnostic marker */
+
+.article-category::before {
+content: "";
+
+width: 0.45rem;
+height: 0.45rem;
+
+border: 1px solid var(--color-primary);
+border-radius: 50%;
+
+box-sizing: border-box;
+
+}
+
+/* ---------------------------------------------------------
+TITLE
+--------------------------------------------------------- */
+
+.article-title {
+max-width: 920px;
+
+margin-top: var(--space-lg);
+margin-bottom: 0;
+
+color: var(--color-text);
+
+font-size: clamp(3rem, 7.5vw, 6.5rem);
+font-weight: var(--weight-bold);
+line-height: 0.94;
+letter-spacing: -0.065em;
+
+text-wrap: balance;
+
+}
+
+/* ---------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------- */
+
+.article-description {
+position: relative;
+
+max-width: 700px;
+
+margin-top: var(--space-2xl);
+padding-left: 1.25rem;
+
+color: var(--color-text-secondary);
+
+font-size: var(--text-lg);
+line-height: 1.75;
+
+}
+
+/* Editorial guide line */
+
+.article-description::before {
+content: "";
+
+position: absolute;
+top: 0.25rem;
+bottom: 0.25rem;
+left: 0;
+
+width: 1px;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+META INFORMATION
+--------------------------------------------------------- */
+
+.article-meta {
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 0.8rem;
+
+margin-top: var(--space-2xl);
+
+color: var(--color-text-muted);
+
+font-size: 0.65rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.06em;
+line-height: 1.5;
+
+}
+
+/* ---------------------------------------------------------
+META SEPARATOR
+--------------------------------------------------------- */
+
+.article-meta-separator {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+width: 1rem;
+
+color: var(--color-border);
+
+font-size: 0.7rem;
+
+}
+
+/* ---------------------------------------------------------
+SUBTLE HEADER RHYTHM
+--------------------------------------------------------- */
+
+.article-header::after {
+content: "";
+
+display: block;
+
+width: min(960px, 100%);
+
+height: 1px;
+
+margin: clamp(4rem, 8vw, 7rem) auto 0;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-header {
+    padding-top: 8rem;
+    padding-bottom: 3.5rem;
+}
+
+.article-header-content {
+    max-width: 100%;
+}
+
+.article-category {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+}
+
+.article-title {
+    margin-top: var(--space-lg);
+
+    font-size: clamp(2.6rem, 12vw, 4.2rem);
+    line-height: 0.97;
+    letter-spacing: -0.055em;
+}
+
+.article-description {
+    max-width: 100%;
+
+    margin-top: var(--space-xl);
+    padding-left: 1rem;
+
+    font-size: var(--text-md);
+    line-height: 1.7;
+}
+
+.article-meta {
+    margin-top: var(--space-xl);
+
+    font-size: 0.6rem;
+}
+
+.article-header::after {
+    margin-top: 3.5rem;
+}
+
+}
+
+/* ---------------------------------------------------------
+SMALL PHONES
+--------------------------------------------------------- */
+
+@media (max-width: 450px) {
+
+.article-header {
+    padding-top: 7rem;
+}
+
+.article-title {
+    font-size: 2.4rem;
+}
+
+.article-description {
+    font-size: 0.95rem;
+}
+
+}
+
+
+/* ---------------------------------------------------------
+   ARTICLE BODY
+   --------------------------------------------------------- */
+
+.article-body {
+    position: relative;
+    padding-bottom: var(--space-5xl);
+}
+
+.article-content {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* Subtle reading guide */
+.article-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2.5rem;
+    width: 1px;
+    background: var(--color-border);
+    opacity: 0.45;
+}
+
+/* Keep the first piece of content visually connected
+   to the article header */
+.article-content > :first-child {
+    margin-top: 0;
+}
+
+/* Give major sections breathing room */
+.article-content > h2 {
+    position: relative;
+}
+
+/* =========================================================
+   ARTICLE BODY RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
+    .article-content::before {
+        left: -1.5rem;
+    }
+}
+
+@media (max-width: 650px) {
+    .article-body {
+        padding-bottom: var(--space-4xl);
+    }
+
+    .article-content {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    /* Remove the desktop reading guide.
+       Mobile already has enough visual density. */
+    .article-content::before {
+        display: none;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   PARAGRAPHS
+   --------------------------------------------------------- */
+
+.article-content p {
+    margin-top: var(--space-xl);
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.9;
+}
+
+.article-content p:first-child {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   HEADINGS
+   --------------------------------------------------------- */
+
+.article-content h2 {
+    position: relative;
+    max-width: 760px;
+    margin-top: var(--space-5xl);
+    margin-bottom: 0;
+
+    color: var(--color-text);
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    font-weight: var(--weight-bold);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+
+    text-wrap: balance;
+}
+
+/* First major heading needs no huge empty space above it */
+.article-content h2:first-child {
+    margin-top: 0;
+}
+
+/* Signature leak-hunt marker */
+.article-content h2::before {
+    content: "";
+    position: absolute;
+
+    top: 0.15em;
+    left: -2rem;
+
+    width: 0.65rem;
+    height: 0.65rem;
+
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+
+    box-sizing: border-box;
+}
+
+/* Small horizontal trace coming from the marker */
+.article-content h2::after {
+    content: "";
+    position: absolute;
+
+    top: calc(0.15em + 0.325rem);
+    left: -1.15rem;
+
+    width: 0.65rem;
+    height: 1px;
+
+    background: var(--color-primary);
+    opacity: 0.6;
+}
+
+
+/* ---------------------------------------------------------
+   H3
+   Secondary diagnostic sections
+   --------------------------------------------------------- */
+
+.article-content h3 {
+    position: relative;
+
+    margin-top: var(--space-3xl);
+    margin-bottom: 0;
+    padding-left: 1.1rem;
+
+    color: var(--color-text);
+    font-size: clamp(1.35rem, 2.7vw, 1.75rem);
+    font-weight: var(--weight-bold);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+
+    text-wrap: balance;
+}
+
+/* Vertical signal beside H3 */
+.article-content h3::before {
+    content: "";
+
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    left: 0;
+
+    width: 1px;
+
+    background: var(--color-primary);
+}
+
+
+/* =========================================================
+   HEADING → PARAGRAPH RELATIONSHIP
+   ========================================================= */
+
+/*
+   The paragraph immediately following a heading belongs
+   visually to that heading.
+
+   This creates a tighter "heading → explanation" rhythm
+   without changing the spacing of normal paragraphs.
+*/
+
+.article-content h2 + p,
+.article-content h3 + p {
+    margin-top: var(--space-lg);
+}
+
+/*
+   The first paragraph after a major heading gets slightly
+   stronger visual presence.
+*/
+
+.article-content h2 + p {
+    color: var(--color-text-secondary);
+}
+
+
+/* =========================================================
+   HEADING → LIST RELATIONSHIP
+   ========================================================= */
+
+.article-content h2 + ul,
+.article-content h2 + ol,
+.article-content h3 + ul,
+.article-content h3 + ol {
+    margin-top: var(--space-lg);
+}
+
+
+/* =========================================================
+   HEADING → CALLOUT / EXAMPLE
+   ========================================================= */
+
+.article-content h2 + .article-callout,
+.article-content h3 + .article-callout,
+.article-content h2 + .article-example,
+.article-content h3 + .article-example {
+    margin-top: var(--space-lg);
+}
+
+
+/* =========================================================
+   HEADING RHYTHM
+   Prevent consecutive headings from looking broken
+   ========================================================= */
+
+.article-content h2 + h3 {
+    margin-top: var(--space-xl);
+}
+
+.article-content h3 + h3 {
+    margin-top: var(--space-2xl);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 950px) {
+    .article-content h2::before {
+        left: -1.5rem;
+    }
+
+    .article-content h2::after {
+        left: -0.65rem;
+        width: 0.45rem;
+    }
+}
+
+@media (max-width: 650px) {
+    .article-content h2 {
+        margin-top: var(--space-4xl);
+        font-size: clamp(1.9rem, 8vw, 2.5rem);
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+    }
+
+    /*
+       Bring the marker inside the content area on mobile.
+       No hanging decorations outside the viewport.
+    */
+    .article-content h2::before {
+        top: -0.9rem;
+        left: 0;
+
+        width: 0.45rem;
+        height: 0.45rem;
+    }
+
+    .article-content h2::after {
+        top: -0.7rem;
+        left: 0.55rem;
+
+        width: 1.4rem;
+    }
+
+    .article-content h3 {
+        margin-top: var(--space-2xl);
+        padding-left: 0.9rem;
+
+        font-size: 1.3rem;
+        line-height: 1.25;
+    }
+
+    .article-content h2 + p,
+    .article-content h3 + p,
+    .article-content h2 + ul,
+    .article-content h2 + ol,
+    .article-content h3 + ul,
+    .article-content h3 + ol {
+        margin-top: var(--space-lg);
+    }
+}
+
+@media (max-width: 450px) {
+    .article-content h2 {
+        font-size: 1.85rem;
+    }
+
+    .article-content h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* ---------------------------------------------------------
+   STRONG / EMPHASIS
+   --------------------------------------------------------- */
+
+.article-content strong,
+.article-content b {
+    position: relative;
+    color: var(--color-text);
+    font-weight: 800;
+    letter-spacing: -0.012em;
+}
+
+/*
+   A very subtle accent underlining for important statements.
+   It sits close to the text instead of looking like a link.
+*/
+.article-content strong::after,
+.article-content b::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.08em;
+    height: 1px;
+    background: var(--color-primary);
+    opacity: 0.45;
+    transform: scaleX(0.35);
+    transform-origin: left center;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Let the emphasis reveal itself when the reader interacts */
+@media (hover: hover) {
+    .article-content strong:hover::after,
+    .article-content b:hover::after {
+        opacity: 0.9;
+        transform: scaleX(1);
+    }
+}
+
+/* =========================================================
+   EMPHASIS / ITALICS
+   ========================================================= */
+
+.article-content em,
+.article-content i {
+    color: var(--color-text);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.008em;
+}
+
+/*
+   Give italic emphasis a quiet visual distinction
+   without turning every sentence into decoration.
+*/
+.article-content em {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+}
+
+/* =========================================================
+   STRONG + EMPHASIS COMBINATION
+   ========================================================= */
+
+.article-content strong em,
+.article-content em strong,
+.article-content b i,
+.article-content i b {
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+    .article-content strong,
+    .article-content b {
+        letter-spacing: -0.008em;
+    }
+
+    .article-content strong::after,
+    .article-content b::after {
+        bottom: -0.05em;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   LINKS
+   --------------------------------------------------------- */
+
+.article-content a {
+    color: var(--color-primary);
+    text-decoration: none;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+}
+
+.article-content a:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------------------------------
+   LISTS
+   --------------------------------------------------------- */
+
+.article-content ul,
+.article-content ol {
+    margin-top: var(--space-xl);
+    padding-left: 1.5rem;
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.9;
+}
+
+.article-content li {
+    margin-top: 0.75rem;
+    padding-left: 0.35rem;
+}
+
+.article-content li:first-child {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   ORDERED LISTS
+   --------------------------------------------------------- */
+
+.article-content ol {
+list-style: none;
+
+margin: var(--space-xl) 0 0;
+padding: 0;
+
+counter-reset: article-step;
+
+}
+
+.article-content ol li {
+position: relative;
+
+counter-increment: article-step;
+
+min-height: 3.5rem;
+
+margin: 0;
+padding: 0.9rem 0 0.9rem 4.25rem;
+
+border-bottom: 1px solid var(--color-border);
+
+color: var(--color-text-secondary);
+font-size: var(--text-md);
+line-height: 1.8;
+
+transition:
+    padding-left 0.25s ease,
+    border-color 0.25s ease;
+
+}
+
+.article-content ol li {
+border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------
+NUMBER
+--------------------------------------------------------- */
+
+.article-content ol li::before {
+content: counter(article-step, decimal-leading-zero);
+
+position: absolute;
+top: 0.9rem;
+left: 0;
+
+width: 2.7rem;
+
+color: var(--color-primary);
+
+font-size: 0.68rem;
+font-weight: var(--weight-bold);
+letter-spacing: 0.1em;
+line-height: 1.8;
+
+text-align: left;
+
+}
+
+/* ---------------------------------------------------------
+VERTICAL TRACE
+--------------------------------------------------------- */
+
+.article-content ol li::after {
+content: "";
+
+position: absolute;
+top: 0;
+bottom: 0;
+left: 3.2rem;
+
+width: 1px;
+
+background: var(--color-border);
+
+}
+
+/* ---------------------------------------------------------
+STRONG TEXT
+--------------------------------------------------------- */
+
+.article-content ol li strong,
+.article-content ol li b {
+color: var(--color-text);
+font-weight: 800;
+}
+
+/* ---------------------------------------------------------
+HOVER
+--------------------------------------------------------- */
+
+@media (hover: hover) {
+
+.article-content ol li:hover {
+    padding-left: 4.5rem;
+}
+
+.article-content ol li:hover::before {
+    color: var(--color-text);
+}
+
+.article-content ol li:hover::after {
+    background: var(--color-primary);
+}
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-content ol li {
+    min-height: 3.25rem;
+
+    padding-top: 0.8rem;
+    padding-right: 0;
+    padding-bottom: 0.8rem;
+    padding-left: 3.5rem;
+}
+
+.article-content ol li:hover {
+    padding-left: 3.5rem;
+}
+
+.article-content ol li::before {
+    top: 0.8rem;
+
+    width: 2.2rem;
+
+    font-size: 0.62rem;
+}
+
+.article-content ol li::after {
+    left: 2.7rem;
+}
+
+}
+
+
+/* ---------------------------------------------------------
+   UNORDERED LISTS
+   --------------------------------------------------------- */
+
+.article-content ul {
+list-style: none;
+margin: var(--space-xl) 0 0;
+padding: 0;
+}
+
+.article-content ul li {
+position: relative;
+
+margin: 0;
+padding: 1rem 0 1rem 3.25rem;
+
+border-bottom: 1px solid var(--color-border);
+
+color: var(--color-text-secondary);
+font-size: var(--text-md);
+line-height: 1.8;
+
+transition:
+    padding-left 0.25s ease,
+    border-color 0.25s ease;
+
+}
+
+.article-content ul li {
+border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------
+TRACE MARKER
+--------------------------------------------------------- */
+
+.article-content ul li::before {
+content: "";
+
+position: absolute;
+top: 50%;
+left: 0;
+
+width: 1rem;
+height: 1rem;
+
+box-sizing: border-box;
+
+border: 1px solid var(--color-primary);
+border-radius: 50%;
+
+transform: translateY(-50%);
+
+transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+
+}
+
+.article-content ul li::after {
+content: "";
+
+position: absolute;
+top: 50%;
+left: 0.3rem;
+
+width: 0.4rem;
+height: 1px;
+
+background: var(--color-primary);
+
+transform: translateY(-50%);
+
+}
+
+/* ---------------------------------------------------------
+STRONG TEXT INSIDE LISTS
+--------------------------------------------------------- */
+
+.article-content ul li strong,
+.article-content ul li b {
+color: var(--color-text);
+font-weight: 800;
+}
+
+/* ---------------------------------------------------------
+HOVER
+--------------------------------------------------------- */
+
+@media (hover: hover) {
+
+.article-content ul li:hover {
+    padding-left: 3.5rem;
+}
+
+.article-content ul li:hover::before {
+    background-color: var(--color-primary);
+    transform: translateY(-50%) scale(1.08);
+}
+
+}
+
+/* ---------------------------------------------------------
+MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+.article-content ul li {
+    padding-top: 0.85rem;
+    padding-right: 0;
+    padding-bottom: 0.85rem;
+    padding-left: 2.75rem;
+}
+
+.article-content ul li:hover {
+    padding-left: 2.75rem;
+}
+
+.article-content ul li::before {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.article-content ul li::after {
+    left: 0.27rem;
+    width: 0.36rem;
+}
+
+}
+
+
+/* ---------------------------------------------------------
+   BLOCKQUOTES
+   --------------------------------------------------------- */
+
+.article-content blockquote {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl) var(--space-2xl);
+
+    border-left: 2px solid var(--color-primary);
+    background: var(--color-bg-secondary);
+
+    color: var(--color-text-secondary);
+    font-size: var(--text-md);
+    line-height: 1.8;
+}
+
+.article-content blockquote p {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   CALLOUT BOX
+   Optional reusable structure:
+   
+   <div class="article-callout">
+       <strong>Key idea</strong>
+       <p>...</p>
+   </div>
+   --------------------------------------------------------- */
+
+.article-callout {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+}
+
+.article-callout strong {
+    display: block;
+    margin-bottom: 0.6rem;
+
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.article-callout p {
+    margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   EXAMPLE BOX
+   Optional reusable structure:
+   
+   <div class="article-example">
+       <span>Example</span>
+       <p>...</p>
+   </div>
+   --------------------------------------------------------- */
+
+.article-example {
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+}
+
+.article-example > span {
+    display: block;
+    margin-bottom: 0.75rem;
+
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.article-example p {
+    margin-top: 0;
+}
+ 
+
+/* ---------------------------------------------------------
+   ARTICLE DIVIDER
+   Optional:
+   
+   <hr>
+   --------------------------------------------------------- */
+
+.article-content hr {
+    width: 100%;
+    height: 1px;
+
+    margin: var(--space-3xl) 0;
+
+    border: 0;
+    background: var(--color-border);
+}
+
+
+/* ---------------------------------------------------------
+   IMAGES
+   --------------------------------------------------------- */
+
+.article-content img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    margin: var(--space-2xl) 0;
+
+    border-radius: var(--radius-md);
+}
+
+
+/* ---------------------------------------------------------
+   IMAGE CAPTION
+   Optional:
+   
+   <figure>
+       <img src="...">
+       <figcaption>...</figcaption>
+   </figure>
+   --------------------------------------------------------- */
+
+.article-content figure {
+    margin: var(--space-2xl) 0;
+}
+
+.article-content figure img {
+    margin: 0;
+}
+
+.article-content figcaption {
+    margin-top: 0.75rem;
+
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    line-height: 1.6;
+}
+
+
+/* ---------------------------------------------------------
+   CODE
+   --------------------------------------------------------- */
+
+.article-content code {
+    padding: 0.15em 0.35em;
+
+    border-radius: 4px;
+    background: var(--color-bg-secondary);
+
+    color: var(--color-text);
+    font-size: 0.9em;
+}
+
+.article-content pre {
+    overflow-x: auto;
+
+    margin: var(--space-2xl) 0;
+    padding: var(--space-xl);
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+
+    line-height: 1.7;
+}
+
+.article-content pre code {
+    padding: 0;
+
+    background: transparent;
+}
+
+
+/* ---------------------------------------------------------
+   TABLES
+   --------------------------------------------------------- */
+
+.article-content table {
+    width: 100%;
+    margin: var(--space-2xl) 0;
+
+    border-collapse: collapse;
+
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.article-content th,
+.article-content td {
+    padding: 0.9rem 0.75rem;
+
+    border-bottom: 1px solid var(--color-border);
+
+    text-align: left;
+}
+
+.article-content th {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+}
+
+
+/* ---------------------------------------------------------
+   SELECTION
+   --------------------------------------------------------- */
+
+.article-content ::selection {
+    background: var(--color-primary);
+    color: var(--color-bg);
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+    .article-header {
+        padding-top: 8rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .article-title {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        line-height: 1;
+    }
+
+    .article-description {
+        margin-top: var(--space-lg);
+
+        font-size: var(--text-md);
+        line-height: 1.7;
+    }
+
+    .article-meta {
+        margin-top: var(--space-lg);
+    }
+
+    .article-body {
+        padding-bottom: var(--space-4xl);
+    }
+
+    .article-content p,
+    .article-content ul,
+    .article-content ol {
+        font-size: 1rem;
+        line-height: 1.85;
+    }
+
+    .article-content h2 {
+        margin-top: var(--space-3xl);
+
+        font-size: clamp(1.8rem, 8vw, 2.4rem);
+    }
+
+    .article-content h3 {
+        margin-top: var(--space-2xl);
+
+        font-size: 1.3rem;
+    }
+
+    .article-content blockquote {
+        padding: var(--space-lg);
+    }
+
+    .article-callout,
+    .article-example {
+        padding: var(--space-lg);
+    }
+
+    .article-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   SMALL PHONES
+   --------------------------------------------------------- */
+
+@media (max-width: 450px) {
+
+    .article-header {
+        padding-top: 7rem;
+    }
+
+    .article-title {
+        font-size: 2.4rem;
+    }
+
+    .article-content ul li {
+        padding-left: 1.4rem;
+    }
+}

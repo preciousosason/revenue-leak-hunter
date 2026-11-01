@@ -1,3 +1,4 @@
+
 const fs = require("fs");
 const path = require("path");
 
@@ -46,7 +47,6 @@ function getMetaValue(html, name) {
     const match =
         html.match(pattern);
 
-
     return match
         ? decodeHtmlEntities(
             match[1].trim()
@@ -62,17 +62,14 @@ function getArticleDirectories() {
         return [];
     }
 
-
     return fs
         .readdirSync(
             articlesDirectory,
             { withFileTypes: true }
         )
-
         .filter(
             entry => entry.isDirectory()
         )
-
         .map(
             entry => entry.name
         );
@@ -89,11 +86,9 @@ function buildArticleRecord(slug) {
             "article.html"
         );
 
-
     if (!fs.existsSync(articleFile)) {
         return null;
     }
-
 
     const html =
         fs.readFileSync(
@@ -101,13 +96,11 @@ function buildArticleRecord(slug) {
             "utf8"
         );
 
-
     const title =
         getMetaValue(
             html,
             "article-title"
         );
-
 
     const category =
         getMetaValue(
@@ -115,13 +108,11 @@ function buildArticleRecord(slug) {
             "article-category"
         );
 
-
     const description =
         getMetaValue(
             html,
             "article-description"
         );
-
 
     const status =
         getMetaValue(
@@ -129,20 +120,17 @@ function buildArticleRecord(slug) {
             "article-status"
         );
 
-
     const articleSlug =
         getMetaValue(
             html,
             "article-slug"
         ) || slug;
 
-
     const publishedAt =
         getMetaValue(
             html,
             "published-at"
         );
-
 
     if (!title) {
 
@@ -152,7 +140,6 @@ function buildArticleRecord(slug) {
 
         return null;
     }
-
 
     return {
 
@@ -170,7 +157,7 @@ function buildArticleRecord(slug) {
             publishedAt || null,
 
         url:
-            `/articles/${articleSlug}/article.html`
+            `/articles/${articleSlug}/article`
 
     };
 
@@ -182,12 +169,10 @@ function buildBlogData() {
     const slugs =
         getArticleDirectories();
 
-
     const articles =
         slugs
             .map(buildArticleRecord)
             .filter(Boolean);
-
 
     /*
     =================================
@@ -204,7 +189,6 @@ function buildBlogData() {
                 ).getTime()
                 : 0;
 
-
         const dateB =
             b.publishedAt
                 ? new Date(
@@ -212,11 +196,9 @@ function buildBlogData() {
                 ).getTime()
                 : 0;
 
-
         return dateB - dateA;
 
     });
-
 
     /*
     =================================
@@ -229,7 +211,6 @@ function buildBlogData() {
             article =>
                 article.status === "published"
         );
-
 
     /*
     =================================
@@ -248,7 +229,6 @@ function buildBlogData() {
 
     };
 
-
     /*
     =================================
     WRITE JSON
@@ -259,7 +239,6 @@ function buildBlogData() {
         dataDirectory,
         { recursive: true }
     );
-
 
     fs.writeFileSync(
 
@@ -274,7 +253,6 @@ function buildBlogData() {
         "utf8"
 
     );
-
 
     console.log(
         "\nBlog build complete."

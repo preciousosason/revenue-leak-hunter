@@ -1,0 +1,17 @@
+
+# LEAKENDIA ROBOTS.TXT
+# Public website: https://leakendia.com/
+
+User-agent: *
+Allow: /
+
+# Private application interfaces
+Disallow: /pages/admin/
+Disallow: /pages/portal/
+
+# Private API routes
+Disallow: /api/admin/
+Disallow: /api/portal/
+
+# Search engine sitemap
+Sitemap: https://leakendia.com/sitemap.xml

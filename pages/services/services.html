@@ -1,88 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
-
+    <!-- ==========================================
+         CORE DOCUMENT CONFIGURATION
+    =========================================== -->
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <!-- ==========================================
+         PRIMARY SEO
+    =========================================== -->
+    <title>Conversion Optimization & Website Audit Services | Leakendia</title>
 
     <meta
         name="description"
-        content="Find where attention breaks down across your website, funnel, messaging, search, email, customer journey, and growth systems."
+        content="Explore Leakendia's conversion optimization and website audit services. Find friction across customer journeys, sales funnels, messaging, SEO, and digital experiences."
+    >
+
+    <meta name="author" content="Leakendia">
+    <meta name="publisher" content="Leakendia">
+    <meta name="application-name" content="Leakendia">
+
+    <!-- ==========================================
+         SEARCH ENGINE CRAWLING
+    =========================================== -->
+    <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
 
     <meta
-        name="theme-color"
-        content="#0a0a0a"
+        name="googlebot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
 
-    <title>
-        Services | Leakendia
-    </title>
-
-
-    <!-- =================================
-         GLOBAL STYLES
-    ================================= -->
-
-    <link
-        rel="stylesheet"
-        href="../../global/variables.css"
+    <meta
+        name="bingbot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
 
-    <link
-        rel="stylesheet"
-        href="../../global/global.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../../global/responsive.css"
-    >
-
-
-    <!-- =================================
-         PAGE STYLES
-    ================================= -->
-
-    <link
-        rel="stylesheet"
-        href="../../pages/services/services.css"
-    >
-
-
-    
-
-
-    <!-- LEAKENDIA META START -->
-
+    <!-- ==========================================
+         CANONICAL & LANGUAGE
+    =========================================== -->
     <link
         rel="canonical"
         href="https://leakendia.com/pages/services/services"
     >
 
-    <meta
-        property="og:type"
-        content="website"
+    <link
+        rel="alternate"
+        hreflang="en"
+        href="https://leakendia.com/pages/services/services"
     >
 
-    <meta
-        property="og:site_name"
-        content="Leakendia"
+    <!-- ==========================================
+         BRAND IDENTITY
+    =========================================== -->
+    <link
+        rel="icon"
+        href="/favicon.png"
+        type="image/png"
     >
+
+    <!-- ==========================================
+         ORIGINAL GLOBAL STYLES
+    =========================================== -->
+    <link rel="stylesheet" href="../../global/variables.css">
+    <link rel="stylesheet" href="../../global/global.css">
+    <link rel="stylesheet" href="../../global/responsive.css">
+
+    <!-- ==========================================
+         ORIGINAL PAGE STYLES
+    =========================================== -->
+    <link rel="stylesheet" href="../../pages/services/services.css">
+
+    <!-- ==========================================
+         OPEN GRAPH
+    =========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Leakendia">
+    <meta property="og:locale" content="en_US">
 
     <meta
         property="og:title"
-        content="Services | Leakendia"
+        content="Conversion Optimization & Website Audit Services | Leakendia"
     >
 
     <meta
         property="og:description"
-        content="Find where attention breaks down across your website, funnel, messaging, search, email, customer journey, and growth systems."
+        content="Find where attention breaks down across your website, sales funnel, messaging, SEO, and customer journey. Explore Leakendia's investigation and optimization services."
     >
 
     <meta
@@ -95,34 +105,28 @@
         content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
     >
 
-    <meta
-        property="og:image:width"
-        content="1200"
-    >
-
-    <meta
-        property="og:image:height"
-        content="630"
-    >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
 
     <meta
         property="og:image:alt"
-        content="Leakendia"
+        content="Leakendia conversion optimization and customer journey services"
     >
 
-    <meta
-        name="twitter:card"
-        content="summary_large_image"
-    >
+    <!-- ==========================================
+         TWITTER / X
+    =========================================== -->
+    <meta name="twitter:card" content="summary_large_image">
 
     <meta
         name="twitter:title"
-        content="Services | Leakendia"
+        content="Conversion Optimization & Website Audit Services | Leakendia"
     >
 
     <meta
         name="twitter:description"
-        content="Find where attention breaks down across your website, funnel, messaging, search, email, customer journey, and growth systems."
+        content="Find the friction between attention and action. Explore Leakendia's website audits, conversion optimization, SEO, and customer journey services."
     >
 
     <meta
@@ -130,9 +134,180 @@
         content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
     >
 
-    <!-- LEAKENDIA META END -->
+    <meta
+        name="twitter:image:alt"
+        content="Leakendia digital optimization services"
+    >
+
+    <!-- ==========================================
+         STRUCTURED DATA: SERVICES PAGE ENTITY GRAPH
+    =========================================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://leakendia.com/#organization",
+          "name": "Leakendia",
+          "url": "https://leakendia.com/",
+          "description": "Leakendia investigates conversion leaks across websites, messaging, funnels, search visibility, and customer journeys.",
+          "logo": {
+            "@id": "https://leakendia.com/#logo"
+          },
+          "knowsAbout": [
+            "Conversion Rate Optimization",
+            "Website Conversion Audits",
+            "Customer Journey Analysis",
+            "Technical SEO",
+            "Sales Funnel Optimization",
+            "Website User Experience",
+            "Landing Page Optimization",
+            "Ecommerce Conversion Optimization",
+            "Website Messaging",
+            "Customer Acquisition",
+            "Digital Marketing",
+            "Search Visibility",
+            "Customer Engagement"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://leakendia.com/#website",
+          "url": "https://leakendia.com/",
+          "name": "Leakendia",
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "CollectionPage",
+          "@id": "https://leakendia.com/pages/services/services.html#webpage",
+          "url": "https://leakendia.com/pages/services/services",
+          "name": "Conversion Optimization & Website Audit Services | Leakendia",
+          "description": "Explore conversion optimization, website audits, customer journey analysis, technical SEO, funnel analysis, and related digital optimization services from Leakendia.",
+          "isPartOf": {
+            "@id": "https://leakendia.com/#website"
+          },
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "about": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "breadcrumb": {
+            "@id": "https://leakendia.com/pages/services/services.html#breadcrumb"
+          },
+          "mainEntity": {
+            "@id": "https://leakendia.com/pages/services/services.html#service-catalog"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://leakendia.com/pages/services/services.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://leakendia.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Services",
+              "item": "https://leakendia.com/pages/services/services"
+            }
+          ]
+        },
+        {
+          "@type": "OfferCatalog",
+          "@id": "https://leakendia.com/pages/services/services.html#service-catalog",
+          "name": "Leakendia Conversion Optimization and Digital Services",
+          "description": "Services focused on identifying and addressing friction across websites, search visibility, customer journeys, and conversion funnels.",
+          "url": "https://leakendia.com/pages/services/services",
+          "provider": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "itemListElement": [
+            {
+              "@type": "OfferCatalog",
+              "name": "Conversion Optimization",
+              "itemListElement": [
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Website Conversion Audits"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Conversion Funnel Analysis"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Landing Page Optimization"
+                }
+              ]
+            },
+            {
+              "@type": "OfferCatalog",
+              "name": "Search Engine Optimization",
+              "itemListElement": [
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Technical SEO"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Search Visibility Analysis"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Website Performance Analysis"
+                }
+              ]
+            },
+            {
+              "@type": "OfferCatalog",
+              "name": "Customer Journey Optimization",
+              "itemListElement": [
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Customer Journey Analysis"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Website Messaging Analysis"
+                },
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Customer Experience Analysis"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://leakendia.com/#conversion-service",
+          "name": "Conversion Optimization and Customer Journey Analysis",
+          "serviceType": "Website Conversion Optimization",
+          "description": "Analysis of customer journey friction, website conversion barriers, messaging gaps, and funnel performance to identify opportunities for improvement.",
+          "url": "https://leakendia.com/pages/services/services",
+          "provider": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "hasOfferCatalog": {
+            "@id": "https://leakendia.com/pages/services/services.html#service-catalog"
+          }
+        }
+      ]
+    }
+    </script>
 
 </head>
+
 
 
 <body data-page="services">

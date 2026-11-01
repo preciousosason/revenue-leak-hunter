@@ -1,0 +1,2971 @@
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 78% 45%,
+            rgba(0, 122, 255, 0.08),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 12% 70%,
+            rgba(255, 59, 48, 0.07),
+            transparent 30%
+        ),
+        #050506;
+}
+
+
+/* =========================================================
+   HERO BACKGROUND
+========================================================= */
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    overflow: hidden;
+}
+
+
+/* Red atmospheric glow */
+
+.hero-background::before {
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    left: -220px;
+    bottom: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 59, 48, 0.12),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* Blue atmospheric glow */
+
+.hero-background::after {
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    right: -260px;
+    top: 10%;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 122, 255, 0.10),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   TECHNICAL GRID
+========================================================= */
+
+.hero-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0.22;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 70px 70px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            transparent,
+            black 18%,
+            black 82%,
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO CONTAINER
+========================================================= */
+
+.hero-container {
+    position: relative;
+    z-index: 2;
+
+    width: min(1400px, 100%);
+
+    margin-inline: auto;
+
+    padding:
+        clamp(7rem, 12vh, 10rem)
+        var(--space-xl)
+        clamp(5rem, 10vh, 8rem);
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(420px, 0.9fr);
+
+    align-items: center;
+
+    gap: clamp(3rem, 6vw, 7rem);
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.hero-content {
+    position: relative;
+
+    max-width: 760px;
+}
+
+
+.hero-eyebrow {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.55rem;
+
+    margin-bottom: 1.4rem;
+
+    color: rgba(255, 255, 255, 0.48);
+
+    font-size: 0.62rem;
+    font-weight: 800;
+
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    opacity: 0;
+
+    animation:
+        heroReveal
+        0.7s
+        ease
+        0.1s
+        forwards;
+}
+
+
+.hero-eyebrow-dot {
+    width: 6px;
+    height: 6px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #ff453a;
+
+    box-shadow:
+        0 0 10px rgba(255, 69, 58, 0.55);
+}
+
+
+.hero-title {
+    margin: 0;
+
+    max-width: 800px;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(
+            3.5rem,
+            6vw,
+            6.4rem
+        );
+
+    font-weight: 800;
+
+    line-height: 0.94;
+
+    letter-spacing: -0.055em;
+
+    opacity: 0;
+
+    animation:
+        heroTitleReveal
+        0.9s
+        cubic-bezier(0.2, 0.8, 0.2, 1)
+        0.25s
+        forwards;
+}
+
+
+.hero-title strong {
+    position: relative;
+
+    display: inline-block;
+
+    color: #ff453a;
+
+    font-weight: inherit;
+}
+
+
+.hero-description {
+    max-width: 650px;
+
+    margin:
+        1.7rem
+        0
+        0;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: var(--text-lg);
+
+    line-height: 1.7;
+
+    opacity: 0;
+
+    animation:
+        heroReveal
+        0.8s
+        ease
+        0.45s
+        forwards;
+}
+
+
+.hero-description strong {
+    color: rgba(255, 255, 255, 0.86);
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+========================================================= */
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 0.8rem;
+
+    margin-top: 2rem;
+
+    opacity: 0;
+
+    animation:
+        heroReveal
+        0.8s
+        ease
+        0.6s
+        forwards;
+}
+
+
+.hero-primary-button {
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HERO TRUST
+========================================================= */
+
+.hero-trust {
+    display: flex;
+    align-items: center;
+
+    gap: 0.65rem;
+
+    margin-top: 1.5rem;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    font-size: 0.58rem;
+
+    line-height: 1.4;
+
+    opacity: 0;
+
+    animation:
+        heroReveal
+        0.8s
+        ease
+        0.75s
+        forwards;
+}
+
+
+.hero-trust-line {
+    width: 22px;
+    height: 1px;
+
+    flex-shrink: 0;
+
+    background:
+        rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================================
+   HERO VISUAL
+========================================================= */
+
+.hero-visual {
+    position: relative;
+
+    width: 100%;
+
+    opacity: 0;
+
+    animation:
+        visualReveal
+        1s
+        cubic-bezier(0.2, 0.8, 0.2, 1)
+        0.35s
+        forwards;
+}
+
+
+/* =========================================================
+   JOURNEY INVESTIGATION
+========================================================= */
+
+.journey-investigation {
+    position: relative;
+
+    width: 100%;
+    max-width: 620px;
+
+    margin-inline: auto;
+
+    padding: 1.25rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.09);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 20, 23, 0.97),
+            rgba(9, 9, 11, 0.97)
+        );
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.35);
+
+    overflow: hidden;
+}
+
+
+/* subtle blue edge */
+
+.journey-investigation::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 122, 255, 0.08),
+            transparent 35%,
+            transparent 70%,
+            rgba(255, 59, 48, 0.04)
+        );
+}
+
+
+/* =========================================================
+   JOURNEY HEADER
+========================================================= */
+
+.journey-header {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding-bottom: 0.9rem;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+}
+
+
+.journey-header-main {
+    display: flex;
+    align-items: center;
+
+    gap: 0.7rem;
+}
+
+
+.journey-kicker {
+    color:
+        rgba(100, 181, 255, 0.68);
+
+    font-size: 0.45rem;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+.journey-kicker1 {
+    color:
+        rgba(34, 222, 13, 0.68);
+
+    font-size: 0.95rem;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+.journey-header h3 {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    letter-spacing: -0.01em;
+}
+
+
+.journey-live {
+    display: flex;
+    align-items: center;
+
+    gap: 0.35rem;
+
+    color:
+        rgba(255, 255, 255, 0.32);
+
+    font-size: 0.42rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+
+.live-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #32d74b;
+
+    box-shadow:
+        0 0 7px rgba(50, 215, 75, 0.45);
+}
+
+
+/* =========================================================
+   JOURNEY INTRO
+========================================================= */
+
+.journey-intro {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 0.75rem;
+
+    margin-top: 1rem;
+
+    padding: 0.85rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+}
+
+
+.intro-number {
+    color:
+        rgba(100, 181, 255, 0.55);
+
+    font-size: 0.48rem;
+    font-weight: 900;
+
+    letter-spacing: 0.08em;
+}
+
+
+.journey-intro p {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 0.6rem;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   CUSTOMER JOURNEY
+========================================================= */
+
+.customer-journey {
+    position: relative;
+
+    margin-top: 0.9rem;
+}
+
+
+/* =========================================================
+   JOURNEY NODE
+========================================================= */
+
+.journey-node {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        34px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    padding: 0.8rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.055);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+
+    opacity: 0;
+
+    animation:
+        journeyNodeReveal
+        0.55s
+        cubic-bezier(0.2, 0.8, 0.2, 1)
+        forwards;
+}
+
+
+.journey-node + .journey-node {
+    margin-top: 0.35rem;
+}
+
+
+/* sequential reveal */
+
+.node-discovery {
+    animation-delay: 0.25s;
+}
+
+.node-landing {
+    animation-delay: 0.55s;
+}
+
+.node-trust {
+    animation-delay: 0.85s;
+}
+
+.node-action {
+    animation-delay: 1.15s;
+}
+
+.node-payment {
+    animation-delay: 1.45s;
+}
+
+
+/* =========================================================
+   NODE MARKER
+========================================================= */
+
+.node-marker {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 9px;
+
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    font-size: 0.5rem;
+    font-weight: 900;
+
+    letter-spacing: 0.04em;
+}
+
+
+.node-discovery .node-marker,
+.node-landing .node-marker {
+    border-color:
+        rgba(100, 181, 255, 0.2);
+
+    color:
+        rgba(100, 181, 255, 0.75);
+}
+
+
+.node-trust .node-marker {
+    border-color:
+        rgba(255, 193, 7, 0.2);
+
+    color:
+        rgba(255, 193, 7, 0.72);
+}
+
+
+.node-action .node-marker {
+    border-color:
+        rgba(255, 59, 48, 0.24);
+
+    color:
+        rgba(255, 98, 88, 0.85);
+}
+
+
+.node-payment .node-marker {
+    border-color:
+        rgba(50, 215, 75, 0.24);
+
+    color:
+        rgba(50, 215, 75, 0.85);
+}
+
+
+/* =========================================================
+   NODE CONTENT
+========================================================= */
+
+.node-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.3rem;
+}
+
+
+.node-label {
+    color:
+        rgba(255, 255, 255, 0.35);
+
+    font-size: 0.5rem;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+.node-content h4 {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.94);
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    letter-spacing: -0.015em;
+}
+
+
+.node-content p {
+    margin: 0;
+
+    max-width: 360px;
+
+    color:
+        rgba(255, 255, 255, 0.48);
+
+    font-size: 0.62rem;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   CUSTOMER THOUGHT
+========================================================= */
+
+.customer-thought {
+    display: flex;
+    align-items: center;
+
+    gap: 0.45rem;
+
+    margin-top: 0.35rem;
+}
+
+
+.customer-thought span {
+    color:
+        rgba(255, 255, 255, 0.25);
+
+    font-size: 0.48rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+}
+
+
+.customer-thought strong {
+    color:
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 0.54rem;
+    font-weight: 600;
+
+    font-style: italic;
+}
+
+
+/* =========================================================
+   NODE METRIC
+========================================================= */
+
+.node-metric {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+    justify-content: center;
+
+    min-width: 58px;
+
+    padding-left: 0.5rem;
+}
+
+
+.node-metric strong {
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-size: 1rem;
+
+    line-height: 1;
+}
+
+
+.node-metric span {
+    margin-top: 0.25rem;
+
+    color:
+        rgba(255, 255, 255, 0.28);
+
+    font-size: 0.42rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    text-align: right;
+}
+
+
+.node-success strong {
+    color: #32d74b;
+}
+
+
+/* =========================================================
+   JOURNEY FLOW
+========================================================= */
+
+.journey-flow {
+    position: relative;
+
+    min-height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+
+.flow-line {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    width: 1px;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.06),
+            rgba(0, 122, 255, 0.25),
+            rgba(255, 255, 255, 0.06)
+        );
+}
+
+
+.flow-customer {
+    position: absolute;
+
+    left: calc(50% - 3px);
+    top: -4px;
+
+    width: 7px;
+    height: 7px;
+
+    color: #64b5ff;
+
+    font-size: 7px;
+
+    opacity: 0;
+
+    animation:
+        customerTravel
+        1.8s
+        ease-in-out
+        1.9s
+        1;
+}
+
+
+.journey-flow span {
+    position: relative;
+    z-index: 2;
+
+    padding:
+        0.22rem
+        0.5rem;
+
+    color:
+        rgba(255, 255, 255, 0.25);
+
+    background:
+        #0b0b0d;
+
+    font-size: 0.45rem;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LEAK SECTION
+========================================================= */
+
+.journey-leak {
+    position: relative;
+    z-index: 1;
+
+    margin: 0.35rem 0;
+
+    padding: 1.05rem;
+
+    border:
+        1px solid
+        rgba(255, 59, 48, 0.34);
+
+    border-radius: 15px;
+
+    background:
+        radial-gradient(
+            circle at 15% 50%,
+            rgba(255, 59, 48, 0.1),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 59, 48, 0.07),
+            rgba(255, 255, 255, 0.012)
+        );
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transform: translateY(6px);
+
+    animation:
+        leakReveal
+        0.7s
+        cubic-bezier(0.2, 0.8, 0.2, 1)
+        3s
+        forwards;
+}
+
+
+/* =========================================================
+   LEAK SCANNER
+========================================================= */
+
+.leak-scanner {
+    position: absolute;
+
+    top: 0;
+    left: -20%;
+
+    width: 2px;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(255, 59, 48, 0.65),
+            transparent
+        );
+
+    opacity: 0;
+
+    animation:
+        leakScan
+        1.8s
+        ease-in-out
+        3.7s
+        1;
+}
+
+
+/* =========================================================
+   LEAK HEADER
+========================================================= */
+
+.leak-header {
+    display: flex;
+    align-items: center;
+
+    gap: 0.75rem;
+}
+
+
+.leak-icon {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        rgba(255, 59, 48, 0.42);
+
+    border-radius: 50%;
+
+    color: #ff453a;
+
+    background:
+        rgba(255, 59, 48, 0.07);
+
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+
+.leak-header > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.18rem;
+}
+
+
+.leak-label {
+    color: #ff6258;
+
+    font-size: 0.48rem;
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+}
+
+
+.leak-header strong {
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-size: 0.76rem;
+}
+
+
+/* =========================================================
+   LEAK EXPLANATION
+========================================================= */
+
+.leak-explanation {
+    margin-top: 0.75rem;
+
+    padding-left: 2.45rem;
+}
+
+
+.leak-explanation p {
+    margin: 0;
+
+    max-width: 430px;
+
+    color:
+        rgba(255, 255, 255, 0.52);
+
+    font-size: 0.62rem;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   LEAK CAUSES
+========================================================= */
+
+.leak-causes {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 0.45rem;
+
+    margin-top: 0.9rem;
+
+    padding-left: 2.45rem;
+}
+
+
+.leak-causes div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.2rem;
+
+    padding: 0.5rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.055);
+
+    border-radius: 7px;
+
+    color:
+        rgba(255, 255, 255, 0.52);
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    font-size: 0.46rem;
+
+    line-height: 1.3;
+}
+
+
+.leak-causes span {
+    color:
+        rgba(255, 59, 48, 0.78);
+
+    font-size: 0.42rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   LEAK LOSS
+========================================================= */
+
+.leak-loss {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-top: 0.8rem;
+
+    padding:
+        0.7rem
+        0
+        0
+        2.45rem;
+
+    border-top:
+        1px solid
+        rgba(255, 59, 48, 0.12);
+}
+
+
+.leak-loss strong {
+    color: #ff6258;
+
+    font-size: 0.62rem;
+
+    letter-spacing: 0.05em;
+}
+
+
+.leak-loss span {
+    color:
+        rgba(255, 255, 255, 0.32);
+
+    font-size: 0.48rem;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   DROPOFF
+========================================================= */
+
+.journey-dropoff {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.7rem;
+
+    padding: 0.7rem;
+
+    opacity: 0;
+
+    animation:
+        dropoffReveal
+        0.65s
+        ease
+        4.15s
+        forwards;
+}
+
+
+.dropoff-people {
+    display: flex;
+
+    gap: 0.1rem;
+
+    color:
+        rgba(255, 59, 48, 0.55);
+
+    font-size: 0.45rem;
+
+    transform: rotate(8deg);
+}
+
+
+.dropoff-people span {
+    display: inline-block;
+}
+
+
+.journey-dropoff > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.15rem;
+}
+
+
+.journey-dropoff span {
+    color:
+        rgba(255, 59, 48, 0.55);
+
+    font-size: 0.43rem;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.journey-dropoff strong {
+    color:
+        rgba(255, 255, 255, 0.42);
+
+    font-size: 0.55rem;
+}
+
+
+/* =========================================================
+   INVESTIGATION RESULT
+========================================================= */
+
+.investigation-result {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+
+    gap: 0.7rem;
+
+    margin-top: 1.1rem;
+
+    padding-top: 1rem;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+
+    opacity: 0;
+
+    animation:
+        resultReveal
+        0.7s
+        ease
+        4.8s
+        forwards;
+}
+
+
+.result-icon {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        rgba(0, 122, 255, 0.3);
+
+    border-radius: 9px;
+
+    color: #64b5ff;
+
+    background:
+        rgba(0, 122, 255, 0.06);
+
+    font-size: 1rem;
+}
+
+
+.investigation-result > div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.2rem;
+}
+
+
+.investigation-result > div:nth-child(2) span {
+    color:
+        rgba(100, 181, 255, 0.62);
+
+    font-size: 0.45rem;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+}
+
+
+.investigation-result > div:nth-child(2) strong {
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-size: 0.62rem;
+}
+
+
+.result-status {
+    display: flex;
+    align-items: center;
+
+    gap: 0.35rem;
+
+    margin-left: auto;
+
+    color:
+        rgba(100, 181, 255, 0.58);
+
+    font-size: 0.45rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #64b5ff;
+
+    box-shadow:
+        0 0 7px rgba(100, 181, 255, 0.6);
+}
+
+
+/* =========================================================
+   HERO SCROLL INDICATOR
+========================================================= */
+
+.hero-scroll {
+    position: absolute;
+
+    bottom: 1.5rem;
+    left: 50%;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 0.35rem;
+
+    transform:
+        translateX(-50%);
+
+    color:
+        var(--color-text-muted);
+
+    font-size: 0.58rem;
+    font-weight: var(--weight-semibold);
+
+    letter-spacing: 0.12em;
+
+    text-decoration: none;
+
+    opacity: 0.7;
+
+    transition:
+        color 200ms ease,
+        opacity 200ms ease;
+}
+
+
+.hero-scroll:hover {
+    color:
+        var(--color-text);
+
+    opacity: 1;
+}
+
+
+.hero-scroll-arrow {
+    font-size: 1rem;
+
+    animation:
+        scrollBounce
+        1.8s
+        ease-in-out
+        infinite;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+/* Hero entrance */
+
+@keyframes heroReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+@keyframes heroTitleReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(24px)
+            scale(0.99);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* Hero visual entrance */
+
+@keyframes visualReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(24px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* Journey node sequence */
+
+@keyframes journeyNodeReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* Customer moving through journey */
+
+@keyframes customerTravel {
+
+    0% {
+        top: -4px;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        top: calc(100% - 4px);
+        opacity: 0;
+    }
+
+}
+
+
+/* Leak appears after journey */
+
+@keyframes leakReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(6px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* One scan only */
+
+@keyframes leakScan {
+
+    0% {
+        left: -10%;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    70% {
+        left: 110%;
+        opacity: 1;
+    }
+
+    100% {
+        left: 110%;
+        opacity: 0;
+    }
+
+}
+
+
+/* Drop-off explanation */
+
+@keyframes dropoffReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* Investigation conclusion */
+
+@keyframes resultReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* Scroll */
+
+@keyframes scrollBounce {
+
+    0%,
+    100% {
+        transform:
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            translateY(5px);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .hero-container {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(360px, 0.85fr);
+
+        gap: var(--space-3xl);
+    }
+
+
+    .hero-title {
+        font-size:
+            clamp(
+                3.2rem,
+                6vw,
+                5.2rem
+            );
+    }
+
+
+    .journey-investigation {
+        max-width: 570px;
+    }
+
+
+    .journey-node {
+        grid-template-columns:
+            32px
+            minmax(0, 1fr)
+            auto;
+    }
+
+
+    .node-content p {
+        max-width: 300px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .hero {
+        min-height: auto;
+    }
+
+
+    .hero-container {
+        grid-template-columns: 1fr;
+
+        padding-block:
+            var(--space-4xl)
+            var(--space-5xl);
+    }
+
+
+    .hero-content {
+        max-width: 800px;
+    }
+
+
+    .hero-visual {
+        width: 100%;
+
+        max-width: 680px;
+
+        margin-inline: auto;
+    }
+
+
+    .journey-investigation {
+        max-width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .hero-container {
+        padding-block:
+            var(--space-4xl)
+            var(--space-5xl);
+    }
+
+
+    .hero-title {
+        font-size:
+            clamp(
+                2.8rem,
+                13vw,
+                4.3rem
+            );
+
+        line-height: 0.94;
+    }
+
+
+    .hero-description {
+        font-size:
+            var(--text-md);
+
+        line-height: 1.7;
+    }
+
+
+    .hero-description strong {
+        white-space: normal;
+    }
+
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    .hero-actions .btn {
+        justify-content: center;
+
+        width: 100%;
+    }
+
+
+    .hero-trust {
+        align-items: flex-start;
+
+        line-height: 1.5;
+    }
+
+
+    .journey-investigation {
+        padding: 0.85rem;
+
+        border-radius: 17px;
+    }
+
+
+    .journey-header {
+        align-items: flex-start;
+    }
+
+
+    .journey-header h3 {
+        font-size: 0.9rem;
+    }
+
+
+    .journey-live {
+        font-size: 0.4rem;
+    }
+
+
+    .journey-intro {
+        margin-top: 0.9rem;
+
+        padding: 0.7rem;
+    }
+
+
+    .journey-intro p {
+        font-size: 0.58rem;
+    }
+
+
+    .journey-node {
+        grid-template-columns:
+            28px
+            minmax(0, 1fr);
+
+        gap: 0.65rem;
+
+        padding: 0.8rem;
+    }
+
+
+    .node-marker {
+        width: 28px;
+        height: 28px;
+
+        border-radius: 8px;
+
+        font-size: 0.5rem;
+    }
+
+
+    .node-content h4 {
+        font-size: 0.76rem;
+    }
+
+
+    .node-content p {
+        font-size: 0.56rem;
+    }
+
+
+    .customer-thought {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 0.1rem;
+    }
+
+
+    .node-metric {
+        grid-column: 2;
+
+        align-items: flex-start;
+
+        min-width: 0;
+
+        padding-left: 0;
+    }
+
+
+    .node-metric strong {
+        font-size: 0.85rem;
+    }
+
+
+    .node-metric span {
+        text-align: left;
+    }
+
+
+    .journey-flow {
+        min-height: 34px;
+    }
+
+
+    .journey-flow span {
+        font-size: 0.4rem;
+    }
+
+
+    .journey-leak {
+        padding: 0.85rem;
+    }
+
+
+    .leak-explanation {
+        padding-left: 0;
+    }
+
+
+    .leak-causes {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        padding-left: 0;
+    }
+
+
+    .leak-loss {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        padding-left: 0;
+    }
+
+
+    .leak-loss span {
+        text-align: left;
+    }
+
+
+    .investigation-result {
+        align-items: flex-start;
+    }
+
+
+    .result-status {
+        display: none;
+    }
+
+
+    .hero-scroll {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .hero-title {
+        font-size:
+            clamp(
+                2.65rem,
+                14vw,
+                3.7rem
+            );
+    }
+
+
+    .journey-header h3 {
+        font-size: 0.82rem;
+    }
+
+
+    .journey-live {
+        display: none;
+    }
+
+
+    .leak-causes {
+        gap: 0.35rem;
+    }
+
+
+    .leak-causes div {
+        padding: 0.45rem;
+
+        font-size: 0.43rem;
+    }
+
+
+    .investigation-result {
+        gap: 0.55rem;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-eyebrow,
+    .hero-title,
+    .hero-description,
+    .hero-actions,
+    .hero-trust,
+    .hero-visual,
+    .journey-node,
+    .flow-customer,
+    .journey-leak,
+    .leak-scanner,
+    .journey-dropoff,
+    .investigation-result,
+    .hero-scroll-arrow {
+
+        animation: none !important;
+    }
+
+
+    .hero-eyebrow,
+    .hero-title,
+    .hero-description,
+    .hero-actions,
+    .hero-trust,
+    .hero-visual,
+    .journey-node,
+    .journey-leak,
+    .journey-dropoff,
+    .investigation-result {
+
+        opacity: 1;
+
+        transform: none;
+    }
+
+}
+
+/* =========================================================
+   HERO — LIVELY MICRO-INTERACTION SYSTEM
+   Purpose:
+   Make the investigation feel active and intelligent
+   without turning the page into a GPU stress test.
+========================================================= */
+
+
+/* =========================================================
+   1. HERO BUTTONS
+========================================================= */
+
+.hero-actions a,
+.hero-actions button,
+.hero-primary-button,
+.hero-secondary-button {
+
+    position: relative;
+    overflow: hidden;
+
+    transform: translateZ(0);
+
+    transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        border-color 220ms ease,
+        background-color 220ms ease;
+}
+
+
+/* moving light across button */
+
+.hero-actions a::after,
+.hero-actions button::after,
+.hero-primary-button::after,
+.hero-secondary-button::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            105deg,
+            transparent 0%,
+            rgba(255,255,255,0.04) 35%,
+            rgba(255,255,255,0.18) 50%,
+            rgba(255,255,255,0.04) 65%,
+            transparent 100%
+        );
+
+    transform: skewX(-18deg);
+
+    pointer-events: none;
+}
+
+
+/* shine only when user interacts */
+
+.hero-actions a:hover::after,
+.hero-actions button:hover::after,
+.hero-primary-button:hover::after,
+.hero-secondary-button:hover::after {
+
+    animation:
+        buttonShine 650ms ease forwards;
+}
+
+
+@keyframes buttonShine {
+
+    from {
+        left: -120%;
+    }
+
+    to {
+        left: 140%;
+    }
+
+}
+
+
+.hero-actions a:hover,
+.hero-actions button:hover,
+.hero-primary-button:hover,
+.hero-secondary-button:hover {
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* primary button gets slightly stronger presence */
+
+.hero-primary-button:hover {
+
+    box-shadow:
+        0 8px 28px rgba(0, 122, 255, 0.20);
+}
+
+
+/* click feedback */
+
+.hero-actions a:active,
+.hero-actions button:active,
+.hero-primary-button:active,
+.hero-secondary-button:active {
+
+    transform:
+        translateY(-1px)
+        scale(0.985);
+
+}
+
+
+/* =========================================================
+   2. LIVE INVESTIGATION INDICATOR
+========================================================= */
+
+.live-dot {
+
+    animation:
+        liveDot 1.8s ease-in-out infinite;
+}
+
+@keyframes liveDot {
+
+    0%,
+    100% {
+        opacity: 0.55;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+
+}
+
+
+/* =========================================================
+   3. JOURNEY CARD
+========================================================= */
+
+.journey-investigation {
+
+    animation:
+        investigationFloat 7s ease-in-out infinite;
+}
+
+@keyframes investigationFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+}
+
+
+/* =========================================================
+   4. JOURNEY NODES
+========================================================= */
+
+.journey-node {
+
+    transition:
+        border-color 240ms ease,
+        background-color 240ms ease,
+        box-shadow 240ms ease;
+}
+
+
+.journey-node:hover {
+
+    border-color:
+        rgba(255,255,255,0.12);
+
+    background-color:
+        rgba(255,255,255,0.025);
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.12);
+}
+
+
+/* marker reacts */
+
+.node-marker {
+
+    transition:
+        transform 220ms ease,
+        border-color 220ms ease,
+        box-shadow 220ms ease;
+}
+
+
+.journey-node:hover .node-marker {
+
+    transform:
+        scale(1.07);
+
+    box-shadow:
+        0 0 14px rgba(0,122,255,0.12);
+}
+
+
+/* =========================================================
+   5. CUSTOMER SIGNAL
+   Small moving indicator that travels through the journey.
+========================================================= */
+
+.journey-flow {
+
+    position: relative;
+}
+
+
+.flow-customer {
+
+    animation:
+        customerTravel 4.5s ease-in-out infinite;
+    will-change:
+        transform,
+        opacity;
+}
+
+
+@keyframes customerTravel {
+
+    0% {
+        transform:
+            translateY(-4px);
+        opacity: 0;
+    }
+
+    8% {
+        opacity: 1;
+    }
+
+    42% {
+        transform:
+            translateY(42px);
+        opacity: 1;
+    }
+
+    48% {
+        transform:
+            translateY(48px);
+        opacity: 0.8;
+    }
+
+    55% {
+        transform:
+            translateY(48px);
+        opacity: 0;
+    }
+
+    100% {
+        transform:
+            translateY(48px);
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================================================
+   6. FLOW LINE
+========================================================= */
+
+.flow-line {
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.04),
+            rgba(0,122,255,0.32),
+            rgba(255,255,255,0.04)
+        );
+
+    background-size:
+        100% 220%;
+
+    animation:
+        flowPulse 3.8s ease-in-out infinite;
+}
+
+
+@keyframes flowPulse {
+
+    0%,
+    100% {
+        background-position:
+            0 0;
+    }
+
+    50% {
+        background-position:
+            0 100%;
+    }
+
+}
+
+
+/* =========================================================
+   7. LEAK DETECTION
+========================================================= */
+
+.journey-leak {
+
+    animation:
+        leakReveal 900ms ease both;
+    animation-delay:
+        1.7s;
+}
+
+
+@keyframes leakReveal {
+
+    0% {
+        opacity: 0;
+        transform:
+            translateY(8px)
+            scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* scanner */
+
+.leak-scanner {
+
+    position: relative;
+    overflow: hidden;
+}
+
+
+.leak-scanner::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 45%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,59,48,0.12),
+            rgba(255,100,80,0.28),
+            rgba(255,59,48,0.08),
+            transparent
+        );
+
+    pointer-events: none;
+
+    animation:
+        leakScan 3.2s ease-in-out infinite;
+}
+
+
+@keyframes leakScan {
+
+    0%,
+    35% {
+        left: -100%;
+    }
+
+    65% {
+        left: 120%;
+    }
+
+    100% {
+        left: 120%;
+    }
+
+}
+
+
+/* =========================================================
+   8. LEAK ICON
+========================================================= */
+
+.leak-icon {
+
+    animation:
+        leakPulse 2.2s ease-in-out infinite;
+}
+
+
+@keyframes leakPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+        box-shadow:
+            0 0 0 rgba(255,59,48,0);
+    }
+
+    50% {
+
+        transform:
+            scale(1.06);
+
+        box-shadow:
+            0 0 18px rgba(255,59,48,0.18);
+    }
+
+}
+
+
+/* =========================================================
+   9. DROP-OFF
+   People disappear from the journey.
+========================================================= */
+
+.journey-dropoff {
+
+    animation:
+        dropoffReveal 700ms ease both;
+
+    animation-delay:
+        2.4s;
+}
+
+
+@keyframes dropoffReveal {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* individual people */
+
+.dropoff-people span {
+
+    display: inline-block;
+
+    animation:
+        personDrop 2.8s ease-in-out infinite;
+}
+
+
+.dropoff-people span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dropoff-people span:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.dropoff-people span:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+.dropoff-people span:nth-child(4) {
+    animation-delay: 0.75s;
+}
+
+.dropoff-people span:nth-child(5) {
+    animation-delay: 1s;
+}
+
+
+@keyframes personDrop {
+
+    0%,
+    100% {
+
+        opacity: 0.9;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+    50% {
+
+        opacity: 0.38;
+
+        transform:
+            translateY(5px)
+            scale(0.94);
+    }
+
+}
+
+
+/* =========================================================
+   10. INVESTIGATION RESULT
+========================================================= */
+
+.investigation-result {
+
+    animation:
+        resultReveal 800ms ease both;
+
+    animation-delay:
+        2.9s;
+}
+
+
+@keyframes resultReveal {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* result status */
+
+.status-dot {
+
+    animation:
+        statusPulse 1.9s ease-in-out infinite;
+}
+
+
+@keyframes statusPulse {
+
+    0%,
+    100% {
+
+        opacity: 0.55;
+
+        transform:
+            scale(0.9);
+    }
+
+    50% {
+
+        opacity: 1;
+
+        transform:
+            scale(1.15);
+    }
+
+}
+
+
+/* =========================================================
+   11. METRIC NUMBERS
+========================================================= */
+
+.node-metric {
+
+    transition:
+        transform 220ms ease,
+        opacity 220ms ease;
+}
+
+
+.journey-node:hover .node-metric {
+
+    transform:
+        translateX(3px);
+
+    opacity:
+        1;
+}
+
+
+/* =========================================================
+   12. CUSTOMER THOUGHT
+========================================================= */
+
+.customer-thought {
+
+    transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+}
+
+
+.journey-node:hover .customer-thought {
+
+    transform:
+        translateX(3px);
+
+}
+
+
+/* =========================================================
+   13. HEADER LIVE STATE
+========================================================= */
+
+.journey-live {
+
+    transition:
+        border-color 220ms ease,
+        background-color 220ms ease;
+}
+
+
+.journey-live:hover {
+
+    border-color:
+        rgba(255,255,255,0.12);
+
+    background-color:
+        rgba(255,255,255,0.04);
+}
+
+
+/* =========================================================
+   14. HERO TRUST ITEMS
+========================================================= */
+
+.hero-trust-line {
+
+    transition:
+        opacity 200ms ease,
+        transform 200ms ease;
+}
+
+
+.hero-trust-line:hover {
+
+    opacity:
+        1;
+
+    transform:
+        translateX(3px);
+}
+
+
+/* =========================================================
+   15. HERO EYEBROW
+========================================================= */
+
+.hero-eyebrow {
+
+    animation:
+        eyebrowReveal 700ms ease both;
+}
+
+
+@keyframes eyebrowReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(6px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   16. SMALL SIGNAL ON EYEBROW DOT
+========================================================= */
+
+.hero-eyebrow-dot {
+
+    animation:
+        eyebrowPulse 2.5s ease-in-out infinite;
+}
+
+
+@keyframes eyebrowPulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(0.95);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.12);
+    }
+
+}
+
+
+/* =========================================================
+   17. SCROLL INDICATOR
+========================================================= */
+
+.hero-scroll-arrow {
+
+    animation:
+        scrollHint 1.8s ease-in-out infinite;
+}
+
+
+@keyframes scrollHint {
+
+    0%,
+    100% {
+        transform:
+            translateY(0);
+
+        opacity:
+            0.55;
+    }
+
+    50% {
+        transform:
+            translateY(5px);
+
+        opacity:
+            1;
+    }
+
+}
+
+
+/* =========================================================
+   18. PERFORMANCE RULE
+========================================================= */
+
+/*
+   Only animate properties the browser can handle cheaply.
+*/
+
+.live-dot,
+.hero-eyebrow-dot,
+.journey-investigation,
+.flow-customer,
+.leak-icon,
+.dropoff-people span,
+.status-dot,
+.hero-scroll-arrow {
+
+    will-change:
+        transform,
+        opacity;
+}
+
+
+/* =========================================================
+   19. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-dot,
+    .hero-eyebrow-dot,
+    .journey-investigation,
+    .flow-customer,
+    .leak-icon,
+    .dropoff-people span,
+    .status-dot,
+    .hero-scroll-arrow,
+    .journey-leak,
+    .journey-dropoff,
+    .investigation-result,
+    .hero-eyebrow,
+    .leak-scanner::after {
+
+        animation:
+            none !important;
+    }
+
+    .hero-actions a,
+    .hero-actions button,
+    .hero-primary-button,
+    .hero-secondary-button {
+
+        transition:
+            none !important;
+    }
+
+}
+
+
+/* ==========================================
+   HERO — ROTATING HEADLINE
+========================================== */
+
+.hero-title-static,
+.hero-title-dynamic {
+  display: block;
+}
+
+.hero-title-dynamic {
+  position: relative;
+  margin-top: 0.12em;
+  min-height: 3.3em;
+}
+
+.hero-title-dynamic strong {
+  display: block;
+  color: #ff3b30;
+  font-weight: inherit;
+}
+
+/* Smooth entrance */
+
+.hero-title-dynamic strong.is-entering {
+  animation: headlineEnter 280ms ease both;
+}
+
+/* Smooth exit */
+
+.hero-title-dynamic strong.is-leaving {
+  animation: headlineLeave 180ms ease both;
+}
+
+@keyframes headlineEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes headlineLeave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(3px);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title-dynamic {
+    min-height: 4.5em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-dynamic strong.is-entering,
+  .hero-title-dynamic strong.is-leaving {
+    animation: none !important;
+  }
+}

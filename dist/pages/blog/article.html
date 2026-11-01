@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Conversion Leak Hunter article"
+        id="article-description"
+    >
+
+    <title id="article-title">
+        Article | Precious
+    </title>
+
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="../../favicon.ico"
+    >
+
+    <!-- GLOBAL STYLES -->
+
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+    <!-- BLOG STYLES -->
+
+    <link
+        rel="stylesheet"
+        href="blog.css"
+    >
+
+    <style>
+
+        /* =================================
+           ARTICLE PAGE
+        ================================= */
+
+        .article-page {
+            padding: 8rem 0 6rem;
+        }
+
+
+        /* =================================
+           ARTICLE HEADER
+        ================================= */
+
+        .article-header {
+            max-width: 850px;
+            margin: 0 auto 4rem;
+        }
+
+
+        .article-category {
+            display: inline-block;
+            margin-bottom: 1.25rem;
+        }
+
+
+        .article-title {
+            margin-bottom: 1.5rem;
+        }
+
+
+        .article-excerpt {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+
+        /* =================================
+           BACK TO BLOG
+        ================================= */
+
+        .article-back {
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+
+
+        /* =================================
+           ARTICLE CONTENT
+        ================================= */
+
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+
+        .article-block-paragraph {
+            margin: 0 0 1.5rem;
+            line-height: 1.9;
+        }
+
+
+        /* =================================
+           HEADINGS
+        ================================= */
+
+        .article-block-heading {
+            line-height: 1.25;
+        }
+
+
+        .article-block-heading-1 {
+            margin-top: 3.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+
+        .article-block-heading-2 {
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+
+
+        .article-block-heading-3 {
+            margin-top: 2rem;
+            margin-bottom: 0.85rem;
+        }
+
+
+        /* =================================
+           QUOTE
+        ================================= */
+
+        .article-block-quote {
+            margin: 2.5rem 0;
+            padding: 1.5rem 2rem;
+            border-left: 4px solid currentColor;
+        }
+
+
+        .article-block-quote blockquote {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+
+        .article-block-quote figcaption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+
+        /* =================================
+           LISTS
+        ================================= */
+
+        .article-block-list {
+            margin: 1.5rem 0 2rem;
+            padding-left: 2rem;
+        }
+
+
+        .article-block-list li {
+            margin-bottom: 0.7rem;
+            line-height: 1.8;
+        }
+
+
+        /* =================================
+           IMAGES
+        ================================= */
+
+        .article-block-image {
+            margin: 2.5rem 0;
+        }
+
+
+        .article-block-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+
+        .article-block-image figcaption {
+            margin-top: 0.75rem;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+
+        /* =================================
+           LINKS
+        ================================= */
+
+        .article-block-link-wrapper {
+            margin: 1.5rem 0;
+        }
+
+
+        .article-block-link {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+
+        /* =================================
+           BUTTON / CTA
+        ================================= */
+
+        .article-block-button-wrapper {
+            margin: 2rem 0;
+        }
+
+
+        .article-block-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .article-block-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+
+        /* =================================
+           CALLOUT
+        ================================= */
+
+        .article-block-callout {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+
+        .article-block-callout h3 {
+            margin-top: 0;
+            margin-bottom: 0.6rem;
+        }
+
+
+        .article-block-callout p {
+            margin: 0;
+            line-height: 1.8;
+        }
+
+
+        /* =================================
+           DIVIDER
+        ================================= */
+
+        .article-block-divider {
+            margin: 3rem 0;
+            border: 0;
+            border-top: 1px solid currentColor;
+            opacity: 0.15;
+        }
+
+
+        /* =================================
+           SPACER
+        ================================= */
+
+        .article-block-spacer {
+            width: 100%;
+        }
+
+
+        /* =================================
+           YOUTUBE
+        ================================= */
+
+        .article-block-video {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin: 2.5rem 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+
+        .article-block-video iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+
+        /* =================================
+           CODE
+        ================================= */
+
+        .article-block-code {
+            margin: 2rem 0;
+            overflow-x: auto;
+            border-radius: 10px;
+        }
+
+
+        .article-block-code pre {
+            margin: 0;
+            padding: 1.25rem;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+
+        .article-block-code code {
+            font-family:
+                "Courier New",
+                Courier,
+                monospace;
+            font-size: 0.9rem;
+        }
+
+
+        /* =================================
+           LOADING / ERROR
+        ================================= */
+
+        .article-loading,
+        .article-error {
+            max-width: 800px;
+            margin: 8rem auto;
+            text-align: center;
+        }
+
+
+        /* =================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 768px) {
+
+            .article-page {
+                padding: 6rem 0 4rem;
+            }
+
+
+            .article-header {
+                margin-bottom: 3rem;
+            }
+
+
+            .article-excerpt {
+                font-size: 1rem;
+            }
+
+
+            .article-block-quote {
+                padding: 1.25rem 1.25rem;
+            }
+
+
+            .article-block-quote blockquote {
+                font-size: 1.05rem;
+            }
+
+
+            .article-block-image {
+                margin: 2rem 0;
+            }
+
+
+            .article-block-video {
+                margin: 2rem 0;
+            }
+
+        }
+
+    </style>
+
+
+    
+
+
+    <!-- LEAKENDIA META START -->
+
+    <link
+        rel="canonical"
+        href="https://leakendia.com/pages/blog/article"
+    >
+
+    <meta
+        property="og:type"
+        content="website"
+    >
+
+    <meta
+        property="og:site_name"
+        content="Leakendia"
+    >
+
+    <meta
+        property="og:title"
+        content="Article | Precious"
+    >
+
+    <meta
+        property="og:description"
+        content="Conversion Leak Hunter article"
+    >
+
+    <meta
+        property="og:url"
+        content="https://leakendia.com/pages/blog/article"
+    >
+
+    <meta
+        property="og:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <meta
+        property="og:image:width"
+        content="1200"
+    >
+
+    <meta
+        property="og:image:height"
+        content="630"
+    >
+
+    <meta
+        property="og:image:alt"
+        content="Leakendia"
+    >
+
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+
+    <meta
+        name="twitter:title"
+        content="Article | Precious"
+    >
+
+    <meta
+        name="twitter:description"
+        content="Conversion Leak Hunter article"
+    >
+
+    <meta
+        name="twitter:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <!-- LEAKENDIA META END -->
+
+</head>
+
+
+<body>
+
+    <div id="navbar"></div>
+
+
+    <main class="article-page">
+
+        <div class="container">
+
+            <article>
+
+                <!-- LOADING -->
+
+                <div
+                    class="article-loading"
+                    id="article-loading"
+                >
+
+                    <p>
+                        Loading article...
+                    </p>
+
+                </div>
+
+
+                <!-- ARTICLE -->
+
+                <div
+                    id="article-container"
+                    hidden
+                >
+
+                    <header class="article-header">
+
+                        <a
+                            href="blog.html"
+                            class="article-back"
+                        >
+                            ← Back to Blog
+                        </a>
+
+
+                        <span
+                            class="section-label article-category"
+                            id="article-category"
+                        >
+                            Conversion
+                        </span>
+
+
+                        <h1
+                            class="article-title"
+                            id="article-heading"
+                        >
+                        </h1>
+
+
+                        <p
+                            class="article-excerpt"
+                            id="article-excerpt"
+                        >
+                        </p>
+
+
+                        <div class="article-meta">
+
+                            <span id="article-read-time">
+                                5 min read
+                            </span>
+
+                            <span>
+                                •
+                            </span>
+
+                            <time
+                                id="article-date"
+                            ></time>
+
+                        </div>
+
+                    </header>
+
+
+                    <!-- BLOCK CONTENT -->
+
+                    <div
+                        class="article-content"
+                        id="article-content"
+                    >
+                    </div>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                <div
+                    class="article-error"
+                    id="article-error"
+                    hidden
+                >
+
+                    <h1>
+                        Article Not Found
+                    </h1>
+
+                    <p>
+                        This article doesn't exist or is no longer published.
+                    </p>
+
+                    <a
+                        href="blog.html"
+                        class="button button-primary"
+                    >
+                        Back to Blog
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </main>
+
+
+    <div id="footer"></div>
+
+
+    <!-- PAGE LOADER -->
+
+    <script src="../../config/page-loader.js"></script>
+
+
+    <!-- SHARED COMPONENTS -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                loadSharedComponent(
+                    "navbar",
+                    "../../components/navbar/navbar.html",
+                    "../../components/navbar/navbar.css",
+                    "../../components/navbar/navbar.js"
+                );
+
+
+                loadSharedComponent(
+                    "footer",
+                    "../../components/footer/footer.html",
+                    "../../components/footer/footer.css",
+                    "../../components/footer/footer.js"
+                );
+
+            }
+        );
+
+    </script>
+
+
+    <!-- ARTICLE SCRIPT -->
+
+    <script src="article.js"></script>
+
+</body>
+
+</html>

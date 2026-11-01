@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ==========================================
+         CORE DOCUMENT SETTINGS
+    =========================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+    <meta name="color-scheme" content="dark">
+
+    <!-- ==========================================
+         PRIMARY SEO METADATA
+    =========================================== -->
+    <title>Client Reviews & Testimonials | Leakendia</title>
+
+    <meta
+        name="description"
+        content="Read client reviews and testimonials about working with Leakendia. Explore firsthand experiences with website audits, conversion optimization, SEO, and customer journey analysis."
+    >
+
+    <meta name="application-name" content="Leakendia">
+    <meta name="author" content="Leakendia">
+    <meta name="publisher" content="Leakendia">
+
+    <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <meta
+        name="googlebot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <meta
+        name="bingbot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <!-- ==========================================
+         CANONICAL & LANGUAGE
+    =========================================== -->
+    <link
+        rel="canonical"
+        href="https://leakendia.com/pages/reviews/reviews.html"
+    >
+
+    <link
+        rel="alternate"
+        hreflang="en"
+        href="https://leakendia.com/pages/reviews/reviews.html"
+    >
+
+    <!-- ==========================================
+         FAVICON
+    =========================================== -->
+    <link
+        rel="icon"
+        href="/favicon.png"
+        type="image/png"
+    >
+
+    <!-- ==========================================
+         GLOBAL STYLES
+    =========================================== -->
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+    <!-- ==========================================
+         PAGE STYLES
+    =========================================== -->
+    <link
+        rel="stylesheet"
+        href="reviews.css"
+    >
+
+    <!-- ==========================================
+         OPEN GRAPH
+    =========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Leakendia">
+    <meta property="og:locale" content="en_US">
+
+    <meta
+        property="og:title"
+        content="Client Reviews & Testimonials | Leakendia"
+    >
+
+    <meta
+        property="og:description"
+        content="Discover what clients say about working with Leakendia. Read firsthand experiences and feedback about our website and customer journey services."
+    >
+
+    <meta
+        property="og:url"
+        content="https://leakendia.com/pages/reviews/reviews.html"
+    >
+
+    <meta
+        property="og:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+
+    <meta
+        property="og:image:alt"
+        content="Leakendia - Conversion Optimization and Customer Journey Analysis"
+    >
+
+    <!-- ==========================================
+         TWITTER / X METADATA
+    =========================================== -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta
+        name="twitter:title"
+        content="Client Reviews & Testimonials | Leakendia"
+    >
+
+    <meta
+        name="twitter:description"
+        content="Read genuine client experiences and testimonials about Leakendia's website optimization and customer journey services."
+    >
+
+    <meta
+        name="twitter:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <meta
+        name="twitter:image:alt"
+        content="Leakendia - Client Reviews and Testimonials"
+    >
+
+    <!-- ==========================================
+         STRUCTURED DATA
+         CONNECTED LEAKENDIA ENTITY GRAPH
+    =========================================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://leakendia.com/#organization",
+          "name": "Leakendia",
+          "url": "https://leakendia.com/",
+          "description": "Leakendia investigates websites, messaging, conversion funnels, and customer journeys to identify opportunities for better customer experiences and conversion performance."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://leakendia.com/#website",
+          "url": "https://leakendia.com/",
+          "name": "Leakendia",
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "CollectionPage",
+          "@id": "https://leakendia.com/pages/reviews/reviews.html#webpage",
+          "url": "https://leakendia.com/pages/reviews/reviews.html",
+          "name": "Client Reviews & Testimonials | Leakendia",
+          "description": "A collection of client reviews, testimonials, ratings, and firsthand experiences from people who have worked with Leakendia.",
+          "isPartOf": {
+            "@id": "https://leakendia.com/#website"
+          },
+          "about": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "inLanguage": "en",
+          "breadcrumb": {
+            "@id": "https://leakendia.com/pages/reviews/reviews.html#breadcrumb"
+          },
+          "relatedLink": [
+            "https://leakendia.com/pages/services/services.html",
+            "https://leakendia.com/pages/portfolio/portfolio.html",
+            "https://leakendia.com/pages/about/about.html",
+            "https://leakendia.com/pages/contact/contact.html"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://leakendia.com/pages/reviews/reviews.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://leakendia.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Client Reviews",
+              "item": "https://leakendia.com/pages/reviews/reviews.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+</head>
+
+<body data-page="reviews">
+
+    <!-- ==========================================
+         GLOBAL NAVBAR
+    =========================================== -->
+    <div id="navbar"></div>
+
+    <!-- ==========================================
+         NAVIGATION FALLBACK
+    =========================================== -->
+    <noscript>
+        <nav aria-label="Site navigation without JavaScript">
+            <a href="/">Home</a>
+            <a href="/pages/services/services.html">Services</a>
+            <a href="/pages/portfolio/portfolio.html">Leak Investigations</a>
+            <a href="/pages/reviews/reviews.html">Reviews</a>
+            <a href="/pages/about/about.html">About Leakendia</a>
+            <a href="/pages/blog/blog.html">Blog</a>
+            <a href="/pages/contact/contact.html">Contact</a>
+        </nav>
+    </noscript>
+
+    <!-- ==========================================
+         REVIEWS PAGE
+    =========================================== -->
+    <main
+        id="main-content"
+        class="reviews-page"
+    >
+
+        <!-- ======================================
+             PAGE HERO
+        ======================================= -->
+        <section
+            class="reviews-hero"
+            aria-labelledby="reviews-page-title"
+        >
+
+            <div class="container">
+
+                <div class="reviews-hero-content">
+
+                    <span class="reviews-eyebrow">
+                        CLIENT REVIEWS
+                    </span>
+
+                    <h1 id="reviews-page-title">
+                        What clients are saying.
+                    </h1>
+
+                    <p>
+                        Read firsthand experiences from businesses
+                        and clients who have worked with Leakendia.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================
+             REVIEW SUMMARY
+        ======================================= -->
+        <section
+            class="reviews-summary-section"
+            aria-label="Client review ratings summary"
+        >
+
+            <div class="container">
+
+                <div class="reviews-summary">
+
+                    <!-- OVERALL RATING -->
+                    <div class="reviews-overall">
+
+                        <span
+                            class="reviews-overall-rating"
+                            id="reviews-average-rating"
+                        >
+                            0.0
+                        </span>
+
+                        <div
+                            class="reviews-overall-stars"
+                            id="reviews-average-stars"
+                            aria-label="Average rating"
+                        >
+                            ☆☆☆☆☆
+                        </div>
+
+                        <span class="reviews-overall-count">
+                            Based on
+                            <strong id="reviews-total-count">0</strong>
+                            reviews
+                        </span>
+
+                    </div>
+
+                    <!-- RATING BREAKDOWN -->
+                    <div
+                        class="reviews-breakdown"
+                        aria-label="Breakdown of client ratings"
+                    >
+
+                        <div class="rating-row">
+                            <span>5</span>
+                            <span aria-hidden="true">★</span>
+                            <div class="rating-bar">
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="5"
+                                ></div>
+                            </div>
+                            <span data-rating-count="5">0</span>
+                        </div>
+
+                        <div class="rating-row">
+                            <span>4</span>
+                            <span aria-hidden="true">★</span>
+                            <div class="rating-bar">
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="4"
+                                ></div>
+                            </div>
+                            <span data-rating-count="4">0</span>
+                        </div>
+
+                        <div class="rating-row">
+                            <span>3</span>
+                            <span aria-hidden="true">★</span>
+                            <div class="rating-bar">
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="3"
+                                ></div>
+                            </div>
+                            <span data-rating-count="3">0</span>
+                        </div>
+
+                        <div class="rating-row">
+                            <span>2</span>
+                            <span aria-hidden="true">★</span>
+                            <div class="rating-bar">
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="2"
+                                ></div>
+                            </div>
+                            <span data-rating-count="2">0</span>
+                        </div>
+
+                        <div class="rating-row">
+                            <span>1</span>
+                            <span aria-hidden="true">★</span>
+                            <div class="rating-bar">
+                                <div
+                                    class="rating-bar-fill"
+                                    data-rating-fill="1"
+                                ></div>
+                            </div>
+                            <span data-rating-count="1">0</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================
+             APPROVED CLIENT REVIEWS
+        ======================================= -->
+        <section
+            class="reviews-list-section"
+            aria-labelledby="client-reviews-heading"
+        >
+
+            <div class="container">
+
+                <div class="reviews-section-heading">
+
+                    <div>
+
+                        <span class="reviews-eyebrow">
+                            CLIENT EXPERIENCES
+                        </span>
+
+                        <h2 id="client-reviews-heading">
+                            Reviews from real clients.
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="reviews-write-button"
+                        id="open-review-form"
+                        aria-controls="review-form-section"
+                    >
+                        Leave a review
+                    </button>
+
+                </div>
+
+                <div
+                    class="reviews-grid"
+                    id="reviews-list"
+                    aria-live="polite"
+                    aria-busy="true"
+                >
+                    <div class="reviews-state">
+                        Loading reviews...
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================
+             LEAVE A REVIEW
+        ======================================= -->
+        <section
+            class="review-form-section"
+            id="review-form-section"
+            aria-labelledby="review-form-heading"
+        >
+
+            <div class="container">
+
+                <div class="review-form-wrapper">
+
+                    <div class="review-form-heading">
+
+                        <span class="reviews-eyebrow">
+                            YOUR EXPERIENCE
+                        </span>
+
+                        <h2 id="review-form-heading">
+                            Share your experience.
+                        </h2>
+
+                        <p>
+                            Tell others what your experience
+                            working with Leakendia was like.
+                        </p>
+
+                    </div>
+
+                    <form
+                        class="review-form"
+                        id="review-form"
+                        novalidate
+                    >
+
+                        <div
+                            class="review-form-message"
+                            id="review-form-message"
+                            aria-live="polite"
+                        ></div>
+
+                        <!-- NAME + BUSINESS -->
+                        <div class="review-form-fields">
+
+                            <div class="form-field">
+
+                                <label for="review-name">
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="review-name"
+                                    name="name"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+                            <div class="form-field">
+
+                                <label for="review-business">
+                                    Business
+                                    <span>Optional</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="review-business"
+                                    name="business"
+                                    maxlength="200"
+                                    autocomplete="organization"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <!-- RATING -->
+                        <div class="form-field">
+
+                            <label id="review-rating-label">
+                                Your rating
+                            </label>
+
+                            <div
+                                class="review-rating"
+                                id="review-rating"
+                                role="group"
+                                aria-labelledby="review-rating-label"
+                            >
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="1"
+                                    aria-label="1 star"
+                                    aria-pressed="false"
+                                >★</button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="2"
+                                    aria-label="2 stars"
+                                    aria-pressed="false"
+                                >★</button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="3"
+                                    aria-label="3 stars"
+                                    aria-pressed="false"
+                                >★</button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="4"
+                                    aria-label="4 stars"
+                                    aria-pressed="false"
+                                >★</button>
+
+                                <button
+                                    type="button"
+                                    class="rating-star"
+                                    data-rating="5"
+                                    aria-label="5 stars"
+                                    aria-pressed="false"
+                                >★</button>
+
+                            </div>
+
+                            <input
+                                type="hidden"
+                                id="review-rating-value"
+                                name="rating"
+                            >
+
+                        </div>
+
+                        <!-- WRITTEN REVIEW -->
+                        <div class="form-field">
+
+                            <label for="review-text">
+                                Your review
+                            </label>
+
+                            <textarea
+                                id="review-text"
+                                name="review"
+                                rows="7"
+                                minlength="10"
+                                maxlength="2000"
+                                required
+                            ></textarea>
+
+                            <div class="review-character-count">
+                                <span id="review-character-count">0</span>
+                                / 2000
+                            </div>
+
+                        </div>
+
+                        <!-- SUBMIT -->
+                        <button
+                            type="submit"
+                            class="review-submit-button"
+                            id="review-submit-button"
+                        >
+                            Submit review
+                        </button>
+
+                        <p class="review-form-note">
+                            Reviews are checked before
+                            appearing publicly.
+                        </p>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         GLOBAL FOOTER
+    =========================================== -->
+    <div id="footer"></div>
+
+    <!-- ==========================================
+         SITE CONFIG
+    =========================================== -->
+    <script src="../../config/site-config.js"></script>
+
+    <!-- ==========================================
+         COMPONENT LOADER
+    =========================================== -->
+    <script src="../../config/component-loader.js"></script>
+
+    <!-- ==========================================
+         REVIEWS SYSTEM
+    =========================================== -->
+    <script src="reviews.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+/* =========================================================
+   LEAKENDIA ADMIN — VISUAL POLISH LAYER
+   Shared, non-destructive refinements. Loaded after page CSS
+   and before responsive overrides.
+   ========================================================= */
+
+/* Better geometry and depth without changing JS hooks. */
+.panel,
+.analytics-panel,
+.analytics-toolbar,
+.analytics-metric,
+.client-card,
+.review-card,
+.notification-item {
+    border-radius: 10px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+}
+
+.panel,
+.analytics-panel,
+.analytics-metric {
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal),
+        transform var(--transition-normal);
+}
+
+.panel:hover,
+.analytics-panel:hover,
+.analytics-metric:hover {
+    border-color: rgba(70, 230, 255, 0.18);
+}
+
+/* Give the workspace a little more breathing room on wide screens. */
+.page-content {
+    padding-top: clamp(24px, 2.2vw, 36px);
+}
+
+/* Consistent controls. */
+.primary-button,
+.secondary-button,
+.header-action,
+.sidebar-toggle,
+.analytics-btn,
+button.filter-button,
+button.client-filter,
+button.notification-filter,
+button.review-filter {
+    border-radius: 7px;
+}
+
+.primary-button,
+.secondary-button,
+.analytics-btn {
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.primary-button:hover:not(:disabled),
+.secondary-button:hover:not(:disabled),
+.analytics-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.primary-button:active:not(:disabled),
+.secondary-button:active:not(:disabled),
+.analytics-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Inputs should look like one system rather than several generations. */
+input,
+textarea,
+select {
+    border-radius: 7px;
+}
+
+select {
+    color-scheme: dark;
+}
+
+select option {
+    background: var(--color-panel-deep);
+    color: var(--text-primary);
+}
+
+/* Sidebar alignment and stronger navigation affordance. */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    box-shadow: 18px 0 50px rgba(0, 0, 0, 0.12);
+}
+
+.nav-item,
+.sidebar-link {
+    border-radius: 7px;
+}
+
+.nav-item.active {
+    box-shadow: inset 0 0 0 1px rgba(70, 230, 255, 0.035);
+}
+
+/* Header separation remains visible over long scrolling views. */
+.admin-header {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+/* Improve text legibility in dense operational surfaces. */
+.page-header h2,
+.section-intro h2,
+.panel-title,
+.analytics-panel h3 {
+    letter-spacing: -0.015em;
+}
+
+/* Accessible focus that is visible but not fluorescent. */
+.admin-main button:focus-visible,
+.admin-main input:focus-visible,
+.admin-main textarea:focus-visible,
+.admin-main select:focus-visible,
+.admin-main a:focus-visible {
+    outline: 2px solid rgba(70, 230, 255, 0.72);
+    outline-offset: 2px;
+}
+
+/* Tables stay readable instead of visually melting into the panel. */
+.analytics-table tbody tr,
+table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.analytics-table tbody tr:hover,
+table tbody tr:hover {
+    background: rgba(70, 230, 255, 0.025);
+}
+
+/* Empty/error/loading states deserve a clear visual boundary. */
+.empty-state,
+.loading-state,
+.error-state {
+    border-radius: 9px;
+}
+
+/* Reduced motion respects the OS preference. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

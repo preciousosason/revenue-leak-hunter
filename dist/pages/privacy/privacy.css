@@ -1,0 +1,424 @@
+/* =================================
+   PRIVACY PAGE
+================================= */
+
+
+/* =================================
+   PAGE HERO
+================================= */
+
+.privacy-hero {
+    padding: 9rem 0 5rem;
+
+    border-bottom: 1px solid var(--color-border);
+}
+
+
+.privacy-hero-content {
+    max-width: 760px;
+}
+
+
+.privacy-eyebrow {
+    display: inline-block;
+
+    margin-bottom: var(--space-lg);
+
+    color: var(--color-primary);
+
+    font-size: 0.7rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+}
+
+
+.privacy-hero h1 {
+    margin: 0 0 var(--space-lg);
+
+    color: var(--color-text);
+
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: var(--weight-bold);
+
+    line-height: 1.05;
+
+    letter-spacing: -0.04em;
+}
+
+
+.privacy-hero p {
+    max-width: 650px;
+
+    margin: 0 0 var(--space-lg);
+
+    color: var(--color-text-muted);
+
+    font-size: var(--text-lg);
+
+    line-height: 1.7;
+}
+
+
+.privacy-updated {
+    color: var(--color-text-muted);
+
+    font-size: var(--text-sm);
+}
+
+
+/* =================================
+   PRIVACY CONTENT
+================================= */
+
+.privacy-content {
+    padding: 6rem 0 8rem;
+}
+
+
+.privacy-layout {
+    display: grid;
+
+    grid-template-columns: 220px minmax(0, 760px);
+
+    gap: 5rem;
+
+    align-items: start;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+}
+
+
+/* =================================
+   SIDEBAR
+================================= */
+
+.privacy-sidebar {
+    position: sticky;
+
+    top: 6rem;
+}
+
+
+.privacy-sidebar-title {
+    display: block;
+
+    margin-bottom: var(--space-lg);
+
+    color: var(--color-text);
+
+    font-size: 0.65rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+.privacy-sidebar nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.7rem;
+}
+
+
+.privacy-sidebar a {
+    color: var(--color-text-muted);
+
+    font-size: 0.85rem;
+
+    line-height: 1.4;
+
+    text-decoration: none;
+
+    transition:
+        color var(--transition-normal);
+}
+
+
+.privacy-sidebar a:hover {
+    color: var(--color-primary);
+}
+
+
+/* =================================
+   DOCUMENT
+================================= */
+
+.privacy-document {
+    min-width: 0;
+}
+
+
+.privacy-section {
+    scroll-margin-top: 6rem;
+
+    padding-bottom: 4rem;
+
+    margin-bottom: 4rem;
+
+    border-bottom: 1px solid var(--color-border);
+}
+
+
+.privacy-section:last-of-type {
+    margin-bottom: 0;
+}
+
+
+/* =================================
+   SECTION NUMBER
+================================= */
+
+.privacy-number {
+    display: block;
+
+    margin-bottom: var(--space-md);
+
+    color: var(--color-primary);
+
+    font-size: 0.7rem;
+    font-weight: var(--weight-bold);
+
+    letter-spacing: 0.1em;
+}
+
+
+/* =================================
+   HEADINGS
+================================= */
+
+.privacy-section h2 {
+    margin: 0 0 var(--space-lg);
+
+    color: var(--color-text);
+
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+
+    line-height: 1.2;
+
+    letter-spacing: -0.02em;
+}
+
+
+.privacy-section h3 {
+    margin: 2rem 0 0.75rem;
+
+    color: var(--color-text);
+
+    font-size: 1rem;
+
+    font-weight: var(--weight-bold);
+}
+
+
+/* =================================
+   PARAGRAPHS
+================================= */
+
+.privacy-section p {
+    margin: 0 0 var(--space-lg);
+
+    color: var(--color-text-muted);
+
+    font-size: 0.98rem;
+
+    line-height: 1.8;
+}
+
+
+.privacy-section p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =================================
+   LISTS
+================================= */
+
+.privacy-section ul {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.75rem;
+
+    margin: 0 0 var(--space-lg);
+
+    padding-left: 1.25rem;
+}
+
+
+.privacy-section li {
+    color: var(--color-text-muted);
+
+    font-size: 0.98rem;
+
+    line-height: 1.7;
+}
+
+
+.privacy-section li::marker {
+    color: var(--color-primary);
+}
+
+
+/* =================================
+   LINKS
+================================= */
+
+.privacy-document a {
+    color: var(--color-primary);
+
+    text-decoration: none;
+}
+
+
+.privacy-document a:hover {
+    text-decoration: underline;
+}
+
+
+/* =================================
+   CONTACT CARD
+================================= */
+
+.privacy-contact-card {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.35rem;
+
+    padding: 1.5rem;
+
+    margin-top: 1.5rem;
+
+    border: 1px solid var(--color-border);
+
+    border-radius: var(--border-radius-lg);
+
+    background: var(--color-bg-secondary);
+}
+
+
+.privacy-contact-card strong {
+    color: var(--color-text);
+
+    font-size: 1rem;
+}
+
+
+.privacy-contact-card span {
+    color: var(--color-text-muted);
+
+    font-size: var(--text-sm);
+}
+
+
+/* =================================
+   IMPORTANT NOTICE
+================================= */
+
+.privacy-notice {
+    padding: 1.5rem;
+
+    margin-top: 2rem;
+
+    border-left: 2px solid var(--color-primary);
+
+    background: var(--color-bg-secondary);
+}
+
+
+.privacy-notice strong {
+    display: block;
+
+    margin-bottom: 0.5rem;
+
+    color: var(--color-text);
+
+    font-size: 0.8rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+
+.privacy-notice p {
+    margin: 0;
+
+    color: var(--color-text-muted);
+
+    font-size: 0.85rem;
+
+    line-height: 1.7;
+}
+
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 900px) {
+
+    .privacy-layout {
+        grid-template-columns: 1fr;
+
+        gap: 3rem;
+    }
+
+
+    .privacy-sidebar {
+        position: static;
+
+        padding-bottom: 2rem;
+
+        border-bottom: 1px solid var(--color-border);
+    }
+
+
+    .privacy-sidebar nav {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 0.8rem 1.5rem;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .privacy-hero {
+        padding: 7rem 0 4rem;
+    }
+
+
+    .privacy-content {
+        padding: 4rem 0 6rem;
+    }
+
+
+    .privacy-sidebar nav {
+        grid-template-columns: 1fr;
+    }
+
+
+    .privacy-section {
+        padding-bottom: 3rem;
+
+        margin-bottom: 3rem;
+    }
+
+}

@@ -1,0 +1,94 @@
+:root {
+    /* ================================
+       BRAND COLORS
+    ================================= */
+
+    --color-bg: #080808;
+    --color-bg-secondary: #101010;
+    --color-bg-tertiary: #151515;
+
+    --color-text: #f5f5f5;
+    --color-text-secondary: #a5a5a5;
+    --color-text-muted: #6f6f6f;
+
+    --color-primary: #ff3b30;
+    --color-primary-hover: #ff5148;
+
+    --color-success: #32d74b;
+    --color-warning: #ffcc00;
+
+    --color-border: rgba(255, 255, 255, 0.10);
+    --color-border-light: rgba(255, 255, 255, 0.06);
+
+
+    /* ================================
+       TYPOGRAPHY
+    ================================= */
+
+    --font-primary: Arial, Helvetica, sans-serif;
+
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-md: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 2rem;
+    --text-4xl: 3rem;
+    --text-5xl: 4rem;
+    --text-6xl: 5rem;
+
+
+    /* ================================
+       FONT WEIGHTS
+    ================================= */
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --weight-black: 900;
+
+
+    /* ================================
+       SPACING
+    ================================= */
+
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
+    --space-5xl: 8rem;
+
+
+    /* ================================
+       CONTAINER
+    ================================= */
+
+    --container-width: 1200px;
+    --container-padding: 1.5rem;
+
+
+    /* ================================
+       BORDERS
+    ================================= */
+
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    --border-radius-full: 999px;
+
+
+    /* ================================
+       TRANSITIONS
+    ================================= */
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+}

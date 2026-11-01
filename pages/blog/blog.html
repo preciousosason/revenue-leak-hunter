@@ -1,7 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <!-- ==========================================
+         DOCUMENT & BROWSER CONFIGURATION
+    =========================================== -->
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,53 +14,98 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Blog | Conversion Leak Hunter</title>
+    <meta name="theme-color" content="#080808">
+    <meta name="color-scheme" content="dark">
+    <meta name="application-name" content="Leakendia">
+
+    <link
+        rel="icon"
+        href="/favicon.png"
+        type="image/png"
+    >
+
+    <!-- ==========================================
+         PRIMARY SEO
+    =========================================== -->
+
+    <title>Conversion Optimization & SEO Blog | Leakendia</title>
 
     <meta
         name="description"
-        content="Practical thinking on conversion leaks, customer journeys, messaging, websites, funnels, and the small points of friction that make people stop moving forward."
+        content="Explore practical insights on conversion optimization, technical SEO, customer journeys, website audits, messaging, and the friction that stops visitors from becoming customers."
     >
 
-    <!-- Global Styles -->
-    <link rel="stylesheet" href="../../global/variables.css">
-    <link rel="stylesheet" href="../../global/global.css">
-    <link rel="stylesheet" href="../../global/responsive.css">
+    <meta name="author" content="Leakendia">
+    <meta name="publisher" content="Leakendia">
 
-    <!-- Components -->
-    <link rel="stylesheet" href="../../components/navbar/navbar.css">
-    <link rel="stylesheet" href="../../components/footer/footer.css">
+    <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
 
-    <!-- Blog -->
-    <link rel="stylesheet" href="blog.css">
+    <meta
+        name="googlebot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
 
-    
+    <meta
+        name="bingbot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
 
-
-    <!-- LEAKENDIA META START -->
+    <!-- ==========================================
+         CANONICAL & LANGUAGE
+    =========================================== -->
 
     <link
         rel="canonical"
         href="https://leakendia.com/pages/blog/blog"
     >
 
-    <meta
-        property="og:type"
-        content="website"
+    <link
+        rel="alternate"
+        hreflang="en"
+        href="https://leakendia.com/pages/blog/blog"
     >
 
-    <meta
-        property="og:site_name"
-        content="Leakendia"
-    >
+    <!-- ==========================================
+         GLOBAL STYLES
+         ALL ORIGINAL FILES PRESERVED
+    =========================================== -->
+
+    <link rel="stylesheet" href="../../global/variables.css">
+    <link rel="stylesheet" href="../../global/global.css">
+    <link rel="stylesheet" href="../../global/responsive.css">
+
+    <!-- ==========================================
+         COMPONENT STYLES
+    =========================================== -->
+
+    <link rel="stylesheet" href="../../components/navbar/navbar.css">
+    <link rel="stylesheet" href="../../components/footer/footer.css">
+
+    <!-- ==========================================
+         BLOG STYLES
+    =========================================== -->
+
+    <link rel="stylesheet" href="blog.css">
+
+    <!-- ==========================================
+         OPEN GRAPH / SOCIAL SHARING
+    =========================================== -->
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Leakendia">
+    <meta property="og:locale" content="en_US">
 
     <meta
         property="og:title"
-        content="Blog | Conversion Leak Hunter"
+        content="Conversion Optimization & SEO Insights | Leakendia"
     >
 
     <meta
         property="og:description"
-        content="Practical thinking on conversion leaks, customer journeys, messaging, websites, funnels, and the small points of friction that make people stop moving forward."
+        content="Explore what happens between attracting visitors and earning customers. Practical investigations into conversion leaks, technical SEO, messaging, and customer journeys."
     >
 
     <meta
@@ -68,20 +118,18 @@
         content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
     >
 
-    <meta
-        property="og:image:width"
-        content="1200"
-    >
-
-    <meta
-        property="og:image:height"
-        content="630"
-    >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
 
     <meta
         property="og:image:alt"
-        content="Leakendia"
+        content="Leakendia conversion optimization and customer journey insights"
     >
+
+    <!-- ==========================================
+         TWITTER / X SHARING
+    =========================================== -->
 
     <meta
         name="twitter:card"
@@ -90,12 +138,12 @@
 
     <meta
         name="twitter:title"
-        content="Blog | Conversion Leak Hunter"
+        content="Conversion Optimization & SEO Blog | Leakendia"
     >
 
     <meta
         name="twitter:description"
-        content="Practical thinking on conversion leaks, customer journeys, messaging, websites, funnels, and the small points of friction that make people stop moving forward."
+        content="Practical insights into website conversion, technical SEO, customer journeys, messaging, and the friction that costs businesses customers."
     >
 
     <meta
@@ -103,12 +151,146 @@
         content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
     >
 
-    <!-- LEAKENDIA META END -->
+    <meta
+        name="twitter:image:alt"
+        content="Leakendia conversion optimization and SEO blog"
+    >
+
+    <!-- ==========================================
+         STRUCTURED DATA
+         ORGANIZATION + WEBSITE + BLOG + WEBPAGE
+         + BREADCRUMB NAVIGATION
+    =========================================== -->
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://leakendia.com/#organization",
+          "name": "Leakendia",
+          "url": "https://leakendia.com/",
+          "description": "Leakendia investigates conversion barriers across websites, messaging, funnels, search visibility, and customer journeys.",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://leakendia.com/#logo",
+            "url": "https://leakendia.com/favicon.png"
+          },
+          "knowsAbout": [
+            "Conversion Rate Optimization",
+            "Technical SEO",
+            "Website Conversion Audits",
+            "Customer Journey Analysis",
+            "Conversion Funnel Optimization",
+            "Landing Page Optimization",
+            "Ecommerce Conversion Optimization",
+            "Website User Experience",
+            "Search Engine Optimization",
+            "Website Performance",
+            "Customer Acquisition",
+            "Website Messaging"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://leakendia.com/#website",
+          "url": "https://leakendia.com/",
+          "name": "Leakendia",
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "Blog",
+          "@id": "https://leakendia.com/pages/blog/blog.html#blog",
+          "name": "Leakendia Blog",
+          "headline": "Conversion Optimization, Technical SEO and Customer Journey Insights",
+          "description": "Practical thinking and investigations into conversion leaks, customer journeys, technical SEO, website messaging, funnels, and the friction that prevents visitors from taking action.",
+          "url": "https://leakendia.com/pages/blog/blog",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "isPartOf": {
+            "@id": "https://leakendia.com/#website"
+          },
+          "about": [
+            {
+              "@type": "Thing",
+              "name": "Conversion Rate Optimization"
+            },
+            {
+              "@type": "Thing",
+              "name": "Technical SEO"
+            },
+            {
+              "@type": "Thing",
+              "name": "Customer Journey Analysis"
+            },
+            {
+              "@type": "Thing",
+              "name": "Website Conversion Audits"
+            },
+            {
+              "@type": "Thing",
+              "name": "Conversion Funnel Analysis"
+            },
+            {
+              "@type": "Thing",
+              "name": "Website User Experience"
+            }
+          ]
+        },
+        {
+          "@type": "CollectionPage",
+          "@id": "https://leakendia.com/pages/blog/blog.html#webpage",
+          "url": "https://leakendia.com/pages/blog/blog",
+          "name": "Conversion Optimization & SEO Blog | Leakendia",
+          "description": "Explore practical insights on conversion optimization, technical SEO, customer journeys, website audits, messaging, and the friction that stops visitors from becoming customers.",
+          "inLanguage": "en",
+          "isPartOf": {
+            "@id": "https://leakendia.com/#website"
+          },
+          "about": {
+            "@id": "https://leakendia.com/#blog"
+          },
+          "mainEntity": {
+            "@id": "https://leakendia.com/pages/blog/blog.html#blog"
+          },
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "breadcrumb": {
+            "@id": "https://leakendia.com/pages/blog/blog.html#breadcrumb"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://leakendia.com/pages/blog/blog.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://leakendia.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog",
+              "item": "https://leakendia.com/pages/blog/blog"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 
 </head>
 
-
-<body>
+<body data-page="blog">
 
     <!-- =================================
          NAVBAR
@@ -116,14 +298,35 @@
 
     <div id="navbar"></div>
 
+    <!-- =================================
+         FALLBACK NAVIGATION
+    ================================= -->
 
-    <main>
+    <noscript>
+        <nav aria-label="Site navigation without JavaScript">
+            <a href="/">Home</a>
+            <a href="/pages/services/services.html">Services</a>
+            <a href="/pages/portfolio/portfolio.html">Leak Investigations</a>
+            <a href="/pages/about/about.html">About</a>
+            <a href="/pages/blog/blog.html">Blog</a>
+            <a href="/pages/contact/contact.html">Contact</a>
+        </nav>
+    </noscript>
+
+    <!-- =================================
+         MAIN BLOG CONTENT
+    ================================= -->
+
+    <main id="main-content">
 
         <!-- =================================
              BLOG HERO
         ================================= -->
 
-        <section class="blog-hero">
+        <section
+            class="blog-hero"
+            aria-labelledby="blog-heading"
+        >
 
             <div class="container">
 
@@ -133,7 +336,7 @@
                         Conversion Leak Hunter
                     </p>
 
-                    <h1>
+                    <h1 id="blog-heading">
                         See where the
                         <br>
                         journey starts to break.
@@ -153,18 +356,21 @@
 
         </section>
 
-
         <!-- =================================
              FEATURED POST
         ================================= -->
 
-        <section class="featured-post">
+        <section
+            class="featured-post"
+            aria-label="Featured blog investigation"
+        >
 
             <div class="container">
 
                 <div
                     class="featured-post-card"
                     id="featured-post"
+                    aria-live="polite"
                 >
 
                     <!-- Populated by blog.js -->
@@ -202,11 +408,10 @@
                             class="post-link"
                         >
                             Read article
-                            <span>→</span>
+                            <span aria-hidden="true">→</span>
                         </a>
 
                     </div>
-
 
                     <!-- =================================
                          LEAK DIAGRAM
@@ -214,7 +419,11 @@
 
                     <div class="featured-post-visual">
 
-                        <div class="leak-diagram">
+                        <div
+                            class="leak-diagram"
+                            role="img"
+                            aria-label="Visitor journey showing a conversion leak between website visitors and customers"
+                        >
 
                             <div class="diagram-node">
                                 VISITORS
@@ -242,12 +451,14 @@
 
         </section>
 
-
         <!-- =================================
              ARTICLES
         ================================= -->
 
-        <section class="articles">
+        <section
+            class="articles"
+            aria-labelledby="articles-heading"
+        >
 
             <div class="container">
 
@@ -257,17 +468,17 @@
                         The Hunt
                     </p>
 
-                    <h2>
+                    <h2 id="articles-heading">
                         Follow the questions
                         behind the drop-off.
                     </h2>
 
                 </div>
 
-
                 <div
                     class="articles-grid"
                     id="articles-grid"
+                    aria-label="Latest Leakendia articles"
                 >
 
                     <!-- Article cards inserted by blog.js -->
@@ -278,12 +489,14 @@
 
         </section>
 
-
         <!-- =================================
              BLOG CTA
         ================================= -->
 
-        <section class="blog-cta">
+        <section
+            class="blog-cta"
+            aria-labelledby="blog-cta-heading"
+        >
 
             <div class="container">
 
@@ -293,7 +506,7 @@
                         Find the leak
                     </p>
 
-                    <h2>
+                    <h2 id="blog-cta-heading">
                         You can read about the problem.
                         Or investigate yours.
                     </h2>
@@ -310,7 +523,7 @@
                         class="button"
                     >
                         Begin Investigation
-                        <span>→</span>
+                        <span aria-hidden="true">→</span>
                     </a>
 
                 </div>
@@ -321,18 +534,22 @@
 
     </main>
 
-
     <!-- =================================
          FOOTER
     ================================= -->
 
     <div id="footer"></div>
 
+    <!-- =================================
+         ORIGINAL COMPONENT LOADER
+    ================================= -->
 
-    <!-- Component Loader -->
     <script src="../../config/component-loader.js"></script>
 
-    <!-- Blog -->
+    <!-- =================================
+         BLOG ARTICLE LOADER
+    ================================= -->
+
     <script src="blog.js"></script>
 
 </body>

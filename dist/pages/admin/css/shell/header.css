@@ -1,0 +1,429 @@
+/* =========================================================
+   ADMIN CONTROL SYSTEM
+   HEADER / SYSTEM STATUS BAR
+   ========================================================= */
+
+.admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+
+    width: 100%;
+    height: var(--header-height, 76px);
+    min-height: var(--header-height, 76px);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(12, 18, 24, 0.98),
+            rgba(7, 11, 15, 0.96)
+        );
+
+    border-bottom: 1px solid var(--border-color, #1B2932);
+
+    backdrop-filter: blur(14px);
+}
+
+/* ---------------------------------------------------------
+   TECHNICAL HEADER LINE
+   --------------------------------------------------------- */
+
+.admin-header::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+
+    width: 120px;
+    height: 1px;
+
+    background: var(--accent-cyan, #46E6FF);
+
+    opacity: 0.65;
+
+    box-shadow:
+        135px 0 0 rgba(61, 126, 255, 0.25);
+}
+
+.admin-header::after {
+    content: "";
+
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+
+    width: 45px;
+    height: 1px;
+
+    background: rgba(70, 230, 255, 0.2);
+}
+
+/* ---------------------------------------------------------
+   LEFT SIDE
+   --------------------------------------------------------- */
+
+.header-left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ---------------------------------------------------------
+   SIDEBAR TOGGLE
+   --------------------------------------------------------- */
+
+.sidebar-toggle {
+    display: none;
+
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    padding: 0;
+
+    border: 1px solid var(--border-color, #1B2932);
+
+    background: rgba(70, 230, 255, 0.025);
+
+    color: var(--text-secondary, #A7B7BD);
+
+    font-family: var(--font-mono, monospace);
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition:
+        color 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease;
+}
+
+.sidebar-toggle:hover {
+    color: var(--accent-cyan, #46E6FF);
+
+    border-color: rgba(70, 230, 255, 0.3);
+
+    background: rgba(70, 230, 255, 0.055);
+}
+
+.sidebar-toggle:active {
+    transform: translateY(1px);
+}
+
+/* ---------------------------------------------------------
+   HEADER TITLE BLOCK
+   --------------------------------------------------------- */
+
+.header-title-block {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header-title-block .eyebrow {
+    display: block;
+
+    color: var(--text-muted, #71818A);
+
+    font-family: var(--font-mono, monospace);
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.16em;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+.header-title-block h1 {
+    margin: 0;
+
+    color: var(--text-primary, #E7F1F4);
+
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.1;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------------------------------------------------------
+   RIGHT SIDE
+   --------------------------------------------------------- */
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------
+   SYSTEM STATUS
+   --------------------------------------------------------- */
+
+.header-status {
+    min-height: 34px;
+
+    padding: 0 12px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    border: 1px solid rgba(84, 242, 139, 0.14);
+
+    background: rgba(84, 242, 139, 0.025);
+
+    color: var(--success, #54F28B);
+
+    font-family: var(--font-mono, monospace);
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+.header-status .status-dot {
+    width: 6px;
+    height: 6px;
+
+    flex: 0 0 6px;
+
+    border-radius: 50%;
+
+    background: var(--success, #54F28B);
+
+    box-shadow:
+        0 0 7px rgba(84, 242, 139, 0.75);
+
+    animation: header-status-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes header-status-pulse {
+    0%,
+    100% {
+        opacity: 0.65;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ---------------------------------------------------------
+   GENERIC HEADER ACTION
+   --------------------------------------------------------- */
+
+.header-action {
+    position: relative;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid var(--border-color, #1B2932);
+
+    background: rgba(70, 230, 255, 0.02);
+
+    color: var(--text-secondary, #A7B7BD);
+
+    font-family: var(--font-mono, monospace);
+
+    cursor: pointer;
+
+    transition:
+        color 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease;
+}
+
+.header-action:hover {
+    color: var(--accent-cyan, #46E6FF);
+
+    border-color: rgba(70, 230, 255, 0.32);
+
+    background: rgba(70, 230, 255, 0.055);
+}
+
+.header-action:active {
+    transform: translateY(1px);
+}
+
+/* ---------------------------------------------------------
+   NOTIFICATION TRIGGER
+   --------------------------------------------------------- */
+
+.notification-trigger {
+    font-size: 17px;
+}
+
+.notification-trigger > span:first-child {
+    line-height: 1;
+}
+
+.notification-trigger .notification-badge {
+    position: absolute;
+
+    top: -5px;
+    right: -5px;
+
+    min-width: 17px;
+    height: 17px;
+
+    padding: 0 4px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 77, 61, 0.6);
+
+    background: var(--critical, #FF4D3D);
+
+    color: #fff;
+
+    font-family: var(--font-mono, monospace);
+    font-size: 8px;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+/* ---------------------------------------------------------
+   HEADER FOCUS STATES
+   --------------------------------------------------------- */
+
+.sidebar-toggle:focus-visible,
+.header-action:focus-visible {
+    outline: 1px solid var(--accent-cyan, #46E6FF);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   TABLET
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    .admin-header {
+        padding: 0 22px;
+    }
+
+    .sidebar-toggle {
+        display: grid;
+        place-items: center;
+    }
+}
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    :root {
+        --header-height: 68px;
+    }
+
+    .admin-header {
+        height: var(--header-height);
+        min-height: var(--header-height);
+
+        padding: 0 15px;
+
+        gap: 12px;
+    }
+
+    .header-left {
+        gap: 10px;
+    }
+
+    .sidebar-toggle,
+    .header-action {
+        width: 34px;
+        height: 34px;
+    }
+
+    .header-title-block {
+        gap: 4px;
+    }
+
+    .header-title-block .eyebrow {
+        font-size: 7px;
+        letter-spacing: 0.12em;
+    }
+
+    .header-title-block h1 {
+        font-size: 16px;
+    }
+
+    .header-right {
+        gap: 7px;
+    }
+
+    .header-status {
+        display: none;
+    }
+
+    .notification-trigger {
+        font-size: 16px;
+    }
+}
+
+/* ---------------------------------------------------------
+   VERY SMALL MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 380px) {
+
+    .admin-header {
+        padding: 0 12px;
+    }
+
+    .header-title-block h1 {
+        font-size: 15px;
+    }
+
+    .header-title-block .eyebrow {
+        max-width: 150px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .header-status .status-dot {
+        animation: none;
+    }
+
+    .sidebar-toggle,
+    .header-action {
+        transition: none;
+    }
+}

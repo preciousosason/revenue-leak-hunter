@@ -1,27 +1,43 @@
+
 {
-  "name": "my-website",
+  "$schema": "https://json.schemastore.org/package",
+  "name": "leakendia",
   "version": "1.0.0",
-  "description": "",
+  "description": "Leakendia website, SEO automation, and Cloudflare deployment",
+  "private": true,
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "new-article": "node scripts/new-article.js",
     "build-blog": "node scripts/build-blog.js",
+    "build-services": "node scripts/build-services.js",
+    "build-sitemap": "node scripts/build-sitemap.js",
     "inject-meta": "node scripts/inject-meta.mjs",
-    "deploy": "npm run inject-meta && wrangler deploy",
-    "preview": "wrangler dev"
+    "build-site": "node scripts/build-site.js",
+    "build-seo": "npm run build-blog && npm run build-services && npm run build-sitemap",
+    "seo:check": "node --check scripts/build-blog.js && node --check scripts/build-services.js && node --check scripts/build-sitemap.js && node --check scripts/inject-meta.mjs",
+    "site:check": "node --check scripts/build-site.js",
+    "check": "npm run seo:check && npm run site:check",
+    "build": "npm run check && npm run build-seo && npm run build-site && npm run inject-meta",
+    "preview": "npm run build && wrangler dev",
+    "deploy:check": "npm run build && wrangler deploy --dry-run",
+    "deploy": "npm run build && wrangler deploy"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/preciousosason/revenue-leak-hunter.git"
   },
-  "keywords": [],
+  "keywords": [
+    "leakendia",
+    "technical-seo",
+    "conversion-optimization"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/preciousosason/revenue-leak-hunter/issues"
   },
-  "homepage": "https://github.com/preciousosason/revenue-leak-hunter#readme",
+  "homepage": "https://leakendia.com",
   "devDependencies": {
     "wrangler": "^4.136.1"
   }

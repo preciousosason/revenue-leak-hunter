@@ -1,8 +1,8 @@
+
 const SITE_CONFIG = {
+    name: "Leakendia",
 
- name: "Leakendia",
-
-title: "Conversion Leak Intelligence",
+    title: "Conversion Leak Intelligence",
 
     tagline:
         "Find the leaks. Fix the journey. Improve the conversion.",
@@ -14,38 +14,33 @@ title: "Conversion Leak Intelligence",
 
     linkedin: "",
 
-
     /* =================================
        ROUTES
     ================================= */
 
     routes: {
-
         home: "/",
 
-        about: "pages/about/about.html",
+        about: "/pages/about/about",
 
-        services: "pages/services/services.html",
+        services: "/pages/services/services",
 
-        portfolio: "pages/portfolio/portfolio.html",
+        portfolio: "/pages/portfolio/portfolio",
 
-        blog: "pages/blog/blog.html",
+        blog: "/pages/blog/blog",
 
-        reviews: "pages/reviews/reviews.html",
+        reviews: "/pages/reviews/reviews",
 
-        contact: "pages/contact/contact.html",
+        contact: "/pages/contact/contact",
 
-        audit: "pages/contact/contact.html"
-
+        audit: "/pages/contact/contact"
     },
-
 
     /* =================================
        NAVIGATION
     ================================= */
 
     navigation: [
-
         {
             label: "Home",
             route: "home"
@@ -53,18 +48,18 @@ title: "Conversion Leak Intelligence",
 
         {
             label: "How It Works",
-            href: "index.html#process",
+            href: "/#process",
             homepageOnly: true
         },
 
         {
-    label: "Reviews",
-    route: "reviews"
-},
+            label: "Reviews",
+            route: "reviews"
+        },
 
         {
             label: "Services",
-            href: "index.html#services",
+            href: "/#services",
             homepageOnly: true
         },
 
@@ -87,20 +82,14 @@ title: "Conversion Leak Intelligence",
             label: "Contact",
             route: "contact"
         }
-
     ],
-
 
     /* =================================
        PRIMARY CTA
     ================================= */
 
     primaryCTA: {
-
         label: "Begin Investigation",
-
         route: "audit"
-
     }
-
 };

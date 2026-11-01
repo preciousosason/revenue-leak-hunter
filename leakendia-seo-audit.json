@@ -1,0 +1,436 @@
+{
+  "pages": [
+    {
+      "file": "index.html",
+      "expected": "https://leakendia.com/",
+      "canonical": [
+        "https://leakendia.com/"
+      ]
+    },
+    {
+      "file": "pages/about/about.html",
+      "expected": "https://leakendia.com/pages/about/about",
+      "canonical": [
+        "https://leakendia.com/pages/about/about"
+      ]
+    },
+    {
+      "file": "pages/blog/article.html",
+      "expected": "https://leakendia.com/pages/blog/article",
+      "canonical": [
+        "https://leakendia.com/pages/blog/article"
+      ]
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "expected": "https://leakendia.com/pages/blog/blog",
+      "canonical": [
+        "https://leakendia.com/pages/blog/blog"
+      ]
+    },
+    {
+      "file": "pages/contact/contact.html",
+      "expected": "https://leakendia.com/pages/contact/contact",
+      "canonical": [
+        "https://leakendia.com/pages/contact/contact"
+      ]
+    },
+    {
+      "file": "pages/conversion-leaks/conversion-leaks.html",
+      "expected": "https://leakendia.com/pages/conversion-leaks/conversion-leaks",
+      "canonical": [
+        "https://leakendia.com/pages/conversion-leaks/conversion-leaks"
+      ]
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "expected": "https://leakendia.com/pages/portfolio/portfolio",
+      "canonical": [
+        "https://leakendia.com/pages/portfolio/portfolio"
+      ]
+    },
+    {
+      "file": "pages/privacy/privacy.html",
+      "expected": "https://leakendia.com/pages/privacy/privacy",
+      "canonical": [
+        "https://leakendia.com/pages/privacy/privacy.html"
+      ]
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "expected": "https://leakendia.com/pages/reviews/reviews",
+      "canonical": [
+        "https://leakendia.com/pages/reviews/reviews"
+      ]
+    },
+    {
+      "file": "pages/services/services.html",
+      "expected": "https://leakendia.com/pages/services/services",
+      "canonical": [
+        "https://leakendia.com/pages/services/services"
+      ]
+    },
+    {
+      "file": "pages/terms/terms.html",
+      "expected": "https://leakendia.com/pages/terms/terms",
+      "canonical": [
+        "https://leakendia.com/pages/terms/terms.html"
+      ]
+    },
+    {
+      "file": "pages/writing-portfolio/index.html",
+      "expected": "https://leakendia.com/pages/writing-portfolio/",
+      "canonical": []
+    },
+    {
+      "file": "pages/writing-portfolio/articles/building-muscle/index.html",
+      "expected": "https://leakendia.com/pages/writing-portfolio/articles/building-muscle/",
+      "canonical": []
+    },
+    {
+      "file": "pages/writing-portfolio/articles/iron-deficiency/index.html",
+      "expected": "https://leakendia.com/pages/writing-portfolio/articles/iron-deficiency/",
+      "canonical": []
+    },
+    {
+      "file": "pages/writing-portfolio/articles/sleep-quality/index.html",
+      "expected": "https://leakendia.com/pages/writing-portfolio/articles/sleep-quality/",
+      "canonical": []
+    },
+    {
+      "file": "pages/services/ai-visibility/index.html",
+      "expected": "https://leakendia.com/pages/services/ai-visibility/",
+      "canonical": [
+        "https://leakendia.com/pages/services/ai-visibility/"
+      ]
+    },
+    {
+      "file": "pages/services/conversion-intelligence/index.html",
+      "expected": "https://leakendia.com/pages/services/conversion-intelligence/",
+      "canonical": [
+        "https://leakendia.com/pages/services/conversion-intelligence/"
+      ]
+    },
+    {
+      "file": "pages/services/conversion-leak-hunting/index.html",
+      "expected": "https://leakendia.com/pages/services/conversion-leak-hunting/",
+      "canonical": [
+        "https://leakendia.com/pages/services/conversion-leak-hunting/"
+      ]
+    },
+    {
+      "file": "pages/services/customer-journey/index.html",
+      "expected": "https://leakendia.com/pages/services/customer-journey/",
+      "canonical": [
+        "https://leakendia.com/pages/services/customer-journey/"
+      ]
+    },
+    {
+      "file": "pages/services/email-systems/index.html",
+      "expected": "https://leakendia.com/pages/services/email-systems/",
+      "canonical": [
+        "https://leakendia.com/pages/services/email-systems/"
+      ]
+    },
+    {
+      "file": "pages/services/funnels/index.html",
+      "expected": "https://leakendia.com/pages/services/funnels/",
+      "canonical": [
+        "https://leakendia.com/pages/services/funnels/"
+      ]
+    },
+    {
+      "file": "pages/services/growth-systems/index.html",
+      "expected": "https://leakendia.com/pages/services/growth-systems/",
+      "canonical": [
+        "https://leakendia.com/pages/services/growth-systems/"
+      ]
+    },
+    {
+      "file": "pages/services/messaging/index.html",
+      "expected": "https://leakendia.com/pages/services/messaging/",
+      "canonical": [
+        "https://leakendia.com/pages/services/messaging/"
+      ]
+    },
+    {
+      "file": "pages/services/websites/index.html",
+      "expected": "https://leakendia.com/pages/services/websites/",
+      "canonical": [
+        "https://leakendia.com/pages/services/websites/"
+      ]
+    },
+    {
+      "file": "articles/find-revenue-leaks-before-scaling/article.html",
+      "expected": "https://leakendia.com/articles/find-revenue-leaks-before-scaling/article",
+      "canonical": [
+        "https://leakendia.com/articles/find-revenue-leaks-before-scaling/article"
+      ]
+    },
+    {
+      "file": "articles/silent-conversion-leaks/article.html",
+      "expected": "https://leakendia.com/articles/silent-conversion-leaks/article",
+      "canonical": [
+        "https://leakendia.com/articles/silent-conversion-leaks/article"
+      ]
+    }
+  ],
+  "missing_canonicals": [
+    "pages/writing-portfolio/index.html",
+    "pages/writing-portfolio/articles/building-muscle/index.html",
+    "pages/writing-portfolio/articles/iron-deficiency/index.html",
+    "pages/writing-portfolio/articles/sleep-quality/index.html"
+  ],
+  "canonical_mismatches": [
+    {
+      "file": "pages/privacy/privacy.html",
+      "expected": "https://leakendia.com/pages/privacy/privacy",
+      "actual": [
+        "https://leakendia.com/pages/privacy/privacy.html"
+      ]
+    },
+    {
+      "file": "pages/terms/terms.html",
+      "expected": "https://leakendia.com/pages/terms/terms",
+      "actual": [
+        "https://leakendia.com/pages/terms/terms.html"
+      ]
+    }
+  ],
+  "internal_html_links": [
+    {
+      "file": "index.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "index.html",
+      "link": "/pages/portfolio/portfolio.html"
+    },
+    {
+      "file": "index.html",
+      "link": "/pages/reviews/reviews.html"
+    },
+    {
+      "file": "index.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "index.html",
+      "link": "/pages/blog/blog.html"
+    },
+    {
+      "file": "index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "link": "/pages/portfolio/portfolio.html"
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "link": "/pages/blog/blog.html"
+    },
+    {
+      "file": "pages/blog/blog.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/contact/contact.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/contact/contact.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/contact/contact.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/portfolio/portfolio.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/blog/blog.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/portfolio/portfolio.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/privacy/privacy.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/privacy/privacy.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/privacy/privacy.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/portfolio/portfolio.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/reviews/reviews.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/blog/blog.html"
+    },
+    {
+      "file": "pages/reviews/reviews.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/terms/terms.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/terms/terms.html",
+      "link": "/pages/about/about.html"
+    },
+    {
+      "file": "pages/terms/terms.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/ai-visibility/index.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/services/ai-visibility/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/conversion-intelligence/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/conversion-intelligence/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/conversion-leak-hunting/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/conversion-leak-hunting/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/email-systems/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/email-systems/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/funnels/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/funnels/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/growth-systems/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/growth-systems/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/messaging/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/messaging/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/websites/index.html",
+      "link": "/pages/services/services.html"
+    },
+    {
+      "file": "pages/services/websites/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/websites/index.html",
+      "link": "/pages/contact/contact.html"
+    },
+    {
+      "file": "pages/services/websites/index.html",
+      "link": "/pages/services/services.html"
+    }
+  ],
+  "security_checks": [
+    {
+      "url": "https://leakendia.com/backend/schema.sql",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/backend/src/index.js",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/backend/admin-login.json",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/backend/src.zip",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/outreach-backup.sql",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/package.json",
+      "status": 403
+    },
+    {
+      "url": "https://leakendia.com/wrangler.jsonc",
+      "status": 403
+    }
+  ]
+}

@@ -1,486 +1,334 @@
-import fs from "fs";
-import path from "path";
 
+import fs from "node:fs";
+import path from "node:path";
 
 /* =================================
-   CONFIG
+   CONFIGURATION
 ================================= */
 
-const ROOT =
-    process.cwd();
+const ROOT = process.cwd();
+const PUBLIC_ROOT = path.join(ROOT, "dist");
 
+const BASE_URL = "https://leakendia.com";
+const SITE_NAME = "Leakendia";
 
-const BASE_URL =
-    "https://leakendia.com";
-
+const DEFAULT_DESCRIPTION =
+    "Find where your customer journey is leaking conversions and what needs to change.";
 
 const DEFAULT_IMAGE =
     `${BASE_URL}/assets/images/og/leakendia-social.jpg`;
 
-
-const DEFAULT_SITE_NAME =
-    "Leakendia";
-
+const START_MARKER = "<!-- LEAKENDIA META START -->";
+const END_MARKER = "<!-- LEAKENDIA META END -->";
 
 /* =================================
-   EXCLUDED DIRECTORIES
+   EXCLUSIONS
 ================================= */
 
-const EXCLUDED =
-    new Set([
-        "node_modules",
-        "backend",
-        ".git",
-        "pages/admin",
-        "pages/admin-backup",
-        "pages/portal"
-    ]);
+const EXCLUDED_DIRECTORIES = [
+    "components",
+    "config",
+    "data",
+    "assets",
+    "pages/admin",
+    "pages/admin-backup",
+    "pages/portal",
+    "pages/writing-portfolio"
+];
 
+const EXCLUDED_FILES = new Set([
+    "pages/blog/article.html"
+]);
+
+function normalizePath(value) {
+    return value.replace(/\\/g, "/");
+}
+
+function isExcluded(relativePath) {
+    const normalized = normalizePath(relativePath);
+
+    if (EXCLUDED_FILES.has(normalized)) {
+        return true;
+    }
+
+    return EXCLUDED_DIRECTORIES.some(directory =>
+        normalized === directory ||
+        normalized.startsWith(`${directory}/`)
+    );
+}
 
 /* =================================
-   WALK FILES
+   DISCOVER PUBLIC HTML FILES
 ================================= */
 
-function walk(
-    directory
-) {
-
+function walk(directory) {
     const files = [];
 
+    for (const entry of fs.readdirSync(directory, {
+        withFileTypes: true
+    })) {
+        const fullPath = path.join(directory, entry.name);
 
-    for (
-        const entry
-        of fs.readdirSync(
-            directory,
-            {
-                withFileTypes: true
-            }
-        )
-    ) {
+        const relativePath = normalizePath(
+            path.relative(PUBLIC_ROOT, fullPath)
+        );
 
-        const fullPath =
-            path.join(
-                directory,
-                entry.name
-            );
-
-
-        const relativePath =
-            path
-                .relative(
-                    ROOT,
-                    fullPath
-                )
-                .replace(
-                    /\\/g,
-                    "/"
-                );
-
-
-        if (
-            entry.isDirectory()
-        ) {
-
-            const excluded =
-                Array.from(
-                    EXCLUDED
-                ).some(
-                    item =>
-                        relativePath ===
-                            item ||
-                        relativePath.startsWith(
-                            `${item}/`
-                        )
-                );
-
-
-            if (!excluded) {
-
-                files.push(
-                    ...walk(
-                        fullPath
-                    )
-                );
-
-            }
-
-
+        if (isExcluded(relativePath)) {
             continue;
-
         }
 
+        if (entry.isDirectory()) {
+            files.push(...walk(fullPath));
+            continue;
+        }
 
         if (
             entry.isFile() &&
-            entry.name.endsWith(
-                ".html"
-            )
+            entry.name.toLowerCase().endsWith(".html") &&
+            !/^google[^/]*\.html$/i.test(relativePath)
         ) {
-
-            files.push(
-                fullPath
-            );
-
+            files.push(fullPath);
         }
-
     }
-
 
     return files;
-
 }
 
-
 /* =================================
-   READ EXISTING TITLE
+   HTML UTILITIES
 ================================= */
 
-function getTitle(
-    html
-) {
-
-    const match =
-        html.match(
-            /<title[^>]*>([\s\S]*?)<\/title>/i
-        );
-
-
-    if (!match) {
-
-        return DEFAULT_SITE_NAME;
-
-    }
-
-
-    return match[1]
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .trim();
-
+function escapeAttribute(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
+function getAttribute(tag, name) {
+    const escaped = name.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&"
+    );
 
-/* =================================
-   READ EXISTING DESCRIPTION
-================================= */
+    const pattern = new RegExp(
+        `\\b${escaped}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
+        "i"
+    );
 
-function getDescription(
-    html
-) {
+    const match = tag.match(pattern);
 
-    const match =
-        html.match(
-            /<meta\s+[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i
-        ) ||
-        html.match(
-            /<meta\s+[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i
-        );
-
-
-    if (!match) {
-
-        return (
-            "Find where your customer journey is leaking conversions and what needs to change."
-        );
-
-    }
-
-
-    return match[1]
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .trim();
-
+    return match
+        ? match[1] ?? match[2] ?? match[3]
+        : null;
 }
 
-
-/* =================================
-   ESCAPE ATTRIBUTE
-================================= */
-
-function escapeAttribute(
-    value
-) {
-
-    return String(
-        value || ""
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        );
-
+function findTags(html, name) {
+    return html.match(
+        new RegExp(`<${name}\\b[^>]*>`, "gi")
+    ) || [];
 }
 
+function findMeta(html, attribute, value) {
+    return findTags(html, "meta").find(tag => {
+        const actual = getAttribute(tag, attribute);
+
+        return actual?.toLowerCase() === value.toLowerCase();
+    });
+}
+
+function hasMeta(html, attribute, value) {
+    return Boolean(findMeta(html, attribute, value));
+}
+
+function getCanonicalTag(html) {
+    return findTags(html, "link").find(tag => {
+        const rel = getAttribute(tag, "rel");
+
+        return rel
+            ?.toLowerCase()
+            .split(/\s+/)
+            .includes("canonical");
+    });
+}
+
+function getTitle(html) {
+    const match = html.match(
+        /<title\b[^>]*>([\s\S]*?)<\/title>/i
+    );
+
+    return match
+        ? match[1].replace(/\s+/g, " ").trim()
+        : SITE_NAME;
+}
+
+function getDescription(html) {
+    const tag = findMeta(
+        html,
+        "name",
+        "description"
+    );
+
+    return tag
+        ? getAttribute(tag, "content") || DEFAULT_DESCRIPTION
+        : DEFAULT_DESCRIPTION;
+}
 
 /* =================================
-   PAGE URL
+   PUBLIC CANONICAL URL GENERATION
 ================================= */
 
-function getPageUrl(
-    file
-) {
-
-    let relative =
-        path
-            .relative(
-                ROOT,
-                file
-            )
-            .replace(
-                /\\/g,
-                "/"
-            );
-
+function getPageUrl(file) {
+    const relative = normalizePath(
+        path.relative(PUBLIC_ROOT, file)
+    );
 
     if (
-        relative ===
-        "index.html"
+        relative.startsWith("../") ||
+        relative === ".."
     ) {
-
-        return `${BASE_URL}/`;
-
+        throw new Error(
+            `File is outside the public build: ${file}`
+        );
     }
 
+    if (relative === "index.html") {
+        return `${BASE_URL}/`;
+    }
 
-    /*
-       Cloudflare Pages normally serves
-       HTML pages using clean URLs.
-
-       Example:
-
-       pages/about/about.html
-       becomes
-       /pages/about/about
-    */
-
-    relative =
-        relative.replace(
-            /\.html$/i,
-            ""
+    if (relative.endsWith("/index.html")) {
+        return (
+            BASE_URL +
+            "/" +
+            relative.slice(0, -"index.html".length)
         );
-
+    }
 
     return (
-        `${BASE_URL}/${relative}`
+        BASE_URL +
+        "/" +
+        relative.replace(/\.html$/i, "")
     );
-
 }
 
-
 /* =================================
-   REMOVE OLD GENERATED META
+   REMOVE PREVIOUS GENERATED BLOCK
 ================================= */
 
-function removeGeneratedMeta(
-    html
-) {
-
+function removeGeneratedMeta(html) {
     return html.replace(
-        /<!-- LEAKENDIA META START -->[\s\S]*?<!-- LEAKENDIA META END -->/gi,
-        ""
+        /\s*<!-- LEAKENDIA META START -->[\s\S]*?<!-- LEAKENDIA META END -->\s*/gi,
+        "\n"
+    );
+}
+
+/* =================================
+   GENERATE MISSING METADATA
+================================= */
+
+function buildMissingMeta(html, file) {
+    const generated = [];
+
+    const title = getTitle(html);
+    const description = getDescription(html);
+
+    const existingCanonical = getCanonicalTag(html);
+
+    const canonical = existingCanonical
+        ? getAttribute(existingCanonical, "href") ||
+          getPageUrl(file)
+        : getPageUrl(file);
+
+    const existingOgImage = findMeta(
+        html,
+        "property",
+        "og:image"
     );
 
-}
+    const image = existingOgImage
+        ? getAttribute(existingOgImage, "content") ||
+          DEFAULT_IMAGE
+        : DEFAULT_IMAGE;
 
+    function addMeta(attribute, name, content) {
+        if (hasMeta(html, attribute, name)) {
+            return;
+        }
 
-/* =================================
-   BUILD META BLOCK
-================================= */
-
-function buildMetaBlock({
-    title,
-    description,
-    url
-}) {
-
-    const safeTitle =
-        escapeAttribute(
-            title
+        generated.push(
+            `<meta ${attribute}="${escapeAttribute(name)}" content="${escapeAttribute(content)}">`
         );
-
-
-    const safeDescription =
-        escapeAttribute(
-            description
-        );
-
-
-    const safeUrl =
-        escapeAttribute(
-            url
-        );
-
-
-    const safeImage =
-        escapeAttribute(
-            DEFAULT_IMAGE
-        );
-
-
-    return `
-    <!-- LEAKENDIA META START -->
-
-    <link
-        rel="canonical"
-        href="${safeUrl}"
-    >
-
-    <meta
-        property="og:type"
-        content="website"
-    >
-
-    <meta
-        property="og:site_name"
-        content="${DEFAULT_SITE_NAME}"
-    >
-
-    <meta
-        property="og:title"
-        content="${safeTitle}"
-    >
-
-    <meta
-        property="og:description"
-        content="${safeDescription}"
-    >
-
-    <meta
-        property="og:url"
-        content="${safeUrl}"
-    >
-
-    <meta
-        property="og:image"
-        content="${safeImage}"
-    >
-
-    <meta
-        property="og:image:width"
-        content="1200"
-    >
-
-    <meta
-        property="og:image:height"
-        content="630"
-    >
-
-    <meta
-        property="og:image:alt"
-        content="${DEFAULT_SITE_NAME}"
-    >
-
-    <meta
-        name="twitter:card"
-        content="summary_large_image"
-    >
-
-    <meta
-        name="twitter:title"
-        content="${safeTitle}"
-    >
-
-    <meta
-        name="twitter:description"
-        content="${safeDescription}"
-    >
-
-    <meta
-        name="twitter:image"
-        content="${safeImage}"
-    >
-
-    <!-- LEAKENDIA META END -->
-`;
-
-}
-
-
-/* =================================
-   PROCESS FILE
-================================= */
-
-function processFile(
-    file
-) {
-
-    let html =
-        fs.readFileSync(
-            file,
-            "utf8"
-        );
-
-
-    html =
-        removeGeneratedMeta(
-            html
-        );
-
-
-    const title =
-        getTitle(
-            html
-        );
-
-
-    const description =
-        getDescription(
-            html
-        );
-
-
-    const url =
-        getPageUrl(
-            file
-        );
-
-
-    const meta =
-        buildMetaBlock({
-            title,
-            description,
-            url
-        });
-
-
-    if (
-        !/<\/head>/i.test(
-            html
-        )
-    ) {
-
-        console.warn(
-            `Skipped: no </head> found in ${file}`
-        );
-
-        return;
-
     }
 
+    if (!existingCanonical) {
+        generated.push(
+            `<link rel="canonical" href="${escapeAttribute(canonical)}">`
+        );
+    }
 
-    html =
-        html.replace(
-            /<\/head>/i,
-            `${meta}\n</head>`
+    addMeta("property", "og:type", "website");
+    addMeta("property", "og:site_name", SITE_NAME);
+    addMeta("property", "og:title", title);
+    addMeta("property", "og:description", description);
+    addMeta("property", "og:url", canonical);
+    addMeta("property", "og:image", image);
+
+    if (image === DEFAULT_IMAGE) {
+        addMeta("property", "og:image:width", "1200");
+        addMeta("property", "og:image:height", "630");
+    }
+
+    addMeta("property", "og:image:alt", SITE_NAME);
+
+    addMeta("name", "twitter:card", "summary_large_image");
+    addMeta("name", "twitter:title", title);
+    addMeta("name", "twitter:description", description);
+    addMeta("name", "twitter:image", image);
+
+    if (!generated.length) {
+        return "";
+    }
+
+    return [
+        START_MARKER,
+        ...generated,
+        END_MARKER
+    ].join("\n");
+}
+
+/* =================================
+   PROCESS PUBLIC PAGE
+================================= */
+
+function processFile(file) {
+    const original = fs.readFileSync(
+        file,
+        "utf8"
+    );
+
+    if (!/<\/head\s*>/i.test(original)) {
+        console.warn(
+            `SKIPPED: Missing </head> in ${normalizePath(path.relative(PUBLIC_ROOT, file))}`
         );
 
+        return "skipped";
+    }
+
+    let html = removeGeneratedMeta(original);
+
+    const metadata = buildMissingMeta(html, file);
+
+    if (metadata) {
+        html = html.replace(
+            /<\/head\s*>/i,
+            `${metadata}\n</head>`
+        );
+    }
+
+    if (html === original) {
+        return "unchanged";
+    }
 
     fs.writeFileSync(
         file,
@@ -488,41 +336,46 @@ function processFile(
         "utf8"
     );
 
-
     console.log(
-        `Updated: ${path.relative(ROOT, file)}`
+        `UPDATED: ${normalizePath(path.relative(PUBLIC_ROOT, file))}`
     );
 
+    return "updated";
 }
-
 
 /* =================================
-   RUN
+   EXECUTION
 ================================= */
 
-const files =
-    walk(
-        ROOT
+function main() {
+    if (!fs.existsSync(PUBLIC_ROOT)) {
+        throw new Error(
+            "Public dist/ directory not found. Run npm run build-site first."
+        );
+    }
+
+    const files = walk(PUBLIC_ROOT);
+
+    const results = {
+        updated: 0,
+        unchanged: 0,
+        skipped: 0
+    };
+
+    console.log(
+        `Found ${files.length} eligible public HTML files.`
     );
 
+    for (const file of files) {
+        const result = processFile(file);
+        results[result]++;
+    }
 
-console.log(
-    `Found ${files.length} HTML files.`
-);
-
-
-for (
-    const file
-    of files
-) {
-
-    processFile(
-        file
-    );
-
+    console.log("\nLEAKENDIA SEO INJECTION COMPLETE");
+    console.log(`Updated: ${results.updated}`);
+    console.log(`Unchanged: ${results.unchanged}`);
+    console.log(`Skipped: ${results.skipped}`);
+    console.log("Admin, portal, components, and writing portfolio excluded.");
 }
 
-
-console.log(
-    "Leakendia social metadata injected."
-);
+main();

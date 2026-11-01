@@ -1,5 +1,5 @@
 {
-    "generatedAt": "2026-09-16T19:28:04.595Z",
+    "generatedAt": "2026-11-01T11:35:24.460Z",
     "articles": [
         {
             "title": "The 7 Silent Conversion Leaks That Make Good Businesses Look Broken",
@@ -8,7 +8,7 @@
             "slug": "silent-conversion-leaks",
             "status": "published",
             "publishedAt": "2026-09-16T19:27:48.956Z",
-            "url": "/articles/silent-conversion-leaks/article.html"
+            "url": "/articles/silent-conversion-leaks/article"
         },
         {
             "title": "Find the Revenue Leaks Before You Scale",
@@ -17,7 +17,7 @@
             "slug": "find-revenue-leaks-before-scaling",
             "status": "published",
             "publishedAt": "2026-09-16T19:10:15.523Z",
-            "url": "/articles/find-revenue-leaks-before-scaling/article.html"
+            "url": "/articles/find-revenue-leaks-before-scaling/article"
         }
     ],
     "publishedArticles": [
@@ -28,7 +28,7 @@
             "slug": "silent-conversion-leaks",
             "status": "published",
             "publishedAt": "2026-09-16T19:27:48.956Z",
-            "url": "/articles/silent-conversion-leaks/article.html"
+            "url": "/articles/silent-conversion-leaks/article"
         },
         {
             "title": "Find the Revenue Leaks Before You Scale",
@@ -37,7 +37,7 @@
             "slug": "find-revenue-leaks-before-scaling",
             "status": "published",
             "publishedAt": "2026-09-16T19:10:15.523Z",
-            "url": "/articles/find-revenue-leaks-before-scaling/article.html"
+            "url": "/articles/find-revenue-leaks-before-scaling/article"
         }
     ]
 }

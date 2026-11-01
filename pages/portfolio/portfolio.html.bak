@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ==========================================
+         DOCUMENT CONFIGURATION
+    =========================================== -->
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="theme-color" content="#080808">
+    <meta name="color-scheme" content="dark">
+
+    <!-- ==========================================
+         PRIMARY SEO METADATA
+    =========================================== -->
+    <title>Conversion Audit Examples & Leak Investigations | Leakendia</title>
+
+    <meta
+        name="description"
+        content="Explore illustrative website conversion audits and customer journey investigations. See how Leakendia identifies friction in ecommerce, SaaS onboarding, trust, messaging, and conversion funnels."
+    >
+
+    <meta name="author" content="Leakendia">
+    <meta name="publisher" content="Leakendia">
+    <meta name="application-name" content="Leakendia">
+
+    <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <meta
+        name="googlebot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <meta
+        name="bingbot"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    >
+
+    <!-- ==========================================
+         CANONICAL & LANGUAGE
+    =========================================== -->
+    <link
+        rel="canonical"
+        href="https://leakendia.com/pages/portfolio/portfolio.html"
+    >
+
+    <link
+        rel="alternate"
+        hreflang="en"
+        href="https://leakendia.com/pages/portfolio/portfolio.html"
+    >
+
+    <!-- ==========================================
+         BRAND ICON
+    =========================================== -->
+    <link
+        rel="icon"
+        href="/favicon.png"
+        type="image/png"
+    >
+
+    <!-- ==========================================
+         GLOBAL STYLES
+         ORIGINAL FILES PRESERVED
+    =========================================== -->
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="portfolio.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+    <!-- ==========================================
+         OPEN GRAPH METADATA
+    =========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Leakendia">
+    <meta property="og:locale" content="en_US">
+
+    <meta
+        property="og:title"
+        content="Leak Investigations | Conversion Audit Examples | Leakendia"
+    >
+
+    <meta
+        property="og:description"
+        content="Explore illustrative investigations into website conversion leaks, customer journey friction, ecommerce product pages, SaaS onboarding, and funnel performance."
+    >
+
+    <meta
+        property="og:url"
+        content="https://leakendia.com/pages/portfolio/portfolio.html"
+    >
+
+    <meta
+        property="og:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta
+        property="og:image:alt"
+        content="Leakendia conversion leak investigations"
+    >
+
+    <!-- ==========================================
+         TWITTER / X METADATA
+    =========================================== -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta
+        name="twitter:title"
+        content="Conversion Leak Investigations | Leakendia"
+    >
+
+    <meta
+        name="twitter:description"
+        content="Explore illustrative conversion investigations showing how website friction, messaging gaps, and customer journey problems can be identified."
+    >
+
+    <meta
+        name="twitter:image"
+        content="https://leakendia.com/assets/images/og/leakendia-social.jpg"
+    >
+
+    <!-- ==========================================
+         CONNECTED STRUCTURED DATA GRAPH
+
+         Organization
+         WebSite
+         CollectionPage
+         BreadcrumbList
+         ItemList
+    =========================================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://leakendia.com/#organization",
+          "name": "Leakendia",
+          "url": "https://leakendia.com/",
+          "description": "Leakendia investigates conversion barriers across websites, messaging, funnels, and customer journeys.",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://leakendia.com/#logo",
+            "url": "https://leakendia.com/favicon.png"
+          },
+          "knowsAbout": [
+            "Conversion Rate Optimization",
+            "Website Conversion Audits",
+            "Customer Journey Analysis",
+            "Conversion Funnel Analysis",
+            "Ecommerce Conversion Optimization",
+            "SaaS Onboarding",
+            "Landing Page Optimization",
+            "Website User Experience",
+            "Website Trust Signals",
+            "Customer Journey Friction",
+            "Website Messaging",
+            "Technical SEO"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://leakendia.com/#website",
+          "url": "https://leakendia.com/",
+          "name": "Leakendia",
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "CollectionPage",
+          "@id": "https://leakendia.com/pages/portfolio/portfolio.html#webpage",
+          "url": "https://leakendia.com/pages/portfolio/portfolio.html",
+          "name": "Conversion Audit Examples and Leak Investigations",
+          "description": "A collection of illustrative website conversion and customer journey investigations demonstrating how potential conversion problems are examined.",
+          "isPartOf": {
+            "@id": "https://leakendia.com/#website"
+          },
+          "publisher": {
+            "@id": "https://leakendia.com/#organization"
+          },
+          "about": [
+            {
+              "@type": "Thing",
+              "name": "Conversion Rate Optimization"
+            },
+            {
+              "@type": "Thing",
+              "name": "Customer Journey Analysis"
+            },
+            {
+              "@type": "Thing",
+              "name": "Website Conversion Audits"
+            },
+            {
+              "@type": "Thing",
+              "name": "Conversion Funnel Analysis"
+            }
+          ],
+          "mainEntity": {
+            "@id": "https://leakendia.com/pages/portfolio/portfolio.html#investigations"
+          },
+          "breadcrumb": {
+            "@id": "https://leakendia.com/pages/portfolio/portfolio.html#breadcrumb"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://leakendia.com/pages/portfolio/portfolio.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://leakendia.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Leak Investigations",
+              "item": "https://leakendia.com/pages/portfolio/portfolio.html"
+            }
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://leakendia.com/pages/portfolio/portfolio.html#investigations",
+          "name": "Illustrative Conversion Leak Investigations",
+          "description": "Examples demonstrating approaches to identifying friction in websites and customer journeys."
+        }
+      ]
+    }
+    </script>
+
+</head>
+
+<body data-page="portfolio">
+
+    <!-- ==========================================
+         ACCESSIBILITY: SKIP NAVIGATION
+    =========================================== -->
+    <a
+        href="#main-content"
+        class="skip-link"
+        style="position:absolute;left:-9999px;top:auto"
+        onfocus="this.style.left='12px';this.style.top='12px';this.style.zIndex='9999'"
+        onblur="this.style.left='-9999px'"
+    >
+        Skip to main content
+    </a>
+
+    <!-- ==========================================
+         NAVBAR
+    =========================================== -->
+    <div id="navbar"></div>
+
+    <noscript>
+        <nav aria-label="Site navigation without JavaScript">
+            <a href="/">Home</a>
+            <a href="/pages/services/services.html">Services</a>
+            <a href="/pages/portfolio/portfolio.html">Leak Investigations</a>
+            <a href="/pages/about/about.html">About</a>
+            <a href="/pages/blog/blog.html">Blog</a>
+            <a href="/pages/contact/contact.html">Contact</a>
+        </nav>
+    </noscript>
+
+    <main id="main-content">
+
+        <!-- ==========================================
+             HERO
+        =========================================== -->
+        <section
+            class="portfolio-hero"
+            aria-labelledby="portfolio-main-heading"
+        >
+
+            <div class="container">
+
+                <div class="portfolio-hero-grid">
+
+                    <div class="portfolio-hero-content">
+
+                        <span class="eyebrow">
+                            THE LEAK FILES
+                        </span>
+
+                        <h1 id="portfolio-main-heading">
+                            Don't Take My Word For It.
+                            <span>
+                                Look At The Leaks.
+                            </span>
+                        </h1>
+
+                        <p>
+                            Every business has friction hiding somewhere.
+                            These investigations show how I approach the
+                            hunt, trace the customer journey, expose what
+                            is being missed, and identify where the
+                            experience can be tightened.
+                        </p>
+
+                        <div class="portfolio-hero-actions">
+
+                            <a
+                                href="#case-studies"
+                                class="btn btn-primary"
+                            >
+                                Explore The Investigations
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a
+                                href="/pages/contact/contact.html"
+                                class="btn btn-secondary"
+                            >
+                                Begin Investigation
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             LEAK INVESTIGATIONS
+        =========================================== -->
+        <section
+            class="case-studies-section"
+            id="case-studies"
+            aria-labelledby="investigations-heading"
+        >
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Leak Investigations
+                        </span>
+
+                        <h2 id="investigations-heading">
+                            Where The Leaks
+                            <span>Were Hiding.</span>
+                        </h2>
+
+                    </div>
+
+                    <p>
+                        These are illustrative investigations, not client
+                        case studies. Each one demonstrates how I think
+                        through a conversion problem before recommending
+                        a fix.
+                    </p>
+
+                </div>
+
+                <!-- DYNAMIC INVESTIGATIONS -->
+                <div
+                    class="case-studies-grid"
+                    id="case-studies-grid"
+                    aria-label="Illustrative conversion investigations"
+                ></div>
+
+                <!-- EMPTY STATE -->
+                <div
+                    class="portfolio-empty"
+                    id="portfolio-empty"
+                    hidden
+                >
+
+                    <span>
+                        NO INVESTIGATIONS FOUND
+                    </span>
+
+                    <p>
+                        The investigation room is currently empty.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             INVESTIGATION METHOD
+        =========================================== -->
+        <section
+            class="portfolio-method"
+            aria-labelledby="portfolio-method-heading"
+        >
+
+            <div class="container">
+
+                <div class="method-grid">
+
+                    <div class="method-content">
+
+                        <span class="eyebrow">
+                            THE APPROACH
+                        </span>
+
+                        <h2 id="portfolio-method-heading">
+                            I Don't Start
+                            With The Fix.
+                        </h2>
+
+                        <p>
+                            That's how businesses end up paying to fix
+                            things that weren't actually broken.
+                        </p>
+
+                        <p>
+                            I start with the journey. Where does attention
+                            become hesitation? Where does intent disappear?
+                            Where does a customer stop moving?
+                        </p>
+
+                        <p>
+                            Then we investigate why.
+                        </p>
+
+                    </div>
+
+                    <div class="method-steps">
+
+                        <div class="method-step">
+
+                            <span class="method-number" aria-hidden="true">
+                                01
+                            </span>
+
+                            <div>
+
+                                <h3>Observe</h3>
+
+                                <p>
+                                    Understand what the customer actually
+                                    encounters.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="method-step">
+
+                            <span class="method-number" aria-hidden="true">
+                                02
+                            </span>
+
+                            <div>
+
+                                <h3>Investigate</h3>
+
+                                <p>
+                                    Trace friction across the customer
+                                    journey.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="method-step">
+
+                            <span class="method-number" aria-hidden="true">
+                                03
+                            </span>
+
+                            <div>
+
+                                <h3>Expose</h3>
+
+                                <p>
+                                    Identify the leak and understand
+                                    why it exists.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="method-step">
+
+                            <span class="method-number" aria-hidden="true">
+                                04
+                            </span>
+
+                            <div>
+
+                                <h3>Seal</h3>
+
+                                <p>
+                                    Recommend practical changes that
+                                    create a cleaner journey.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             CONVERSION CTA
+        =========================================== -->
+        <section
+            class="portfolio-cta"
+            aria-labelledby="portfolio-cta-heading"
+        >
+
+            <div class="container">
+
+                <div class="portfolio-cta-inner">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            YOUR TURN
+                        </span>
+
+                        <h2 id="portfolio-cta-heading">
+                            There Might Be
+                            A Leak In Your Funnel.
+                        </h2>
+
+                        <p>
+                            More traffic won't automatically repair
+                            a journey that quietly loses customers.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="/pages/contact/contact.html"
+                        class="btn btn-primary"
+                    >
+                        Begin Investigation
+                        <span aria-hidden="true">→</span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         GLOBAL FOOTER
+    =========================================== -->
+    <div id="footer"></div>
+
+    <!-- ==========================================
+         INVESTIGATION MODAL
+         ORIGINAL FUNCTIONALITY PRESERVED
+    =========================================== -->
+    <div
+        class="case-modal"
+        id="case-modal"
+        hidden
+        aria-hidden="true"
+    >
+
+        <div
+            class="case-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-modal-title"
+        >
+
+            <button
+                type="button"
+                class="case-modal-close"
+                id="case-modal-close"
+                aria-label="Close investigation"
+            >
+                ×
+            </button>
+
+            <div
+                class="case-modal-body"
+                id="case-modal-body"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         ORIGINAL SCRIPT DEPENDENCIES
+         ORDER PRESERVED
+    =========================================== -->
+    <script src="../../config/site-config.js"></script>
+
+    <script src="../../data/case-studies.js"></script>
+
+    <script src="../../config/component-loader.js"></script>
+
+    <script src="portfolio.js"></script>
+
+    <script src="../../config/page-loader.js"></script>
+
+</body>
+</html>
