@@ -3,10 +3,18 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "my-website",
   "compatibility_date": "2026-09-21",
+
+  "main": "./url-router.js",
+
   "observability": {
     "enabled": true
   },
+
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none"
   }
 }
+
