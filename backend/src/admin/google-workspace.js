@@ -740,44 +740,147 @@ function quotedPrintableUtf8(value) {
  * Whatever is typed into Leakendia is the
  * content sent to Gmail.
  */
-function mimeMessage({
-    from,
-    to,
-    subject,
-    text
-}) {
-    const safeFrom =
-        String(from)
-            .replace(
-                /[\r\n]+/g,
-                " "
-            )
-            .trim();
 
-    const safeTo =
-        String(to)
-            .replace(
-                /[\r\n]+/g,
-                " "
-            )
-            .trim();
+function escapeOutreachHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
-    const safeSubject =
-        encodeHeaderUtf8(subject);
+function brandedOutreachHtml(message) {
+    const paragraphs = String(message)
+        .trim()
+        .split(/\n\s*\n/)
+        .map(block => {
+            const content = escapeOutreachHtml(block)
+                .replace(/\r?\n/g, "<br>");
 
-    const body =
-        quotedPrintableUtf8(text);
+            return `<p style="margin:0 0 18px;line-height:1.75;">${content}</p>`;
+        })
+        .join("");
 
+    return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Message from Leakendia</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff;color:#252525;font-family:Arial,Helvetica,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="padding:28px 18px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<tr>
+<td style="padding:0 0 22px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="background:#111111;border-radius:8px;padding:10px;">
+<span style="color:#ff5148;font-size:18px;font-weight:bold;">L.</span>
+</td>
+<td style="padding-left:12px;">
+<div style="font-size:14px;font-weight:800;letter-spacing:2px;color:#111111;">LEAKENDIA</div>
+<div style="font-size:9px;letter-spacing:1px;color:#777777;padding-top:4px;">CONVERSION LEAK INVESTIGATION</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding-bottom:22px;">
+<div style="height:2px;width:48px;background:#ff3b30;"></div>
+</td>
+</tr>
+<tr>
+<td style="font-size:14px;line-height:1.75;color:#333333;">
+${paragraphs}
+</td>
+</tr>
+<tr>
+<td style="padding-top:12px;">
+<div style="border-top:1px solid #e8e8e8;padding-top:20px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="width:3px;background:#ff3b30;font-size:0;">&nbsp;</td>
+<td style="padding-left:14px;">
+<div style="font-size:14px;font-weight:700;color:#111111;">Precious</div>
+<div style="font-size:12px;color:#555555;padding-top:4px;">Founder, Leakendia</div>
+<div style="font-size:11px;color:#777777;padding-top:5px;">Find the leak. Fix what deserves fixing.</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+<tr>
+<td style="padding-top:18px;">
+<a href="https://leakendia.com/" style="font-size:11px;color:#555555;text-decoration:underline;">leakendia.com</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>`;
+}
+
+function brandedOutreachText(message) {
     return [
+        String(message).trim(),
+        "",
+        "Precious",
+        "Founder, Leakendia",
+        "Find the leak. Fix what deserves fixing.",
+        "https://leakendia.com/"
+    ].join("\n");
+}
+function mimeMessage({ from, to, subject, text, mode = "plain" }) {
+    const safeFrom = String(from).replace(/[\r\n]+/g, " ").trim();
+    const safeTo = String(to).replace(/[\r\n]+/g, " ").trim();
+    const safeSubject = encodeHeaderUtf8(subject);
+
+    const headers = [
         `From: Precious <${safeFrom}>`,
         `To: ${safeTo}`,
         `Subject: ${safeSubject}`,
         `Date: ${new Date().toUTCString()}`,
-        "MIME-Version: 1.0",
+        "MIME-Version: 1.0"
+    ];
+
+    if (mode !== "signature") {
+        return [
+            ...headers,
+            'Content-Type: text/plain; charset="UTF-8"',
+            "Content-Transfer-Encoding: quoted-printable",
+            "",
+            quotedPrintableUtf8(text)
+        ].join("\r\n");
+    }
+
+    const boundary = `leakendia_${crypto.randomUUID().replace(/-/g, "")}`;
+
+    return [
+        ...headers,
+        `Content-Type: multipart/alternative; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
         'Content-Type: text/plain; charset="UTF-8"',
         "Content-Transfer-Encoding: quoted-printable",
         "",
-        body
+        quotedPrintableUtf8(brandedOutreachText(text)),
+        "",
+        `--${boundary}`,
+        'Content-Type: text/html; charset="UTF-8"',
+        "Content-Transfer-Encoding: quoted-printable",
+        "",
+        quotedPrintableUtf8(brandedOutreachHtml(text)),
+        "",
+        `--${boundary}--`,
+        ""
     ].join("\r\n");
 }
 
@@ -788,25 +891,20 @@ function mimeMessage({
 
 export async function sendGoogleOutreachEmail(
     env,
-    {
+    { to, subject, text, mode = "plain" }
+) {
+    const cfg = requiredConfig(env);
+    const token = await accessToken(env);
+
+    const message = mimeMessage({
+        from: cfg.sender,
         to,
         subject,
-        text
-    }
-) {
-    const cfg =
-        requiredConfig(env);
+        text,
+        mode
+    });
 
-    const token =
-        await accessToken(env);
-
-    const message =
-        mimeMessage({
-            from: cfg.sender,
-            to,
-            subject,
-            text
-        });
+    // Keep the existing const raw = ... and all remaining code below.
 
     const raw =
         base64Url(

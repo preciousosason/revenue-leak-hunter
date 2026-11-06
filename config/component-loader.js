@@ -1721,6 +1721,10 @@ async function loadGlobalAnalytics() {
 
 async function initializeComponents() {
 
+    void loadScript("global/hash-scroll.js").catch(error => {
+    console.warn("Hash scroll fix could not load:", error);
+});
+
     const pageType =
         document.body.dataset.page ||
         "home";

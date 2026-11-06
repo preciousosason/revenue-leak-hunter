@@ -58,6 +58,12 @@ const ROUTES = {
 
     "/blog/find-revenue-leaks-before-scaling":
   "/articles/find-revenue-leaks-before-scaling/article.html",
+
+    "/privacy-policy":
+  "/pages/privacy/privacy.html",
+
+      "/terms-policy":
+  "/pages/terms/terms.html",
 };
 
 
@@ -67,8 +73,6 @@ const ROUTES = {
 
 const ALIASES = {
 
-  "/portfolio":
-    "/case-studies",
 
     "/articles/silent-conversion-leaks/article":
   "/blog/7-silent-conversion-leaks",
@@ -76,8 +80,29 @@ const ALIASES = {
   
     "/articles/find-revenue-leaks-before-scaling/article":
   "/blog/find-revenue-leaks-before-scaling",
-};
 
+ "/pages/privacy/privacy.html": "/privacy-policy",
+
+ "/pages/terms/terms.html": "/terms-policy",
+    // Alternative public URLs
+    "/portfolio": "/case-studies",
+
+    // Legacy extensionless URLs
+    "/pages/about/about": "/about",
+    "/pages/blog/blog": "/blog",
+    "/pages/contact/contact": "/contact",
+    "/pages/reviews/reviews": "/reviews",
+    "/pages/portfolio/portfolio": "/case-studies",
+    "/pages/services/services": "/services",
+
+    // Legacy shortened paths
+    "/services/services": "/services",
+    "/about/about": "/about",
+    "/blog/blog": "/blog",
+    "/contact/contact": "/contact",
+    "/reviews/reviews": "/reviews",
+    "/portfolio/portfolio": "/case-studies"
+};
 
 /* ============================================================
    3. CONFIGURATION
@@ -485,11 +510,44 @@ export default {
        A. PRIVATE / API AREAS
     --------------------------------------------------------- */
 
-    if (isReserved(pathname)) {
+  /* --------------------------------------------------------
+   A. PRIVATE / API AREAS
+--------------------------------------------------------- */
 
-      return env.ASSETS.fetch(request);
+// Support the admin clean URL without redirecting
+// or changing the existing authentication system.
 
-    }
+if (
+    pathname === "/pages/admin/admin" ||
+    pathname === "/pages/admin/admin/"
+) {
+    const internalURL = new URL(request.url);
+
+    internalURL.pathname = "/pages/admin/admin.html";
+
+    return env.ASSETS.fetch(
+        new Request(internalURL.toString(), request)
+    );
+}
+
+if (
+    pathname === "/pages/portal/portal" ||
+    pathname === "/pages/portal/portal/"
+) {
+    const internalURL = new URL(request.url);
+
+    internalURL.pathname = "/pages/portal/portal.html";
+
+    return env.ASSETS.fetch(
+        new Request(internalURL.toString(), request)
+    );
+}
+
+// Preserve all other private and API routes.
+
+if (isReserved(pathname)) {
+    return env.ASSETS.fetch(request);
+}
 
 
     /* --------------------------------------------------------

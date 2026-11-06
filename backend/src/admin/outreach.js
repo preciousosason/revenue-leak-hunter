@@ -145,13 +145,26 @@ async function sendOutreachMessage(request,env){
     const step=p.last_sent_at===null?0:Number(p.followup_step)+1;
     if(step>5)return json({success:false,error:"Maximum of five follow-ups reached."},400);
     const subject=clean(data.subject,300),message=clean(data.message,20000);
+    const mode = data.mode === "signature" ? "signature" : "plain";
+
+if (/\{\{[^{}]+\}\}/.test(subject + "\n" + message)) {
+    return json({
+        success: false,
+        error: "Unresolved personalization placeholders detected. Replace them before sending."
+    }, 400);
+}
     if(!subject||!message)return json({success:false,error:"Subject and message are required."},400);
     const existing=await env.DB.prepare(`SELECT id,status FROM outreach_messages WHERE prospect_id=? AND sequence_step=? AND status IN ('sending','sent') ORDER BY created_at DESC LIMIT 1`).bind(p.id,step).first();
     if(existing)return json({success:false,error:"This sequence step has already been sent or is currently sending."},409);
     const now=isoNow(),messageId=createId(),type=step===0?"initial":`followup_${step}`;
     await env.DB.prepare(`INSERT INTO outreach_messages (id,campaign_id,prospect_id,sequence_step,type,subject,body,status,created_at) VALUES (?,?,?,?,?,?,?,?,?)`).bind(messageId,p.campaign_id,p.id,step,type,subject,message,"sending",now).run();
     try{
-        const sent=await sendGoogleOutreachEmail(env,{to:p.email,subject,text:message});
+   const sent = await sendGoogleOutreachEmail(env, {
+    to: p.email,
+    subject,
+    text: message,
+    mode
+});
         const sentAt=isoNow(),intervals=parseIntervals(p.followup_intervals),complete=step===5?1:0,next=complete?null:addDays(sentAt,intervals[step]);
         await env.DB.prepare(`UPDATE outreach_messages SET status='sent',provider_message_id=?,sent_at=? WHERE id=?`).bind(sent.id,sentAt,messageId).run();
         await env.DB.prepare(`UPDATE outreach_prospects SET status=CASE WHEN status='scheduled' THEN 'contacted' ELSE status END,last_sent_at=?,followup_step=?,next_followup_date=?,sequence_complete=?,updated_at=? WHERE id=?`).bind(sentAt,step,next,complete,sentAt,p.id).run();
