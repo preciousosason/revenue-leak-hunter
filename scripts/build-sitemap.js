@@ -26,13 +26,12 @@ const EXCLUDED_FILES = new Set([
 
 const CORE_PAGES = [
     "/",
-    "/pages/about/about",
-    "/pages/services/services",
-    "/pages/portfolio/portfolio",
-    "/pages/reviews/reviews",
-    "/pages/blog/blog",
-    "/pages/contact/contact",
-    "/pages/conversion-leaks/conversion-leaks"
+    "/about",
+    "/services",
+    "/case-studies",
+    "/reviews",
+    "/blog",
+    "/contact",
 ];
 
 function isExcluded(urlPath) {
@@ -92,9 +91,9 @@ function discoverServices() {
             )
         )
     )
-    .map(entry =>
-        `/pages/services/${entry.name}/`
-    );
+.map(entry =>
+    `/services/${entry.name}`
+);
 }
 
 function getArticleStatus(html) {
@@ -139,9 +138,18 @@ function discoverArticles() {
             continue;
         }
 
-        urls.push(
-            `/articles/${entry.name}/article`
-        );
+        const articleRoutes = {
+    "silent-conversion-leaks":
+        "/blog/7-silent-conversion-leaks",
+
+    "find-revenue-leaks-before-scaling":
+        "/blog/find-revenue-leaks-before-scaling"
+};
+
+urls.push(
+    articleRoutes[entry.name] ||
+    `/articles/${entry.name}/article`
+);
     }
 
     return urls;
@@ -149,19 +157,23 @@ function discoverArticles() {
 
 function discoverAdditionalPages() {
     const candidates = [
-        "pages/privacy/privacy.html",
-        "pages/terms/terms.html"
+        {
+            file: "pages/privacy/privacy.html",
+            url: "/privacy-policy"
+        },
+        {
+            file: "pages/terms/terms.html",
+            url: "/terms-policy"
+        }
     ];
 
     return candidates
-        .filter(file =>
-            !EXCLUDED_FILES.has(file)
+        .filter(entry =>
+            fs.existsSync(
+                path.join(ROOT, entry.file)
+            )
         )
-        .filter(file =>
-            fs.existsSync(path.join(ROOT, file))
-        )
-        .map(urlFromFile)
-        .filter(Boolean);
+        .map(entry => entry.url);
 }
 
 function buildSitemap() {

@@ -750,15 +750,20 @@ function escapeOutreachHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
+
+const OUTREACH_LOGO_URL =
+    "https://leakendia.com/assets/brand/leakendia-email-mark.jpg";
+
 function brandedOutreachHtml(message) {
-    const paragraphs = String(message)
+    const paragraphs = String(message ?? "")
         .trim()
         .split(/\n\s*\n/)
+        .filter(Boolean)
         .map(block => {
             const content = escapeOutreachHtml(block)
                 .replace(/\r?\n/g, "<br>");
 
-            return `<p style="margin:0 0 18px;line-height:1.75;">${content}</p>`;
+            return `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:#dedede;">${content}</p>`;
         })
         .join("");
 
@@ -769,75 +774,130 @@ function brandedOutreachHtml(message) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Message from Leakendia</title>
 </head>
-<body style="margin:0;padding:0;background:#ffffff;color:#252525;font-family:Arial,Helvetica,sans-serif;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+<body style="margin:0;padding:0;background-color:#080808;color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#080808" style="background-color:#080808;">
 <tr>
-<td style="padding:28px 18px;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<td align="center" style="padding:32px 14px;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#111111" style="width:100%;max-width:600px;background-color:#111111;border:1px solid #303030;border-radius:16px;">
+
+<!-- ACTUAL LEAKENDIA LOGO -->
 <tr>
-<td style="padding:0 0 22px;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0">
-<tr>
-<td style="background:#111111;border-radius:8px;padding:10px;">
-<span style="color:#ff5148;font-size:18px;font-weight:bold;">L.</span>
-</td>
-<td style="padding-left:12px;">
-<div style="font-size:14px;font-weight:800;letter-spacing:2px;color:#111111;">LEAKENDIA</div>
-<div style="font-size:9px;letter-spacing:1px;color:#777777;padding-top:4px;">CONVERSION LEAK INVESTIGATION</div>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style="padding-bottom:22px;">
-<div style="height:2px;width:48px;background:#ff3b30;"></div>
+<td align="center" style="padding:34px 26px 10px;">
+<img
+    src="${OUTREACH_LOGO_URL}"
+    width="100"
+    height="100"
+    alt="Leakendia logo"
+    style="display:block;width:100px;height:100px;object-fit:contain;border:0;"
+/>
 </td>
 </tr>
+
+<!-- BRAND HEADER -->
 <tr>
-<td style="font-size:14px;line-height:1.75;color:#333333;">
-${paragraphs}
-</td>
-</tr>
-<tr>
-<td style="padding-top:12px;">
-<div style="border-top:1px solid #e8e8e8;padding-top:20px;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0">
-<tr>
-<td style="width:3px;background:#ff3b30;font-size:0;">&nbsp;</td>
-<td style="padding-left:14px;">
-<div style="font-size:14px;font-weight:700;color:#111111;">Precious</div>
-<div style="font-size:12px;color:#555555;padding-top:4px;">Founder, Leakendia</div>
-<div style="font-size:11px;color:#777777;padding-top:5px;">Find the leak. Fix what deserves fixing.</div>
-</td>
-</tr>
-</table>
+<td align="center" style="padding:0 24px;">
+
+<div style="font-size:25px;line-height:1.3;font-weight:800;letter-spacing:4px;color:#f5f5f5;">
+LEAKENDI<span style="color:#ff3b30;">A</span>
 </div>
+
+<div style="font-size:10px;line-height:1.7;letter-spacing:2px;color:#aaaaaa;padding-top:7px;">
+CONVERSION LEAK INVESTIGATION
+</div>
+
 </td>
 </tr>
+
+<!-- RED DIVIDER -->
 <tr>
-<td style="padding-top:18px;">
-<a href="https://leakendia.com/" style="font-size:11px;color:#555555;text-decoration:underline;">leakendia.com</a>
+<td style="padding:25px 28px 0;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48%" style="border-top:1px solid #383838;font-size:0;line-height:0;">&nbsp;</td>
+<td width="4%" style="border-top:2px solid #ff3b30;font-size:0;line-height:0;">&nbsp;</td>
+<td width="48%" style="border-top:1px solid #383838;font-size:0;line-height:0;">&nbsp;</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- YOUR EDITABLE MESSAGE -->
+<tr>
+<td style="padding:32px 28px 12px;font-size:15px;line-height:1.8;color:#dedede;">
+
+${paragraphs}
+
+</td>
+</tr>
+
+<!-- FOUNDER SIGNATURE -->
+<tr>
+<td style="padding:12px 28px 30px;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+
+<td width="3" bgcolor="#ff3b30" style="background-color:#ff3b30;font-size:0;">&nbsp;</td>
+
+<td style="padding-left:16px;">
+
+<div style="font-size:17px;font-weight:700;line-height:1.5;color:#ffffff;">
+Precious
+</div>
+
+<div style="font-size:13px;line-height:1.7;color:#b8b8b8;">
+Founder, Leakendia
+</div>
+
+<a href="https://leakendia.com/" style="font-size:13px;line-height:1.9;color:#ff6259;text-decoration:underline;">
+leakendia.com
+</a>
+
 </td>
 </tr>
 </table>
+
+</td>
+</tr>
+
+<!-- BRAND FOOTER -->
+<tr>
+<td style="border-top:1px solid #303030;padding:21px 28px 25px;">
+
+<div style="font-size:11px;line-height:1.8;letter-spacing:1.2px;font-weight:700;color:#b8b8b8;">
+LEAKENDIA <span style="color:#ff3b30;">/</span> WHERE CONVERSION LEAKS END
+</div>
+
+</td>
+</tr>
+
+</table>
+
 </td>
 </tr>
 </table>
+
 </body>
 </html>`;
 }
 
 function brandedOutreachText(message) {
     return [
-        String(message).trim(),
+        String(message ?? "").trim(),
         "",
         "Precious",
         "Founder, Leakendia",
-        "Find the leak. Fix what deserves fixing.",
-        "https://leakendia.com/"
+        "https://leakendia.com/",
+        "",
+        "LEAKENDIA / WHERE CONVERSION LEAKS END"
     ].join("\n");
 }
+
 function mimeMessage({ from, to, subject, text, mode = "plain" }) {
     const safeFrom = String(from).replace(/[\r\n]+/g, " ").trim();
     const safeTo = String(to).replace(/[\r\n]+/g, " ").trim();

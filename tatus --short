@@ -1,0 +1,219 @@
+warning: in the working copy of 'config/site-config.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sitemap.xml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/config/site-config.js b/config/site-config.js[m
+[1mindex 1dd0fb0..a4fcf51 100644[m
+[1m--- a/config/site-config.js[m
+[1m+++ b/config/site-config.js[m
+[36m@@ -18,23 +18,23 @@[m [mconst SITE_CONFIG = {[m
+        ROUTES[m
+     ================================= */[m
+ [m
+[31m-    routes: {[m
+[31m-        home: "/",[m
+[32m+[m[32mroutes: {[m
+[32m+[m[32m    home: "/",[m
+ [m
+[31m-        about: "/pages/about/about",[m
+[32m+[m[32m    about: "/about",[m
+ [m
+[31m-        services: "/pages/services/services",[m
+[32m+[m[32m    services: "/services",[m
+ [m
+[31m-        portfolio: "/pages/portfolio/portfolio",[m
+[32m+[m[32m    portfolio: "/case-studies",[m
+ [m
+[31m-        blog: "/pages/blog/blog",[m
+[32m+[m[32m    blog: "/blog",[m
+ [m
+[31m-        reviews: "/pages/reviews/reviews",[m
+[32m+[m[32m    reviews: "/reviews",[m
+ [m
+[31m-        contact: "/pages/contact/contact",[m
+[32m+[m[32m    contact: "/contact",[m
+ [m
+[31m-        audit: "/pages/contact/contact"[m
+[31m-    },[m
+[32m+[m[32m    audit: "/contact"[m
+[32m+[m[32m},[m
+ [m
+     /* =================================[m
+        NAVIGATION[m
+[1mdiff --git a/scripts/build-sitemap.js b/scripts/build-sitemap.js[m
+[1mindex 2cfa84d..da77e31 100644[m
+[1m--- a/scripts/build-sitemap.js[m
+[1m+++ b/scripts/build-sitemap.js[m
+[36m@@ -26,13 +26,12 @@[m [mconst EXCLUDED_FILES = new Set([[m
+ [m
+ const CORE_PAGES = [[m
+     "/",[m
+[31m-    "/pages/about/about",[m
+[31m-    "/pages/services/services",[m
+[31m-    "/pages/portfolio/portfolio",[m
+[31m-    "/pages/reviews/reviews",[m
+[31m-    "/pages/blog/blog",[m
+[31m-    "/pages/contact/contact",[m
+[31m-    "/pages/conversion-leaks/conversion-leaks"[m
+[32m+[m[32m    "/about",[m
+[32m+[m[32m    "/services",[m
+[32m+[m[32m    "/case-studies",[m
+[32m+[m[32m    "/reviews",[m
+[32m+[m[32m    "/blog",[m
+[32m+[m[32m    "/contact",[m
+ ];[m
+ [m
+ function isExcluded(urlPath) {[m
+[36m@@ -92,9 +91,9 @@[m [mfunction discoverServices() {[m
+             )[m
+         )[m
+     )[m
+[31m-    .map(entry =>[m
+[31m-        `/pages/services/${entry.name}/`[m
+[31m-    );[m
+[32m+[m[32m.map(entry =>[m
+[32m+[m[32m    `/services/${entry.name}`[m
+[32m+[m[32m);[m
+ }[m
+ [m
+ function getArticleStatus(html) {[m
+[36m@@ -139,9 +138,18 @@[m [mfunction discoverArticles() {[m
+             continue;[m
+         }[m
+ [m
+[31m-        urls.push([m
+[31m-            `/articles/${entry.name}/article`[m
+[31m-        );[m
+[32m+[m[32m        const articleRoutes = {[m
+[32m+[m[32m    "silent-conversion-leaks":[m
+[32m+[m[32m        "/blog/7-silent-conversion-leaks",[m
+[32m+[m
+[32m+[m[32m    "find-revenue-leaks-before-scaling":[m
+[32m+[m[32m        "/blog/find-revenue-leaks-before-scaling"[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32murls.push([m
+[32m+[m[32m    articleRoutes[entry.name] ||[m
+[32m+[m[32m    `/articles/${entry.name}/article`[m
+[32m+[m[32m);[m
+     }[m
+ [m
+     return urls;[m
+[36m@@ -149,19 +157,23 @@[m [mfunction discoverArticles() {[m
+ [m
+ function discoverAdditionalPages() {[m
+     const candidates = [[m
+[31m-        "pages/privacy/privacy.html",[m
+[31m-        "pages/terms/terms.html"[m
+[32m+[m[32m        {[m
+[32m+[m[32m            file: "pages/privacy/privacy.html",[m
+[32m+[m[32m            url: "/privacy-policy"[m
+[32m+[m[32m        },[m
+[32m+[m[32m        {[m
+[32m+[m[32m            file: "pages/terms/terms.html",[m
+[32m+[m[32m            url: "/terms-policy"[m
+[32m+[m[32m        }[m
+     ];[m
+ [m
+     return candidates[m
+[31m-        .filter(file =>[m
+[31m-            !EXCLUDED_FILES.has(file)[m
+[31m-        )[m
+[31m-        .filter(file =>[m
+[31m-            fs.existsSync(path.join(ROOT, file))[m
+[32m+[m[32m        .filter(entry =>[m
+[32m+[m[32m            fs.existsSync([m
+[32m+[m[32m                path.join(ROOT, entry.file)[m
+[32m+[m[32m            )[m
+         )[m
+[31m-        .map(urlFromFile)[m
+[31m-        .filter(Boolean);[m
+[32m+[m[32m        .map(entry => entry.url);[m
+ }[m
+ [m
+ function buildSitemap() {[m
+[1mdiff --git a/sitemap.xml b/sitemap.xml[m
+[1mindex 287f0c1..050523b 100644[m
+[1m--- a/sitemap.xml[m
+[1m+++ b/sitemap.xml[m
+[36m@@ -4,63 +4,60 @@[m
+     <loc>https://leakendia.com/</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/articles/find-revenue-leaks-before-scaling/article</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/about</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/articles/silent-conversion-leaks/article</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/blog</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/about/about</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/blog/7-silent-conversion-leaks</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/blog/blog</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/blog/find-revenue-leaks-before-scaling</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/contact/contact</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/case-studies</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/conversion-leaks/conversion-leaks</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/contact</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/portfolio/portfolio</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/privacy-policy</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/privacy/privacy</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/reviews</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/reviews/reviews</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/ai-visibility/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/ai-visibility</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/conversion-intelligence/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/conversion-intelligence</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/conversion-leak-hunting/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/conversion-leak-hunting</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/customer-journey/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/customer-journey</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/email-systems/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/email-systems</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/funnels/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/funnels</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/growth-systems/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/growth-systems</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/messaging/</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/messaging</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/services</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/services/websites</loc>[m
+   </url>[m
+   <url>[m
+[31m-    <loc>https://leakendia.com/pages/services/websites/</loc>[m
+[31m-  </url>[m
+[31m-  <url>[m
+[31m-    <loc>https://leakendia.com/pages/terms/terms</loc>[m
+[32m+[m[32m    <loc>https://leakendia.com/terms-policy</loc>[m
+   </url>[m
+ </urlset>[m
