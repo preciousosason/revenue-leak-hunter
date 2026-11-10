@@ -175,6 +175,55 @@ function getDescription(html) {
         : DEFAULT_DESCRIPTION;
 }
 
+
+const CANONICAL_ROUTES = {
+    "index.html": "/",
+
+    "pages/about/about.html": "/about",
+    "pages/services/services.html": "/services",
+    "pages/portfolio/portfolio.html": "/case-studies",
+    "pages/reviews/reviews.html": "/reviews",
+    "pages/blog/blog.html": "/blog",
+    "pages/contact/contact.html": "/contact",
+
+    "pages/privacy/privacy.html": "/privacy-policy",
+    "pages/terms/terms.html": "/terms-policy",
+
+    "articles/silent-conversion-leaks/article.html":
+        "/blog/7-silent-conversion-leaks",
+
+    "articles/find-revenue-leaks-before-scaling/article.html":
+        "/blog/find-revenue-leaks-before-scaling"
+};
+
+function getApprovedCanonical(file) {
+    const relative = normalizePath(
+        path.relative(PUBLIC_ROOT, file)
+    );
+
+    if (
+        relative.startsWith("../") ||
+        relative === ".."
+    ) {
+        throw new Error("File outside public directory.");
+    }
+
+    if (Object.hasOwn(CANONICAL_ROUTES, relative)) {
+        return BASE_URL + CANONICAL_ROUTES[relative];
+    }
+
+    const serviceMatch = relative.match(
+        /^pages\/services\/([a-z0-9]+(?:-[a-z0-9]+)*)\/index\.html$/
+    );
+
+    if (serviceMatch) {
+        return `${BASE_URL}/services/${serviceMatch[1]}`;
+    }
+
+    return null;
+}
+
+
 /* =================================
    PUBLIC CANONICAL URL GENERATION
 ================================= */
@@ -233,12 +282,14 @@ function buildMissingMeta(html, file) {
     const title = getTitle(html);
     const description = getDescription(html);
 
-    const existingCanonical = getCanonicalTag(html);
+const existingCanonical = getCanonicalTag(html);
 
-    const canonical = existingCanonical
-        ? getAttribute(existingCanonical, "href") ||
-          getPageUrl(file)
-        : getPageUrl(file);
+const canonical =
+    getApprovedCanonical(file) ||
+    (existingCanonical
+        ? getAttribute(existingCanonical, "href")
+        : null) ||
+    getPageUrl(file);
 
     const existingOgImage = findMeta(
         html,
@@ -316,6 +367,32 @@ function processFile(file) {
     }
 
     let html = removeGeneratedMeta(original);
+
+    const approvedCanonical = getApprovedCanonical(file);
+
+if (approvedCanonical) {
+    const canonicalTag = getCanonicalTag(html);
+
+    if (canonicalTag) {
+        html = html.replace(
+            canonicalTag,
+            `<link rel="canonical" href="${escapeAttribute(approvedCanonical)}">`
+        );
+    }
+
+    const ogUrlTag = findMeta(
+        html,
+        "property",
+        "og:url"
+    );
+
+    if (ogUrlTag) {
+        html = html.replace(
+            ogUrlTag,
+            `<meta property="og:url" content="${escapeAttribute(approvedCanonical)}">`
+        );
+    }
+}
 
     const metadata = buildMissingMeta(html, file);
 

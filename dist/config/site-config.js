@@ -18,23 +18,23 @@ const SITE_CONFIG = {
        ROUTES
     ================================= */
 
-    routes: {
-        home: "/",
+routes: {
+    home: "/",
 
-        about: "/pages/about/about",
+    about: "/about",
 
-        services: "/pages/services/services",
+    services: "/services",
 
-        portfolio: "/pages/portfolio/portfolio",
+    portfolio: "/case-studies",
 
-        blog: "/pages/blog/blog",
+    blog: "/blog",
 
-        reviews: "/pages/reviews/reviews",
+    reviews: "/reviews",
 
-        contact: "/pages/contact/contact",
+    contact: "/contact",
 
-        audit: "/pages/contact/contact"
-    },
+    audit: "/contact"
+},
 
     /* =================================
        NAVIGATION
