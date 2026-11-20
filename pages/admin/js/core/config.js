@@ -1,9 +1,10 @@
-/* =========================================================
-   ADMIN CONFIGURATION
-   ========================================================= */
+const IS_LOCAL =
+    ["localhost", "127.0.0.1", "[::1]"]
+        .includes(window.location.hostname);
 
-export const API_URL =
-    "https://revenue-leak-hunter-api.preciousosason.workers.dev";
+export const API_URL = IS_LOCAL
+    ? "http://localhost:8788"
+    : "https://revenue-leak-hunter-api.preciousosason.workers.dev";
 
 export const SESSION_KEY =
     "revenueLeakHunterAdminSession";

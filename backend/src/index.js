@@ -1,3 +1,15 @@
+import {
+    handleMarketplaceCategoryRoutes
+} from "./marketplace/categories.js";
+
+import {
+    handleMarketplaceCatalogRoutes
+} from "./marketplace/catalog.js";
+
+import {
+    handleMarketplaceEditorRoutes
+} from "./marketplace/editor.js";
+
 import { cleanupAnalytics } from "./analytics/events.js";
 import {
     CORS_HEADERS
@@ -47,6 +59,48 @@ export default {
         }
 
         try {
+
+                        // --------------------------------------------------
+            // MARKETPLACE CATEGORY ROUTES
+            // --------------------------------------------------
+
+            const marketplaceCategoryResponse =
+                await handleMarketplaceCategoryRoutes(
+                    request,
+                    env
+                );
+
+            if (marketplaceCategoryResponse) {
+                return marketplaceCategoryResponse;
+            }
+
+            // --------------------------------------------------
+            // MARKETPLACE CATALOG ROUTES
+            // --------------------------------------------------
+
+            const marketplaceCatalogResponse =
+                await handleMarketplaceCatalogRoutes(
+                    request,
+                    env
+                );
+
+            if (marketplaceCatalogResponse) {
+                return marketplaceCatalogResponse;
+            }
+
+            /* =========================================================
+   MARKETPLACE EDITOR ROUTES
+========================================================= */
+
+const marketplaceEditorResponse =
+    await handleMarketplaceEditorRoutes(
+        request,
+        env
+    );
+
+if (marketplaceEditorResponse) {
+    return marketplaceEditorResponse;
+}
             // --------------------------------------------------
             // ROOT
             // --------------------------------------------------

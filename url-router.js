@@ -32,7 +32,9 @@
  *
  * ============================================================
  */
-
+import {
+    handleMarketplacePage
+} from "./marketplace/routes.js";
 
 /* ============================================================
    1. REGISTERED PUBLIC ROUTES
@@ -505,7 +507,39 @@ export default {
 
     const normalized = normalizePath(pathname);
 
+    /* --------------------------------------------------------
+       MARKETPLACE DYNAMIC ROUTES
+    --------------------------------------------------------- */
 
+    if (
+        pathname === "/marketplace" ||
+        pathname.startsWith("/marketplace/")
+    ) {
+        if (
+            pathname.endsWith("/") &&
+            pathname !== "/"
+        ) {
+            const cleanURL = new URL(request.url);
+
+            cleanURL.pathname =
+                pathname.replace(/\/+$/, "");
+
+            return Response.redirect(
+                cleanURL.toString(),
+                308
+            );
+        }
+
+        const marketplaceResponse =
+            await handleMarketplacePage(
+                request,
+                env
+            );
+
+        if (marketplaceResponse) {
+            return marketplaceResponse;
+        }
+    }
     /* --------------------------------------------------------
        A. PRIVATE / API AREAS
     --------------------------------------------------------- */

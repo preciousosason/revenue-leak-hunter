@@ -6,6 +6,13 @@
 
   "main": "./url-router.js",
 
+  "services": [
+    {
+        "binding": "MARKETPLACE_API",
+        "service": "revenue-leak-hunter-api"
+    }
+],
+
   "observability": {
     "enabled": true
   },

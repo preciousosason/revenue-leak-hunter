@@ -69,6 +69,7 @@ import {
 
 import { initOutreach, loadOutreach } from "./views/outreach.js";
 
+import { mountManager as mountMarketplace } from "./views/marketplace-manager.js";
 
 
 /* =========================================================
@@ -115,7 +116,42 @@ export function showDashboard() {
 
 }
 
+/* =========================================================
+   MARKETPLACE
+   ========================================================= */
 
+async function loadMarketplace() {
+
+    const root =
+        document.getElementById(
+            "marketplace-root"
+        );
+
+    if (!root) {
+        return;
+    }
+
+    root.textContent =
+        "Loading Marketplace...";
+
+    try {
+
+        await mountMarketplace(root);
+
+    } catch (error) {
+
+        console.error(
+            "Marketplace loading failed:",
+            error
+        );
+
+        root.textContent =
+            error.message ||
+            "Unable to load Marketplace.";
+
+    }
+
+}
 /* =========================================================
    MODULE CONNECTIONS
    ========================================================= */
@@ -132,7 +168,9 @@ configureNavigation({
 
     loadAnalytics,
 
-    loadOutreach
+    loadOutreach,
+
+    loadMarketplace
 
 });
 

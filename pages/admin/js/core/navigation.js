@@ -8,6 +8,7 @@ let loadNotificationsHandler = null;
 
 let loadAnalyticsHandler = null;
 let loadOutreachHandler = null;
+let loadMarketplaceHandler = null;
 
 
 export function configureNavigation({
@@ -16,7 +17,8 @@ export function configureNavigation({
     loadReviews,
     loadNotifications,
     loadAnalytics,
-    loadOutreach
+    loadOutreach,
+    loadMarketplace
 } = {}) {
 
     stopConversationPollingHandler =
@@ -35,6 +37,9 @@ export function configureNavigation({
         loadAnalytics || null;
 
     loadOutreachHandler = loadOutreach || null;
+
+    loadMarketplaceHandler =
+    loadMarketplace || null;
 
 }
 
@@ -175,6 +180,9 @@ export function switchView(view) {
         outreach:
             "Outreach",
 
+            marketplace:
+    "Marketplace",
+
         conversation:
             "Conversation",
 
@@ -240,7 +248,10 @@ export function switchView(view) {
     if (view === "outreach") {
         loadOutreachHandler?.();
     }
-
+    
+if (view === "marketplace") {
+    loadMarketplaceHandler?.();
+}
 }
 
 
