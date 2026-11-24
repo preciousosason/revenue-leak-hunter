@@ -69,7 +69,7 @@ import {
 
 import { initOutreach, loadOutreach } from "./views/outreach.js";
 
-import { mountManager as mountMarketplace } from "./views/marketplace-publisher.js";
+import { mountManager as mountMarketplace } from "./views/marketplace-studio.js";
 
 
 /* =========================================================
