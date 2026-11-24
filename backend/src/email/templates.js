@@ -151,3 +151,416 @@ export function clientCustomEmailTemplate({ name = "", message = "", portalUrl, 
     const text = ["LEAKENDIA", "PRIVATE NOTE", "", clientFirstName ? `Hi ${clientFirstName},` : "Hello,", "", String(message).trim(), "", `Open your workspace: ${portalUrl}`, "", "Precious", "Leakendia"].join("\n");
     return { html, text };
 }
+
+// ============================================================
+// LEAKENDIA — AUTHENTICATION EMAIL TEMPLATE
+// ============================================================
+
+export function authVerificationEmailTemplate({
+    code,
+    expiresMinutes = 10,
+    logoUrl
+}) {
+
+    const safeCode = escapeHtml(code);
+
+    const safeLogoUrl = escapeHtml(logoUrl);
+
+    const safeMinutes = escapeHtml(expiresMinutes);
+
+    const html = `<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<meta name="color-scheme" content="dark">
+
+<meta name="supported-color-schemes" content="dark">
+
+<title>Verify your Leakendia account</title>
+
+<style>
+
+@media only screen and (max-width:620px) {
+
+    .email-shell {
+        width:100%!important;
+    }
+
+    .email-pad {
+        padding-left:22px!important;
+        padding-right:22px!important;
+    }
+
+    .hero-title {
+        font-size:34px!important;
+    }
+
+    .verification-code {
+        font-size:32px!important;
+        letter-spacing:8px!important;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body style="
+    margin:0;
+    padding:0;
+    background:#080808;
+    color:#f5f5f5;
+    font-family:Arial,Helvetica,sans-serif;
+">
+
+<div style="
+    display:none;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+">
+    Your secure Leakendia verification code.
+</div>
+
+<table role="presentation"
+width="100%"
+cellspacing="0"
+cellpadding="0"
+border="0"
+bgcolor="#080808">
+
+<tr>
+
+<td align="center"
+style="padding:36px 14px;">
+
+<table class="email-shell"
+role="presentation"
+width="600"
+cellspacing="0"
+cellpadding="0"
+border="0"
+bgcolor="#101010"
+style="
+    width:600px;
+    max-width:600px;
+    border:1px solid #292929;
+    border-radius:24px;
+    overflow:hidden;
+">
+
+<tr>
+
+<td height="3"
+bgcolor="#ff3b30"
+style="font-size:0;line-height:0;">
+&nbsp;
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+align="center"
+style="padding:38px 42px 24px;">
+
+<img
+src="${safeLogoUrl}"
+width="96"
+height="96"
+alt="Leakendia"
+style="
+    display:block;
+    border:0;
+    border-radius:20px;
+">
+
+<div style="
+    margin-top:18px;
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:8px;
+    color:#f5f5f5;
+">
+LEAKENDIA
+</div>
+
+<div style="
+    margin-top:8px;
+    color:#a5a5a5;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:2px;
+">
+FIND THE LEAK. FIX WHAT'S COSTING YOU.
+</div>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+style="padding:10px 42px;">
+
+<span style="
+    display:inline-block;
+    border:1px solid #ff3b30;
+    border-radius:999px;
+    padding:8px 13px;
+    color:#ff5148;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+">
+SECURE AUTHENTICATION
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+style="padding:20px 42px 10px;">
+
+<h1 class="hero-title"
+style="
+    margin:0;
+    color:#f5f5f5;
+    font-size:44px;
+    line-height:1.08;
+    letter-spacing:-1.5px;
+">
+
+Your identity.
+
+<br>
+
+<span style="color:#ff5148;">
+Your private access.
+</span>
+
+</h1>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+style="padding:20px 42px;">
+
+<p style="
+    margin:0;
+    color:#a5a5a5;
+    font-size:16px;
+    line-height:1.75;
+">
+
+Use the verification code below to securely
+sign in to your Leakendia account.
+
+</p>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+style="padding:10px 42px 24px;">
+
+<table role="presentation"
+width="100%"
+cellspacing="0"
+cellpadding="0"
+border="0"
+bgcolor="#151515"
+style="
+    border:1px solid #333333;
+    border-radius:16px;
+">
+
+<tr>
+
+<td align="center"
+style="padding:28px 12px;">
+
+<div style="
+    color:#a5a5a5;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:2px;
+">
+
+YOUR VERIFICATION CODE
+
+</div>
+
+<div class="verification-code"
+style="
+    margin-top:20px;
+    color:#f5f5f5;
+    font-family:monospace;
+    font-size:42px;
+    font-weight:800;
+    letter-spacing:10px;
+">
+
+${safeCode}
+
+</div>
+
+<div style="
+    margin-top:18px;
+    color:#ff5148;
+    font-size:12px;
+    font-weight:700;
+">
+
+EXPIRES IN ${safeMinutes} MINUTES
+
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+style="padding:0 42px 30px;">
+
+<p style="
+    margin:0 0 14px;
+    color:#a5a5a5;
+    font-size:14px;
+    line-height:1.7;
+">
+
+Never share this code with anyone.
+Leakendia will never ask you to disclose
+your verification code.
+
+</p>
+
+<p style="
+    margin:0;
+    color:#a5a5a5;
+    font-size:13px;
+    line-height:1.7;
+">
+
+If you did not request this code,
+you can safely ignore this email.
+
+</p>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="email-pad"
+bgcolor="#0c0c0c"
+style="
+    padding:24px 42px;
+    border-top:1px solid #252525;
+">
+
+<div style="
+    color:#a5a5a5;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:2px;
+">
+
+LEAKENDIA
+
+</div>
+
+<p style="
+    margin:8px 0 0;
+    color:#a5a5a5;
+    font-size:11px;
+    line-height:1.7;
+">
+
+Private by design. Secure by default.
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>`;
+
+    const text = [
+
+        "LEAKENDIA",
+
+        "",
+
+        "Secure account authentication",
+
+        "",
+
+        `Your verification code is: ${code}`,
+
+        "",
+
+        `This code expires in ${expiresMinutes} minutes.`,
+
+        "",
+
+        "Never share this code with anyone.",
+
+        "If you did not request this code, ignore this email.",
+
+        "",
+
+        "Leakendia",
+
+        "Private by design. Secure by default."
+
+    ].join("\n");
+
+    return {
+
+        html,
+
+        text
+
+    };
+
+}

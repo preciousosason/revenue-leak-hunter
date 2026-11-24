@@ -3,7 +3,8 @@ import { Resend } from "resend";
 import {
     clientReplyEmailTemplate,
     clientWelcomeEmailTemplate,
-    clientCustomEmailTemplate
+    clientCustomEmailTemplate,
+    authVerificationEmailTemplate
 } from "./templates.js";
 
 const DEFAULT_FROM = "Leakendia <notifications@leakendia.com>";
@@ -84,4 +85,61 @@ export async function sendClientCustomNotification(env, { email, name = "", subj
         ...template,
         idempotencyKey: notificationId ? `custom-notification/${notificationId}` : undefined
     });
+}
+
+// ============================================================
+// SEND AUTHENTICATION VERIFICATION EMAIL
+// ============================================================
+
+export async function sendAuthVerificationEmail(
+    env,
+    {
+        email,
+        code,
+        challengeId,
+        expiresMinutes = 10
+    }
+) {
+
+    if (!/^\d{6}$/.test(String(code))) {
+
+        throw new Error(
+            "Invalid authentication verification code."
+        );
+
+    }
+
+    if (!challengeId) {
+
+        throw new Error(
+            "Authentication challenge ID is required."
+        );
+
+    }
+
+    const { logoUrl } = config(env);
+
+    const template = authVerificationEmailTemplate({
+
+        code,
+
+        expiresMinutes,
+
+        logoUrl
+
+    });
+
+    return deliver(env, {
+
+        email,
+
+        subject: "Your Leakendia verification code",
+
+        ...template,
+
+        idempotencyKey:
+            `auth-verification/${challengeId}`
+
+    });
+
 }

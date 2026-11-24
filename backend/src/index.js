@@ -1,4 +1,6 @@
-
+import {
+    handleAuthRoutes
+} from "./auth/auth.routes.js";
 
 import { handleMarketplaceLaunchRoutes } from "./marketplace/launch.js";
 
@@ -50,7 +52,18 @@ export default {
         const url = new URL(request.url);
         const pathname = url.pathname;
         const method = request.method;
+// ========================================================
+// UNIFIED CUSTOMER AUTHENTICATION
+// ========================================================
 
+const authPath = new URL(request.url).pathname;
+
+if (
+    authPath === "/api/auth" ||
+    authPath.startsWith("/api/auth/")
+) {
+    return handleAuthRoutes(request, env);
+}
         // --------------------------------------------------
         // CORS
         // --------------------------------------------------
