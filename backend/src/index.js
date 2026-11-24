@@ -1,3 +1,7 @@
+
+
+import { handleMarketplaceLaunchRoutes } from "./marketplace/launch.js";
+
 import {
     handleMarketplaceCategoryRoutes
 } from "./marketplace/categories.js";
@@ -97,10 +101,16 @@ const marketplaceEditorResponse =
         request,
         env
     );
+const marketplaceLaunchResponse =
+    await handleMarketplaceLaunchRoutes(request, env);
 
+if (marketplaceLaunchResponse) {
+    return marketplaceLaunchResponse;
+}
 if (marketplaceEditorResponse) {
     return marketplaceEditorResponse;
 }
+
             // --------------------------------------------------
             // ROOT
             // --------------------------------------------------

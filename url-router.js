@@ -505,6 +505,24 @@ export default {
 
     const pathname = url.pathname;
 
+    /* ==========================================
+   MARKETPLACE PUBLIC API
+========================================== */
+
+if (pathname.startsWith("/api/marketplace/")) {
+
+    if (!["GET", "HEAD"].includes(request.method)) {
+
+        return new Response("Method not allowed", {
+            status: 405
+        });
+
+    }
+
+    return env.MARKETPLACE_API.fetch(request);
+
+}
+
     const normalized = normalizePath(pathname);
 
     /* --------------------------------------------------------

@@ -1,5 +1,37 @@
-import {layout,card,service,e} from './render.js';
-export async function handleMarketplacePage(request,env){const u=new URL(request.url),p=u.pathname;if(p!='/marketplace'&&!p.startsWith('/marketplace/service/')&&!p.startsWith('/marketplace/category/'))return null;if(!['GET','HEAD'].includes(request.method))return new Response(null,{status:405});
- if(!env.MARKETPLACE_API)return new Response('Marketplace unavailable',{status:503});
- const get=async path=>{const res=await env.MARKETPLACE_API.fetch('https://internal.example/api/marketplace/'+path);if(res.status===404)return null;if(!res.ok)throw Error('Catalog unavailable');return (await res.json()).data;};
- try{let res;if(p.startsWith('/marketplace/service/')){const s=await get('services/'+encodeURIComponent(p.split('/').pop()));res=s?service(s):layout({title:'Service not found',description:'',path:p,body:'<h1>Service not found</h1>',status:404,noindex:true});}else{const q=new URLSearchParams(u.search),categories=await get('categories');if(p.includes('/category/')){const slug=p.split('/').pop();if(!categories.some(c=>c.slug===slug))return layout({title:'Category not found',description:'',path:p,body:'<h1>Category not found</h1>',status:404,noindex:true});q.set('category',slug);}const data=await get('services?'+q);const tree=parent=>'<ul>'+categories.filter(c=>c.parent_id===parent).map(c=>`<li><a href="/marketplace/category/${e(c.slug)}">${e(c.name)} (${c.service_count})</a>${tree(c.id)}</li>`).join('')+'</ul>';const next=new URLSearchParams(q);next.set('page',data.page+1);res=layout({title:'Marketplace | Leakendia',description:'Explore Leakendia digital services.',path:p,noindex:!!u.search,body:`<h1>Marketplace</h1><form action="/marketplace"><label>Search <input name="search" value="${e(q.get('search'))}"></label><label>Sort <select name="sort"><option value="newest">Newest</option><option value="price">Price</option><option value="title">Title</option></select></label><button>Search</button></form><div class="catalog"><aside><a href="/marketplace">All services</a>${tree(null)}</aside><section class="cards">${data.items.map(card).join('')||'<p>No services found.</p>'}${data.hasMore?`<a href="?${e(next)}">Next page</a>`:''}</section></div>`});}return request.method==='HEAD'?new Response(null,{status:res.status,headers:res.headers}):res;}catch{return new Response('Marketplace unavailable',{status:503,headers:{'Cache-Control':'no-store'}});}}
+export async function handleMarketplacePage(request, env) {
+
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+
+    let template;
+
+    if (
+        pathname === "/marketplace" ||
+        /^\/marketplace\/category\/[a-z0-9-]+$/.test(pathname)
+    ) {
+
+        template = "/pages/marketplace/marketplace.html";
+
+    } else if (
+        /^\/marketplace\/service\/[a-z0-9-]+$/.test(pathname)
+    ) {
+
+        template = "/pages/marketplace/service/service.html";
+
+    } else {
+
+        return new Response("Page not found", {
+            status: 404
+        });
+
+    }
+
+    const assetURL = new URL(template, request.url);
+
+    return env.ASSETS.fetch(
+        new Request(assetURL, {
+            method: request.method
+        })
+    );
+
+}

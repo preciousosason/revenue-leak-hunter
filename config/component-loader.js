@@ -1330,7 +1330,10 @@ const PAGE_COMPONENTS = {
         SERVICES_COMPONENTS,
 
     "service-detail":
-        SERVICE_DETAIL_COMPONENTS
+        SERVICE_DETAIL_COMPONENTS,
+
+    marketplace:
+        []
 
 };
 

@@ -39,7 +39,8 @@ const PUBLIC_DIRECTORIES = [
     "config",
     "data",
     "global",
-    "pages"
+    "pages" ,
+    "marketplace"
 ];
 
 const PUBLIC_ROOT_FILES = [

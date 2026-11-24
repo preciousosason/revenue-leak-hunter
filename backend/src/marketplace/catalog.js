@@ -32,7 +32,8 @@ export async function handleMarketplaceCatalogRoutes(request,env){
  if(offer.length>2)where.push('EXISTS (SELECT 1 FROM marketplace_offers o WHERE '+offer.join(' AND ')+')');
  const order=({price:'price_minor IS NULL,price_minor ASC',newest:'s.published_at DESC',title:'s.title ASC'})[u.searchParams.get('sort')]||'s.featured DESC,s.created_at DESC';
  const page=Math.max(1,Math.min(10000,Number(u.searchParams.get('page'))||1));if(!Number.isInteger(page))return fail('Invalid page');
- const rows=await all(db,`SELECT s.*, (SELECT MIN(price_minor) FROM marketplace_offers WHERE service_id=s.id AND active=1 AND currency='USD') price_minor FROM marketplace_services s WHERE ${where.join(' AND ')} ORDER BY ${order},s.id LIMIT 25 OFFSET ?`,...args,(page-1)*24);
+ const rows=await all(db,`SELECT s.*, (SELECT MIN(price_minor) FROM marketplace_offers WHERE service_id=s.id AND active=1 AND currency='USD') price_minor,
+(SELECT id FROM marketplace_media WHERE service_id=s.id AND role='thumbnail' LIMIT 1) thumbnail_id FROM marketplace_services s WHERE ${where.join(' AND ')} ORDER BY ${order},s.id LIMIT 25 OFFSET ?`,...args,(page-1)*24);
  return ok({items:rows.slice(0,24),hasMore:rows.length>24,page});}
  if(!a||!['POST','PATCH'].includes(m)|| (m==='POST'&&key)||(m==='PATCH'&&!id.test(key)))return fail('Method not allowed',405);
  if(!request.headers.get('content-type')?.startsWith('application/json'))return fail('JSON required',415);
