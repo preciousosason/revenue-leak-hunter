@@ -1,3 +1,7 @@
+import { readSessionCookie } from "../auth/cookies.js";
+import { assertTrustedHost, assertSameOrigin, authJSON } from "../auth/security.js";
+import { revokeCurrentSession, removeCustomerSession } from "../auth/sessions.js";
+
 import {
     handlePortalLogin,
     handlePortalMe,
@@ -20,6 +24,19 @@ export async function handlePortalRoutes(
     env
 ) {
     const url = new URL(request.url);
+    if (!url.pathname.startsWith("/api/portal/")) return null;
+    if (readSessionCookie(request)) {
+        try {
+            assertTrustedHost(request, env);
+            if (!["GET", "HEAD"].includes(request.method)) assertSameOrigin(request, env);
+        } catch (error) {
+            return authJSON({ success: false, error: "Request origin is not permitted." }, error.status || 403);
+        }
+        if (url.pathname === "/api/portal/logout" && request.method === "POST") {
+            await revokeCurrentSession(request, env);
+            return removeCustomerSession(request, authJSON({ success: true }));
+        }
+    }
 
     if (
         url.pathname === "/api/portal/login" &&

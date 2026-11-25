@@ -436,3 +436,128 @@ span:nth-child(3) {
     }
 
 }
+/* ============================================
+   GLOBAL CUSTOMER AUTHENTICATION
+============================================ */
+
+.site-navbar [data-auth-action][hidden] {
+    display: none !important;
+}
+
+.navbar-auth-action {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 42px;
+    min-width: 100px;
+
+    white-space: nowrap;
+
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        transform .25s ease;
+}
+
+
+/* ============================================
+   UNAUTHENTICATED CUSTOMER
+============================================ */
+
+.navbar-auth-action[data-auth-state="guest"] {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+
+/* ============================================
+   AUTHENTICATED CUSTOMER
+============================================ */
+
+.navbar-auth-action[data-auth-state="authenticated"] {
+    background: rgba(255, 59, 48, .08);
+
+    border: 1px solid rgba(255, 59, 48, .45);
+
+    color: #ff7169;
+
+    box-shadow:
+        0 0 18px rgba(255, 59, 48, .06);
+}
+
+.navbar-auth-action[data-auth-state="authenticated"]::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    flex-shrink: 0;
+
+    background: #ff3b30;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px rgba(255, 59, 48, .7);
+}
+
+.navbar-auth-action[data-auth-state="authenticated"]:hover {
+    background: rgba(255, 59, 48, .15);
+
+    border-color: #ff3b30;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 0 22px rgba(255, 59, 48, .13);
+}
+
+
+/* ============================================
+   MOBILE AUTHENTICATION
+============================================ */
+
+.mobile-navigation .navbar-auth-action {
+    width: 100%;
+    min-height: 46px;
+}
+
+@media (max-width: 850px) {
+
+    .navbar-container > .navbar-auth-action {
+        display: none;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .navbar-auth-action {
+        transition: none;
+    }
+
+}
+/* ============================================
+   FIXED GLOBAL NAVBAR OFFSET
+============================================ */
+
+body.auth-page {
+    padding-top: 76px;
+}
+
+@media (max-width: 850px) {
+
+    body.auth-page {
+        padding-top: 70px;
+    }
+
+}

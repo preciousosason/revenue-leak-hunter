@@ -53,6 +53,8 @@ const ROUTES = {
 
   "/contact": "/pages/contact/contact.html",
 
+  "/sign-in": "/pages/sign-in/sign-in.html",
+
   "/reviews": "/pages/reviews/reviews.html",
 
   "/blog/7-silent-conversion-leaks":
@@ -510,7 +512,8 @@ export default {
 
 if (
     pathname === "/api/auth" ||
-    pathname.startsWith("/api/auth/")
+    pathname.startsWith("/api/auth/") ||
+    pathname.startsWith("/api/portal/")
 ) {
 
     return env.MARKETPLACE_API.fetch(request);

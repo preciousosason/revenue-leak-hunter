@@ -551,7 +551,7 @@ body: new URLSearchParams({
 
 }).toString(),
 
-                redirect: "error",
+               redirect: "manual", 
 
                 signal: AbortSignal.timeout(10000)
 
@@ -582,7 +582,15 @@ console.error("[GOOGLE_AUTH] Token exchange failed", {
     );
 
 }
+if (response.status >= 300 && response.status < 400) {
 
+    throw new GoogleAuthError(
+        "Unexpected Google token endpoint redirect.",
+        "GOOGLE_UNEXPECTED_REDIRECT",
+        503
+    );
+
+}
     if (!response.ok) {
 
         throw new GoogleAuthError(
@@ -642,11 +650,19 @@ async function getGoogleKeys(forceRefresh = false) {
     const response = await fetch(
         GOOGLE_JWKS_URL,
         {
-            redirect: "error",
+          redirect: "manual",  
             signal: AbortSignal.timeout(10000)
         }
     );
+if (response.status >= 300 && response.status < 400) {
 
+    throw new GoogleAuthError(
+        "Unexpected Google signing keys redirect.",
+        "GOOGLE_KEYS_UNEXPECTED_REDIRECT",
+        503
+    );
+
+}
     if (!response.ok) {
 
         throw new GoogleAuthError(

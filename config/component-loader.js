@@ -1323,6 +1323,8 @@ const SERVICE_DETAIL_COMPONENTS = [
 
 const PAGE_COMPONENTS = {
 
+    "sign-in": [],
+
     home:
         HOMEPAGE_COMPONENTS,
 

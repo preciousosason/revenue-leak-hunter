@@ -254,6 +254,12 @@ export async function handlePortalMe(
             );
         }
 
+        await env.DB.prepare(`
+            INSERT INTO conversations (id, client_id, subject, status, created_at, updated_at)
+            SELECT ?, ?, 'Customer conversation', 'open', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+            WHERE NOT EXISTS (SELECT 1 FROM conversations WHERE client_id = ?)
+        `).bind(createId(), client.id, client.id).run();
+
         client.services =
             await getClientServices(
                 client.id,

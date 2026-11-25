@@ -1,12 +1,18 @@
-const API_URL =
-    "https://revenue-leak-hunter-api.preciousosason.workers.dev";
+const API_URL = "";
 
 
 document.addEventListener(
     "DOMContentLoaded",
     async () => {
 
-        const sessionToken =
+        const { default: Auth } = await import("/global/auth/auth-state.js");
+        const authState = await Auth.init();
+        if (authState.error) {
+            alert("Unable to verify your session. Please reload and try again.");
+            return;
+        }
+        const unified = authState.authenticated === true;
+        const sessionToken = unified ? null :
             sessionStorage.getItem(
                 "portalSessionToken"
             );
@@ -157,10 +163,9 @@ document.addEventListener(
            AUTHENTICATION
         ================================== */
 
-        if (!sessionToken) {
+        if (!unified && !sessionToken) {
 
-            window.location.href =
-                "/pages/contact/contact.html";
+            Auth.redirectToSignIn(window.location.pathname + window.location.search);
 
             return;
 
@@ -477,13 +482,17 @@ document.addEventListener(
                         method: "GET",
 
                         headers: {
-                            "Authorization":
-                                `Bearer ${sessionToken}`
+                            ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                         }
                     }
                 );
 
 
+            if (response.status === 401) {
+                sessionStorage.removeItem("portalSessionToken");
+                Auth.redirectToSignIn(window.location.pathname + window.location.search);
+                throw new Error("Session expired.");
+            }
             const result =
                 await response.json();
 
@@ -831,8 +840,7 @@ document.addEventListener(
                             method: "GET",
 
                             headers: {
-                                "Authorization":
-                                    `Bearer ${sessionToken}`
+                                ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                             }
                         }
                     );
@@ -1524,8 +1532,7 @@ document.addEventListener(
                         method: "POST",
 
                         headers: {
-                            "Authorization":
-                                `Bearer ${sessionToken}`
+                            ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                         },
 
                         body:
@@ -1684,8 +1691,7 @@ document.addEventListener(
                             method: "GET",
 
                             headers: {
-                                "Authorization":
-                                    `Bearer ${sessionToken}`
+                                ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                             }
                         }
                     );
@@ -1945,8 +1951,7 @@ document.addEventListener(
                                         "Content-Type":
                                             "application/json",
 
-                                        "Authorization":
-                                            `Bearer ${sessionToken}`
+                                        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                                     },
 
                                     body:
@@ -2226,24 +2231,32 @@ document.addEventListener(
 
                     try {
 
-                        await fetch(
+                        if (unified) {
+                            await Auth.signOut({ redirectTo: null });
+                        } else {
+                        const logoutResponse = await fetch(
                             `${API_URL}/api/portal/logout`,
                             {
                                 method: "POST",
 
                                 headers: {
-                                    "Authorization":
-                                        `Bearer ${sessionToken}`
+                                    ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
                                 }
                             }
                         );
 
+                        if (!logoutResponse.ok) throw new Error("Logout failed.");
+                        }
                     } catch (error) {
-
+                        logoutButton.disabled = false;
+                        logoutButton.textContent = "Sign out";
+                        alert("Unable to sign out. Please try again.");
+                        startMessagePolling();
                         console.error(
                             "Logout error:",
                             error
                         );
+                        return;
 
                     }
 
@@ -2316,8 +2329,7 @@ document.addEventListener(
             );
 
 
-            window.location.href =
-                "/pages/contact/contact.html";
+            alert("Unable to load your workspace. Please reload and try again.");
 
         }
 

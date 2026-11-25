@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Private Portal | Conversion Leak Hunter
+    </title>
+
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../global/responsive.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="portal.css"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="portal-page">
+
+        <!-- =================================
+             ATMOSPHERIC BACKGROUND
+        ================================== -->
+
+        <div
+            class="portal-background"
+            aria-hidden="true"
+        >
+
+            <div class="portal-grid"></div>
+
+            <div class="portal-glow portal-glow-one"></div>
+
+            <div class="portal-glow portal-glow-two"></div>
+
+        </div>
+
+
+        <!-- =================================
+             HEADER
+        ================================== -->
+
+        <header class="portal-header">
+
+            <a
+                href="/"
+                class="portal-brand"
+            >
+
+                <span class="portal-brand-mark">
+                    RL
+                </span>
+
+                <span class="portal-brand-text">
+                    Conversion Leak Hunter
+                </span>
+
+            </a>
+
+
+            <div class="portal-header-right">
+
+                <div class="portal-live-status">
+
+                    <span class="portal-live-dot"></span>
+
+                    <span>
+                        SECURE SESSION
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="portal-logout"
+                    class="portal-logout"
+                >
+
+                    <span>
+                        Log Out
+                    </span>
+
+                    <span
+                        class="portal-logout-icon"
+                        aria-hidden="true"
+                    >
+                        ↗
+                    </span>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================
+             MAIN SHELL
+        ================================== -->
+
+        <section class="portal-shell">
+
+
+            <!-- =================================
+                 INTRO
+            ================================== -->
+
+            <section class="portal-hero">
+
+                <div class="portal-eyebrow">
+
+                    <span class="portal-eyebrow-line"></span>
+
+                    PRIVATE CLIENT PORTAL
+
+                </div>
+
+
+                <div class="portal-hero-main">
+
+                    <div>
+
+                        <h1>
+                            Welcome,
+                            <span id="client-name">
+                                Client
+                            </span>.
+                        </h1>
+
+
+                        <p class="portal-intro">
+                            Your private workspace for the
+                            Leak Hunt investigation.
+                        </p>
+
+                    </div>
+
+
+                    <div class="portal-hero-indicator">
+
+                        <span class="portal-hero-indicator-dot"></span>
+
+                        <span>
+                            INVESTIGATION ACTIVE
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 ERROR
+            ================================== -->
+
+            <div
+                id="portal-error"
+                class="portal-error"
+                hidden
+            ></div>
+
+
+            <!-- =================================
+                 INVESTIGATION CARD
+            ================================== -->
+
+            <section class="portal-card investigation-card">
+
+                <div class="portal-card-topline">
+
+                    <span>
+                        01 / INVESTIGATION
+                    </span>
+
+                    <span class="portal-card-code">
+                        RLH-PRIVATE
+                    </span>
+
+                </div>
+
+
+                <div class="portal-card-header">
+
+                    <div>
+
+                        <span class="portal-label">
+                            CURRENT CASE
+                        </span>
+
+                        <h2>
+                            Leak Hunt Investigation
+                        </h2>
+
+                    </div>
+
+
+                    <span
+                        id="investigation-status"
+                        class="portal-status"
+                    >
+                        OPEN
+                    </span>
+
+                </div>
+
+
+                <div class="portal-client-info">
+
+                    <div class="portal-info-item">
+
+                        <span>
+                            Name
+                        </span>
+
+                        <strong id="client-info-name">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="portal-info-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong id="client-info-email">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="portal-info-item">
+
+                        <span>
+                            Business
+                        </span>
+
+                        <strong id="client-info-business">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="portal-info-item">
+
+                        <span>
+                            Website
+                        </span>
+
+                        <strong id="client-info-website">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 CONVERSATION
+            ================================== -->
+
+            <section class="conversation-section">
+
+                <div class="conversation-heading">
+
+                    <div>
+
+                        <div class="conversation-title-row">
+
+                            <span class="conversation-index">
+                                02
+                            </span>
+
+                            <span class="portal-label">
+                                PRIVATE CONVERSATION
+                            </span>
+
+                        </div>
+
+
+                        <h2>
+                            Your Leak Hunt
+                        </h2>
+
+
+                        <p class="conversation-description">
+                            Communicate directly with your
+                            Conversion Leak Hunter.
+                        </p>
+
+                    </div>
+
+
+                    <div class="conversation-live">
+
+                        <span class="conversation-live-dot"></span>
+
+                        LIVE
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================
+                     MESSAGES
+                ================================== -->
+
+                <div
+                    id="messages-container"
+                    class="messages-container"
+                >
+
+                    <div class="messages-loading">
+
+                        <span class="loading-orbit"></span>
+
+                        <span>
+                            Loading conversation...
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================
+                     MESSAGE COMPOSER
+                ================================== -->
+
+                <form
+                    id="message-form"
+                    class="message-form"
+                >
+
+                    <div class="message-input-shell">
+
+                        <div class="message-input-topline">
+
+                            <span>
+                                SECURE MESSAGE
+                            </span>
+
+                            <span>
+                                ENCRYPTED SESSION
+                            </span>
+
+                        </div>
+
+
+                        <textarea
+                            id="message-input"
+                            name="message"
+                            rows="4"
+                            maxlength="5000"
+                            placeholder="Write a message..."
+                            required
+                        ></textarea>
+
+
+                        <!-- =================================
+                             FILE ATTACHMENTS
+                        ================================== -->
+
+                        <div class="message-composer-tools">
+
+                            <label
+                                for="message-files"
+                                class="file-attach-button"
+                            >
+
+                                <span
+                                    class="file-attach-icon"
+                                    aria-hidden="true"
+                                >
+                                    +
+                                </span>
+
+                                <span>
+                                    Attach Files
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                id="message-files"
+                                type="file"
+                                multiple
+                                hidden
+                                accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                            >
+
+
+                            <span
+                                id="file-selection"
+                                class="file-selection"
+                            >
+                                No files selected
+                            </span>
+
+                        </div>
+
+
+                        <!-- =================================
+                             SELECTED FILES
+                        ================================== -->
+
+                        <div
+                            id="selected-files"
+                            class="selected-files"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <!-- =================================
+                             FORM FOOTER
+                        ================================== -->
+
+                        <div class="message-form-footer">
+
+                            <span class="message-private-note">
+
+                                <span class="message-lock">
+                                    ◆
+                                </span>
+
+                                Private conversation
+
+                            </span>
+
+
+                            <button
+                                type="submit"
+                                id="send-message"
+                            >
+
+                                <span>
+                                    Send Message
+                                </span>
+
+                                <span
+                                    class="send-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- =================================
+                 FOOTER NOTE
+            ================================== -->
+
+            <footer class="portal-footer-note">
+
+                <span class="portal-footer-line"></span>
+
+                <span>
+                    PRIVATE • SECURE • CLIENT ONLY
+                </span>
+
+                <span class="portal-footer-line"></span>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+
+    <script src="portal.js"></script>
+
+</body>
+
+</html>

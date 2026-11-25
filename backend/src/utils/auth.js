@@ -1,7 +1,21 @@
+import { authenticateCustomer } from "../auth/sessions.js";
+import { readSessionCookie } from "../auth/cookies.js";
+import { assertTrustedHost, assertSameOrigin } from "../auth/security.js";
+
 export async function authenticateSession(
     request,
     env
 ) {
+    if (new URL(request.url).pathname.startsWith("/api/portal/")) {
+        if (readSessionCookie(request)) {
+            assertTrustedHost(request, env);
+            if (!["GET", "HEAD"].includes(request.method)) {
+                assertSameOrigin(request, env);
+            }
+            const customer = await authenticateCustomer(request, env);
+            return customer ? { ...customer, id: customer.session_id } : null;
+        }
+    }
     const authorization =
         request.headers.get(
             "Authorization"
