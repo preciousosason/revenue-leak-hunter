@@ -9,6 +9,8 @@ let loadNotificationsHandler = null;
 let loadAnalyticsHandler = null;
 let loadOutreachHandler = null;
 let loadMarketplaceHandler = null;
+let loadPaymentsHandler = null;
+let loadProjectsHandler = null;
 
 
 export function configureNavigation({
@@ -18,7 +20,7 @@ export function configureNavigation({
     loadNotifications,
     loadAnalytics,
     loadOutreach,
-    loadMarketplace
+    loadMarketplace, loadPayments,loadProjects
 } = {}) {
 
     stopConversationPollingHandler =
@@ -40,6 +42,8 @@ export function configureNavigation({
 
     loadMarketplaceHandler =
     loadMarketplace || null;
+    loadPaymentsHandler = loadPayments || null;
+    loadProjectsHandler = loadProjects || null;
 
 }
 
@@ -165,6 +169,8 @@ export function switchView(view) {
 
     const titles = {
 
+        payments: "Payments",
+        projects: "Projects",
         overview:
             "Overview",
 
@@ -249,6 +255,10 @@ export function switchView(view) {
         loadOutreachHandler?.();
     }
     
+if (view === "payments") loadPaymentsHandler?.();
+if (view === "projects") {
+    loadProjectsHandler?.();
+}
 if (view === "marketplace") {
     loadMarketplaceHandler?.();
 }

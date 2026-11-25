@@ -39,6 +39,14 @@ export async function handleAdminClients(
                         clients.website,
                         clients.created_at,
                         clients.updated_at,
+                        ca.status AS account_status,
+                        ca.registered_at,
+                        ca.last_login_at,
+                        ca.email_verified_at,
+                        (SELECT GROUP_CONCAT(provider, ',') FROM auth_identities
+                         WHERE client_id = clients.id) AS auth_providers,
+                        (SELECT COUNT(*) FROM conversations c
+                         WHERE c.client_id = clients.id) AS conversation_count,
                         conversations.id AS conversation_id,
                         conversations.subject,
                         conversations.status,
@@ -46,15 +54,18 @@ export async function handleAdminClients(
                         (
                             SELECT COUNT(*)
                             FROM messages
-                            WHERE messages.conversation_id =
-                                  conversations.id
+                            JOIN conversations mc ON mc.id = messages.conversation_id
+                            WHERE mc.client_id = clients.id
                         ) AS message_count
                      FROM clients
-                     LEFT JOIN conversations
-                        ON conversations.client_id =
-                           clients.id
+                     LEFT JOIN customer_accounts ca ON ca.client_id = clients.id
+                     LEFT JOIN conversations ON conversations.id = (
+                         SELECT c.id FROM conversations c
+                         WHERE c.client_id = clients.id
+                         ORDER BY c.created_at DESC, c.id DESC LIMIT 1
+                     )
                      ORDER BY
-                        conversations.updated_at DESC,
+                        COALESCE(conversations.updated_at, ca.last_login_at, clients.created_at) DESC,
                         clients.created_at DESC`
                 )
                 .all();

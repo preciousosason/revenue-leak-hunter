@@ -1,3 +1,4 @@
+import { openCustomerProfile } from "./customer-profile.js";
 import {
     api
 } from "../core/api.js";
@@ -169,11 +170,12 @@ export function getFilteredClients() {
                 const status =
                     String(
                         client.status ||
-                        "open"
+                        "none"
                     ).toLowerCase();
 
                 if (
                     [
+                        "none",
                         "closed",
                         "resolved",
                         "archived"
@@ -184,6 +186,10 @@ export function getFilteredClients() {
 
             }
 
+            const filter = state.activeClientFilter;
+            if (filter === "registered" && !client.account_status) return false;
+            if (filter === "legacy" && client.account_status) return false;
+            if (filter === "restricted" && !["suspended", "disabled"].includes(client.account_status)) return false;
             if (!searchTerm) {
                 return true;
             }
@@ -193,6 +199,8 @@ export function getFilteredClients() {
                 client.email,
                 client.business,
                 client.website,
+                client.auth_providers,
+                client.account_status,
                 client.id
             ]
                 .filter(Boolean)
@@ -321,6 +329,7 @@ export function renderRecentClients() {
                     <button
                         class="client-row"
                         data-conversation="${conversationId}"
+                        ${conversationId ? "" : "disabled title=\"No conversation yet\""}
                         type="button"
                     >
                         <span class="client-avatar">
@@ -349,7 +358,7 @@ export function renderRecentClients() {
                         <span class="client-row-meta">
                             ${escapeHTML(
                                 formatRelativeTime(
-                                    client.conversation_updated_at ||
+                                    client.last_login_at || client.conversation_updated_at ||
                                     client.created_at
                                 )
                             )}
@@ -455,7 +464,8 @@ export function renderClients() {
             </div>
         `;
 
-        updateClientSummary(filtered);
+        clientsList.querySelectorAll(".open-profile").forEach(button => button.addEventListener("click", () => openCustomerProfile(button.dataset.client, openConversationHandler, loadClients)));
+    updateClientSummary(filtered);
 
         return;
 
@@ -515,9 +525,9 @@ export function renderClients() {
                                     )}
                                 </span>
 
-                                ${renderServiceSummary(
-                                    client.services
-                                )}
+                                <span class="client-data muted">${escapeHTML(client.account_status ? `Verified · ${client.auth_providers || "Unknown provider"}` : "Legacy contact")}</span>
+                                <span class="client-data muted">${escapeHTML(client.registered_at ? `Registered: ${client.registered_at}` : "Not registered")}</span>
+                                ${renderServiceSummary(client.services)}
                             </div>
 
                         </div>
@@ -535,7 +545,8 @@ export function renderClients() {
                         </div>
 
                         <div class="client-status ${statusClass}">
-                            ${statusLabel}
+                            ${client.conversation_id ? statusLabel : "NO CONVERSATION"}
+                            <small>${escapeHTML(client.account_status ? `ACCOUNT: ${client.account_status.toUpperCase()}` : "LEGACY CONTACT")}</small>
 
                             ${
                                 unread
@@ -547,15 +558,18 @@ export function renderClients() {
                         <div class="client-data mono">
                             ${escapeHTML(
                                 formatRelativeTime(
-                                    client.conversation_updated_at ||
+                                    client.last_login_at || client.conversation_updated_at ||
                                     client.created_at
                                 )
                             )}
                         </div>
 
                         <button
+                            class="client-row-action open-profile" data-client="${escapeHTML(client.id)}" type="button">Profile</button>
+                        <button
                             class="client-row-action open-conversation"
                             data-conversation="${conversationId}"
+                            ${conversationId ? "" : "disabled title=\"No conversation yet\""}
                             type="button"
                             aria-label="Open conversation with ${escapeHTML(
                                 client.name || "client"

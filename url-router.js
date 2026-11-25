@@ -522,6 +522,40 @@ if (
     /* ==========================================
    MARKETPLACE PUBLIC API
 ========================================== */
+if (
+    pathname === "/api/marketplace/payment-instructions"
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (
+    pathname === "/api/marketplace/payment-notifications"
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (
+    pathname === "/api/marketplace/notifications"
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (
+    pathname === "/api/marketplace/projects"
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (
+    pathname === "/api/marketplace/project-reviews"
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (
+    pathname === "/api/marketplace/project-files" ||
+    pathname.startsWith("/api/marketplace/project-files/")
+) {
+    return env.MARKETPLACE_API.fetch(request);
+}
+if (pathname === "/api/marketplace/payments" || pathname.startsWith("/api/marketplace/payments/") || pathname.startsWith("/api/marketplace/payment-evidence/")) return env.MARKETPLACE_API.fetch(request);
+if (pathname === "/api/marketplace/quotations" || pathname.startsWith("/api/marketplace/quotations/")) return env.MARKETPLACE_API.fetch(request);
+if (pathname === "/api/marketplace/cart" || pathname === "/api/marketplace/requests" || pathname.startsWith("/api/marketplace/requests/")) return env.MARKETPLACE_API.fetch(request);
 
 if (pathname.startsWith("/api/marketplace/")) {
 

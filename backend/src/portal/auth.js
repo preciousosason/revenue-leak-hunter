@@ -50,7 +50,7 @@ async function createSession(
             7 * 24 * 60 * 60 * 1000
         ).toISOString();
 
-    await env.DB
+    const result = await env.DB
         .prepare(
             `INSERT INTO sessions
             (
@@ -58,15 +58,16 @@ async function createSession(
                 client_id,
                 expires_at
             )
-            VALUES (?, ?, ?)`
+            SELECT ?, id, ? FROM clients WHERE id = ? AND NOT EXISTS (SELECT 1 FROM customer_accounts a WHERE a.client_id = clients.id AND a.status != 'active')`
         )
         .bind(
             sessionId,
-            clientId,
-            expiresAt
+            expiresAt,
+            clientId
         )
         .run();
 
+    if (result.meta?.changes !== 1) throw new Error("Account unavailable.");
     return {
         sessionId,
         expiresAt
@@ -144,7 +145,8 @@ export async function handlePortalLogin(
                         website,
                         created_at
                      FROM clients
-                     WHERE token_hash = ?`
+                     WHERE token_hash = ?
+                       AND NOT EXISTS (SELECT 1 FROM customer_accounts a WHERE a.client_id = clients.id AND a.status != 'active')`
                 )
                 .bind(tokenHash)
                 .first();

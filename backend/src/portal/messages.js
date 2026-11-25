@@ -47,6 +47,7 @@ export async function handlePortalMessages(
                         updated_at
                      FROM conversations
                      WHERE client_id = ?
+                     AND NOT EXISTS (SELECT 1 FROM service_requests r WHERE r.conversation_id = conversations.id)
                      ORDER BY created_at DESC
                      LIMIT 1`
                 )
@@ -194,6 +195,7 @@ export async function handlePortalSendMessage(
                     `SELECT id
                      FROM conversations
                      WHERE client_id = ?
+                     AND NOT EXISTS (SELECT 1 FROM service_requests r WHERE r.conversation_id = conversations.id)
                      ORDER BY created_at DESC
                      LIMIT 1`
                 )

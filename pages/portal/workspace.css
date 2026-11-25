@@ -1,0 +1,18 @@
+/* Workspace shell: scoped to the existing portal. */
+.portal-page { --portal-bg:#080808; --portal-panel:rgba(18,18,18,.94); --portal-blue:#ff3b30; --portal-blue-bright:#ff8078; --portal-cyan:#ff7169; --portal-border:rgba(255,59,48,.2); }
+.portal-page [hidden] { display:none !important; }
+.workspace-layout { position:relative; z-index:2; display:grid; grid-template-columns:220px minmax(0,1fr); gap:32px; width:min(1440px,calc(100% - 48px)); margin:0 auto; align-items:start; }
+.workspace-layout .portal-shell { width:100%; min-width:0; padding:42px 0 48px; }
+.workspace-sidebar { position:sticky; top:20px; margin-top:42px; padding:18px 12px; border:1px solid #303030; border-radius:16px; background:#101010; }
+.workspace-kicker { font-size:11px; letter-spacing:.16em; color:#ff8078; padding:8px; }
+#workspace-nav { display:grid; gap:5px; }
+.workspace-link { display:flex; gap:10px; align-items:center; width:100%; text-align:left; padding:12px; border:1px solid transparent; border-radius:8px; color:#c4c4c4; background:transparent; font:inherit; font-size:14px; cursor:pointer; }
+.workspace-link:hover,.workspace-link[aria-current="page"] { color:#ff8c85; background:#291514; border-color:#63302d; }
+.workspace-link span { font-size:10px; font-family:monospace; color:#aaa; }
+.workspace-extra { padding:28px; border:1px solid #303030; border-radius:16px; background:#111; min-height:260px; }
+.workspace-extra h2 { font-size:clamp(24px,4vw,36px); margin:0 0 16px; }
+.workspace-extra p { color:#bbb; line-height:1.6; margin:12px 0; }
+.workspace-extra button,.workspace-extra a { display:inline-block; margin:8px 8px 8px 0; padding:10px 14px; border:1px solid #75352f; border-radius:8px; color:#fff; background:#331816; cursor:pointer; text-decoration:none; font:inherit; }
+.workspace-extra button:disabled { opacity:.5; cursor:wait; }
+.workspace-session { border-top:1px solid #333; padding:12px 0; overflow-wrap:anywhere; }
+@media(max-width:850px){ .workspace-layout { grid-template-columns:minmax(0,1fr); gap:0; width:calc(100% - 28px); } .workspace-sidebar { position:relative; top:auto; margin-top:16px; } #workspace-nav { display:flex; overflow-x:auto; } .workspace-link { width:auto; flex-shrink:0; } .workspace-layout .portal-shell { padding-top:24px; } }

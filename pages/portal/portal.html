@@ -11,7 +11,7 @@
     >
 
     <title>
-        Private Portal | Conversion Leak Hunter
+        Private Portal | Leakendia
     </title>
 
     <meta
@@ -39,10 +39,12 @@
         href="portal.css"
     >
 
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="/pages/portal/workspace.css">
 </head>
 
 
-<body>
+<body data-page="portal">
 
     <main class="portal-page">
 
@@ -76,11 +78,11 @@
             >
 
                 <span class="portal-brand-mark">
-                    RL
+                    L
                 </span>
 
                 <span class="portal-brand-text">
-                    Conversion Leak Hunter
+                    LEAKENDIA
                 </span>
 
             </a>
@@ -127,6 +129,11 @@
              MAIN SHELL
         ================================== -->
 
+        <div class="workspace-layout">
+        <aside class="workspace-sidebar" aria-label="Workspace navigation">
+            <p class="workspace-kicker">WORKSPACE / 01</p>
+            <nav id="workspace-nav" aria-label="Private portal sections"></nav>
+        </aside>
         <section class="portal-shell">
 
 
@@ -134,7 +141,7 @@
                  INTRO
             ================================== -->
 
-            <section class="portal-hero">
+            <section class="portal-hero" data-workspace-view="overview">
 
                 <div class="portal-eyebrow">
 
@@ -158,8 +165,7 @@
 
 
                         <p class="portal-intro">
-                            Your private workspace for the
-                            Leak Hunt investigation.
+                            Manage your conversations, account and service activity.
                         </p>
 
                     </div>
@@ -170,7 +176,7 @@
                         <span class="portal-hero-indicator-dot"></span>
 
                         <span>
-                            INVESTIGATION ACTIVE
+                            CUSTOMER WORKSPACE
                         </span>
 
                     </div>
@@ -195,16 +201,16 @@
                  INVESTIGATION CARD
             ================================== -->
 
-            <section class="portal-card investigation-card">
+            <section class="portal-card investigation-card" data-workspace-view="overview">
 
                 <div class="portal-card-topline">
 
                     <span>
-                        01 / INVESTIGATION
+                        01 / CUSTOMER PROFILE
                     </span>
 
                     <span class="portal-card-code">
-                        RLH-PRIVATE
+                        LEAKENDIA / PRIVATE
                     </span>
 
                 </div>
@@ -215,11 +221,11 @@
                     <div>
 
                         <span class="portal-label">
-                            CURRENT CASE
+                            ACCOUNT INFORMATION
                         </span>
 
                         <h2>
-                            Leak Hunt Investigation
+                            Your customer profile
                         </h2>
 
                     </div>
@@ -229,7 +235,7 @@
                         id="investigation-status"
                         class="portal-status"
                     >
-                        OPEN
+                        —
                     </span>
 
                 </div>
@@ -297,7 +303,7 @@
                  CONVERSATION
             ================================== -->
 
-            <section class="conversation-section">
+            <section class="conversation-section" data-workspace-view="messages">
 
                 <div class="conversation-heading">
 
@@ -323,7 +329,7 @@
 
                         <p class="conversation-description">
                             Communicate directly with your
-                            Conversion Leak Hunter.
+                            LEAKENDIA.
                         </p>
 
                     </div>
@@ -499,6 +505,7 @@
                  FOOTER NOTE
             ================================== -->
 
+            <section id="workspace-extra" class="workspace-extra" hidden></section>
             <footer class="portal-footer-note">
 
                 <span class="portal-footer-line"></span>
@@ -513,10 +520,12 @@
 
         </section>
 
+        </div>
     </main>
 
 
-    <script src="portal.js"></script>
+    <script src="/pages/portal/portal.js"></script>
+    <script type="module" src="/pages/portal/workspace.js"></script>
 
 </body>
 

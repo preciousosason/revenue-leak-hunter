@@ -1,3 +1,5 @@
+import {loadPayments} from "./views/payments.js";
+import { loadProjects } from "./views/projects.js";
 /* =========================================================
    ADMIN CONTROL SYSTEM
    APPLICATION ENTRY POINT
@@ -170,7 +172,7 @@ configureNavigation({
 
     loadOutreach,
 
-    loadMarketplace
+    loadMarketplace, loadPayments, loadProjects
 
 });
 

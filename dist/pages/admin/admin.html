@@ -302,7 +302,20 @@
     <span class="nav-label">Marketplace</span>
     <span class="nav-indicator"></span>
 </button>
+<button
+    class="nav-item sidebar-link"
+    data-view="projects"
+    type="button"
+>
+    <span class="nav-icon">▣</span>
 
+    <span class="nav-label">
+        Projects
+    </span>
+
+    <span class="nav-indicator"></span>
+</button>
+<button class="nav-item sidebar-link" data-view="payments" type="button"><span class="nav-icon">$</span><span class="nav-label">Payments</span><span class="nav-indicator"></span></button>
 <button
     class="nav-item sidebar-link"
     data-view="analytics"
@@ -907,6 +920,14 @@
 >
     <div id="marketplace-root"></div>
 </section>
+<section id="view-payments" class="admin-view analytics-page" hidden><div id="payments-root"></div></section>
+<section
+    id="view-projects"
+    class="admin-view analytics-page"
+    hidden
+>
+    <div id="projects-root"></div>
+</section>
 <section id="view-analytics" class="admin-view analytics-page" hidden>
  <header class="analytics-header">
   <div><div class="analytics-kicker">CONVERSION INTELLIGENCE / V2</div><h2 class="analytics-title">See what moves people.</h2><p class="analytics-description">Follow the journey from first visit to verified enquiry. Find friction, compare outcomes, and choose your next improvement.</p></div>
@@ -1075,6 +1096,9 @@
                                     Unread
                                 </button>
 
+                                <button class="client-filter" type="button" data-filter="registered">Registered</button>
+                                <button class="client-filter" type="button" data-filter="legacy">Legacy</button>
+                                <button class="client-filter" type="button" data-filter="restricted">Restricted</button>
                             </div>
 
 

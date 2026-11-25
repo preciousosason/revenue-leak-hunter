@@ -5,7 +5,9 @@ export async function handleMarketplacePage(request, env) {
 
     let template;
 
-    if (
+    if (pathname === "/marketplace/cart") {
+        template = "/pages/marketplace/cart.html";
+    } else if (
         pathname === "/marketplace" ||
         /^\/marketplace\/category\/[a-z0-9-]+$/.test(pathname)
     ) {

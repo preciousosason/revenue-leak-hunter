@@ -45,7 +45,8 @@ export async function authenticateSession(
                     sessions.client_id,
                     sessions.expires_at
                  FROM sessions
-                 WHERE sessions.id = ?`
+                 WHERE sessions.id = ?
+                   AND NOT EXISTS (SELECT 1 FROM customer_accounts a WHERE a.client_id = sessions.client_id AND a.status != 'active')`
             )
             .bind(sessionId)
             .first();

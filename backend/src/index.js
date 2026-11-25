@@ -1,7 +1,26 @@
+import { handlePaymentEvidence } from "./marketplace/payment-evidence.js";
+import { handlePayments } from "./marketplace/payments.js";
+import { handleProjects } from "./marketplace/projects.js";
+import {
+    handleProjectReviews
+} from "./marketplace/project-reviews.js";
+import {
+    handleProjectFiles
+} from "./marketplace/project-files.js";
+import {
+    handlePaymentNotifications
+} from "./marketplace/payment-notifications.js";
+import {
+    handleBusinessNotifications
+} from "./marketplace/business-notifications.js";
+import { handlePaymentInstructions } from "./marketplace/payment-instructions.js";
+import { handleQuotations } from "./marketplace/quotations.js";
+import { handleRequests } from "./marketplace/requests.js";
 import {
     handleAuthRoutes
 } from "./auth/auth.routes.js";
 
+import { handleCart } from "./marketplace/cart.js";
 import { handleMarketplaceLaunchRoutes } from "./marketplace/launch.js";
 
 import {
@@ -76,6 +95,52 @@ if (
         }
 
         try {
+            const projectFilesResponse =
+    await handleProjectFiles(request, env);
+
+if (projectFilesResponse) {
+    return projectFilesResponse;
+}
+const projectReviewsResponse =
+    await handleProjectReviews(request, env);
+
+if (projectReviewsResponse) {
+    return projectReviewsResponse;
+}
+            const projectResponse =
+    await handleProjects(request, env);
+
+if (projectResponse) {
+    return projectResponse;
+}
+            const evidenceResponse = await handlePaymentEvidence(request, env);
+            if (evidenceResponse) return evidenceResponse;
+            const businessNotificationsResponse =
+    await handleBusinessNotifications(request, env);
+
+if (businessNotificationsResponse) {
+    return businessNotificationsResponse;
+}
+            const paymentNotificationsResponse =
+    await handlePaymentNotifications(request, env);
+
+if (paymentNotificationsResponse) {
+    return paymentNotificationsResponse;
+}
+            const paymentResponse = await handlePayments(request, env);
+            if (paymentResponse) return paymentResponse;
+            const paymentInstructionsResponse =
+    await handlePaymentInstructions(request, env);
+
+if (paymentInstructionsResponse) {
+    return paymentInstructionsResponse;
+}
+            const quotationResponse = await handleQuotations(request, env);
+            if (quotationResponse) return quotationResponse;
+            const requestResponse = await handleRequests(request, env);
+            if (requestResponse) return requestResponse;
+            const cartResponse = await handleCart(request, env);
+            if (cartResponse) return cartResponse;
 
                         // --------------------------------------------------
             // MARKETPLACE CATEGORY ROUTES
@@ -95,15 +160,15 @@ if (
             // MARKETPLACE CATALOG ROUTES
             // --------------------------------------------------
 
-            const marketplaceCatalogResponse =
-                await handleMarketplaceCatalogRoutes(
-                    request,
-                    env
-                );
+const marketplaceCatalogResponse =
+    await handleMarketplaceCatalogRoutes(
+        request,
+        env
+    );
 
-            if (marketplaceCatalogResponse) {
-                return marketplaceCatalogResponse;
-            }
+if (marketplaceCatalogResponse) {
+    return marketplaceCatalogResponse;
+}
 
             /* =========================================================
    MARKETPLACE EDITOR ROUTES

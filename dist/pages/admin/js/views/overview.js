@@ -24,10 +24,7 @@ export function updateStats() {
         state.clients.length;
 
     const totalConversations =
-        state.clients.filter(
-            client =>
-                client.conversation_id
-        ).length;
+        state.clients.reduce((total, client) => total + Number(client.conversation_count ?? (client.conversation_id ? 1 : 0)), 0);
 
     const totalMessages =
         state.clients.reduce(

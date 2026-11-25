@@ -1,3 +1,4 @@
+import { handleCustomerProfile } from "./customer-profile.js";
 import {
     handleAdminLogin,
     handleAdminMe,
@@ -48,6 +49,9 @@ export async function handleAdminRoutes(
 ) {
     const url =
         new URL(request.url);
+
+    const profileResponse = await handleCustomerProfile(request, env);
+    if (profileResponse) return profileResponse;
 
     const outreachResponse = await handleAdminOutreachRoutes(request, env);
     if (outreachResponse) return outreachResponse;
