@@ -504,7 +504,18 @@ export default {
     const url = new URL(request.url);
 
     const pathname = url.pathname;
+/* ==========================================
+   UNIFIED CUSTOMER AUTHENTICATION API
+========================================== */
 
+if (
+    pathname === "/api/auth" ||
+    pathname.startsWith("/api/auth/")
+) {
+
+    return env.MARKETPLACE_API.fetch(request);
+
+}
     /* ==========================================
    MARKETPLACE PUBLIC API
 ========================================== */

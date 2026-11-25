@@ -535,21 +535,21 @@ async function exchangeGoogleCode(
                         "application/x-www-form-urlencoded"
                 },
 
-                body: new URLSearchParams({
+body: new URLSearchParams({
 
-                    code,
+    code,
 
-                    client_id: config.clientId,
+    client_id: config.clientId,
 
-                    client_secret: config.clientSecret,
+    client_secret: config.clientSecret,
 
-                    redirect_uri: config.redirectUri,
+    redirect_uri: config.redirectUri,
 
-                    grant_type: "authorization_code",
+    grant_type: "authorization_code",
 
-                    code_verifier: verifier
+    code_verifier: verifier
 
-                }),
+}).toString(),
 
                 redirect: "error",
 
@@ -558,15 +558,30 @@ async function exchangeGoogleCode(
             }
         );
 
-    } catch {
+} catch (error) {
 
-        throw new GoogleAuthError(
-            "Google authentication is temporarily unavailable.",
-            "GOOGLE_CONNECTION_FAILED",
-            503
-        );
+console.error("[GOOGLE_AUTH] Token exchange failed", {
+    name: error?.name || "UnknownError",
 
-    }
+    message: String(error?.message || "Unknown error")
+        .replace(/https?:\/\/[^\s]+/gi, "[URL REDACTED]")
+        .slice(0, 250),
+
+    timeout: error?.name === "TimeoutError",
+
+    aborted: error?.name === "AbortError",
+
+    timeoutSupported:
+        typeof AbortSignal.timeout === "function"
+});
+
+    throw new GoogleAuthError(
+        "Google authentication is temporarily unavailable.",
+        "GOOGLE_CONNECTION_FAILED",
+        503
+    );
+
+}
 
     if (!response.ok) {
 
