@@ -1,3 +1,7 @@
+import {
+    loadRequestQueue,
+    loadInboxQueue
+} from "../views/work-queues.js";
 let stopConversationPollingHandler = null;
 
 let loadClientsHandler = null;
@@ -169,8 +173,10 @@ export function switchView(view) {
 
     const titles = {
 
-        payments: "Payments",
-        projects: "Projects",
+requests: "Service Requests",
+inbox: "Inbox",
+payments: "Payments",
+projects: "Projects",
         overview:
             "Overview",
 
@@ -254,7 +260,13 @@ export function switchView(view) {
     if (view === "outreach") {
         loadOutreachHandler?.();
     }
-    
+    if (view === "requests") {
+    loadRequestQueue();
+}
+
+if (view === "inbox") {
+    loadInboxQueue();
+}
 if (view === "payments") loadPaymentsHandler?.();
 if (view === "projects") {
     loadProjectsHandler?.();

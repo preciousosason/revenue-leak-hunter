@@ -54,7 +54,8 @@ const PUBLIC_ROOT_FILES = [
 
 const EXCLUDED_PATHS = [
     "pages/writing-portfolio",
-    "pages/admin-backup"
+    "pages/admin-backup",
+    "pages/admin/admin.js"
 ];
 
 const PRIVATE_NAME_PATTERN =

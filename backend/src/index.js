@@ -1,3 +1,16 @@
+import {
+    handleFileLibrary
+} from "./marketplace/file-library.js";
+
+import {
+    handleAdminQueues
+} from "./marketplace/admin-queues.js";
+import {
+    handleStorageAudit
+} from "./marketplace/storage-audit.js";
+import {
+    handleCustomerInsights
+} from "./marketplace/customer-insights.js";
 import { handlePaymentEvidence } from "./marketplace/payment-evidence.js";
 import { handlePayments } from "./marketplace/payments.js";
 import { handleProjects } from "./marketplace/projects.js";
@@ -95,6 +108,25 @@ if (
         }
 
         try {
+            const fileLibraryResponse =
+    await handleFileLibrary(request, env);
+
+if (fileLibraryResponse) {
+    return fileLibraryResponse;
+}
+
+const adminQueuesResponse =
+    await handleAdminQueues(request, env);
+
+if (adminQueuesResponse) {
+    return adminQueuesResponse;
+}
+    const storageAuditResponse =
+    await handleStorageAudit(request, env);
+
+if (storageAuditResponse) {
+    return storageAuditResponse;
+}
             const projectFilesResponse =
     await handleProjectFiles(request, env);
 
@@ -115,6 +147,12 @@ if (projectResponse) {
 }
             const evidenceResponse = await handlePaymentEvidence(request, env);
             if (evidenceResponse) return evidenceResponse;
+            const customerInsightsResponse =
+    await handleCustomerInsights(request, env);
+
+if (customerInsightsResponse) {
+    return customerInsightsResponse;
+}
             const businessNotificationsResponse =
     await handleBusinessNotifications(request, env);
 

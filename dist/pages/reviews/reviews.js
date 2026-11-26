@@ -8,13 +8,24 @@ document.addEventListener(
 
         loadReviews();
 
-        setupReviewForm();
+const form = document.getElementById(
+    "review-form"
+);
 
-        setupReviewRating();
+if (form) {
 
-        setupCharacterCounter();
+    const link = document.createElement("a");
 
-        setupReviewButton();
+    link.href = "/pages/portal/portal.html";
+
+    link.textContent =
+        "Open Private Portal to review a completed project";
+
+    form.replaceWith(link);
+
+}
+
+setupReviewButton();
 
     }
 );
@@ -172,6 +183,16 @@ function renderReviews(
                                 </span>
 
                                 ${business}
+                                ${
+    Number(review.verified_project) === 1
+        ? `
+            <span class="review-verified-project"
+                  title="Review associated with a completed project">
+                &#10003; Verified project
+            </span>
+        `
+        : ""
+}
 
                             </div>
 

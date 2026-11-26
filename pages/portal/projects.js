@@ -1,9 +1,16 @@
 import {
     renderProjectFiles
 } from './project-files.js';
+import {
+    attachProjectActivity
+} from './customer-insights.js';
 
 
-export async function renderProjects(root,current,page=1){const el=(parent,tag,text='')=>{const n=document.createElement(tag);n.textContent=text;parent.append(n);return n;};try{const r=await fetch('/api/marketplace/projects?page='+page,{cache:'no-store',credentials:'same-origin'}),data=await r.json();if(!r.ok||!data.success)throw Error(data.error||'Unable to load projects');if(!current())return;root.replaceChildren();el(root,'h2','My projects');if(!data.projects.length)el(root,'p','No activated projects yet.');for(const p of data.projects){const card=el(root,'section');card.className='workspace-session';el(card,'h3',p.title);el(card,'p',p.status+' · '+p.progress+'% complete');const progress=el(card,'progress');progress.max=100;progress.value=p.progress;progress.setAttribute('aria-label','Milestone completion');el(card,'p','Request: '+p.request_id);const filesPanel = el(card, 'div');
+export async function renderProjects(root,current,page=1){const el=(parent,tag,text='')=>{const n=document.createElement(tag);n.textContent=text;parent.append(n);return n;};try{const r=await fetch('/api/marketplace/projects?page='+page,{cache:'no-store',credentials:'same-origin'}),data=await r.json();if(!r.ok||!data.success)throw Error(data.error||'Unable to load projects');if(!current())return;root.replaceChildren();el(root,'h2','My projects');if(!data.projects.length)el(root,'p','No activated projects yet.');for(const p of data.projects){const card=el(root,'section');card.className='workspace-session';el(card,'h3',p.title);el(card,'p',p.status+' · '+p.progress+'% complete');const progress=el(card,'progress');progress.max=100;progress.value=p.progress;progress.setAttribute('aria-label','Milestone completion');el(card,'p','Request: '+p.request_id);attachProjectActivity(
+    card,
+    p,
+    current
+);
 
 filesPanel.hidden = true;
 

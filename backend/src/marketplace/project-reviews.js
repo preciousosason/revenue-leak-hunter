@@ -1,5 +1,9 @@
 import {authenticateCustomer} from '../auth/sessions.js';
 import {assertTrustedHost,assertSameOrigin,readAuthJSON,authJSON} from '../auth/security.js';
+import {
+    createRateKey,
+    consumeRateLimit
+} from '../auth/rate-limit.js';
 export async function handleProjectReviews(request,env){
  if(new URL(request.url).pathname!='/api/marketplace/project-reviews')return null;
  try{
@@ -15,9 +19,62 @@ export async function handleProjectReviews(request,env){
   const b=await readAuthJSON(request), review=typeof b.review==='string'?b.review.trim():'';
   if(typeof b.project_id!=='string'||b.project_id.length>128||!Number.isInteger(b.rating)||b.rating<1||b.rating>5||review.length<10||review.length>2000)return authJSON({success:false,error:'Invalid review'},400);
   const id=crypto.randomUUID();
+  if (b.publication_consent !== true) {
+
+    return authJSON({
+        success: false,
+        error: 'Publication consent required'
+    }, 400);
+
+}
+
+const rate = await consumeRateLimit(
+    env.DB,
+    await createRateKey(
+        env.AUTH_SECRET,
+        'project-review',
+        user.client_id
+    ),
+    {
+        limit: 10,
+        windowSeconds: 3600
+    }
+);
+
+if (!rate.allowed) {
+
+    return authJSON({
+        success: false,
+        error: 'Too many review attempts'
+    }, 429);
+
+}
   try{await env.DB.batch([
    env.DB.prepare(`INSERT INTO reviews(id,client_id,name,business,rating,review,approved) SELECT ?,c.id,substr(c.name,1,100),substr(c.business,1,200),?,?,0 FROM clients c WHERE c.id=?`).bind(id,b.rating,review,user.client_id),
-   env.DB.prepare('INSERT INTO project_review_claims(project_id,review_id,client_id) VALUES(?,?,?)').bind(b.project_id,id,user.client_id)
+ env.DB.prepare(`
+    INSERT INTO project_review_consents (
+        review_id,
+        client_id,
+        policy_version
+    )
+    VALUES (?, ?, 'public-review-v1')
+`).bind(
+    id,
+    user.client_id
+),
+
+env.DB.prepare(`
+    INSERT INTO project_review_claims (
+        project_id,
+        review_id,
+        client_id
+    )
+    VALUES (?, ?, ?)
+`).bind(
+    b.project_id,
+    id,
+    user.client_id
+)  
   ]);}catch(e){if(/Review not eligible|UNIQUE constraint failed/.test(String(e.message)))return authJSON({success:false,error:'Project not eligible or already reviewed'},409);throw e;}
   return authJSON({success:true},201);
  }catch(e){return authJSON({success:false,error:'Unable to process project review'},e.status||500);}

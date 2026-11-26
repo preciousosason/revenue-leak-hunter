@@ -198,17 +198,50 @@ export async function handlePublicApprovedReviews(
         const result =
             await env.DB
                 .prepare(
-                    `SELECT
-                        id,
-                        name,
-                        business,
-                        rating,
-                        review,
-                        created_at
-                     FROM reviews
-                     WHERE approved = 1
-                     ORDER BY created_at DESC
-                     LIMIT 50`
+`SELECT
+    v.id,
+    v.name,
+    v.business,
+    v.rating,
+    v.review,
+    v.created_at,
+
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM project_review_claims c
+
+            JOIN project_review_consents consent
+                ON consent.review_id = c.review_id
+                AND consent.client_id = c.client_id
+
+            JOIN projects p
+                ON p.id = c.project_id
+
+            JOIN quotations q
+                ON q.id = p.quotation_id
+
+            JOIN service_requests r
+                ON r.id = q.request_id
+
+            WHERE c.review_id = v.id
+              AND c.client_id = v.client_id
+              AND r.client_id = v.client_id
+              AND p.status = 'completed'
+        )
+
+        THEN 1
+        ELSE 0
+
+    END AS verified_project
+
+FROM reviews v
+
+WHERE v.approved = 1
+
+ORDER BY v.created_at DESC
+
+LIMIT 50`
                 )
                 .all();
 

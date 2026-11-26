@@ -1,11 +1,14 @@
+import {
+    renderFileLibrary
+} from "./file-library.js";
 import { renderPayments } from "./payments.js";
 import { renderProjects } from "./projects.js";
 import {
     renderProjectReviews
 } from "./project-reviews.js";
 import {
-    renderBusinessNotifications
-} from "./business-notifications.js";
+    renderNotificationCenter
+} from "./customer-insights.js";
 import { renderQuotations } from "./quotations.js";
 import { renderRequests } from "./requests.js";
 import Auth from "/global/auth/auth-state.js";
@@ -53,7 +56,7 @@ if (view === "reviews") {
 }
 if (view === "notifications") {
 
-    renderBusinessNotifications(
+    renderNotificationCenter(
         extra,
         () => ticket === generation
     );
@@ -63,7 +66,15 @@ if (view === "notifications") {
  if(view==="quotations"){renderQuotations(extra,()=>ticket===generation);return;}
  if(view==="requests"){renderRequests(extra,()=>ticket===generation);return;}
  if(view==="account"){account(ticket);return;}
- if(view==="files"){element("p","Your existing shared files are available as attachments in Messages. A dedicated file library is not yet connected.",extra);button("Open messages",extra,()=>{location.hash="messages";});return;}
+if (view === "files") {
+
+    renderFileLibrary(
+        extra,
+        () => ticket === generation
+    );
+
+    return;
+}
  element("p","This workspace section is not yet connected to a backend. No records or actions are being simulated.",extra);
  if(view==="requests")link("Browse marketplace","/marketplace",extra);
 }

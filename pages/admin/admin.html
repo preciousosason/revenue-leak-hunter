@@ -315,6 +315,33 @@
 
     <span class="nav-indicator"></span>
 </button>
+<button
+    class="nav-item sidebar-link"
+    data-view="requests"
+    type="button"
+>
+    <span class="nav-icon">▤</span>
+
+    <span class="nav-label">
+        Service Requests
+    </span>
+
+    <span class="nav-indicator"></span>
+</button>
+
+<button
+    class="nav-item sidebar-link"
+    data-view="inbox"
+    type="button"
+>
+    <span class="nav-icon">✉</span>
+
+    <span class="nav-label">
+        Inbox
+    </span>
+
+    <span class="nav-indicator"></span>
+</button>
 <button class="nav-item sidebar-link" data-view="payments" type="button"><span class="nav-icon">$</span><span class="nav-label">Payments</span><span class="nav-indicator"></span></button>
 <button
     class="nav-item sidebar-link"
@@ -919,6 +946,25 @@
     hidden
 >
     <div id="marketplace-root"></div>
+</section>
+<!-- CENTRALIZED SERVICE REQUESTS -->
+
+<section
+    id="view-requests"
+    class="admin-view analytics-page"
+    hidden
+>
+    <div id="requests-root"></div>
+</section>
+
+<!-- CENTRALIZED CUSTOMER INBOX -->
+
+<section
+    id="view-inbox"
+    class="admin-view analytics-page"
+    hidden
+>
+    <div id="inbox-root"></div>
 </section>
 <section id="view-payments" class="admin-view analytics-page" hidden><div id="payments-root"></div></section>
 <section
